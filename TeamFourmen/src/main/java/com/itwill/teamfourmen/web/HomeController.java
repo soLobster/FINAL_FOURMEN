@@ -14,15 +14,13 @@ public class HomeController {
 	@Value("${api.themoviedb.api-key}")
 	private String API_KEY;
 	
+	private String url = "https://api.themoviedb.org/3/movie/";
+	
 	@GetMapping("/")
 	public String home() {
 		log.info("HOME()");
 		
-		
-		int movieId = 609681;
-		
-		
-		return "redirect:https://api.themoviedb.org/3/movie/" + movieId+ "?api_key="+ API_KEY;
+		return "index";
 	}
 	
 

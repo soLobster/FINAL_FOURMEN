@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TEAM FOURMEN</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+        crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+        
+<style type="text/css">
+
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+.nanumgothic * {
+ font-family: 'Nanum Gothic', sans-serif;
+}
+
+/* 폰트 적용 */
+body {
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+
+</style>
+</head>
+<body>
+
+	<h1>TV SHOW Details</h1>
+
+
+	<div class="card rounded-0 border-0">
+        <img id = "backdrop-img" class = "bd-placeholder-img bd-placeholder-img-lg card-img rounded-0 border-0" 
+        th:src = " 'https:/image.tmdb.org/t/p/w1920_and_h600_multi_faces' + ${tvShowDto.backdrop_path} "
+        focusable="false" />
+      <div class="card-img-overlay rounded-0 border-0">
+        <!-- <img  th:src = " 'https:/image.tmdb.org/t/p/w500' + ${tvShowDto.poster_path}"  />  -->
+          <h2 class="card-title" th:text = "${tvShowDto.name}"></h2>
+          <article class="card-text" th:text = "${tvShowDto.overview}"></article>
+          <p class="card-text" >
+            <small th:text = "${tvShowDto.first_air_date}"></small>
+          </p>
+      </div>
+	</div>
+	
+	<div id="colorfulArea">This is a colorful area.</div>
+	
+
+
+
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+	</script>
+	<script>
+  // 이미지 로드 후 실행되는 함수
+  window.onload = function () {
+  document.querySelector('img#backdrop-img').addEventListener('load', function() {
+    // 이미지가 성공적으로 로드되면 이곳에서 CamanJS를 사용하여 이미지 처리
+    console.log('Image loaded successfully');
+
+    // 여기에서 다양한 CamanJS 메소드를 사용하여 이미지를 조정할 수 있습니다.
+    Caman('#backdrop-img', function () {
+      // 평균 색상을 가져오기
+      var averageColor = this.getPixelColor(0, 0);
+      console.log('Average Color:', averageColor);
+
+      // 색상을 변수로 설정
+      var primaryColor = `rgba(${averageColor.r}, ${averageColor.g}, ${averageColor.b}, 1)`;
+
+      // 색상을 root 변수로 설정
+      document.documentElement.style.setProperty('--primaryColor', primaryColor);
+
+      // 특정 엘리먼트의 배경색 설정
+      document.getElementById('colorfulArea').style.backgroundColor = primaryColor;
+
+      // 이미지를 화면에 표시
+      this.render();
+    });
+  });
+  };
+	</script>
+</body>
+</html>
