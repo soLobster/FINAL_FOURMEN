@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.itwill.teamfourmen.dto.TvShowDTO;
 import com.itwill.teamfourmen.dto.TvShowListDTO;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -47,26 +49,56 @@ public class TvShowController {
         }
 	}
 	
-	@GetMapping("/details/{id}")
-	public String getTvShow(Model model, @PathVariable (name = "id") int id) {
-		log.info("GET TV SHOW () ID = {}", id);
-		
-		log.info("API KEY - {}",API_KEY);
-		
-		int seriesId = id;
-		
-		WebClient webClient = WebClient.create("https://api.themoviedb.org/3/tv");
-		
-		Mono<TvShowDTO> tvShow = webClient.get()
-				.uri("/{seriesId}?language=ko&api_key={api_key}", seriesId, API_KEY)
-				.accept(MediaType.APPLICATION_JSON)
-				.retrieve()
-				.bodyToMono(TvShowDTO.class);
+//	@GetMapping("/details/{id}")
+//	public String getTvShow(Model model, @PathVariable (name = "id") int id) {
+//		log.info("GET TV SHOW () ID = {}", id);
+//
+//		log.info("API KEY - {}",API_KEY);
+//
+//		int seriesId = id;
+//
+//		WebClient webClient = WebClient.create("https://api.themoviedb.org/3/tv");
+//
+//		Mono<TvShowDTO> tvShow = webClient.get()
+//				.uri("/{seriesId}?language=ko&api_key={api_key}", seriesId, API_KEY)
+//				.accept(MediaType.APPLICATION_JSON)
+//				.retrieve()
+//				.bodyToMono(TvShowDTO.class);
+//
+//		TvShowDTO tvShowDto = tvShow.block();
+//
+//		model.addAttribute("tvShowDto", tvShowDto);
+//
+//		return "tvshow/details";
+//	}
 
-		TvShowDTO tvShowDto = tvShow.block();
-		
-		model.addAttribute("tvShowDto", tvShowDto);
-		
+	@GetMapping("/details/{id}")
+	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
+		log.info("Get Tv Show Details = {}", id);
+		log.info("API KET = {}", API_KEY);
+		RestTemplate restTemplate = new RestTemplate();
+
+		int seriesId = id;
+
+		String apiUri = "https://api.themoviedb.org/3/tv";
+
+		String targetUrl = UriComponentsBuilder.fromUriString(apiUri)
+				.path("/{seriesId}")
+				.queryParam("language", "ko")
+				.queryParam("api_key", API_KEY)
+				.buildAndExpand(String.valueOf(seriesId))
+				.toUriString();
+
+		//log.info(targetUrl);
+
+		TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
+
+		log.info("tvShowDto = {}", tvShowDTO.toString());
+
+		model.addAttribute("tvShowDto", tvShowDTO);
+
+
 		return "tvshow/details";
 	}
+
 }
