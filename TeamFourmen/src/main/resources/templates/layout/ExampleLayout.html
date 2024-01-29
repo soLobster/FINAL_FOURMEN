@@ -5,6 +5,12 @@
 <title>TEAM FOURMEN LAYOUT</title>
 </head>
 <body>
-
+    <nav th:fragment="navigation-bar">
+        <a th:href="@{/}">HOME</a>
+        <a th:href="@{/movie/popular}">인기 영화</a>
+        <a th:href="@{/movie/recent}">최신 영화</a>
+        <a th:href="@{/movie/top-rated}">최신 영화</a>
+    </nav>
+    
 </body>
 </html>

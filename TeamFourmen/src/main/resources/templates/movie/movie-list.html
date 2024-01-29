@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Fourmen</title>
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link th:href="@{/css/movie/movie-list-search.css}" rel="stylesheet">
+    <link th:href="@{/css/movie/movie-list-main.css}" rel="stylesheet">
+	
+</head>
+<body>
+    <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+    <h1>영화 리스트</h1>
+	
+    <div class="content-container">
+        <!-- search-container는 필터와 검색을 위한 div -->
+        <div class="search-container">
+
+            <form>
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <span class="filter-title">필터</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- 개봉일자 필터 -->
+                        <div class="filter-container">
+                            <div class="filter-item-container">
+                                <div class="filter-title">개봉일자</div>
+                                <div class="div-release">
+                                    <label for="input-date-from" class="release-label">from</label>
+                                    <input type="date" class="form-horizontal release-input" id="input-date-from">
+                                </div>
+                                <div class="div-release">
+                                    <label for="input-date-to" class="release-label">to</label>
+                                    <input type="date" class="form-horizontal release-input" id="input-date-to">
+                                </div>                        
+                            </div>
+                            
+                            <!-- 장르 필터 -->
+                            <div class="filter-item-container">
+                                <div class="filter-title">장르</div>
+                                <!-- TODO: 나중에 DB에서 장르 목록 가져오면 FOR문으로 대체하기 -->
+                                <ul class="genre-list">
+                                    <li>
+                                        <input type="checkbox" value="14" name="genre" id="genre-action" class="checkbox-genre d-none">
+                                        <label for="genre-action" class="checkbox-genre-label">액션</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" value="12" name="genre" id="genre-adventure" class="checkbox-genre d-none">
+                                        <label for="genre-adventure" class="checkbox-genre-label">모험</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" value="16" name="genre" id="genre-animation" class="checkbox-genre d-none">
+                                        <label for="genre-animation" class="checkbox-genre-label">애니메이션</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" value="35" name="genre" id="genre-comedy" class="checkbox-genre d-none">
+                                        <label for="genre-comedy" class="checkbox-genre-label">코미디</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" value="80" name="genre" id="genre-crime" class="checkbox-genre d-none">
+                                        <label for="genre-crime" class="checkbox-genre-label">범죄</label>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <!-- 원어 -->
+                            <div class="filter-item-container">
+                                <div class="filter-title">원어</div>
+                                <div>
+                                    <select name="original-language" class="combobox-language">
+                                        <option selected="selected">선택 안함</option>
+                                        <option>한국어</option>
+                                        <option>영어</option>
+                                        <option>프랑스어</option>
+                                        <option>일본어</option>
+                                        <option>중국어</option>                                
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="filter-item-container">
+                                <div class="filter-title">런타임</div>
+                                <div>
+                                    <span>최소: </span><input type="number" name="runtime-min" class="runtime-range">                           
+                                </div>
+                                <div>
+                                    <span>최대: </span><input type="number" name="runtime-max" class="runtime-range">
+                                </div>                                
+                            </div>
+                                                                                        
+                        </div>  <!-- filter container /div -->
+                    </div>  <!-- card-body /div -->
+                </div>  <!-- 카드 /div -->
+                <input type="submit" class="filter-btn">                          
+            </form>
+        </div>
+      
+        <main class="list-container">
+
+            <div class="movie-item-container" th:each="movie : ${movieItemDtoList}">
+                <div class="movie-item-image-container">
+                    <!-- TODO: detail 컨트롤러 만들면 돌아와서 링크만들기 -->    
+                    <img th:src="@{https://image.tmdb.org/t/p/original/{posterPath} (posterPath=${movie.posterPath})}">                    
+                </div>
+                <div class="movie-description-container">
+                    <div th:text="${movie.title}" class="movie-title"></div>
+                    <div th:text="${movie.releaseDate}"></div>
+                </div>
+                
+            </div>
+
+        </main>        
+    </div>
+
+	
+	
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	
+	
+</body>
+</html>
