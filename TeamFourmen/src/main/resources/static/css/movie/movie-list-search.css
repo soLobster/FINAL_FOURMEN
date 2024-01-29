@@ -1,0 +1,131 @@
+@charset "UTF-8";
+
+body {
+    background-color: rgb(31, 32, 41);
+    color: rgb(196, 195, 202);
+}
+
+.content-container {
+    width: 85%;
+    margin: 0 auto;
+    display:flex;
+    align-items: start;
+    height: auto;
+}
+
+/* 필터, 검색을 위한 컨테이너 */
+.search-container {
+    width: 260px;
+    min-width: 260px;
+    height: auto;
+    margin-right: 36px;
+}
+
+/* 영화 리스트 보여주는 컨테이너 */
+.list-container {
+    width: 100%;
+    height: auto;
+}   
+
+
+/* 필터 카드 커스텀 */
+.custom-card {
+    background-color: rgb(31, 32, 41);
+    color: rgb(196, 195, 202);
+    border-color: #ffffff;
+}
+
+
+/* 필터의 각 항목 컨테이너. 카드처럼 border를 줌 */
+.card-body {
+    padding: 0;
+}
+
+.filter-container {
+    width: 100%;
+}
+
+.filter-item-container {
+    padding: 14px 16px;
+    border-top: solid #adb5bd 1.6px;
+    height: auto;
+}
+
+/* 필터의 각 제목 css */
+.filter-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+
+
+/* 개봉일 from-to label과 date input 좌우정렬 */
+.div-release {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* 장르 아이템들 flex로 설정해서 자유롭게 배치 */
+.genre-list {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: inherit;
+    
+}
+
+.genre-list li {
+    display: inline-block;
+    margin: 4px 4px;
+}
+
+/* 장르 체크박스 스타일 */
+.checkbox-genre-label {
+    border: solid #495057 2px;
+    border-radius: 14px;
+    padding: 6px;
+}
+
+.checkbox-genre-label:hover {
+    background-color: #495057;
+    font-weight: 500;
+    color: #fff;
+}
+
+	/*선택된 장르 배경색 진하게 */
+.checkbox-genre:checked  + label {
+    background-color: #495057;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* 콤보박스 언어선택 */
+.combobox-language {
+    width: 100%;
+}
+
+/* 런타임 관련 */
+.runtime-range {
+    margin-bottom: 16px;
+}
+
+/* 필터 검색 버튼 꾸미기 */
+.filter-btn {
+    display: block;
+    margin: 8px auto 24px auto;
+    width: 100%;
+    background-color: #fbc500;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: none;
+    color: #102770;
+    font-size: 1.1rem;
+    font-weight: 600;
+        
+}

@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+.list-container {
+    padding: 0 8px 0 8px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5em;
+    flex-wrap: wrap;    
+}
+
+.movie-item-container {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.movie-item-image-container img {
+    width: 100%;
+}
+
+.movie-title {
+    font-size: 1.2em;
+    font-weight: 700;
+}
