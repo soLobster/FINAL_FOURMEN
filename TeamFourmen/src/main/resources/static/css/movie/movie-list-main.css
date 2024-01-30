@@ -3,7 +3,7 @@
 .list-container {
     padding: 0 8px 0 8px;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1.5em;
     flex-wrap: wrap;    
 }
@@ -19,7 +19,7 @@
     width: 100%;
     height: 0;
     padding-bottom: 150%;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .movie-item-image-container img {
@@ -27,13 +27,21 @@
     position: absolute;
     top: 0;
     left: 0;
+    text-align: center;
     object-fit: cover;
     width: 100%;
     height: 100%;
 
 }
 
+.movie-description-container a {
+    text-decoration: none;
+    color: rgb(196, 195, 202);       
+}
+
+
 .movie-title {
     font-size: 1.2em;
     font-weight: 700;
 }
+

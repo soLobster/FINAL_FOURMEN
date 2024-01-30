@@ -6,6 +6,7 @@
 	
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-search.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-main.css}" rel="stylesheet">
 	
@@ -43,25 +44,9 @@
                                 <div class="filter-title">장르</div>
                                 <!-- TODO: 나중에 DB에서 장르 목록 가져오면 FOR문으로 대체하기 -->
                                 <ul class="genre-list">
-                                    <li>
-                                        <input type="checkbox" value="14" name="genre" id="genre-action" class="checkbox-genre d-none">
-                                        <label for="genre-action" class="checkbox-genre-label">액션</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" value="12" name="genre" id="genre-adventure" class="checkbox-genre d-none">
-                                        <label for="genre-adventure" class="checkbox-genre-label">모험</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" value="16" name="genre" id="genre-animation" class="checkbox-genre d-none">
-                                        <label for="genre-animation" class="checkbox-genre-label">애니메이션</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" value="35" name="genre" id="genre-comedy" class="checkbox-genre d-none">
-                                        <label for="genre-comedy" class="checkbox-genre-label">코미디</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" value="80" name="genre" id="genre-crime" class="checkbox-genre d-none">
-                                        <label for="genre-crime" class="checkbox-genre-label">범죄</label>
+                                    <li th:each="movieGenre : ${movieGenreList}">
+                                        <input type="checkbox" th:value="${movieGenre.id}" name="genre" th:id="'genre-' + ${movieGenre.id}" class="checkbox-genre d-none">
+                                        <label th:for="'genre-' + ${movieGenre.id}" th:text="${movieGenre.genre}" class="checkbox-genre-label"></label>
                                     </li>
                                 </ul>
                             </div>
@@ -100,19 +85,22 @@
       
         <main>
             <div class="list-container">
-                <div class="movie-item-container" th:each="movie : ${movieItemDtoList}">
+                <div class="movie-item-container" th:each="movie : ${listDto.results}">
                     <div class="movie-item-image-container">
-                        <!-- TODO: detail 컨트롤러 만들면 돌아와서 링크만들기 -->    
-                        <img th:src="@{https://image.tmdb.org/t/p/original/{posterPath} (posterPath=${movie.posterPath})}">                    
+                        <a th:href="@{/movie/details(id=${movie.id})}">
+                            <img th:src="@{https://image.tmdb.org/t/p/original/{posterPath} (posterPath=${movie.posterPath})}">
+                        </a>                    
                     </div>
                     <div class="movie-description-container">
-                        <div th:text="${movie.title}" class="movie-title"></div>
+                        <a th:href="@{/movie/details(id=${movie.id})}">
+                            <div th:text="${movie.title}" class="movie-title"></div>
+                        </a>
                         <div th:text="${movie.releaseDate}"></div>
                     </div>                
                 </div>
             </div>
             <button id="btn-more-post" class="btn btn-primary w-100">추가 게시물 로드</button>
-        </main>         
+        </main>
     </div>
 
 	
@@ -120,6 +108,9 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script th:inline="javascript">
+    	const totalPages = [[${listDto.totalPages}]];
+	</script>
 	<script th:src="@{/js/movie/movie-list.js}"></script>
 	
 </body>

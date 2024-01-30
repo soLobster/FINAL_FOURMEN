@@ -1,4 +1,4 @@
-package com.itwill.teamfourmen.dto;
+package com.itwill.teamfourmen.dto.movie;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

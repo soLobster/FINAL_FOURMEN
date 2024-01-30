@@ -1,9 +1,5 @@
 @charset "UTF-8";
 
-body {
-    background-color: rgb(31, 32, 41);
-    color: rgb(196, 195, 202);
-}
 
 .content-container {
     width: 90%;

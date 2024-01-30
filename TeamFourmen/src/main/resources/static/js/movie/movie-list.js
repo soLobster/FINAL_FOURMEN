@@ -50,9 +50,10 @@ window.addEventListener('DOMContentLoaded', function() {
         
         let innerHtml = '';
         
-        await axios.get(url + queryString)
+        if (page < totalPages) {
+			
+			await axios.get(url + queryString)
             .then((response) => {
-                console.log(response.data);
                 
                 page = response.data.page;
                 
@@ -75,7 +76,14 @@ window.addEventListener('DOMContentLoaded', function() {
             })
             .catch((error) => {
                 console.log(`ERROR 발생!! ${error}`)
-            })
+            })            	
+		} else {
+			btnMorePost.classList.add('d-none');
+		}
+		
+		
+        
+        
         
     };
     
@@ -85,11 +93,11 @@ window.addEventListener('DOMContentLoaded', function() {
         const totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
         const currentHeight = window.scrollY;
         
-        if ((totalHeight - currentHeight) < 600) {
+        if ((totalHeight - currentHeight) < 800) {
             getAdditionalList();
         }
         
-    }, 500));
+    }, 300));
     
     
     btnMorePost.addEventListener('click', getAdditionalList);

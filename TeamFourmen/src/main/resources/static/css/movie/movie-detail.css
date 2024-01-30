@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+
+#movie-details-header {
+    width: 100%;
+    
+    background-position: left calc((50vw - 170px) - 340px) top;
+    background-repeat: no-repeat;    
+    background-size: cover;
+}
+
+#movie-background-color-div {
+    width: 100%;    
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 30px 40px;
+}
+
+/* 포스터부분 css */
+.movie-details-poster-container {
+    width: 300px;
+}
+
+.movie-details-poster-container img {
+    width: 100%;
+    min-width: 100%;
+}
+
+/* 영화 설명부분 css */
+
+.movie-details-description-container {
+    width: calc(100% - 300px);
+    display: flex;
+    align-items: center;
+}
+
+.movie-description-inner-container {
+    padding-left: 40px;
+}
+
+.movie-title-etc {
+    margin-bottom: 36px;
+}
+
+.movie-title {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    font-size: 1.5em;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.movie-etc-info {
+    font-size: 0.9em;
+}
+
+.movie-tagline {
+    font-size: 1.2em;
+    font-style: italic;
+    margin-bottom: 16px;
+    color: #adb5bd;
+}
+
+.movie-description {
+    margin-bottom: 24px; 
+}
+
+
+/* 영화설명 및 감독리스트 */
+
+.movie-director-name-container {
+    display: flex;
+    justify-content: start;    
+}
+
+.movie-director-name {
+    width: 33%;
+}
+
+
