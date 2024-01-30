@@ -17,17 +17,19 @@ public class MovieApiUtil {
 	
 	/**
 	 * 영화 리스트를 MovieListDto객체로 돌려주는 메서드.
-	 * 파라미터는 무조건 "popular", "now playing", "top rated", "upcoming" 중 하나여야 함!
+	 * 파라미터는 무조건 "popular", "now_playing", "top_rated", "upcoming" 중 하나여야 함!
 	 * @param listCategory 무조건 "popular", "now playing", "top rated", "upcoming" 중 하나
 	 * @return 받아온 json데이터를 매핑한 MovieListDto객체
 	 */
-	public MovieListDto getMovieList(String listCategory) {		
+	public MovieListDto getMovieList(String listCategory, int page) {
+		log.info("getMovieList(listCategory={}, page={})", listCategory, page);
+		
 		String uri = "";
-		String queryParam = "?language=ko";
+		String queryParam = "?language=ko&page=" + page;
 				
 		
 		switch(listCategory) {
-		case "now playing":
+		case "now_playing":
 			uri = "/movie/now_playing" + queryParam;
 			break;
 			
@@ -35,7 +37,7 @@ public class MovieApiUtil {
 			uri = "/movie/popular" + queryParam;
 			break;
 			
-		case "top rated":
+		case "top_rated":
 			uri = "/movie/top_rated" + queryParam;
 			break;
 			

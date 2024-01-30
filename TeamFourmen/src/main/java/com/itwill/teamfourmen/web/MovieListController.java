@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwill.teamfourmen.dto.MovieListDto;
 import com.itwill.teamfourmen.dto.MovieListItemDto;
@@ -23,11 +24,12 @@ public class MovieListController {
 	private final MovieApiUtil apiUtil;
 	
 	@GetMapping("/popular")
-	public String popularMovieList(Model model) {
+	public String popularMovieList(Model model
+			, @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
 		
 		log.info("popularMovieList()");
 		
-		MovieListDto listDto = apiUtil.getMovieList("popular");
+		MovieListDto listDto = apiUtil.getMovieList("popular", page);
 		log.info("listDto={}", listDto);
 		
 		List<MovieListItemDto> movieItemDtoList= listDto.getResults();
