@@ -4,16 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TvShowDTO {
 
     private boolean adult;
     private String backdrop_path;
-    // private List<CreatedBy> created_by;
+    private List<TvShowCreatedByDTO> created_by;
     // private List<Integer> episode_run_time;
     private String first_air_date;
-    // private List<Genre> genres;
+    private List<TvShowGenreDTO> genres;
     private String homepage;
     private int id;
     private boolean in_production;
@@ -22,7 +24,7 @@ public class TvShowDTO {
     // private Episode last_episode_to_air;
     private String name;
     // private Episode next_episode_to_air;
-    // private List<Network> networks;
+    private List<TvShowNetworkDTO> networks;
     private int number_of_episodes;
     private int number_of_seasons;
     // private List<String> origin_country;
@@ -40,5 +42,6 @@ public class TvShowDTO {
     private String type;
     private double vote_average;
     private int vote_count;
+
 }
 
