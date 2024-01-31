@@ -14,6 +14,9 @@ import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
+import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
+import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
+import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
 import com.itwill.teamfourmen.service.MovieApiUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +49,7 @@ public class ExampleTest {
 		
 	}
 	
-	@Test
+	// @Test
 	public void movieCreditTest() {
 		
 		MovieCreditDto creditDto = movieUtil.getMovieCredit(609681);
@@ -59,6 +62,31 @@ public class ExampleTest {
 		
 		List<MovieCrewDto> directorList = creditDto.getCrew().stream().filter((x) -> x.getJob().equals("Director")).toList();
 		log.info("director lists = {}", directorList);
+		
+	}
+	
+	
+	// @Test
+	public void movieVideoTest() throws JsonMappingException, JsonProcessingException {
+		
+		List<MovieVideoDto> videoList = movieUtil.getMovieVideoList(609681);
+		
+		Assertions.assertNotNull(videoList);
+		log.info("movie video list = {}", videoList);
+		
+		List<MovieVideoDto> trailerList = videoList.stream().filter((x) -> x.getType().equals("Trailer")).toList();
+		
+		log.info("movie trailer list = {}", trailerList);
+	}
+	
+	@Test
+	public void movieProviderTest() throws JsonMappingException, JsonProcessingException {
+		
+		MovieProviderDto providerDto = movieUtil.getMovieProviderList(680);
+		
+		Assertions.assertNotNull(providerDto);
+		log.info("providerDto={}", providerDto);
+		
 		
 	}
 	

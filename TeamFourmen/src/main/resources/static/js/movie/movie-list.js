@@ -14,6 +14,7 @@
 window.addEventListener('DOMContentLoaded', function() {
     
     let page = 1;   // default로 1 page에서 시작, load할수록 page 증가.
+    let originPath = location.origin;
     let pathname = location.pathname;   // 현재 있는 주소(query string제외)
     const listCategory = pathname.substring(7); // 현재 리스트 페이지의 카테고리(now_playing, popular, top_rated, ...)  
     
@@ -61,10 +62,14 @@ window.addEventListener('DOMContentLoaded', function() {
                     innerHtml += `
                         <div class="movie-item-container">
                             <div class="movie-item-image-container">
-                                <img src='https://image.tmdb.org/t/p/original/${movie.poster_path}'>
+                            	<a href='${originPath}/movie/details?id=${movie.id}'>
+                                	<img src='https://image.tmdb.org/t/p/original/${movie.poster_path}'>
+                                </a>
                             </div>
                             <div class="movie-description-container">
-                                <div>${movie.title}</div>
+                            	<a href='${originPath}/movie/details?id=${movie.id}'>
+                                	<div>${movie.title}</div>
+                                </a>
                                 <div>${movie.release_date}</div>
                             </div>                            
                         </div>

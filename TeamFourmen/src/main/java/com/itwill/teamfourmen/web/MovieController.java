@@ -16,7 +16,11 @@ import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
+import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
+import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
+import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
 import com.itwill.teamfourmen.service.MovieApiUtil;
+import com.itwill.teamfourmen.service.MovieDetailService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MovieController {
 	
 	private final MovieApiUtil apiUtil;
+	private final MovieDetailService detailService;
 	
 	/**
 	 * 인기영화 리스트 컨트롤러
@@ -108,19 +113,44 @@ public class MovieController {
 		
 		log.info("movieDetails(id={})", id);
 		
+		// 영화 디테일 정보 가져오기
 		MovieDetailsDto movieDetailsDto = apiUtil.getMovieDetails(id);
 		log.info("movieDetailsDto={}", movieDetailsDto);
 		
+		// TODO: 만약 credit dto가 없을 리가 있을까 생각해보자..
 		MovieCreditDto movieCreditDto = apiUtil.getMovieCredit(id);
-		log.info("movieDetails(id={})", id);
-		log.info("movieDetailsDto={}", movieDetailsDto);
 		log.info("movieCreditDto={}", movieCreditDto);
-		
 		List<MovieCrewDto> directorList = movieCreditDto.getCrew().stream().filter((x) -> x.getJob().equals("Director")).toList();
+		
+		// 영화의 비디오 가져오기
+		List<MovieVideoDto> movieVideoList = apiUtil.getMovieVideoList(id);
+		List<MovieVideoDto> movieTrailerList = null;	// 여기에 트레일러 리스트만 가져올거임
+		
+		if (movieVideoList != null) {	// 영화의 비디오 리스트가 있는 경우에.
+			movieTrailerList = movieVideoList.stream().filter((x) -> x.getType().equals("Trailer")).toList();
+		}
+		
+		log.info("movieVideoList = {}", movieVideoList);
+		
+		
+		// 영화 provider 리스트 가져오기
+		// 무비 provider, 각각 플랫폼마다 어떤 서비스가 있는지 확인하기 위해 MovieService에서 메서드 사용
+		MovieProviderDto movieProviderDto = apiUtil.getMovieProviderList(id);
+		log.info("movieProviderDto={}", movieProviderDto);
+		
+		List<MovieProviderItemDto> movieProviderList = null;
+		if (movieProviderDto != null) {
+			movieProviderList = detailService.getOrganizedMovieProvider(movieProviderDto);
+			log.info("movieProviderList={}", movieProviderList);
+		}
+
+		
 		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
 		model.addAttribute("directorList", directorList);
+		model.addAttribute("movieTrailerList", movieTrailerList);
+		model.addAttribute("movieProviderList", movieProviderList);
 		
 		return "/movie/movie-details";
 	}
