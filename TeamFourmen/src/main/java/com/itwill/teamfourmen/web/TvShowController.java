@@ -182,7 +182,7 @@ public class TvShowController {
 		}
 
 		// 관련 추천 드라마 목록...
-
+		// TODO 여기서 부터 해야됨.
 
 
 		return "tvshow/details";
