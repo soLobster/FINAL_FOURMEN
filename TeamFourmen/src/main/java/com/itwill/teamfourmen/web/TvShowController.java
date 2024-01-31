@@ -183,7 +183,20 @@ public class TvShowController {
 
 		// 관련 추천 드라마 목록...
 		// TODO 여기서 부터 해야됨.
+		String getTvShowRecoUrl = UriComponentsBuilder.fromUriString(apiUri)
+				.path("/{seriesId}/recommendations")
+				.queryParam("language", "ko")
+				.queryParam("api_key", API_KEY)
+				.buildAndExpand(String.valueOf(seriesId))
+				.toUriString();
 
+		TvShowRecoListDTO tvShowRecoListDTO = restTemplate.getForObject(getTvShowRecoUrl, TvShowRecoListDTO.class);
+
+		//log.info("tvShowRecoList = {}",tvShowRecoListDTO.toString());
+
+		List<TvShowRecoDTO> tvShowRecoDTO = tvShowRecoListDTO.getResults();
+
+		model.addAttribute("tvShowReco", tvShowRecoDTO);
 
 		return "tvshow/details";
 	}

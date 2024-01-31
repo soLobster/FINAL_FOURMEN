@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>TEAM FOURMEN</title>
+<title th:text="${tvShowDto.getName() + ' (Tv Series) '}"></title>
  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
@@ -292,6 +292,31 @@
 			max-width: 100%;
 		}
 
+		.tvShow_recommendations{
+			/*background-color: cornflowerblue;*/
+		}
+
+		div.recommendationList_scroller {
+			margin-left: 0;
+			padding: 0 0 0 0;
+			overflow-x: auto;
+			white-space: nowrap;
+		}
+
+		ol.recommendation_scroller {
+			padding-left: 0;
+		}
+
+		li.recommendation_card {
+			display: inline-block;
+			overflow: hidden;
+			margin-right: 10px;
+		}
+
+		.recommendation_img {
+			max-width: 100%;
+		}
+
 		 ::-webkit-scrollbar {
 			width: 5px; /* 스크롤바 너비 */
 			height: 6px;
@@ -312,6 +337,7 @@
 <body class = "ko v4">
 <header>
 	<h1>TV SHOW Details</h1>
+	<a th:href="@{/tvshow/list}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
 </header>
 
 <main>
@@ -380,7 +406,7 @@
 							<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
 							<a th:href="@{''}" class="text-decoration-none" target="_blank">
 								<section class = "card-img-overlay">
-									<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getOriginal_name()}"></p>
+									<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
 									<p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
 								</section>
 							</a>
@@ -423,15 +449,31 @@
 				<hr class = "break_line border-1 opacity-50">
 			</div>
 
-			<div class = "tvShow_media">미디어</div>
+			<div class = "tvShow_media">
+				<h3>미디어를 팬페이지 게시판으로 만드는 아이디어는???...</h3>
+			</div>
 
 			<div class = "mt-0 py-0">
 				<hr class = "break_line border-1 opacity-50">
 			</div>
 
-			<div class = "tvShow_recommendations">추천</div>
-
-		</div>
+			<div class = "tvShow_recommendations pt-2">
+				<h3>추천</h3>
+				<div class = "recommendationList_scroller mt-3">
+					<ol class= "recommendation_scroller">
+						<li class = "border-0 card recommendation_card" th:each=" recommendation : ${tvShowReco} " th:object="${recommendation}">
+							<img class = "recommendation_img" th:src = "@{'https:/image.tmdb.org/t/p/original' + ${recommendation.getBackdrop_path()}}" width="250" height="141"/>
+							<a th:href = "@{/tvshow/details/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" target="_blank">
+								<section class="card-img-overlay">
+									<p class="card-title text-white fs-5 fw-bolder" th:text="${recommendation.getName()}"></p>
+									<p class="card-text text-white fst-italic" th:text="${recommendation.getFirst_air_date()}"></p>
+								</section>
+							</a>
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div> <!-- 미드 콘테이너 -->
 
 		<div class = "mid_sidebar">
 			<div class = "sns mt-4">
