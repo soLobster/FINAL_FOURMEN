@@ -1,4 +1,4 @@
-package com.itwill.teamfourmen.dto;
+package com.itwill.teamfourmen.dto.tvshow;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -35,7 +35,7 @@ public class TvShowDTO {
     private String poster_path;
     // private List<ProductionCompany> production_companies;
     // private List<ProductionCountry> production_countries;
-    // private List<Season> seasons;
+    private List<TvShowSeasonDTO> seasons;
     // private List<SpokenLanguage> spoken_languages;
     private String status;
     private String tagline;

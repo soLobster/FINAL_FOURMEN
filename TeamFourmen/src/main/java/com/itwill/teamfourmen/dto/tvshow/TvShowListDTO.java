@@ -1,4 +1,4 @@
-package com.itwill.teamfourmen.dto;
+package com.itwill.teamfourmen.dto.tvshow;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TvShowListDTO {
 
+	private int page;
 	private List<TvShowDTO> results;
 	
 }

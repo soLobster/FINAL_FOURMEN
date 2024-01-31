@@ -51,7 +51,7 @@
 
 		.mid_container{
 			grid-area: mid_container;
-			background-color: darkgrey;
+			/* background-color: darkgrey; */
 		}
 
 		.mid_container div{
@@ -215,6 +215,98 @@
 			margin-right: 20px;
 		}
 
+		div.cast_scroller {
+			margin-top: 20px;
+			margin-left: 0;
+			padding: 0 0 0 0;
+			overflow-x: auto;
+			white-space: nowrap;
+		}
+
+		ol.people_scroller{
+			padding-left: 0;
+		}
+
+		li.people_card {
+			display: inline-block;
+			overflow: hidden;
+			margin-right: 10px;
+		}
+
+		.people_img {
+			max-width: 100%;
+		}
+
+		.card-img-overlay{
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0s, opacity 0.5s ease;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: start;
+		}
+
+		.card:hover .card-img-overlay {
+			visibility: visible;
+			opacity: 1;
+		}
+
+		.card-title{
+			white-space: normal;
+		}
+
+		.card-text{
+			white-space: normal;
+		}
+
+
+		.tvShow_seasons {
+			/* background-color: cornflowerblue; */
+		}
+
+		div.seasonList_scroller{
+			margin-left: 0;
+			padding: 0 0 0 0;
+			overflow-x: auto;
+			white-space: nowrap;
+		}
+
+		ol.season_scroller {
+			padding-left: 0;
+		}
+
+		li.season_card {
+			display: inline-block;
+			overflow: hidden;
+			margin-right: 10px;
+		}
+
+		.season_img {
+			max-width: 100%;
+		}
+
+		 ::-webkit-scrollbar {
+			width: 5px; /* 스크롤바 너비 */
+			height: 6px;
+		}
+
+		::-webkit-scrollbar-thumb { /* 스크롤바 색상, 모서리 곡선 */
+			background-color: darkgray;
+			border-radius: 6px;
+		}
+
+		::-webkit-scrollbar-track {
+			background-color: black; /* 스크롤바 트랙 색상 */
+		}
+
+
 	</style>
 </head>
 <body class = "ko v4">
@@ -279,15 +371,70 @@
 	<section class= "mid_layout">
 
 		<div class = "mid_container">
-			<div class = "tvShow_actors">배우들</div>
-			<div class = "tvShow_seasons">시즌</div>
-			<div class = "tvShow_forum">리뷰</div>
+			<div class = "tvShow_actors pb-0">
+				<h3>캐스팅</h3>
+				<div class = "cast_scroller">
+					<ol class = "people_scroller">
+						<li class="border-0 card people_card" th:each=" people : ${tvShowCast} " th:object=" ${people} ">
+							<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273"/>
+							<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
+							<a th:href="@{''}" class="text-decoration-none" target="_blank">
+								<section class = "card-img-overlay">
+									<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getOriginal_name()}"></p>
+									<p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
+								</section>
+							</a>
+						</li>
+					</ol>
+				</div>
+				<a th:href="@{''}"} class="text-decoration-none text-secondary" target="_blank"><p class="mt-2 mb-0 text-end">총 출연진 & 제작자 바로가기</p></a>
+			</div>
+			<div class = "mt-0 py-0">
+				<hr class = "break_line border-1 opacity-50">
+			</div>
+
+			<div class = "tvShow_seasons pt-2">
+				<h3>시즌</h3>
+				<div class = "seasonList_scroller mt-3">
+					<ol class = "season_scroller">
+						<li class = "border-0 card season_card" th:each=" season : ${seasonList} " th:object="${season}">
+							<img class="season_img" th:if="${season.poster_path ne null and season.poster_path ne 'null'}"  th:src=" @{'https:/image.tmdb.org/t/p/original' + ${season.getPoster_path()}} " width="180" height="273" />
+							<img class="season_img" th:unless="${season.poster_path ne null and season.poster_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
+							<a th:href="@{''}" class = "text-decoration-none" target="_blank">
+								<section class="card-img-overlay">
+									<p class = "card-title text-white fs-4 fw-bolder" th:text="${ 'Season ' + season.getSeason_number()}"></p>
+									<p class = "card-text text-white fst-italic" th:text="${season.getAir_date()}"></p>
+								</section>
+							</a>
+						</li>
+					</ol>
+				</div>
+			</div>
+
+			<div class = "mt-0 py-0">
+				<hr class = "break_line border-1 opacity-50">
+			</div>
+
+			<div class = "tvShow_forum">
+				<h3>리뷰...는 나중에</h3>
+			</div>
+
+			<div class = "mt-0 py-0">
+				<hr class = "break_line border-1 opacity-50">
+			</div>
+
 			<div class = "tvShow_media">미디어</div>
+
+			<div class = "mt-0 py-0">
+				<hr class = "break_line border-1 opacity-50">
+			</div>
+
 			<div class = "tvShow_recommendations">추천</div>
+
 		</div>
 
 		<div class = "mid_sidebar">
-			<div class = "sns">
+			<div class = "sns mt-4">
 				<a class = "text-reset" th:href=" 'https://www.facebook.com/' + ${sns.getFacebook_id()}" target="_blank" ><i class="fs-2 fa-brands fa-square-facebook"></i></a>
 				<a class = "text-reset" th:href=" 'https://www.instagram.com/' + ${sns.getInstagram_id()}" target="_blank"><i class="fs-2 fa-brands fa-instagram"></i></a>
 				<a class = "text-reset" th:href=" 'https://www.twitter.com/' + ${sns.getTwitter_id()}" target="_blank"><i class="fs-2 fa-brands fa-twitter"></i></a>

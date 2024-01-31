@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.itwill.teamfourmen.dto.*;
+import com.itwill.teamfourmen.dto.tvshow.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -41,7 +41,7 @@ public class TvShowController {
 		log.info(list.toString());
 		
 		for(TvShowListDTO tvShowData : list){
-            log.info("tvShowData - {}", tvShowData.getResults());
+            //log.info("tvShowData - {}", tvShowData.getResults());
             model.addAttribute("tvShowList", tvShowData.getResults());
         }
 	}
@@ -91,9 +91,13 @@ public class TvShowController {
 
 		TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
 
-		log.info("tvShowDto = {}", tvShowDTO.toString());
+		//log.info("tvShowDto = {}", tvShowDTO.toString());
+
+		List<TvShowSeasonDTO> seasonList = tvShowDTO.getSeasons();
 
 		model.addAttribute("tvShowDto", tvShowDTO);
+
+		model.addAttribute("seasonList", seasonList);
 
 		// 시청 등급
 		String contentRatingsUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -118,10 +122,10 @@ public class TvShowController {
 		}
 
 		model.addAttribute("rating",rating);
-		log.info("rating = {}", rating);
+		//log.info("rating = {}", rating);
 
 		// 방송사? 배급사?
-		log.info("network?? = {}",tvShowDTO.getNetworks().get(0));
+		//log.info("network?? = {}",tvShowDTO.getNetworks().get(0));
 		// TODO : 방송사가 하나가 아닌곳이 있음... LIST로 해서 타임리프로 하나씩 출력하는것으로 수정해야함.
 		TvShowNetworkDTO network = tvShowDTO.getNetworks().get(0);
 
@@ -138,8 +142,23 @@ public class TvShowController {
 
 		model.addAttribute("sns", tvShowSnsDTO);
 
-		log.info("SNS ??? = {}",tvShowSnsDTO.toString());
+		//log.info("SNS ??? = {}",tvShowSnsDTO.toString());
 
+		// 배우, 스탭 목록
+		String getTvShowCreditUrl = UriComponentsBuilder.fromUriString(apiUri)
+				.path("/{seriesId}/credits")
+				.queryParam("language", "ko")
+				.queryParam("api_key", API_KEY)
+				.buildAndExpand(String.valueOf(seriesId))
+				.toUriString();
+
+		TvShowCreditListDTO tvShowCreditListDTO = restTemplate.getForObject(getTvShowCreditUrl, TvShowCreditListDTO.class);
+
+		List<TvShowCreditDTO> tvShowCast = tvShowCreditListDTO.getCast();
+
+		List<TvShowCreditDTO> tvShowCrew = tvShowCreditListDTO.getCrew();
+
+		model.addAttribute("tvShowCast", tvShowCast);
 
 		// 장르
 		String genresName = tvShowDTO.getGenres().stream()
@@ -161,6 +180,9 @@ public class TvShowController {
 		} catch (ParseException e){
 			e.printStackTrace();
 		}
+
+		// 관련 추천 드라마 목록...
+
 
 
 		return "tvshow/details";
