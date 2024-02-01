@@ -52,4 +52,6 @@ public class MovieDetailsDto {
 	private double voteAverage;
 	private int voteCount;
 	
+	private String mediaType;	// 컬랙션 리스트에 포함돼 있는 필드값
+	
 }

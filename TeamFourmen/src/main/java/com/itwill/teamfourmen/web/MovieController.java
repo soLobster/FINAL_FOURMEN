@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.itwill.teamfourmen.dto.movie.MovieCastDto;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
+import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
@@ -120,7 +122,8 @@ public class MovieController {
 		// TODO: 만약 credit dto가 없을 리가 있을까 생각해보자..
 		MovieCreditDto movieCreditDto = apiUtil.getMovieCredit(id);
 		log.info("movieCreditDto={}", movieCreditDto);
-		List<MovieCrewDto> directorList = movieCreditDto.getCrew().stream().filter((x) -> x.getJob().equals("Director")).toList();
+		List<MovieCrewDto> directorList = movieCreditDto.getCrew().stream().filter((x) -> x.getJob().equals("Director")).toList();	// 감독만 꺼내온 리스트
+		List<MovieCastDto> castList = movieCreditDto.getCast();	// 출연진만 꺼내온 리스트
 		
 		// 영화의 비디오 가져오기
 		List<MovieVideoDto> movieVideoList = apiUtil.getMovieVideoList(id);
@@ -143,14 +146,28 @@ public class MovieController {
 			movieProviderList = detailService.getOrganizedMovieProvider(movieProviderDto);
 			log.info("movieProviderList={}", movieProviderList);
 		}
-
 		
+		
+		// 해당 영화의 Collection이 있으면 Collection리스트 가져오기
+		if(movieDetailsDto.getBelongsToCollection() != null) {
+			List<MovieDetailsDto> movieCollectionList = apiUtil.getMovieCollectionList(movieDetailsDto.getBelongsToCollection().getId());
+			model.addAttribute("movieCollectionList", movieCollectionList);
+		}
+		
+		// 해당영화의 social media id 가져옴
+		MovieExternalIdDto movieExternalIdDto = apiUtil.getMovieExternalId(id);
+		
+		// 해당 영화와 관련된 추천영화 목록 가져옴
+		List<MovieDetailsDto> recommendedList = apiUtil.getRecommendedMovie(id);
 		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
 		model.addAttribute("directorList", directorList);
+		model.addAttribute("castList", castList);
 		model.addAttribute("movieTrailerList", movieTrailerList);
 		model.addAttribute("movieProviderList", movieProviderList);
+		model.addAttribute("movieExternalIdDto", movieExternalIdDto);
+		model.addAttribute("recommendedList", recommendedList);
 		
 		return "/movie/movie-details";
 	}

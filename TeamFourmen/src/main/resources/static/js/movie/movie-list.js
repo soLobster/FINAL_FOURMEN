@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <div class="movie-description-container">
                             	<a href='${originPath}/movie/details?id=${movie.id}'>
-                                	<div>${movie.title}</div>
+                                	<div class="movie-title">${movie.title}</div>
                                 </a>
                                 <div>${movie.release_date}</div>
                             </div>                            

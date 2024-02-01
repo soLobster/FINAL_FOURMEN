@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<title>Fourmen</title>
+	<title th:text="${movieDetailsDto.title}"></title>
 	
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -21,15 +21,16 @@
                     <img class="detail_poster"
                         th:src="@{~/api/image/proxy(url='https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${movieDetailsDto.posterPath})}" alt="포스터">
                 </div>
-                <div class="movie-provider-container" th:if="${movieProviderList != null}">
+                <!-- <div class="movie-provider-container" th:if="${movieProviderList != null}">
                     <div class="each-provider-container"  th:each="provider : ${movieProviderList}">
                         <div class="div-movie-provider-logo">
-                            <!-- <img class="movie-provider-logo" src="@{https://media.themoviedb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg}"> -->
+                            <img class="movie-provider-logo" th:src="@{https://media.themoviedb.org/t/p/original{logoPath} (logoPath = ${provider.logoPath})}">
                         </div>
-                        <div class="div-movie-provider-name">
+                        <div class="div-movie-provider-options">
+                            <span th:each="option : ${provider.options}" th:text="${!optionStat.last ? option + ', ' : option}"></span>
                         </div>
                     </div>
-                </div>
+                </div>  -->
             </div>
             <section class="movie-details-description-container">
                 <div class="movie-description-inner-container">            
@@ -128,6 +129,130 @@
             </section>
         </div>
     </header>
+    
+    <div class="movie-body-content">
+        <main class="movie-main-container">        
+            <section class="movie-cast-container main-section">
+                <h3>캐스팅</h3>
+                <div class="movie-whole-cards-container">
+                    <div th:each="i : ${#numbers.sequence(0, 8)}" th:if="${i < #lists.size(castList)}" class="div-each-card">                                                         
+                        <div class="movie-card-image-container">
+                            <img th:src="@{https://media.themoviedb.org/t/p/w138_and_h175_face{profilePath} (profilePath = ${castList[i].profilePath})}"
+                             alt="출연진 사진" class="img-movie-card">
+                            
+                            <div class="div-movie-card-overlay">
+                                <p th:text="${castList[i].name}" class="movie-card-name"></p>
+                                <p th:text="${castList[i].character}" class="movie-cast-character"></p>
+                            </div>                   
+                         </div>
+                    </div>
+                </div>                
+            </section>
+            
+            <div class="div-horizontal-line"></div>
+            
+            <selection th:if="${movieDetailsDto.belongsToCollection}" class="movie-collection-container main-section">
+                <h3 th:text="|${movieDetailsDto.belongsToCollection.name}에 포함된 작품|"></h3>
+                <div class="movie-whole-cards-container">
+                    <div class="div-each-card" th:each="movieInCollection : ${movieCollectionList}">
+                        <a class="movie-collection-card-link" th:href="@{/movie/details(id = ${movieInCollection.id})}">
+                            <div class="movie-card-image-container movie-poster-card">
+                                <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${movieInCollection.posterPath})}"
+                                    alt="무비 컬랙션 포스터" class="img-movie-cast img-movie-collection-card">
+                                <div class="div-movie-card-overlay">
+                                    <p class="movie-card-name" th:text="${movieInCollection.title}"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>                    
+                </div>
+            </selection>
+            
+            <div class="div-horizontal-line"></div>
+            
+            <!-- TODO: 한줄평 작성 구현하기 -->
+            <section class="main-section">
+                <div>한줄평 작성 예정</div>
+            </section>
+            
+            <div class="div-horizontal-line"></div>
+            
+            <selection th:if="${movieDetailsDto.belongsToCollection}" class="movie-collection-container main-section">
+                <h3>추천</h3>
+                <div class="movie-whole-cards-container">
+                    <div class="div-each-card" th:each="recommended : ${recommendedList}">
+                        <a class="movie-collection-card-link" th:href="@{/movie/details(id = ${recommended.id})}">
+                            <div class="movie-card-image-container movie-poster-card">
+                                <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${recommended.posterPath})}"
+                                    alt="추천 작품 포스터" class="img-movie-cast img-movie-collection-card">
+                                <div class="div-movie-card-overlay">
+                                    <p class="movie-card-name" th:text="${recommended.title}"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>                    
+                </div>
+            </selection>
+        </main>
+        
+        <aside class="movie-aisde-container">
+            <section class="movie-social-media-section aside-section">
+                <div th:if="${movieExternalIdDto.instagramId}" class="movie-social-media-each-container">
+                    <a th:href="@{https://www.instagram.com/{id} (id = ${movieExternalIdDto.instagramId})}" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+                <div th:if="${movieExternalIdDto.facebookId}" class="movie-social-media-each-container">
+                    <a th:href="@{https://www.facebook.com/{id} (id = ${movieExternalIdDto.facebookId})}" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                </div>
+                <div th:if="${movieExternalIdDto.twitterId}" class="movie-social-media-each-container">
+                    <a th:href="@{https://twitter.com/{id} (id = ${movieExternalIdDto.twitterId})}"  target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                </div>
+                <div th:if="${movieExternalIdDto.imdbId}" class="movie-social-media-each-container">
+                    <a th:href="@{https://www.imdb.com/title/{id} (id = ${movieExternalIdDto.imdbId})}" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-imdb"></i>
+                    </a>
+                </div>                    
+            </section>
+            
+            <section class="movie-provider-container aside-section" th:if="${movieProviderList != null}">
+                <h4>Where to watch</h4>
+
+                <div class="movie-provider-logo-container">
+                    <div class="div-provider-each" th:each="provider : ${movieProviderList}">
+                        <div class="div-provider-each-logo">
+                            <img class="movie-provider-logo" th:src="@{https://media.themoviedb.org/t/p/original{logoPath} (logoPath = ${provider.logoPath})}">                                                    
+                        </div>
+                        <!-- <div class="div-provider-description">
+                            <p th:text="${provider.providerName}" class="provider-name"></p>
+                            <p class="provider-options"><span th:each="option : ${provider.options}" th:text="${!optionStat.last ? option + ', ' : option}"></span></p>
+                        </div> -->
+                    </div>
+                </div>
+
+            </section>
+            
+            <section class="movie-detailed-description aside-section">
+                <div class="original-title-container" th:if="${movieDetailsDto.originalTitle != null}">
+                    <h5>원제</h5>
+                    <div th:text="${movieDetailsDto.originalTitle}"></div>
+                </div>
+                <div class="release-date-container">
+                    <h5>개봉일</h5>
+                    <div th:text="${movieDetailsDto.releaseDate}"></div>
+                </div>
+                <div class="original-language-container">
+                    <h5>원어</h5>
+                    <div th:text="${movieDetailsDto.originalLanguage}"></div>
+                </div>
+            </section>
+            
+        </aside>
+    </div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>

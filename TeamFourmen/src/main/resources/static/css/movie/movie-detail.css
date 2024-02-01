@@ -27,23 +27,6 @@
     min-width: 100%;
 }
 
-.movie-provider-container {
-    width: 300px;
-    min-width: 300px;
-    background-color: #001845;
-    color: #fff;
-    font-weight: 600;
-}
-
-.each-provider-container {
-    width: 100%;
-    min-width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
 
 
 
@@ -87,6 +70,9 @@
 
 
 /* 영화설명 및 감독리스트 */
+.movie-director-container h5 {
+    font-weight: 600;
+}
 
 .movie-director-name-container {
     display: flex;
@@ -96,6 +82,8 @@
 .movie-director-name {
     width: 33%;
 }
+
+
 
 	/* 영화 설명부분 중 좋아요, 저장, 트레일러 등 부분 */
  .movie-like-trailer-container {
@@ -206,6 +194,11 @@
     font-weight: 700;
 }
 
+.modal-header h3 {
+    margin-left: 16px;
+    font-weight: 600;
+}
+
 
 .div-btn-close {
     margin-right: 0 8px 0 0;
@@ -217,7 +210,7 @@
 .btn-header-close {
     background-color: rgb(31, 32, 41);
     margin: 0;
-    padding-right: 32px;
+    margin-right: 32px;
     font-size: 1.2em;
     border: none;
     color: #dee2e6;
@@ -253,6 +246,211 @@
 
 
 
+/* 메인바디 줄 나누는 div */
+.div-horizontal-line {
+    width: 100%;
+    min-width: 100%;
+    height: 0.5px;
+    background-color: #6c757d;
+    border: none;    
+}
+
+/* 메인바디 (포스터와 간략설명 뒤) */
+.movie-body-content {
+    width: 80%;
+    margin: 3% auto;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.movie-main-container {
+    width: 70%;    
+}
+
+
+/* 섹션 마진 정의 */
+.main-section {
+    width: 100%;
+    height: auto;
+    margin: 5% 0 5% 0;
+    
+}
+
+    /* 영화 출연진 관련 */ /* 사진슬라이드 관련도 아래 css사용하면 됨! */ 
+.movie-cast-container {
+    overflow: hidden;
+}
+
+
+.movie-whole-cards-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+}
+
+.div-each-card {
+    width: 180px;
+    min-width: 140px;
+    margin: 0 24px 8px 0;
+}
+
+.movie-card-image-container {
+    width: 100%;
+    min-width: 100%;
+    border-color: none;
+    border-radius: 8px;
+    
+    position: relative;
+    
+    /* 이미지에 border-radius 적용 위해 */
+    overflow: hidden;
+}
+
+.div-movie-card-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+}
+
+.movie-card-image-container:hover .div-movie-card-overlay {
+    visibility:visible;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: all 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;    
+}
+
+.img-movie-card {
+    width: 100%;
+    min-width: 100%;
+}
 
 
 
+.movie-card-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+/* 영화컬렉션 사이즈조절 */
+.movie-collection-container {
+    overflow: hidden;
+    display: block;
+}
+
+.movie-poster-card {
+    height: 0;
+    padding-bottom: 150%;
+}
+
+.movie-collection-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.img-movie-collection-card {
+    position: absolute;
+    height: 100%;    
+}
+
+.movie-collection-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+.movie-collection-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* 사이드바 CSS 시작 */
+.movie-aisde-container {
+    width: 100%;
+    max-width: 320px;
+    min-width: 260px;
+    margin-left: 50px;
+}
+
+
+.aside-section {
+    margin: 5% 0 8% 5%;
+}
+
+
+	/* 소셜미디어 관련 */
+.movie-social-media-section {
+    width: 100%;
+    display: flex;
+}
+
+.movie-social-media-each-container {
+    margin-right: 16px;
+    font-size: 1.8em;
+}
+
+.movie-social-media-each-container a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+	/* provider 관련 */
+.movie-provider-logo-container {
+    width: 100%;
+    
+}
+
+.movie-provider-logo-container {
+    width: 100%;
+    display: flex;        
+}
+
+.div-provider-each {
+    margin-right: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.div-provider-each-logo {
+    width: 50px;
+      
+}
+
+.movie-provider-logo {
+    width: 100%;
+    min-width: 100%;
+}
+
+.div-provider-description {
+}
+
+.provider-name {
+    margin-bottom: 0;
+    font-weight: 600;
+    font-size: 0.8em;
+}
+
+.provider-options {
+    font-size: 0.7em;
+    font-style: italic;
+    
+}
+
+
+	/* 사이드바 영화 상세 정보 관련 */
+.movie-detailed-description > div {
+    margin: 24px 0;
+}
+
+.movie-detailed-description div h5 {
+    font-weight: 600;
+}
+	
+	

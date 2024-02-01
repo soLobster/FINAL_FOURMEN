@@ -12,12 +12,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
+import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
 import com.itwill.teamfourmen.service.MovieApiUtil;
+import com.itwill.teamfourmen.service.MovieDetailService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +29,8 @@ public class ExampleTest {
 
 	@Autowired
 	private MovieApiUtil movieUtil;
+	@Autowired
+	private MovieDetailService movieDetailService;
 	
 	//@Test
 	public void test() throws JsonMappingException, JsonProcessingException {
@@ -79,15 +83,45 @@ public class ExampleTest {
 		log.info("movie trailer list = {}", trailerList);
 	}
 	
-	@Test
+	// @Test
 	public void movieProviderTest() throws JsonMappingException, JsonProcessingException {
 		
-		MovieProviderDto providerDto = movieUtil.getMovieProviderList(680);
+		MovieProviderDto providerDto = movieUtil.getMovieProviderList(893723);
+		List<MovieProviderItemDto> providerList = movieDetailService.getOrganizedMovieProvider(providerDto);
 		
 		Assertions.assertNotNull(providerDto);
 		log.info("providerDto={}", providerDto);
 		
+		Assertions.assertNotNull(providerList);
+		log.info("provider list = {}", providerList);
 		
+	}
+	
+	// @Test
+	public void movieCollectionList() {
+		
+		List<MovieDetailsDto> collectionList = movieUtil.getMovieCollectionList(623911);
+		
+		Assertions.assertNotNull(collectionList);
+		log.info("collectionLIst={}", collectionList);
+		
+	}
+	
+	
+	// @Test
+	public void externalIdTest() {
+		MovieExternalIdDto dto = movieUtil.getMovieExternalId(609681);
+		
+		Assertions.assertNotNull(dto);
+		log.info("external ids = {}", dto);
+	}
+	
+	@Test
+	public void recommendedMovieTest() {
+		List<MovieDetailsDto> list = movieUtil.getRecommendedMovie(609681);
+		
+		Assertions.assertNotNull(list);
+		log.info("list={}", list);
 	}
 	
 	

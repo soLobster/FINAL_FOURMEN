@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
+import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
@@ -221,9 +222,7 @@ public class MovieApiUtil {
 	public MovieProviderDto getMovieProviderList(int id) {
 		
 		log.info("getMovieProviderList(id={})", id);
-		
-		String queryParam = "?language=ko";
-		
+				
 		WebClient client = WebClient.create(baseUrl);
 		String json = client.get()
 			.uri("/movie/" + id + "/watch/providers")
@@ -249,11 +248,93 @@ public class MovieApiUtil {
 			e.printStackTrace();
 			return null;
 		}
-		
-		
-		
-		
+
 	}
 	
 	
-}
+	/**
+	 * collectionID에 해당하는 MovieDetailsDto타입의 collection 리스트를 리턴
+	 * @param collectionId
+	 * @return MovieDetailsDto타입의 collection 리스트. 중간 로직 에러시 null 반환..
+	 */
+	public List<MovieDetailsDto> getMovieCollectionList(int collectionId) {
+		
+		log.info("getMovieCollectionList(id={})", collectionId);
+		
+		String queryParam = "?language=ko";
+		
+		WebClient client = WebClient.create(baseUrl);
+		JsonNode json = client.get()
+			.uri("/collection/" + collectionId + queryParam)
+			.header("Authorization", token)
+			.retrieve()
+			.bodyToMono(JsonNode.class)
+			.block();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode collectionListNode = json.get("parts");
+		try {
+			MovieDetailsDto[] movieCollectionArray = mapper.treeToValue(collectionListNode, MovieDetailsDto[].class);
+			List<MovieDetailsDto> movieCollectionList = Arrays.asList(movieCollectionArray);
+			
+			return movieCollectionList;
+		} catch (JsonProcessingException | IllegalArgumentException e) {			
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * id에 해당하는 영화의 외부링크 접근을 위한 id를 가져옴
+	 * 여기서 외부링크란 facebook, twitter 등을 의미
+	 * 예) 페이스북: https://www.facebook.com/아이디 하면 해당 페이스북 페이지로 가짐
+	 * @param id
+	 * @return 외부링크 return 없을경우 null
+	 */
+	public MovieExternalIdDto getMovieExternalId(int id) {
+		
+		WebClient client = WebClient.create(baseUrl);
+		MovieExternalIdDto externalIdDto = client.get()
+				.uri("/movie/" + id + "/external_ids")
+				.header("Authorization", token)
+				.retrieve()
+				.bodyToMono(MovieExternalIdDto.class)
+				.block();
+		
+		return externalIdDto;
+	}
+	
+	
+	public List<MovieDetailsDto> getRecommendedMovie(int id) {
+		
+		log.info("getRecommendedMovie(id={})", id);
+		
+		String queryParam = "?language=ko";
+		
+		WebClient client = WebClient.create(baseUrl);
+		JsonNode node = client.get()
+				.uri("/movie/" + id + "/recommendations" + queryParam)
+				.header("Authorization", token)
+				.retrieve()
+				.bodyToMono(JsonNode.class)
+				.block();
+		
+		JsonNode resultsNode = node.get("results");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			MovieDetailsDto[] recommendeArray = mapper.treeToValue(resultsNode, MovieDetailsDto[].class);
+			List<MovieDetailsDto> recommendedList = Arrays.asList(recommendeArray);
+			
+			return recommendedList;
+			
+		} catch (JsonProcessingException | IllegalArgumentException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+}	// MovieApiUtil 클래스 끝

@@ -20,8 +20,11 @@ public class MovieDetailService {
 		
 		List<MovieProviderItemDto> organizedProviderList = new ArrayList<>();
 		
-		organizedProviderList.addAll(providerDto.getRent());
-		organizedProviderList.stream().map((x) -> x.getOptions().add("렌트")).toList();
+		if (providerDto.getRent() != null) {			
+			organizedProviderList.addAll(providerDto.getRent());
+			organizedProviderList.stream().map((x) -> x.getOptions().add("렌트")).toList();
+		}
+		
 		
 		if (providerDto.getBuy() != null) {
 			for (MovieProviderItemDto provider : providerDto.getBuy()) {			
