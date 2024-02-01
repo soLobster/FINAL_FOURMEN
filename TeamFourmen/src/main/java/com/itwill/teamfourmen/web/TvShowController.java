@@ -77,11 +77,15 @@ public class TvShowController {
 		TvShowListDTO listDTO = apiUtil.getTvShowList("popular", 1);
 		log.info("listDto = {}", listDTO);
 
+		model.addAttribute("listDTO", listDTO);
+
+		log.info("TOTALPAGES = {}", listDTO.getTotal_pages());
+
 		List<TvShowDTO> tvShowDto = listDTO.getResults();
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
-		return "/tvshow/list";
+		return "tvshow/list";
 	}
 
 	@GetMapping("/top_rated")
@@ -91,17 +95,20 @@ public class TvShowController {
 		TvShowListDTO listDTO = apiUtil.getTvShowList("top_rated", 1);
 		log.info("listDto = {}", listDTO);
 
+		model.addAttribute("listDTO", listDTO);
+
 		List<TvShowDTO> tvShowDto = listDTO.getResults();
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
-		return "/tvshow/list";
+		return "tvshow/list";
 	}
 
 	@GetMapping("/details/{id}")
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
 		log.info("Get Tv Show Details = {}", id);
 		log.info("API KET = {}", API_KEY);
+
 		RestTemplate restTemplate = new RestTemplate();
 
 		int seriesId = id;
@@ -165,7 +172,7 @@ public class TvShowController {
 				.queryParam("api_key", API_KEY)
 				.buildAndExpand(String.valueOf(seriesId))
 				.toUriString();
-		// TODO: 페북, 인스타, 트위터가 각각 있음 있는것도 있고 없는것도 있고 이거 판별 해야 함.
+
 		TvShowSnsDTO tvShowSnsDTO = restTemplate.getForObject(getTvShowSnsUrl, TvShowSnsDTO.class);
 
 		model.addAttribute("sns", tvShowSnsDTO);
@@ -210,7 +217,6 @@ public class TvShowController {
 		}
 
 		// 관련 추천 드라마 목록...
-		// TODO 여기서 부터 해야됨.
 		String getTvShowRecoUrl = UriComponentsBuilder.fromUriString(apiUri)
 				.path("/{seriesId}/recommendations")
 				.queryParam("language", "ko")
@@ -228,5 +234,16 @@ public class TvShowController {
 
 		return "tvshow/details";
 	}
+
+	private void getInitialList(String pageName, Model model) {
+
+		TvShowListDTO listDTO = apiUtil.getTvShowList(pageName, 1);
+		log.info("list={}", listDTO);
+
+		List<TvShowDTO> tvShowDTOList = listDTO.getResults();
+
+		model.addAttribute("tvShowDTOList", tvShowDTOList);
+	}
+
 
 }
