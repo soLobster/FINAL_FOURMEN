@@ -1,38 +1,112 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>TEAM FOURMEN</title>
- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Tv Show List</title>
+
+	 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet" 
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
         crossorigin="anonymous">
-</head>
-<body>
 
+	<style>
+
+		@font-face {
+			font-family: 'Pretendard-Regular';
+			src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+			font-weight: 400;
+			font-style: normal;
+		}
+
+		body {
+			font-family: 'Pretendard-Regular';
+			background-color: black ;
+		}
+
+		main {
+			color: white;
+		}
+
+		.layout {
+			padding-left: 6rem;
+			padding-right: 6rem;
+			width: 100vw;
+			height: auto;
+			display: grid;
+			grid:
+				"sidebar body" 1fr
+				/ 1fr 4fr;
+			gap: 8px;
+		}
+
+		.search_section {
+			grid-area: sidebar;
+			background-color: cornflowerblue;
+		}
+		.Tv_Show_Section {
+			width: 100%;
+			padding-left: 23px;
+			padding-right: 23px;
+			grid-area: body;
+			/*background-color: cadetblue;*/
+		}
+
+		.flex-container {
+			height: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		.flex_box {
+			width: 180px;
+			height: 370px;
+			margin-left: 10px;
+			margin-right: 10px;
+			margin-bottom: 35px;
+			object-fit: contain;
+		}
+
+		img.show_poster {
+			max-width: 100%;
+			object-fit: cover;
+		}
+
+
+
+
+	</style>
+</head>
+
+<body>
 	<h1>TV SHOW LIST</h1>
-	
-	<table class = "table">
-		<thead class = "table-dark">
-			<tr>
-				<th class = d-none>series Id</th>
-				<th>poster</th>
-				<th>title</th>
-				<th>first air date</th>
-			</tr>
-		</thead>
-		<tbody class="table-group-divider">
-			<tr th:each = " tvshow : ${tvShowList}" th:object = "${tvshow}">
-				<td class = "d-none"><input th:value = "*{id}"></td>
-				<td><a th:href = "@{/tvshow/details/{id}(id = *{id})}"><img th:src = " 'https://image.tmdb.org/t/p/original' + *{poster_path}" width = 243px  height = 360px /></a></td>
-				<td><a th:href = "@{/tvshow/details/{id}(id = *{id})}" th:text = "*{name}"></a></td>
-				<td th:text = "*{first_air_date}"></td>
-			</tr>
-		</tbody>
-	</table>
-	
-	
+
+	<main>
+		<h3>TV SHOW LIST</h3>
+
+		<a th:href="@{/}">HOME</a>
+
+		<section class="layout">
+			<div class = "search_section"> 검색 공간임 </div>
+			<div class = "Tv_Show_Section">
+				<div class = "flex-container">
+					<div class = "rounded border-0 card flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
+						<a th:href = "@{details/{id}(id = ${tvshow.getId()} )}">
+							<img class = "rounded-top show_poster" th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="180" height="273" />
+							<div class="card-body">
+								<p class = "card-title" th:text="${tvshow.getName()}"></p>
+								<p class = "fst-italic card-text" th:text="${tvshow.getFirst_air_date()}"></p>
+							</div>
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</section>
+	</main>
+
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 		</script>

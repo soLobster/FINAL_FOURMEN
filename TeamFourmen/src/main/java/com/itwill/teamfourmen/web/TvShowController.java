@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.itwill.teamfourmen.dto.tvshow.*;
+import com.itwill.teamfourmen.service.TvShowApiUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -22,29 +24,28 @@ import reactor.core.publisher.Flux;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/tvshow")
 public class TvShowController {
 	
 	@Value("${api.themoviedb.api-key}")
 	private String API_KEY; 
 
-	@GetMapping("/list")
-	public void getTvShowList(Model model) {
-		log.info("GET TV SHOW LIST ()");
-		
-		WebClient webClient = WebClient.create("https://api.themoviedb.org/3/tv/top_rated?language=ko&api_key=390e779304bcd53af3b649f4e27c6452");
-		Flux<TvShowListDTO> tvShowList = webClient.get().accept(MediaType.APPLICATION_JSON)
-				.retrieve().bodyToFlux(TvShowListDTO.class);
-		
-		List<TvShowListDTO> list = tvShowList.collectList().block();
-		
-		log.info(list.toString());
-		
-		for(TvShowListDTO tvShowData : list){
-            //log.info("tvShowData - {}", tvShowData.getResults());
-            model.addAttribute("tvShowList", tvShowData.getResults());
-        }
-	}
+	private final TvShowApiUtil apiUtil;
+
+//	@GetMapping("/list")
+//	public void getTvShowList(Model model) {
+//		log.info("GET TV SHOW LIST ()");
+//
+//		WebClient webClient = WebClient.create("https://api.themoviedb.org/3/tv/top_rated?language=ko&api_key=390e779304bcd53af3b649f4e27c6452");
+//		Flux<TvShowListDTO> tvShowList = webClient.get().accept(MediaType.APPLICATION_JSON)
+//				.retrieve().bodyToFlux(TvShowListDTO.class);
+//
+//		List<TvShowListDTO> list = tvShowList.collectList().block();
+//
+//		log.info(list.toString());
+//
+//	}
 	
 //	@GetMapping("/details/{id}")
 //	public String getTvShow(Model model, @PathVariable (name = "id") int id) {
@@ -68,6 +69,34 @@ public class TvShowController {
 //
 //		return "tvshow/details";
 //	}
+
+	@GetMapping("/popular")
+	public String getPopularTvShowList(Model model){
+		log.info("GET Popular Tv Show List");
+
+		TvShowListDTO listDTO = apiUtil.getTvShowList("popular", 1);
+		log.info("listDto = {}", listDTO);
+
+		List<TvShowDTO> tvShowDto = listDTO.getResults();
+
+		model.addAttribute("tvShowDto", tvShowDto);
+
+		return "/tvshow/list";
+	}
+
+	@GetMapping("/top_rated")
+	public String getTopRatedTvShowList(Model model) {
+		log.info("GET Top Rated Tv Show List");
+
+		TvShowListDTO listDTO = apiUtil.getTvShowList("top_rated", 1);
+		log.info("listDto = {}", listDTO);
+
+		List<TvShowDTO> tvShowDto = listDTO.getResults();
+
+		model.addAttribute("tvShowDto", tvShowDto);
+
+		return "/tvshow/list";
+	}
 
 	@GetMapping("/details/{id}")
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
@@ -126,10 +155,9 @@ public class TvShowController {
 
 		// 방송사? 배급사?
 		//log.info("network?? = {}",tvShowDTO.getNetworks().get(0));
-		// TODO : 방송사가 하나가 아닌곳이 있음... LIST로 해서 타임리프로 하나씩 출력하는것으로 수정해야함.
-		TvShowNetworkDTO network = tvShowDTO.getNetworks().get(0);
+		List<TvShowNetworkDTO> networkList = tvShowDTO.getNetworks();
 
-		model.addAttribute("network", network);
+		model.addAttribute("networkList" ,networkList);
 
 		// SNS 불러오기
 		String getTvShowSnsUrl = UriComponentsBuilder.fromUriString(apiUri)
