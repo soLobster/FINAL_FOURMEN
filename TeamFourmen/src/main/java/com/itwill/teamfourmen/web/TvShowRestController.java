@@ -20,14 +20,26 @@ public class TvShowRestController {
 
     private final TvShowApiUtil util;
 
+
+    @GetMapping("/trend-list")
+    public ResponseEntity<TvShowListDTO> getAdditonalTrendList (@RequestParam(name = "timeWindow") String timeWindow, @RequestParam(name = "page") int page){
+        log.info("Get AdditionalTrendList - timeWindow = {}, Page = {}", timeWindow, page);
+
+        TvShowListDTO trendListDto = util.getTrendTvShowList(timeWindow,page);
+
+        return ResponseEntity.ok(trendListDto);
+    }
+
+
     @GetMapping("/list")
     public ResponseEntity<TvShowListDTO> getAdditionalList (@RequestParam(name = "listCategory") String listCategory ,@RequestParam(name = "page") int page){
         log.info("Get AdditionalList Category = {} , Page = {}", listCategory, page);
 
         TvShowListDTO listDTO = util.getTvShowList(listCategory,page);
-        log.info("listDTO = {}", listDTO);
+        //log.info("listDTO = {}", listDTO);
 
         return ResponseEntity.ok(listDTO);
     }
+
 
 }

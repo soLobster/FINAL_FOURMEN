@@ -12,12 +12,14 @@ window.addEventListener('DOMContentLoaded', function (){
     let originPath = location.origin;
     let pathName = location.pathname; // 현재 주소
 
-    const listCategory = pathName.substring(8); // 카테고리 뽑아오기 ... popular, top_rated
+    console.log(pathName);
+
+    const timeWindow = pathName.substring(17); // 카테고리 뽑아오기 ... popular, top_rated
 
     const flexContainer  = document.querySelector('.flex-container');
     const btnLoadTvShow = document.querySelector('#btn-load-tvShow');
 
-    console.log(listCategory);
+    console.log(timeWindow);
     console.log('LOCAL PATH = ' + pathName);
 
     // Throttle 함수 : 마지막 함수가 호출된 후 일정 시간이 지나기 전에 다시 호출되지 않도록 하는 것
@@ -53,12 +55,12 @@ window.addEventListener('DOMContentLoaded', function (){
 
     const getAdditionalTvShowList = async function() {
 
-        const url = '../api/tvshow/list';
-        let queryString = `?listCategory=${listCategory}&page=${page+1}`;
-
-        let innerHtml = '';
+        const url = '/api/tvshow/trend-list';
+        let queryString = `?timeWindow=${timeWindow}&page=${page+1}`;
 
         console.log(url+queryString);
+
+        let innerHtml = '';
 
         if(page < totalPages) {
             await

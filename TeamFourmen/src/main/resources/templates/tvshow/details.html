@@ -50,6 +50,8 @@
 
 		.mid_container{
 			grid-area: mid_container;
+			max-width: 100%;
+			min-width: 100%;
 			/* background-color: darkgrey; */
 		}
 
@@ -367,7 +369,8 @@
 <body class = "ko v4">
 <header>
 	<h1>TV SHOW Details</h1>
-	<a th:href="@{/tvshow/top_rated}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
+<!--	<a th:href="@{/tvshow/top_rated}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>-->
+	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
 </header>
 
 <main>
@@ -476,7 +479,7 @@
 				<hr class = "break_line border-1 opacity-50">
 			</div>
 
-			<div class = "tvShow_recommendations pt-2">
+			<div class = "tvShow_recommendations pt-2" th:if = "${tvShowReco.size() ne 0 }">
 				<h3>추천</h3>
 				<div class = "recommendationList_scroller mt-3">
 					<ol class= "recommendation_scroller">

@@ -9,6 +9,10 @@
         rel="stylesheet" 
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
         crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+
+
 
 	<style>
 
@@ -17,6 +21,10 @@
 			src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
 			font-weight: 400;
 			font-style: normal;
+		}
+
+		html{
+			scroll-behavior: smooth;
 		}
 
 		body {
@@ -29,8 +37,8 @@
 		}
 
 		.layout {
-			padding-left: 6rem;
-			padding-right: 6rem;
+			padding-left: 3rem;
+			padding-right: 3rem;
 			width: 100vw;
 			height: auto;
 			display: grid;
@@ -43,25 +51,40 @@
 		.search_section {
 			grid-area: sidebar;
 			background-color: cornflowerblue;
+			width: 250px;
+			min-width: 250px;
 		}
 		.Tv_Show_Section {
-			width: 100%;
-			padding-left: 23px;
-			padding-right: 23px;
-			grid-area: body;
+			/*width: 100%;*/
+			/*margin-left: 20px;*/
+			/*grid-area: body;*/
 			/*background-color: cadetblue;*/
+
+			width: 100%;
+			grid-area: body;
+			display: flex; /* 부모 컨테이너를 flex 컨테이너로 설정 */
+			flex-direction: column; /* 자식 요소들을 세로로 배치 */
+			align-items: center; /* 가운데 정렬 */
 		}
 
 		.flex-container {
-			height: auto;
+			/*height: auto;*/
+			/*margin-right: 0;*/
+			/*display: flex;*/
+			/*flex-direction: row;*/
+			/*flex-wrap: wrap;*/
+
+			width: 100%; /* flex-container의 너비를 100%로 설정 */
+			margin-right: 0;
 			display: flex;
-			flex-direction: row;
 			flex-wrap: wrap;
+			justify-content: center;
 		}
 
 		.flex_box {
-			width: 180px;
-			height: 370px;
+			width: 200px;
+			/*표기되는 포스터 높이*/
+			height: 350px;
 			margin-left: 10px;
 			margin-right: 10px;
 			margin-bottom: 35px;
@@ -73,11 +96,52 @@
 			object-fit: cover;
 		}
 
-		div.load_tvShow_button {
+		.load_tvShow_button {
+			/*padding-left: 10px;*/
+			/*padding-right: 20px;*/
+
+			width: 100%; /* load_tvShow_button의 너비를 100%로 설정 */
 			padding-left: 10px;
-			padding-right: 10px;
+			padding-right: 20px;
 		}
 
+		button#btn-load-tvShow{
+			width: 100%;
+		}
+
+		.back_to_top{
+			width: 10px;
+			height: 10px;
+			position: fixed;
+			bottom: 2rem;
+			right: 2rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 0.5rem;
+			padding: 0.5rem;
+			text-decoration: none;
+			transition: 0.2s ease-out;
+			z-index: 999;
+		}
+
+		.back_to_top span {
+			color: white;
+			font-size: 3rem;
+			transition: 0.2s ease-out;
+		}
+
+		.back_to_top i {
+			color: darkgray;
+			opacity: 0.7;
+		}
+
+		.back_to_top i:hover {
+			color: lightgray;
+		}
+		.back_to_top:hover span {
+			transform: translateY(-4px);
+		}
 
 	</style>
 </head>
@@ -97,20 +161,28 @@
 
 			<div class = "Tv_Show_Section">
 				<div class = "flex-container">
-					<div class = "rounded border-0 card flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
-						<a th:href = "@{details/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none">
-							<img class = "rounded-top show_poster" th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="180" height="273" />
+					<div class = "rounded border-0 card text-bg-dark flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
+						<a th:href = "@{/tvshow/details/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none">
+							<img class = "rounded-top show_poster" th:if="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
+								 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="200" height="273" />
+							<img class = "rounded-top show_poster" th:unless="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
+								 th:src = "@{'/image/default.png'}" width="200" height="273" />
 							<div class="card-body">
-								<p class = "mb-0 card-title" th:text="${tvshow.getName()}"></p>
-								<p class = "fst-italic card-text" th:text="${tvshow.getFirst_air_date()}"></p>
+								<p class = "fs-border mb-0 card-title text-white" th:utext="${#strings.abbreviate(tvshow.getName(), 11)}"></p>
+								<p class = "fst-italic card-text text-white-50" th:text="${tvshow.getFirst_air_date()}"></p>
 							</div>
 						</a>
 					</div>
 				</div>
 				<div class = "load_tvShow_button">
-					<button id = "btn-load-tvShow" class="fs-bolder fs-3 btn btn-secondary w-100">Load More Tv-Show</button>
+					<button id = "btn-load-tvShow" class="fs-bolder fs-3 btn btn-secondary opacity-50">Load More Tv-Show</button>
 				</div>
 			</div>
+
+			<!-- back to top button -->
+			<a href="#" class="back_to_top">
+				<span><i class="fa-solid fa-circle-up"></i></span>
+			</a>
 
 		</section>
 	</main>

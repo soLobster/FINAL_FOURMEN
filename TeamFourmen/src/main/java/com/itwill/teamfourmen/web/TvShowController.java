@@ -70,11 +70,11 @@ public class TvShowController {
 //		return "tvshow/details";
 //	}
 
-	@GetMapping("/popular")
-	public String getPopularTvShowList(Model model){
-		log.info("GET Popular Tv Show List");
+	@GetMapping("/trending/{timeWindow}")
+	public String getPopularTvShowList(Model model, @PathVariable String timeWindow){
+		log.info("GET Trending Tv Show List");
 
-		TvShowListDTO listDTO = apiUtil.getTvShowList("popular", 1);
+		TvShowListDTO listDTO = apiUtil.getTrendTvShowList(timeWindow, 1);
 		log.info("listDto = {}", listDTO);
 
 		model.addAttribute("listDTO", listDTO);
@@ -85,15 +85,15 @@ public class TvShowController {
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
-		return "tvshow/list";
+		return "tvshow/trend-list";
 	}
 
 	@GetMapping("/top_rated")
-	public String getTopRatedTvShowList(Model model) {
+	public String getTopRatedTvShowList(Model model) throws ParseException {
 		log.info("GET Top Rated Tv Show List");
 
 		TvShowListDTO listDTO = apiUtil.getTvShowList("top_rated", 1);
-		log.info("listDto = {}", listDTO);
+		//log.info("listDto = {}", listDTO);
 
 		model.addAttribute("listDTO", listDTO);
 
@@ -101,10 +101,12 @@ public class TvShowController {
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
+
+
 		return "tvshow/list";
 	}
 
-	@GetMapping("/details/{id}")
+	@GetMapping(value = {"/details/{id}" })
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
 		log.info("Get Tv Show Details = {}", id);
 		log.info("API KET = {}", API_KEY);
@@ -127,7 +129,7 @@ public class TvShowController {
 
 		TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
 
-		//log.info("tvShowDto = {}", tvShowDTO.toString());
+		log.info("tvShowDto = {}", tvShowDTO.toString());
 
 		List<TvShowSeasonDTO> seasonList = tvShowDTO.getSeasons();
 
@@ -229,6 +231,8 @@ public class TvShowController {
 		//log.info("tvShowRecoList = {}",tvShowRecoListDTO.toString());
 
 		List<TvShowRecoDTO> tvShowRecoDTO = tvShowRecoListDTO.getResults();
+
+		log.info("RECO = {}",tvShowRecoDTO.size());
 
 		model.addAttribute("tvShowReco", tvShowRecoDTO);
 
