@@ -77,7 +77,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 listContainer.innerHTML += innerHtml;
-                
+
             })
             .catch((error) => {
                 console.log(`ERROR 발생!! ${error}`)
@@ -97,7 +97,6 @@ window.addEventListener('DOMContentLoaded', function() {
         
         const totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
         const currentHeight = window.scrollY;
-        
         if ((totalHeight - currentHeight) < 800) {
             getAdditionalList();
         }

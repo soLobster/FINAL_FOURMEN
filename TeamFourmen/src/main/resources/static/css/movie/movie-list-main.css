@@ -45,3 +45,24 @@
     font-weight: 700;
 }
 
+
+@media (max-width: 1480px) {
+    .list-container {
+        grid-template-columns: repeat(4, minmax(0, 1fr));    
+    }
+}
+
+@media (max-width: 1360px) {
+    
+    .movie-item-container {
+        margin-bottom:0;
+    }
+           
+}
+
+@media (max-width: 1220px) {
+    .list-container {
+        grid-template-columns: repeat(3, minmax(0, 1fr));    
+    }
+}
+
