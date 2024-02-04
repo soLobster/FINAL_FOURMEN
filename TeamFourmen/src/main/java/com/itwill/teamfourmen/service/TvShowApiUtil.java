@@ -92,5 +92,103 @@ public class TvShowApiUtil {
         return tvShowListDTO;
     }
 
+    /*
+    OTT 별 Tv Show List 불러오기
+
+    Ex URL ) https://api.themoviedb.org/3/discover/tv?language=ko-KR&page=4&sort_by=vote_count.desc&watch_region=KR&with_watch_providers=8&api_key=390e779304bcd53af3b649f4e27c6452
+
+    language = ko-KR
+    page
+    sort_by = vote_count
+    watch_region=KR
+    with_watch_provider = {parameter} 넷플릭스, 애플티비, 디즈니, 아마존, 왓챠, 웨이브 등등을 이름과 아이디를 매핑을 해놔야함.
+    api_key =
+     */
+
+    public TvShowListDTO getOttTvShowList (String platform, int page){
+        log.info("Get Ott Tv Show List platform = {}, page = {}");
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String baseUrl = "https://api.themoviedb.org/3/discover/tv";
+
+        String targetUrl = "";
+
+        switch (platform){
+            case "netfilx":
+                targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                        .queryParam("language", "ko-KR")
+                        .queryParam("page", page)
+                        .queryParam("sort_by", "vote_count.desc")
+                        .queryParam("watch_region", "KR")
+                        .queryParam("with_watch_providers", 8)
+                        .queryParam("api_key", API_KEY)
+                        .toUriString();
+                log.info("targetURL = {}", targetUrl);
+                break;
+            case "disney_plus":
+                targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                        .queryParam("language", "ko-KR")
+                        .queryParam("page", page)
+                        .queryParam("sort_by", "vote_count.desc")
+                        .queryParam("watch_region", "KR")
+                        .queryParam("with_watch_providers", 337)
+                        .queryParam("api_key", API_KEY)
+                        .toUriString();
+                log.info("targetURL = {}", targetUrl);
+                break;
+            case "apple_tv":
+                targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                        .queryParam("language", "ko-KR")
+                        .queryParam("page", page)
+                        .queryParam("sort_by", "vote_count.desc")
+                        .queryParam("watch_region", "KR")
+                        .queryParam("with_watch_providers", 350)
+                        .queryParam("api_key", API_KEY)
+                        .toUriString();
+                log.info("targetURL = {}", targetUrl);
+                break;
+            case "amazone_prime":
+                targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                        .queryParam("language", "ko-KR")
+                        .queryParam("page", page)
+                        .queryParam("sort_by", "vote_count.desc")
+                        .queryParam("watch_region", "KR")
+                        .queryParam("with_watch_providers", 119)
+                        .queryParam("api_key", API_KEY)
+                        .toUriString();
+                log.info("targetURL = {}", targetUrl);
+                break;
+            case "watcha":
+                targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                        .queryParam("language", "ko-KR")
+                        .queryParam("page", page)
+                        .queryParam("sort_by", "vote_count.desc")
+                        .queryParam("watch_region", "KR")
+                        .queryParam("with_watch_providers", 97)
+                        .queryParam("api_key", API_KEY)
+                        .toUriString();
+                log.info("targetURL = {}", targetUrl);
+                break;
+            case "wavve":
+                targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                        .queryParam("language", "ko-KR")
+                        .queryParam("page", page)
+                        .queryParam("sort_by", "vote_count.desc")
+                        .queryParam("watch_region", "KR")
+                        .queryParam("with_watch_providers", 356)
+                        .queryParam("api_key", API_KEY)
+                        .toUriString();
+                log.info("targetURL = {}", targetUrl);
+                break;
+            default:
+                log.info("WRONG PARAM - getOttTvShowList");
+                break;
+        }
+
+        TvShowListDTO tvShowListDTO = restTemplate.getForObject(targetUrl, TvShowListDTO.class);
+
+        return tvShowListDTO;
+    }
 
 }

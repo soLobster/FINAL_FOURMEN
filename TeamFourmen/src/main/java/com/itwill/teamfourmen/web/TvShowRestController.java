@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/tvshow")
+@RequestMapping("/api/tv")
 public class TvShowRestController {
 
     private final TvShowApiUtil util;
@@ -28,6 +28,15 @@ public class TvShowRestController {
         TvShowListDTO trendListDto = util.getTrendTvShowList(timeWindow,page);
 
         return ResponseEntity.ok(trendListDto);
+    }
+
+    @GetMapping("/ott-list")
+    public ResponseEntity<TvShowListDTO> getAddtionalOttTvShowList (@RequestParam(name = "platform") String platform, @RequestParam(name = "page") int page){
+        log.info("Get AdditionalOttTvShowList - platform = {}, page = {}", platform, page);
+
+        TvShowListDTO ottTvShowList = util.getOttTvShowList(platform, page);
+
+        return ResponseEntity.ok(ottTvShowList);
     }
 
 

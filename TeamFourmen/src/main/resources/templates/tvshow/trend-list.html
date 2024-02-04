@@ -162,7 +162,7 @@
     <div class = "Tv_Show_Section">
       <div class = "flex-container">
         <div class = "rounded border-0 card text-bg-dark flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
-          <a th:href = "@{/tvshow/details/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none">
+          <a th:href = "@{/tv/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none">
             <img class = "rounded-top show_poster" th:if="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
                  th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="200" height="273" />
             <img class = "rounded-top show_poster" th:unless="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"

@@ -25,7 +25,7 @@ import reactor.core.publisher.Flux;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/tvshow")
+@RequestMapping("/tv")
 public class TvShowController {
 	
 	@Value("${api.themoviedb.api-key}")
@@ -70,6 +70,14 @@ public class TvShowController {
 //		return "tvshow/details";
 //	}
 
+	@GetMapping("/main")
+	public String getTvShowMain(Model model){
+		log.info("GET TV SHOW MAIN VIEW");
+
+		return "tvshow/main";
+	}
+
+
 	@GetMapping("/trending/{timeWindow}")
 	public String getPopularTvShowList(Model model, @PathVariable String timeWindow){
 		log.info("GET Trending Tv Show List");
@@ -101,12 +109,28 @@ public class TvShowController {
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
-
-
 		return "tvshow/list";
 	}
 
-	@GetMapping(value = {"/details/{id}" })
+	@GetMapping("/ott/{platform}")
+	public String getOttTvShowList(Model model, @PathVariable String platform){
+		log.info("Get Tv Show From OTT Platform = {}", platform);
+
+		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
+
+		log.info("list={}", listDTO);
+
+		model.addAttribute("listDTO", listDTO);
+
+		List<TvShowDTO> ottTvShowList = listDTO.getResults();
+
+		model.addAttribute("tvShowDto", ottTvShowList);
+
+		return "tvshow/ott-list";
+	}
+
+	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
+	@GetMapping(value = {"/{id}" })
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
 		log.info("Get Tv Show Details = {}", id);
 		log.info("API KET = {}", API_KEY);
@@ -238,6 +262,18 @@ public class TvShowController {
 
 		return "tvshow/details";
 	}
+
+
+
+	@GetMapping("/{id}/season/{season_number}")
+	public String getTvShowSeasonDetails(Model model, @PathVariable(name= "id") int id , @PathVariable(name = "season_number") int season_number){
+
+		log.info("GET TV SHOW SEASON DETAILS - ID = {} , SEASON_NUM = {}", id, season_number);
+
+		return "tvshow/season-details";
+	}
+
+
 
 	private void getInitialList(String pageName, Model model) {
 

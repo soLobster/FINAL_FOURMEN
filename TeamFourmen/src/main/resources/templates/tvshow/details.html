@@ -448,7 +448,7 @@
 						<li class = "border-0 card season_card" th:each=" season : ${seasonList} " th:object="${season}">
 							<img class="season_img" th:if="${season.poster_path ne null and season.poster_path ne 'null'}"  th:src=" @{'https:/image.tmdb.org/t/p/original' + ${season.getPoster_path()}} " width="180" height="273" />
 							<img class="season_img" th:unless="${season.poster_path ne null and season.poster_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
-							<a th:href="@{''}" class = "text-decoration-none" target="_blank">
+							<a th:href="@{${tvShowDto.getId() + '/season/'} + ${season.getSeason_number()}}" class = "text-decoration-none" target="_blank">
 								<section class="card-img-overlay">
 									<p class = "card-title text-white fs-4 fw-bolder" th:text="${ 'Season ' + season.getSeason_number()}"></p>
 									<p class = "card-text text-white fst-italic" th:text="${season.getAir_date()}"></p>
@@ -485,7 +485,7 @@
 					<ol class= "recommendation_scroller">
 						<li class = "border-0 card recommendation_card" th:each=" recommendation : ${tvShowReco} " th:object="${recommendation}">
 							<img class = "recommendation_img" th:src = "@{'https:/image.tmdb.org/t/p/original' + ${recommendation.getBackdrop_path()}}" width="250" height="141"/>
-							<a th:href = "@{/tvshow/details/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" target="_blank">
+							<a th:href = "@{/tv/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" >
 								<section class="card-img-overlay">
 									<p class="card-title text-white fs-5 fw-bolder" th:text="${recommendation.getName()}"></p>
 									<p class="card-text text-white fst-italic" th:text="${recommendation.getFirst_air_date()}"></p>
