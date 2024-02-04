@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.domain;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +14,7 @@ import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
+import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
@@ -116,12 +118,27 @@ public class ExampleTest {
 		log.info("external ids = {}", dto);
 	}
 	
-	@Test
+	// @Test
 	public void recommendedMovieTest() {
 		List<MovieDetailsDto> list = movieUtil.getRecommendedMovie(609681);
 		
 		Assertions.assertNotNull(list);
 		log.info("list={}", list);
+	}
+	
+	
+	@Test
+	public void movieListFilterTest() {
+		MovieQueryParamDto filterDto = new MovieQueryParamDto();
+		filterDto.setPrimaryReleaseDateGte(LocalDate.of(2022, 10, 1));
+		filterDto.setPrimaryReleaseDateLte(LocalDate.of(2024, 2, 1));
+		filterDto.setWithGenres(List.of(80));
+		
+		MovieListDto filteredListDto = movieUtil.getFilteredMovieList(filterDto);
+		Assertions.assertNotNull(filteredListDto);
+		
+		log.info("filteredListDto = {}", filteredListDto);
+		
 	}
 	
 	

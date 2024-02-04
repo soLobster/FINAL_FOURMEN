@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
+import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
@@ -35,34 +36,37 @@ public class MovieApiUtil {
 	
 	/**
 	 * 영화 리스트를 MovieListDto객체로 돌려주는 메서드.
-	 * 파라미터는 무조건 "popular", "now_playing", "top_rated", "upcoming" 중 하나여야 함!
+	 * 파라미터는 무조건 "popular", "now_playing", "top_rated", "upcoming", "filter" 중 하나여야 함!
 	 * @param listCategory 무조건 "popular", "now_playing", "top_rated", "upcoming" 중 하나
 	 * @return 받아온 json데이터를 매핑한 MovieListDto객체
 	 * @throws JsonProcessingException 
 	 * @throws JsonMappingException 
 	 */
-	public MovieListDto getMovieList(String listCategory, int page) throws JsonMappingException, JsonProcessingException {
-		log.info("getMovieList(listCategory={}, page={})", listCategory, page);
+	public MovieListDto getMovieList(MovieQueryParamDto paramDto) throws JsonMappingException, JsonProcessingException {
+		log.info("getMovieList(param={})", paramDto);
 		
 		String uri = "";
-		String queryParam = "?language=ko&page=" + page;
+//		String queryParam = "?language=ko&page=" + page;
 				
 		
-		switch(listCategory) {
+		switch(paramDto.getListCategory()) {
 		case "now_playing":
-			uri = "/movie/now_playing" + queryParam;
+			uri = "/movie/now_playing";
 			break;
 			
 		case "popular":
-			uri = "/movie/popular" + queryParam;
+			uri = "/movie/popular";
 			break;
 			
 		case "top_rated":
-			uri = "/movie/top_rated" + queryParam;
+			uri = "/movie/top_rated";
 			break;
 			
 		case "upcoming":
-			uri = "/movie/upcoming" + queryParam;
+			uri = "/movie/upcoming";
+			break;
+		case "filter":
+			uri="/discover/movie";
 			break;
 			
 		default:
@@ -70,20 +74,31 @@ public class MovieApiUtil {
 			break;			
 		}
 		
+		String uriToPassIn = uri;
+		
 		WebClient client = WebClient.create(baseUrl);
 		
 		MovieListDto movieListDto = client.get()
-				.uri(uri)				
+				.uri(uriBuilder -> uriBuilder
+						.path(uriToPassIn)
+						.queryParam("page", paramDto.getPage())
+						.queryParam("language", "ko")
+						.queryParam("sort_by", paramDto.getSortBy())
+						.queryParam("primary_release_date.gte", paramDto.getPrimaryReleaseDateGte())
+						.queryParam("primary_release_date.lte", paramDto.getPrimaryReleaseDateLte())
+						.queryParam("with_original_language", paramDto.getWithOriginalLanguage())
+						.queryParam("with_runtime.gte", paramDto.getWithRuntimeGte())
+						.queryParam("with_runtime.lte", paramDto.getWithRuntimeLte())
+						.queryParam("with_genres", paramDto.getWithGenres())
+						.build())				
 				.header("Authorization", token)
 				.retrieve()
 				.bodyToMono(MovieListDto.class)
 				.block();
 		
-//		ObjectMapper mapper = new ObjectMapper();
-//		MovieListDto movieListDto = mapper.readValue(json, MovieListDto.class);
-		
 		return movieListDto;
 	}
+	
 	
 	
 	/**
@@ -307,6 +322,11 @@ public class MovieApiUtil {
 	}
 	
 	
+	/**
+	 * id에 해당하는 영화와 관련된 추천영화 리스트 반환
+	 * @param id
+	 * @return
+	 */
 	public List<MovieDetailsDto> getRecommendedMovie(int id) {
 		
 		log.info("getRecommendedMovie(id={})", id);

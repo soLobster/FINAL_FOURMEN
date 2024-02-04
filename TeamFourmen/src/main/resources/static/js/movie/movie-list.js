@@ -46,8 +46,10 @@ window.addEventListener('DOMContentLoaded', function() {
     // 영화리스트 가져오는 async함수;
     const getAdditionalList = async function() {
         
-        const url = '../api/movie/list';
-        let queryString = `?listCategory=${listCategory}&page=${page+1}`;
+        const url = '../api/movie/list';        
+        let queryString = 
+            location.search ? location.search + `&listCategory=${listCategory}&page=${page+1}` : `?listCategory=${listCategory}&page=${page+1}`;
+                // `?listCategory=${listCategory}&page=${page+1}`;
         
         let innerHtml = '';
         
@@ -55,9 +57,9 @@ window.addEventListener('DOMContentLoaded', function() {
 			
 			await axios.get(url + queryString)
             .then((response) => {
-                
                 page = response.data.page;
-                
+                console.log(`page=${page}`);
+                                
                 for (let movie of response.data.results) {
                     innerHtml += `
                         <div class="movie-item-container">
@@ -97,11 +99,11 @@ window.addEventListener('DOMContentLoaded', function() {
         
         const totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
         const currentHeight = window.scrollY;
-        if ((totalHeight - currentHeight) < 800) {
+        if ((totalHeight - currentHeight) < 1200) {
             getAdditionalList();
         }
         
-    }, 300));
+    }, 1000));
     
     
     btnMorePost.addEventListener('click', getAdditionalList);

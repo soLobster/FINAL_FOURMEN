@@ -5,7 +5,7 @@
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1.5em;
-    flex-wrap: wrap;    
+    flex-wrap: wrap;
 }
 
 .movie-item-container {
@@ -46,6 +46,24 @@
 }
 
 
+
+/* 우측 하단 TOP버튼 */
+#btn-to-top {
+    position: fixed;
+    bottom: 36px;
+    right: 1%;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
+#btn-to-top a {
+    color: inherit;
+    text-decoration: none;    
+}
+
+
+/* 반응형 위한 CSS */
 @media (max-width: 1480px) {
     .list-container {
         grid-template-columns: repeat(4, minmax(0, 1fr));    
@@ -64,5 +82,23 @@
     .list-container {
         grid-template-columns: repeat(3, minmax(0, 1fr));    
     }
+}
+
+
+@media (max-width: 880px) {
+    .list-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));    
+    }
+}
+
+@media (max-width: 640px) {
+    .list-container {
+        grid-template-columns: repeat(1, minmax(0, 1fr));    
+    }
+    
+    .movie-item-container {
+        min-width: 160px;
+    }
+    
 }
 
