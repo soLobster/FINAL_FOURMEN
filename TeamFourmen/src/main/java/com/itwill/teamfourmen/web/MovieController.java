@@ -111,6 +111,14 @@ public class MovieController {
 	}
 	
 	
+	/**
+	 * 유저가 선택한 필터내용을 반영한 영화 리스트를 반환함
+	 * @param filterDto
+	 * @param model
+	 * @return
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 */
 	@GetMapping("/filter")
 	public String filterMovieList(@ModelAttribute MovieQueryParamDto filterDto, Model model) throws JsonMappingException, JsonProcessingException {
 		
@@ -118,6 +126,18 @@ public class MovieController {
 		filterDto.setListCategory("filter");
 		
 		getInitialList(filterDto, model);		
+		
+		return "/movie/movie-list";
+	}
+	
+	
+	@GetMapping("/search")
+	public String searchMovieList(@ModelAttribute MovieQueryParamDto searchDto, Model model) throws JsonMappingException, JsonProcessingException {
+		
+		log.info("searchMovieList(searchDto=${})", searchDto);
+		searchDto.setListCategory("search");
+		
+		getInitialList(searchDto, model);
 		
 		return "/movie/movie-list";
 	}

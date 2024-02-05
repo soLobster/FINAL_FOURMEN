@@ -60,15 +60,16 @@ public class MovieApiUtil {
 			
 		case "top_rated":
 			uri = "/movie/top_rated";
-			break;
-			
+			break;			
 		case "upcoming":
 			uri = "/movie/upcoming";
 			break;
 		case "filter":
 			uri="/discover/movie";
 			break;
-			
+		case "search":
+			uri="/search/movie";
+			break;
 		default:
 			log.info("getMovieList()에 잘못된 파라미터 입력함");
 			break;			
@@ -90,6 +91,7 @@ public class MovieApiUtil {
 						.queryParam("with_runtime.gte", paramDto.getWithRuntimeGte())
 						.queryParam("with_runtime.lte", paramDto.getWithRuntimeLte())
 						.queryParam("with_genres", paramDto.getWithGenres())
+						.queryParam("query", paramDto.getQuery())
 						.build())				
 				.header("Authorization", token)
 				.retrieve()

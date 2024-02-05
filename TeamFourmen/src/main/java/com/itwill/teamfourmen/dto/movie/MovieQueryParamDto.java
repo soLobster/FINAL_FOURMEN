@@ -41,5 +41,7 @@ public class MovieQueryParamDto {
 	private Integer withRuntimeGte;
 	private Integer withRuntimeLte;
 	private List<Integer> withGenres;
+	
+	private String query;
 		
 }

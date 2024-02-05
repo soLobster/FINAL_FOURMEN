@@ -10,6 +10,7 @@
     <link th:href="@{/css/theme.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-search.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-main.css}" rel="stylesheet">
+    <link th:href="@{/css/accordion/accordion.css}" rel="stylesheet">
 	
 </head>
 <body>
@@ -19,17 +20,19 @@
     <div class="content-container">
         <!-- search-container는 필터와 검색을 위한 div -->
         <aside class="search-container">
-
+            <!-- 필터 form -->
             <form action="../movie/filter">
-                <div class="card custom-card">
-                    <div class="card-header">
+                <div class="custom-card accordion-container">
+                    <div class="custom-card-header accordion-header">
                         <span class="filter-title">필터</span>
+                        <i class="fa-solid fa-caret-down accordion-symbol-down"></i>
+                        <i class="fa-solid fa-caret-up accordion-symbol-up"></i>
                     </div>
-                    <div class="card-body">
+                    <div class="custom-card-body accordion-content">
                         <!-- 개봉일자 필터 -->
-                        <div class="filter-container">
-                            <div class="filter-item-container">
-                                <div class="filter-title">정렬</div>
+                        <div class="card-body-container">
+                            <div class="card-each-item-container">
+                                <div class="card-each-item-title">정렬</div>
                                 <div class="div-movie-sort">                                    
                                     <select name="sortBy">
                                         <option value="popularity.desc" selected="selected">인기순</option>
@@ -39,8 +42,8 @@
                                     </select>
                                 </div>                        
                             </div>
-                            <div class="filter-item-container">
-                                <div class="filter-title">개봉일자</div>
+                            <div class="card-each-item-container">
+                                <div class="card-each-item-title">개봉일자</div>
                                 <div class="div-release">
                                     <label for="input-date-from" class="release-label">from</label>
                                     <input type="date" class="form-horizontal release-input" id="input-date-from" name="primaryReleaseDateGte">
@@ -52,8 +55,8 @@
                             </div>
                             
                             <!-- 장르 필터 -->
-                            <div class="filter-item-container">
-                                <div class="filter-title">장르</div>
+                            <div class="card-each-item-container">
+                                <div class="card-each-item-title">장르</div>
                                 <!-- TODO: 나중에 DB에서 장르 목록 가져오면 FOR문으로 대체하기 -->
                                 <ul class="genre-list">
                                     <li th:each="movieGenre : ${movieGenreList}">
@@ -64,8 +67,8 @@
                             </div>
                             
                             <!-- 원어 -->
-                            <div class="filter-item-container">
-                                <div class="filter-title">원어</div>
+                            <div class="card-each-item-container">
+                                <div class="card-each-item-title">원어</div>
                                 <div>
                                     <select name="withOriginalLanguage" class="combobox-language">
                                         <option selected="selected" value="">선택 안함</option>
@@ -79,8 +82,8 @@
                                 </div>
                             </div>
                             
-                            <div class="filter-item-container">
-                                <div class="filter-title">런타임</div>
+                            <div class="card-each-item-container">
+                                <div class="card-each-item-title">런타임</div>
                                 <div>
                                     <span>최소: </span><input type="number" name="withRuntimeGte" class="runtime-range">                           
                                 </div>
@@ -91,8 +94,33 @@
                                                                                         
                         </div>  <!-- filter container /div -->
                     </div>  <!-- card-body /div -->
+                    <input type="submit" class="filter-btn accordion-btn" value="필터">                          
                 </div>  <!-- 카드 /div -->
-                <input type="submit" class="filter-btn">                          
+            </form>
+            
+            <!-- 검색 form -->
+            <form action="../movie/search">
+                <div class="custom-card accordion-container">
+                    <div class="custom-card-header accordion-header">
+                        <span class="filter-title">검색</span>
+                        <i class="fa-solid fa-caret-down accordion-symbol-down"></i>
+                        <i class="fa-solid fa-caret-up accordion-symbol-up"></i>
+                    </div>
+                    <div class="custom-card-body accordion-content">
+                        <div class="card-body-container">
+                            <div class="card-each-item-container">
+                                <div class="movie-search-input">
+                                    <input type="text" class="form-control" name="query">
+                                    <div class="movie-search-btn">
+                                        <button class="accordion-btn">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </aside>
       
@@ -111,8 +139,11 @@
                         <div th:text="${movie.releaseDate}"></div>
                     </div>                
                 </div>
+                <div th:if="${#lists.isEmpty(listDto.results)}">
+                    게시글을 찾을 수 없습니다.
+                </div>
             </div>
-            <button id="btn-more-post" class="btn btn-primary w-100">추가 게시물 로드</button>
+            <button id="btn-more-post" class="btn btn-primary w-100" th:if="${listDto.totalPages > 1}">추가 게시물 로드</button>
         </main>
     </div>
     <div id="btn-to-top">
@@ -135,6 +166,7 @@
     	const totalPages = [[${listDto.totalPages}]];
 	</script>
 	<script th:src="@{/js/movie/movie-list.js}"></script>
+	<script th:src="@{/js/accordion/accordion.js}"></script>
 	
 </body>
 </html>

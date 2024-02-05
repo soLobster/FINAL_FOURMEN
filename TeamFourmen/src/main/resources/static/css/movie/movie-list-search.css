@@ -7,7 +7,11 @@
     display:flex;
     align-items: start;
     height: auto;
+    /*display: grid;
+    grid-template-columns: 1fr 4fr;*/
+    
 }
+
 
 /* 필터, 검색을 위한 컨테이너 */
 .search-container {
@@ -15,45 +19,59 @@
     min-width: 260px;
     height: auto;
     margin-right: 36px;
-    position: sticky;
-    top: 32px;
 }
 
 /* 영화 리스트 보여주는 컨테이너 */
+.content-container main {
+    flex-grow: 1;
+}
 .list-container {
     width: 100%;
     height: auto;
+    
 }   
 
 
 /* 필터 카드 커스텀 */
 .custom-card {
-    background-color: rgb(31, 32, 41);
-    color: rgb(196, 195, 202);
-    border-color: #ffffff;
+    background-color: inherit;
+    color: inherit;
+    margin-bottom: 16px;
 }
 
+.custom-card-header {
+    border: 0.5px solid #fff;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    
+    
+}
 
 /* 필터의 각 항목 컨테이너. 카드처럼 border를 줌 */
-.card-body {
+.custom-card-body {
     padding: 0;
+    border: 0.5px solid #fff;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
 }
 
-.filter-container {
+.card-body-container {
     width: 100%;
 }
 
-.filter-item-container {
+.card-each-item-container {
     padding: 14px 16px;
     border-top: solid #adb5bd 1.6px;
     height: auto;
 }
 
 /* 필터의 각 제목 css */
-.filter-title {
+.card-each-item-title {
     font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 16px;
 }
 
     /* 영화 정렬 select포함한 div */
@@ -118,7 +136,7 @@
     /* 필터 검색 버튼 꾸미기 */
 .filter-btn {
     display: block;
-    margin: 8px auto 24px auto;
+    margin: 0;
     width: 100%;
     background-color: #fbc500;
     text-align: center;
@@ -131,3 +149,23 @@
     font-weight: 600;        
 }
 
+
+/* 검색관련 */
+.movie-search-input {
+    position: relative;
+}
+
+.movie-search-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.movie-search-btn button {
+    background-color: transparent;
+    border: none;
+}
