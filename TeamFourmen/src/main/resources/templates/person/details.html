@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/7542e28415.js" crossorigin="anonymous"></script>
+    <title>인물 상세정보</title>
+</head>
+<body>
+    <div>
+        <header>
+
+        </header>
+        <main>
+            <section>
+                <div>
+                    <p>TODO: 개요, 미디어, 팬덤, 공유 등 메뉴 목록 만들기</p>
+                </div>
+                <div>
+                    <div>
+                        <div class="content_wrapper">
+                            <div>
+                                <section>
+                                    <div class="content_profile_img">
+                                        <div>
+                                            <img class="profile_img" th:src="@{'https://media.themoviedb.org/t/p/w300_and_h450_bestv2' + ${detailsPerson.profilePath}}"
+                                                 alt="Sydney Sweeney">
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div>
+                                <section>
+                                    <div th:each="externalIDs : ${externalIDs}" class="social_links">
+                                        <div style="margin-top: 10px">
+                                            <span>
+                                                <a style="text-decoration: none; margin-right: 10px; color: black;"
+                                                   th:if="${externalIDs.getFacebookId() != null}" th:href="'https://www.facebook.com/' + ${externalIDs.getFacebookId()}">
+                                                    <i style="font-size: 1.75rem;" class="fa-brands fa-facebook"></i>
+                                                </a>
+
+                                                <a style="text-decoration: none; margin-right: 10px; color: black;"
+                                                   th:if="${externalIDs.getTwitterId() != null}" th:href="'https://twitter.com/' + ${externalIDs.getTwitterId()}">
+                                                    <i style="font-size: 1.75rem;" class="fa-brands fa-twitter"></i>
+                                                </a>
+
+                                                <a style="text-decoration: none; margin-right: 10px; color: black; background-image: url('https://www.instagram.com/') + /* append Instagram ID here */"
+                                                   th:if="${externalIDs.getInstagramId() != null}" th:href="'https://www.instagram.com/' + ${externalIDs.getInstagramId()}">
+                                                    <i style="font-size: 1.75rem;" class="fa-brands fa-instagram"></i>
+                                                </a>
+
+                                                <a style="text-decoration: none; margin-right: 10px; color: black; background-image: url('https://www.tiktok.com/@') + /* append TikTok ID here */"
+                                                   th:if="${externalIDs.getTiktokId() != null}" th:href="'https://www.tiktok.com/@' + ${externalIDs.getTiktokId()}">
+                                                    <i style="font-size: 1.75rem;" class="fa-brands fa-tiktok"></i>
+                                                </a>
+
+                                                <a style="text-decoration: none; margin-right: 10px; color: black; background-image: url('https://www.youtube.com/') + /* append YouTube ID here */"
+                                                   th:if="${externalIDs.getYoutubeId() != null}" th:href="'https://www.youtube.com/' + ${externalIDs.getYoutubeId()}">
+                                                    <i style="font-size: 1.75rem;" class="fa-brands fa-youtube"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <h3>
+                                        인물 정보
+                                    </h3>
+
+                                    <section>
+                                        <p>
+                                            <strong>
+                                                <bdi>유명 분야</bdi>
+                                            </strong>
+                                        </p>
+                                        <p th:text="${detailsPerson.getKnownForDepartment()}"></p>
+
+                                        <p>
+                                            <strong>
+                                                <bdi>참여 작품 수</bdi>
+                                            </strong>
+                                        </p>
+                                        <p th:text="${movieCredits.getCast().size()} + ${tvCredits.getCast().size()}"></p>
+                                        <p th:text="${movieCreditsCast.getTitle()}"></p>
+                                        <p th:text="${tvCreditsCast.getName()}"></p>
+
+                                        <p>
+                                            <strong>
+                                                <bdi>성별</bdi>
+                                            </strong>
+                                        </p>
+                                        <p th:if="${detailsPerson.getGender() == 1}">여자</p>
+                                        <p th:if="${detailsPerson.getGender() == 2}">남자</p>
+
+                                        <p>
+                                            <strong>
+                                                <bdi>생일</bdi>
+                                            </strong>
+                                        </p>
+                                        <p th:if="${detailsPerson.getBirthday() != null}" th:text="${detailsPerson.getBirthday()}"></p>
+                                        <p th:if="${detailsPerson.getBirthday() == null}">-</p>
+
+                                        <p>
+                                            <strong>
+                                                <bdi>출생지</bdi>
+                                            </strong>
+                                        </p>
+                                        <p th:if="${detailsPerson.getPlaceOfBirth() != null}" th:text="${detailsPerson.getPlaceOfBirth()}"></p>
+                                        <p th:if="${detailsPerson.getPlaceOfBirth() == null}">-</p>
+                                    </section>
+
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
