@@ -17,6 +17,7 @@ import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
 import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
+import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
@@ -180,6 +181,16 @@ public class MovieController {
 		MovieProviderDto movieProviderDto = apiUtil.getMovieProviderList(id);
 		log.info("movieProviderDto={}", movieProviderDto);
 		
+		
+		// releasedate관련 정보 가져옴 (작품 연령제한 포함된 정보)
+		List<MovieReleaseDateItemDto> releaseDateItemList = apiUtil.getMovieReleaseDateInfo(id, "KR");
+		MovieReleaseDateItemDto releaseItemDto = detailService.getType3MovieReleaseDateItem(releaseDateItemList);
+		if (releaseItemDto == null || releaseItemDto.getCertification() != null) {	// 한국 release date정보 없으면 미국꺼 가져오도록 함
+			releaseDateItemList = apiUtil.getMovieReleaseDateInfo(id, "US");
+			releaseItemDto = detailService.getType3MovieReleaseDateItem(releaseDateItemList);	// 미국꺼 가져옴. 미국정보마져 없으면 null
+		}
+		
+		
 		List<MovieProviderItemDto> movieProviderList = null;
 		if (movieProviderDto != null) {
 			movieProviderList = detailService.getOrganizedMovieProvider(movieProviderDto);
@@ -207,6 +218,7 @@ public class MovieController {
 		model.addAttribute("movieProviderList", movieProviderList);
 		model.addAttribute("movieExternalIdDto", movieExternalIdDto);
 		model.addAttribute("recommendedList", recommendedList);
+		model.addAttribute("releaseItemDto", releaseItemDto);
 		
 		return "/movie/movie-details";
 	}

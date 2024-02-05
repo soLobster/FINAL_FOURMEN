@@ -53,8 +53,26 @@
     font-style: italic;
 }
 
+.movie-title-year {
+    font-size: 1.25em;
+}
+
 .movie-etc-info {
     font-size: 0.9em;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.movie-etc-info div {
+    margin-right: 16px;
+}
+
+.div-movie-certificate {
+    display: inline-block;
+    border: 0.5px solid #fff;
+    padding: 2px 4px;
 }
 
 .movie-tagline {

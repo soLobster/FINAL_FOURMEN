@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
+import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MovieDetailService {
 	
+	/**
+	 * 플랫폼 마다 선택가능한 옵션들을 한곳에 모아 반환
+	 * @param providerDto
+	 * @return
+	 */
 	public List<MovieProviderItemDto> getOrganizedMovieProvider(MovieProviderDto providerDto) {
 		
 		log.info("getOrganizedMovieProvider(providerDto={})", providerDto);
@@ -56,6 +62,38 @@ public class MovieDetailService {
 	}
 	
 	
+	
+	/**
+	 * List<MovieReleaseDateItemDto>에서 type=3인 리스트 element만 꺼내서 MovieReleaseDateItemDto타입으로 리턴함
+	 * 만약 3타입 없으면 null을 반환
+	 * @param movieReleaseItemList
+	 * @return
+	 */
+	public MovieReleaseDateItemDto getType3MovieReleaseDateItem(List<MovieReleaseDateItemDto> movieReleaseItemList) {
+		log.info("getType3MovieReleaseDateItem(movieReleaseItemList={})", movieReleaseItemList);
+		
+		List<MovieReleaseDateItemDto> releaseItemType3List = null;
+		
+		if (movieReleaseItemList != null) {
+			releaseItemType3List = movieReleaseItemList.stream().filter((x) -> x.getType() == 3).toList();
+			
+			if (releaseItemType3List.size() == 1) {
+				
+				return releaseItemType3List.get(0);
+				
+			} else if(releaseItemType3List.size() != 0) {	// 혹시나 type3이 여러개인 경우를 대비해서.. 처음 1개만 가져옴
+				
+				return releaseItemType3List.get(0);
+				
+			}
+		}
+		
+		
+		return null;
+	}
+	
+	
+	// 다른 메서드에 사용되는 메서드
 	public List<MovieProviderItemDto> addOrganizedProviderList(List<MovieProviderItemDto> organizedProviderList
 			, MovieProviderItemDto provider, String option) {
 		

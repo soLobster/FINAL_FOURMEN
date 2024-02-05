@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const backgroundColorDiv = document.querySelector('#movie-background-color-div');
 	const descriptionContainer  = document.querySelector('.movie-details-description-container');
 	const tagline = document.querySelector('.movie-tagline');
+	const divMovieCertificate = document.querySelector('.div-movie-certificate');	// 한 페이지당 하나만 있다고 가정함..
 	
 	const imageRootPath = 'https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces';
 	
@@ -43,9 +44,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('밝기 조건문 안에 왓음');
             descriptionContainer.style.color = '#000000';
             tagline.style.color = '#495057';
-            
+            if (divMovieCertificate) {
+	            divMovieCertificate.style.borderColor = '#000';
+			}
         } else {
             descriptionContainer.style.color = '#fff';
+            if (divMovieCertificate) {
+	            divMovieCertificate.style.borderColor = '#fff';
+			}
         }
     }
 	

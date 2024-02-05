@@ -15,6 +15,7 @@ import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
 import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
+import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
@@ -127,17 +128,18 @@ public class ExampleTest {
 	}
 	
 	
+	
+	
 	@Test
-	public void movieListFilterTest() {
-		MovieQueryParamDto filterDto = new MovieQueryParamDto();
-		filterDto.setPrimaryReleaseDateGte(LocalDate.of(2022, 10, 1));
-		filterDto.setPrimaryReleaseDateLte(LocalDate.of(2024, 2, 1));
-		filterDto.setWithGenres(List.of(80));
+	public void movieReleaseDateTest() {
 		
-		MovieListDto filteredListDto = movieUtil.getFilteredMovieList(filterDto);
-		Assertions.assertNotNull(filteredListDto);
+		List<MovieReleaseDateItemDto> list = movieUtil.getMovieReleaseDateInfo(792307, "US");
+		MovieReleaseDateItemDto releaseDto = movieDetailService.getType3MovieReleaseDateItem(list);
 		
-		log.info("filteredListDto = {}", filteredListDto);
+		Assertions.assertNotNull(list);
+		
+		log.info("개봉정보, 연령제한 포함={}", list);
+		log.info("타입3={}", releaseDto);
 		
 	}
 	

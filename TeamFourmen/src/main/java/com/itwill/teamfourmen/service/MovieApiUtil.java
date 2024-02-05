@@ -16,6 +16,8 @@ import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
 import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
+import com.itwill.teamfourmen.dto.movie.MovieReleaseDateDto;
+import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
@@ -228,7 +230,7 @@ public class MovieApiUtil {
 		log.info("movie video list = {}", movieVideoList);
 		
 		return movieVideoList;
-	}
+	}	
 	
 	
 	/**
@@ -356,6 +358,48 @@ public class MovieApiUtil {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	
+	/**
+	 * 영화 id와 국가코드를 아규먼트로 받아, 해당 영화의 해당 국가에서의 MovieReleaseDateItemDto리스트를 리턴해줌.
+	 * MovieReleaseDateItemDto에는 연령제한 등의 정보가 있다.
+	 * @param id
+	 * @param countryCode
+	 * @return 만약 해당 국가코드의 releaseDate정보가 있으면 List<MovieReleaseDateItemDto>를 리턴, 없으면 null을 리턴
+	 */
+	public List<MovieReleaseDateItemDto> getMovieReleaseDateInfo(int id, String countryCode) {
+		
+		WebClient client = WebClient.create(baseUrl);
+		
+		JsonNode node = client.get()
+				.uri("/movie/" + id + "/release_dates")
+				.header("Authorization", token)
+				.retrieve()
+				.bodyToMono(JsonNode.class)
+				.block();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode resultsNode = node.get("results");
+		try {
+			MovieReleaseDateDto[] releaseDateArray = mapper.treeToValue(resultsNode, MovieReleaseDateDto[].class);
+			List<MovieReleaseDateDto> releaseDateList = Arrays.asList(releaseDateArray);
+			
+			List<MovieReleaseDateDto> filteredReleaseDateList = releaseDateList.stream().filter((x) -> x.getIso_3166_1().equals(countryCode)).toList();
+			
+			if (filteredReleaseDateList.size() != 0) {
+				List<MovieReleaseDateItemDto> releaseDateItemList = filteredReleaseDateList.get(0).getRelease_dates();
+				return releaseDateItemList;
+			} else {
+				return null;
+			}
+			
+		} catch (JsonProcessingException | IllegalArgumentException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 	
 	

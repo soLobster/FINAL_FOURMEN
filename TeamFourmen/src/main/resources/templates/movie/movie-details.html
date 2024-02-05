@@ -35,11 +35,21 @@
             <section class="movie-details-description-container">
                 <div class="movie-description-inner-container">            
                     <div class="movie-title-etc">
-                        <h2 th:text="${movieDetailsDto.title}" class="movie-title"></h2>
+                        <h2 th:text="|${movieDetailsDto.title} (${movieDetailsDto.releaseDate.year})|" class="movie-title" th:if="${movieDetailsDto.releaseDate != null}"></h2>
+                        <h2 th:text="${movieDetailsDto.title}" class="movie-title" th:if="movieDetailsDto.releaseDate == null"></h2>
                         <div class="movie-etc-info">
-                            <span th:text="${movieDetailsDto.releaseDate}"></span>
-                            <span th:each=" genre : ${movieDetailsDto.genres}" th:text="${!genreStat.last ? genre.genre + ', ' : genre.genre}"></span>
-                            <span th:text="${movieDetailsDto.runtime} + 'm'"></span>
+                            <div class="div-movie-certificate" th:if="${releaseItemDto != null}">
+                                <span th:text="|${releaseItemDto.certification}+|"></span>
+                            </div>
+                            <div>
+                                <span th:text="${movieDetailsDto.releaseDate}"></span>
+                            </div>
+                            <div>
+                                <span th:each=" genre : ${movieDetailsDto.genres}" th:text="${!genreStat.last ? genre.genre + ', ' : genre.genre}"></span>
+                            </div>
+                            <div>
+                                <span th:text="${movieDetailsDto.runtime} + 'm'"></span>
+                            </div>
                         </div>
                     </div>
                     <!-- 좋아요, 트레일러 등 -->
@@ -231,7 +241,7 @@
             </section>
             
             <section class="movie-provider-container aside-section bubble-outer-container" th:if="${movieProviderList != null}">
-                <h4>Where to watch</h4>
+                <h4>Available Now on</h4>
 
                 <div class="movie-provider-logo-container">
                     <div class="div-provider-each bubble-inner-container" th:each="provider : ${movieProviderList}">
