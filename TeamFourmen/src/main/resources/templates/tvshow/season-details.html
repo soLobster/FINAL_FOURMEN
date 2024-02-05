@@ -185,16 +185,20 @@
 
 
 <div class = "episode-list-container">
-  <div class = "d-flex mb-2 episode-direction" th:unless = "${tvShowDto.getNumber_of_seasons() == 1}">
-
-<!--  TODO 현재 페이지의 시즌이 '1' 일때 만약 '0' 시즌이 없다면 'Previous Season' 버튼이 있으면 안됨.  -->
+  <div class = "d-flex mb-2 episode-direction justify-content-center" th:unless = "${tvShowDto.getNumber_of_seasons() == 1}">
 
     <a th:unless = "${seasonDto.getSeason_number() == 1 }"
-       class="p-2 btn btn btn-outline-light btn-sm forward_season_button"
+       class="p-2 btn btn btn-outline-light btn-sm me-auto forward_season_button"
        th:href = "@{ '../season/' + ${seasonDto.getSeason_number() - 1} }">Previous Season</a>
+
+
+    <a th:href = "@{'/tv/' + ${tvShowDto.getId()}}" class = "p-2  btn btn-outline-light btn-sm" th:text="${'Back to ' + tvShowDto.getOriginal_name() + ' Main'}"></a>
+
+
     <a th:unless = "${ seasonDto.getSeason_number() == tvShowDto.getNumber_of_seasons()}"
        class="ms-auto p-2 btn btn-outline-light btn-sm backward_season_button"
        th:href = "@{'../season/' + ${seasonDto.getSeason_number() + 1} }">Next Season</a>
+
   </div>
 
   <div class = "mt-5 episode-list">
