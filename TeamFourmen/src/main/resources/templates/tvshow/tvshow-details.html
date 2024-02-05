@@ -112,6 +112,12 @@
 			height: 450px;
 		}
 
+		#poster_img_none{
+			position: relative;
+			width: 300px;
+			height: 450px;
+		}
+
 		section.overView {
 			margin-top: 45px;
 			display: flex;
@@ -376,13 +382,23 @@
 <main>
 	<div class = "flex_header_container">
 		<!-- 윗부분 배경화면 -->
-		<img class = "backdropImg" th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.backdrop_path} "/>
+		<img class = "backdropImg"
+			 th:if="${tvShowDto.getBackdrop_path() ne null and tvShowDto.getBackdrop_path() ne 'null' and tvShowDto.getBackdrop_path() ne ''}"
+			 th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.backdrop_path} "/>
+		<img class = "backdropImg"
+			 th:unless="${tvShowDto.getBackdrop_path() ne null and tvShowDto.getBackdrop_path() ne 'null' and tvShowDto.getBackdrop_path() ne ''}"
+			 th:src = "@{'/image/default-black-background.jpg'}"/>
 
 		<div class = "tvShow_Details">
 			<!-- 포스터 영역 -->
 			<section class = "poster">
 				<div class = "poster_ott">
-					<img id = "poster_img"  class = "detail_poster rounded" th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.poster_path}" alt = "Tv Show Poster"/>
+					<img id = "poster_img"  class = "detail_poster rounded"
+						 th:if = "${tvShowDto.getPoster_path() ne null and tvShowDto.getPoster_path() ne 'null' and tvShowDto.getPoster_path() ne ''}"
+						 th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.poster_path}" alt = "Tv Show Poster"/>
+					<img id = "poster_img_none"  class = "detail_poster rounded"
+						 th:unless= "${tvShowDto.getPoster_path() ne null and tvShowDto.getPoster_path() ne 'null' and tvShowDto.getPoster_path() ne ''}"
+						 th:src = "@{'/image/default.png'}" alt = "Tv Show Poster"/>
 				</div>
 			</section>
 			<!-- 글 영역 -->
@@ -448,7 +464,7 @@
 						<li class = "border-0 card season_card" th:each=" season : ${seasonList} " th:object="${season}">
 							<img class="season_img" th:if="${season.poster_path ne null and season.poster_path ne 'null'}"  th:src=" @{'https:/image.tmdb.org/t/p/original' + ${season.getPoster_path()}} " width="180" height="273" />
 							<img class="season_img" th:unless="${season.poster_path ne null and season.poster_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
-							<a th:href="@{${tvShowDto.getId() + '/season/'} + ${season.getSeason_number()}}" class = "text-decoration-none" target="_blank">
+							<a th:href="@{${tvShowDto.getId() + '/season/'} + ${season.getSeason_number()}}" class = "text-decoration-none">
 								<section class="card-img-overlay">
 									<p class = "card-title text-white fs-4 fw-bolder" th:text="${ 'Season ' + season.getSeason_number()}"></p>
 									<p class = "card-text text-white fst-italic" th:text="${season.getAir_date()}"></p>
@@ -484,7 +500,12 @@
 				<div class = "recommendationList_scroller mt-3">
 					<ol class= "recommendation_scroller">
 						<li class = "border-0 card recommendation_card" th:each=" recommendation : ${tvShowReco} " th:object="${recommendation}">
-							<img class = "recommendation_img" th:src = "@{'https:/image.tmdb.org/t/p/original' + ${recommendation.getBackdrop_path()}}" width="250" height="141"/>
+							<img class = "recommendation_img"
+								 th:if = "${recommendation.getBackdrop_path() ne null and recommendation.getBackdrop_path() ne 'null' and recommendation.getBackdrop_path() ne ''}"
+								 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${recommendation.getBackdrop_path()}}" width="250" height="141"/>
+							<img class = "recommendation_img"
+								 th:unless = "${recommendation.getBackdrop_path() ne null and recommendation.getBackdrop_path() ne 'null' and recommendation.getBackdrop_path() ne ''}"
+								 th:src = "@{'/image/default-w600.png'}" width="250" height="141"/>
 							<a th:href = "@{/tv/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" >
 								<section class="card-img-overlay">
 									<p class="card-title text-white fs-5 fw-bolder" th:text="${recommendation.getName()}"></p>

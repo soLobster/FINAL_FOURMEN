@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +75,7 @@ public class TvShowController {
 	public String getTvShowMain(Model model){
 		log.info("GET TV SHOW MAIN VIEW");
 
-		return "tvshow/main";
+		return "tvshow/tvshow-main";
 	}
 
 
@@ -109,7 +110,7 @@ public class TvShowController {
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
-		return "tvshow/list";
+		return "tvshow/top-rated-list";
 	}
 
 	@GetMapping("/ott/{platform}")
@@ -139,19 +140,19 @@ public class TvShowController {
 
 		int seriesId = id;
 
-		// 드라마 정보
 		String apiUri = "https://api.themoviedb.org/3/tv";
-
-		String targetUrl = UriComponentsBuilder.fromUriString(apiUri)
-				.path("/{seriesId}")
-				.queryParam("language", "ko")
-				.queryParam("api_key", API_KEY)
-				.buildAndExpand(String.valueOf(seriesId))
-				.toUriString();
-
-		log.info(targetUrl);
-
-		TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
+		// 드라마 정보
+//		String targetUrl = UriComponentsBuilder.fromUriString(apiUri)
+//				.path("/{seriesId}")
+//				.queryParam("language", "ko")
+//				.queryParam("api_key", API_KEY)
+//				.buildAndExpand(String.valueOf(seriesId))
+//				.toUriString();
+//
+//		log.info(targetUrl);
+//
+//		TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
+		TvShowDTO tvShowDTO = apiUtil.getTvShowDetails(id);
 
 		log.info("tvShowDto = {}", tvShowDTO.toString());
 
@@ -260,7 +261,7 @@ public class TvShowController {
 
 		model.addAttribute("tvShowReco", tvShowRecoDTO);
 
-		return "tvshow/details";
+		return "tvshow/tvshow-details";
 	}
 
 
@@ -268,11 +269,49 @@ public class TvShowController {
 	@GetMapping("/{id}/season/{season_number}")
 	public String getTvShowSeasonDetails(Model model, @PathVariable(name= "id") int id , @PathVariable(name = "season_number") int season_number){
 
+
 		log.info("GET TV SHOW SEASON DETAILS - ID = {} , SEASON_NUM = {}", id, season_number);
+
+		TvShowDTO tvShowDto = apiUtil.getTvShowDetails(id);
+
+		log.info("TVSHOW Name = {}", tvShowDto.getName());
+
+		model.addAttribute("tvShowDto", tvShowDto);
+
+
+		TvShowSeasonDTO getSeasonDto = apiUtil.getTvShowSeasonDetail(id, season_number);
+
+		log.info("SEASON DETAIL = {}", getSeasonDto);
+
+		model.addAttribute("seasonDto", getSeasonDto);
+
+		// 제목 옆 최초 방영 년도 표기
+		if(getSeasonDto.getEpisodes().get(0).getAir_date() != null) {
+			String dateString = getSeasonDto.getEpisodes().get(0).getAir_date();
+
+			log.info("==========AIR DATE========== = {}", dateString);
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+			try {
+				Date date = dateFormat.parse(dateString);
+				SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+				String year = yearFormat.format(date);
+
+				model.addAttribute("releaseYear", year);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		// 시즌 1화의 stillpath를 가져오기 위함.
+		TvShowEpisodeDTO episodeDTO = apiUtil.getTvShowEpisodeDetail(id, season_number, getSeasonDto.getEpisodes().get(0).getEpisode_number());
+
+		log.info("EPISODE DETAIL = {}", episodeDTO.getStill_path());
+
+		model.addAttribute("episodeDTO", episodeDTO);
 
 		return "tvshow/season-details";
 	}
-
 
 
 	private void getInitialList(String pageName, Model model) {

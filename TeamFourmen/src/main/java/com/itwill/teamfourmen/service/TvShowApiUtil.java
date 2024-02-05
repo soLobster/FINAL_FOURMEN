@@ -1,7 +1,9 @@
 package com.itwill.teamfourmen.service;
 
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
+import com.itwill.teamfourmen.dto.tvshow.TvShowEpisodeDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowListDTO;
+import com.itwill.teamfourmen.dto.tvshow.TvShowSeasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -106,7 +108,7 @@ public class TvShowApiUtil {
      */
 
     public TvShowListDTO getOttTvShowList (String platform, int page){
-        log.info("Get Ott Tv Show List platform = {}, page = {}");
+        log.info("Get Ott Tv Show List platform = {}, page = {}" , platform, page);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -190,5 +192,78 @@ public class TvShowApiUtil {
 
         return tvShowListDTO;
     }
+    public TvShowDTO getTvShowDetails (int tvshow_id) {
+        log.info("get TvShow Season Detail - TVSHOW ID = {}", tvshow_id);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String baseUrl = "https://api.themoviedb.org/3/tv";
+
+        String targetUrl = "";
+
+        targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                .path("/{tvshow_id}")
+                .queryParam("language", "ko")
+                .queryParam("api_key", API_KEY)
+                .buildAndExpand(String.valueOf(tvshow_id))
+                .toUriString();
+        log.info("TARGET URL = {}",targetUrl);
+
+        TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
+
+        return  tvShowDTO;
+    }
+
+
+    public TvShowSeasonDTO getTvShowSeasonDetail (int tvshow_id ,int season_number){
+        log.info("get TvShow Season Detail - TVSHOW ID = {} , SEASON_NUM = {}", tvshow_id, season_number);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String baseUrl = "https://api.themoviedb.org/3/tv";
+
+        String targetUrl = "";
+
+        targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                .path("/{tvshow_id}")
+                .path("/season")
+                .path("/{season_number}")
+                .queryParam("language", "ko-KR")
+                .queryParam("api_key", API_KEY)
+                .buildAndExpand(String.valueOf(tvshow_id), String.valueOf(season_number))
+                .toUriString();
+        log.info("TARGET URL = {}",targetUrl);
+
+        TvShowSeasonDTO seasonDTO = restTemplate.getForObject(targetUrl, TvShowSeasonDTO.class);
+
+        return  seasonDTO;
+    }
+
+    public TvShowEpisodeDTO getTvShowEpisodeDetail(int tvshow_id, int season_number, int episode_number){
+        log.info("get TvShow Episode Detail - TVSHOW ID = {} , SEASON_NUMBER = {}, EPISODE_NUMBER = {}", tvshow_id, season_number, episode_number);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String baseUrl = "https://api.themoviedb.org/3/tv";
+
+        String targetUrl = "";
+
+        targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                .path("/{tvshow_id}")
+                .path("/season")
+                .path("/{season_number}")
+                .path("/episode")
+                .path("/{episode_number}")
+                .queryParam("language", "ko-KR")
+                .queryParam("api_key", API_KEY)
+                .buildAndExpand(String.valueOf(tvshow_id), String.valueOf(season_number), String.valueOf(episode_number))
+                .toUriString();
+        log.info("TARGET URL = {}", targetUrl);
+
+        TvShowEpisodeDTO episodeDTO = restTemplate.getForObject(targetUrl, TvShowEpisodeDTO.class);
+
+        return  episodeDTO;
+    }
+
 
 }
