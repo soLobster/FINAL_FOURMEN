@@ -38,8 +38,16 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	
+	// WebClient 사용을 위한 의존성 설정.
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.projectlombok:lombok'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	
 	
 	// Querydsl ----
 	

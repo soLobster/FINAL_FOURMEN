@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/7542e28415.js" crossorigin="anonymous"></script>
+    <title>인물 상세정보</title>
+    <link rel="stylesheet" th:href="@{/css/person_details.css}"> <!-- 스타일시트 연결 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+</head>
+<body>
+    <div>
+        <header>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    언어
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/?language=en">en</a></li>
+                    <li><a class="dropdown-item" href="/?language=ko">ko</a></li>
+                </ul>
+            </div>
+        </header>
+        <main>
+            <section>
+                <div>
+                    <p>TODO: 개요, 미디어, 팬덤, 공유 등 메뉴 목록 만들기</p>
+                </div>
+                <div>
+                    <div>
+                        <div class="content_wrapper">
+                            <div>
+                                <div class="a">
+                                    <section>
+                                        <div class="content_profile_img">
+                                            <div>
+                                                <img class="profile_img" th:src="@{'https://media.themoviedb.org/t/p/w300_and_h450_bestv2' + ${detailsPerson.profilePath}}"
+                                                     alt="Sydney Sweeney">
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div class="b">
+                                    <section>
+                                        <div th:each="externalIDs : ${externalIDs}" class="social_links">
+                                            <div>
+                                                <span>
+                                                    <a
+                                                       th:if="${externalIDs.getFacebookId() != null}"
+                                                       th:href="'https://www.facebook.com/' + ${externalIDs.getFacebookId()}">
+                                                        <i class="fa-brands fa-facebook"></i>
+                                                    </a>
+
+                                                    <a
+                                                       th:if="${externalIDs.getTwitterId() != null}"
+                                                       th:href="'https://twitter.com/' + ${externalIDs.getTwitterId()}">
+                                                        <i class="fa-brands fa-twitter"></i>
+                                                    </a>
+
+                                                    <a
+                                                       th:if="${externalIDs.getInstagramId() != null}"
+                                                       th:href="'https://www.instagram.com/' + ${externalIDs.getInstagramId()}">
+                                                        <i class="fa-brands fa-instagram"></i>
+                                                    </a>
+
+                                                    <a
+                                                       th:if="${externalIDs.getTiktokId() != null}"
+                                                       th:href="'https://www.tiktok.com/@' + ${externalIDs.getTiktokId()}">
+                                                        <i class="fa-brands fa-tiktok"></i>
+                                                    </a>
+
+                                                    <a
+                                                       th:if="${externalIDs.getYoutubeId() != null}"
+                                                       th:href="'https://www.youtube.com/' + ${externalIDs.getYoutubeId()}">
+                                                        <i class="fa-brands fa-youtube"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <h3>
+                                            인물 정보
+                                        </h3>
+                                        <section class="person_info">
+                                            <p>
+                                                <strong>
+                                                    <bdi style="margin: 0">유명 분야</bdi>
+                                                </strong>
+                                            </p>
+                                            <p th:text="${detailsPerson.getKnownForDepartment()}"></p>
+
+                                            <p>
+                                                <strong>
+                                                    <bdi>참여 작품 수</bdi>
+                                                </strong>
+                                            </p>
+                                            <p th:text="${movieCredits.getCast().size()} + ${tvCredits.getCast().size()}"></p>
+                                            <p th:if="${movieCredits.getCast() == null or tvCredits.getCast() == null or
+                                            movieCredits.getCast().isEmpty() or tvCredits.getCast().isEmpty()}">-</p>
+
+                                            <p>
+                                                <strong>
+                                                    <bdi>성별</bdi>
+                                                </strong>
+                                            </p>
+                                            <p th:text="${detailsPerson.getGender() == 1 ? '여성' : (detailsPerson.getGender() == 2 ? '남성' : '-')}" />
+
+                                            <p>
+                                                <strong>
+                                                    <bdi>생일</bdi>
+                                                </strong>
+                                            </p>
+                                            <p th:text="${detailsPerson.getBirthday() != null ? detailsPerson.getBirthday() : '-'}"></p>
+
+                                            <p>
+                                                <strong>
+                                                    <bdi>출생지</bdi>
+                                                </strong>
+                                            </p>
+                                            <p th:if="${detailsPerson.getPlaceOfBirth() != null}"
+                                               th:text="${detailsPerson.getPlaceOfBirth()}"></p>
+                                            <p th:if="${detailsPerson.getPlaceOfBirth() == null}">-</p>
+                                        </section>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <div class="c">
+                                <div>
+                                    <section>
+                                        <div>
+                                            <p th:text="${detailsPerson.getName()}"></p>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h3>
+                                            약력
+                                        </h3>
+                                        <div>
+                                            <p th:text="${detailsPerson.getBiography()}"></p>
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <h3>유명 분야</h3>
+                                        <div>
+                                            <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 8}">
+                                                <a>
+                                                    <img class="poster_img" th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}" alt="poster_img">
+                                                </a>
+                                            </span>
+                                            <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 8}">
+                                                <p th:text="${uniqueCast.popularity}"></p>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section>
+
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous">
+    </script>
+</body>
+</html>
