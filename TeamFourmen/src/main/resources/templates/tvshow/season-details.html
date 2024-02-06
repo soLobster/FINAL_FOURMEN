@@ -192,7 +192,7 @@
        th:href = "@{ '../season/' + ${seasonDto.getSeason_number() - 1} }">Previous Season</a>
 
 
-    <a th:href = "@{'/tv/' + ${tvShowDto.getId()}}" class = "p-2  btn btn-outline-light btn-sm" th:text="${'Back to ' + tvShowDto.getOriginal_name() + ' Main'}"></a>
+    <a th:href = "@{'/tv/' + ${tvShowDto.getId()}}" class = "p-2  btn btn-outline-light btn-sm" th:text="${'Back to ' +tvShowDto.getOriginal_name()  + ' Main'}"></a>
 
 
     <a th:unless = "${ seasonDto.getSeason_number() == tvShowDto.getNumber_of_seasons()}"

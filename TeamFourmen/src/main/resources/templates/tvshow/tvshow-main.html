@@ -10,6 +10,10 @@
         crossorigin="anonymous">
   <style>
 
+    *, *::after, *::before {
+      box-sizing: border-box;
+    }
+
     @font-face {
       font-family: 'Pretendard-Regular';
       src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -19,13 +23,35 @@
 
     body{
       font-family: 'Pretendard-Regular';
+      background-color: rgb(31,32,41);
+      color : rgb(196, 195, 202);
+    }
 
-      background-color: #040f29;
-
-      color : white;
-
+    .random-container {
+      width: 100vw;
+      margin: 0;
       font-size: 30px;
     }
+
+    .OTT {
+      margin-left: 5rem;
+      margin-right: 5rem;
+    }
+
+    .ott-title {
+      margin: 0;
+    }
+
+    .ott-header {
+      position: relative;
+      display: flex;
+    }
+
+    .ott-title:hover + .hide-info{
+      display: flex;
+      color: rgb(196, 195, 202);
+    }
+
 
     .div1 {
       font-size: 50px;
@@ -95,9 +121,81 @@
       text-align: center;
     }
 
+    .ott-container {
+      display: flex;
+    }
+
+    .scroller {
+      margin-left: 0;
+      padding: 0 0 0 0;
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+    }
+
+    .scroller::-webkit-scrollbar{
+      display: none;
+    }
+
+    .tv_scoller {
+      padding-left: 0;
+    }
+
+    .ott_item_card {
+      display: inline-block;
+      overflow: hidden;
+      margin-right: 10px;
+    }
+
+    .btn-slide-image {
+      background-color: transparent;
+      border: none;
+      color: #e9ecef;
+      opacity: 0.8;
+      font-size: 30px;
+      z-index: 2;
+    }
+
+    .btn-prev,
+    .btn-next {
+      color : white;
+    }
+
+    .card-img-overlay{
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.5s ease;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+    }
+
+    .card:hover .card-img-overlay {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .card-title{
+      white-space: normal;
+    }
+
+    .card-text{
+      white-space: normal;
+    }
+
   </style>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+  <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
   <script>
+
     function divrandom() {
 
       let div1 = document.querySelector('.div1');
@@ -175,8 +273,6 @@
     window.onload = function () {
       divrandom();
       updateCalendar();
-
-
     }
 
 
@@ -188,15 +284,281 @@
 
 <h1>TV SHOW MAIN</h1>
 
-<div class = "p-2 header-tvshow-daily">
-  <h2 class = "mb-0">Discover TV SHOW</h2>
-  <div class = "today-calender">
-    <div class = "calender-month"></div>
-    <div class = "calender-date"></div>
-  </div>
-</div>
+<div class = "random-container">
 
-<div>
+  <div class = "p-2 header-tvshow-daily">
+    <h2 class = "mb-0 fw-bolder">Discover TV SHOW</h2>
+    <div class = "today-calender">
+      <div class = "calender-month"></div>
+      <div class = "calender-date"></div>
+    </div>
+  </div>
+
+  <!-- 넷플릭스 -->
+  <div class = "OTT">
+    <div class = "ott-header">
+      <a th:href="@{/tv/ott/netfilx}" class = "text-decoration-none">
+        <h3 class = "text-white ott-title">Netfilx</h3>
+      </a>
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+        <div class = "scroller mx-3 mt-3">
+          <ol class = "tv_scoller">
+            <li class = "border-0 card ott_item_card" th:each=" tv : ${Netfilx}" th:object="${tv}">
+              <img class = "ott_img"
+                   th:if = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                   th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tv.getBackdrop_path()}}" width="300" height="auto" />
+              <img class = "ott_img"
+                   th:unless = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                   th:src = "@{'/image/default-w600.png'}" width="300" height="auto" />
+              <a th:href = "@{/tv/{id}(id = ${tv.getId()})}" class = "text-decoration-none">
+                <section class = "card-img-overlay">
+                  <div class = "card-body">
+                    <p class = "card-title fs-5 text-white" th:text="${tv.getName()}"></p>
+                    <p class = "card-text  fs-5 text-white fst-italic" th:text="${tv.getFirst_air_date()}"></p>
+                  </div>
+                </section>
+              </a>
+            </li>
+          </ol>
+        </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 디즈니 -->
+  <div class = "OTT">
+    <div class = "ott-header">
+      <a th:href="@{/tv/ott/disney_plus}" class = "text-decoration-none">
+        <h3 class = "text-white ott-title">Disney Plus</h3>
+      </a>
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class = "scroller mx-3 mt-3">
+        <ol class = "tv_scoller">
+          <li class = "border-0 card ott_item_card" th:each=" tv : ${Disney}" th:object="${tv}">
+            <img class = "tvshow_img"
+                 th:if = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tv.getBackdrop_path()}}" width="300" height="auto" />
+            <img class = "tvshow_img"
+                 th:unless = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'/image/default-w600.png'}" width="300" height="auto" />
+            <a th:href = "@{/tv/{id}(id = ${tv.getId()})}" class = "text-decoration-none">
+              <section class = "card-img-overlay">
+                <div class = "card-body">
+                  <p class = "card-title fs-5 text-white" th:text="${tv.getName()}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:text="${tv.getFirst_air_date()}"></p>
+                </div>
+              </section>
+            </a>
+          </li>
+        </ol>
+      </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 애플 -->
+  <div class = "OTT">
+    <div class = "ott-header">
+      <a th:href="@{/tv/ott/apple_tv}" class = "text-decoration-none">
+        <h3 class = "text-white ott-title">Apple Tv Plus</h3>
+      </a>
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class = "scroller mx-3 mt-3">
+        <ol class = "tv_scoller">
+          <li class = "border-0 card ott_item_card" th:each=" tv : ${Apple}" th:object="${tv}">
+            <img class = "tvshow_img"
+                 th:if = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tv.getBackdrop_path()}}" width="300" height="auto" />
+            <img class = "tvshow_img"
+                 th:unless = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'/image/default-w600.png'}" width="300" height="auto" />
+            <a th:href = "@{/tv/{id}(id = ${tv.getId()})}" class = "text-decoration-none">
+              <section class = "card-img-overlay">
+                <div class = "card-body">
+                  <p class = "card-title fs-5 text-white" th:text="${tv.getName()}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:text="${tv.getFirst_air_date()}"></p>
+                </div>
+              </section>
+            </a>
+          </li>
+        </ol>
+      </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 아마존 -->
+  <div class = "OTT">
+    <div class = "ott-header">
+      <a th:href="@{/tv/ott/amazone_prime}" class = "text-decoration-none">
+        <h3 class = "text-white ott-title">Amazone Prime Video</h3>
+      </a>
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class = "scroller mx-3 mt-3">
+        <ol class = "tv_scoller">
+          <li class = "border-0 card ott_item_card" th:each=" tv : ${Amazone}" th:object="${tv}">
+            <img class = "tvshow_img"
+                 th:if = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tv.getBackdrop_path()}}" width="300" height="auto" />
+            <img class = "tvshow_img"
+                 th:unless = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'/image/default-w600.png'}" width="300" height="auto" />
+            <a th:href = "@{/tv/{id}(id = ${tv.getId()})}" class = "text-decoration-none">
+              <section class = "card-img-overlay">
+                <div class = "card-body">
+                  <p class = "card-title fs-5 text-white" th:text="${tv.getName()}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:text="${tv.getFirst_air_date()}"></p>
+                </div>
+              </section>
+            </a>
+          </li>
+        </ol>
+      </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 왓챠 -->
+  <div class = "OTT">
+    <div class = "ott-header">
+      <a th:href="@{/tv/ott/watcha}" class = "text-decoration-none">
+        <h3 class = "text-white ott-title">Watcha</h3>
+      </a>
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class = "scroller mx-3 mt-3">
+        <ol class = "tv_scoller">
+          <li class = "border-0 card ott_item_card" th:each=" tv : ${Watcha}" th:object="${tv}">
+            <img class = "tvshow_img"
+                 th:if = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tv.getBackdrop_path()}}" width="300" height="auto" />
+            <img class = "tvshow_img"
+                 th:unless = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'/image/default-w600.png'}" width="300" height="auto" />
+            <a th:href = "@{/tv/{id}(id = ${tv.getId()})}" class = "text-decoration-none">
+              <section class = "card-img-overlay">
+                <div class = "card-body">
+                  <p class = "card-title fs-5 text-white" th:text="${tv.getName()}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:text="${tv.getFirst_air_date()}"></p>
+                </div>
+              </section>
+            </a>
+          </li>
+        </ol>
+      </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 웨이브 -->
+  <div class = "OTT">
+    <div class = "ott-header">
+      <a th:href="@{/tv/ott/wavve}" class = "text-decoration-none">
+        <h3 class = "text-white ott-title">Wavve</h3>
+      </a>
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class = "scroller mx-3 mt-3">
+        <ol class = "tv_scoller">
+          <li class = "border-0 card ott_item_card" th:each=" tv : ${Wavve}" th:object="${tv}">
+            <img class = "tvshow_img"
+                 th:if = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tv.getBackdrop_path()}}" width="300" height="auto" />
+            <img class = "tvshow_img"
+                 th:unless = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'/image/default-w600.png'}" width="300" height="auto" />
+            <a th:href = "@{/tv/{id}(id = ${tv.getId()})}" class = "text-decoration-none">
+              <section class = "card-img-overlay">
+                <div class = "card-body">
+                  <p class = "card-title fs-5 text-white" th:text="${tv.getName()}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:text="${tv.getFirst_air_date()}"></p>
+                </div>
+              </section>
+            </a>
+          </li>
+        </ol>
+      </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 이주의 인기 리스트 -->
+  <div class = "OTT">
+    <div class = "ott-header">
+      <a th:href="@{/tv/trending/week}" class = "text-decoration-none">
+        <h3 class = "text-white ott-title">이번주 인기 리스트 TOP 20</h3>
+      </a>
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class = "scroller mx-3 mt-3">
+        <ol class = "tv_scoller">
+          <li class = "border-0 card ott_item_card" th:each=" tv : ${popularThisWeek}" th:object="${tv}">
+            <img class = "tvshow_img"
+                 th:if = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tv.getBackdrop_path()}}" width="300" height="auto" />
+            <img class = "tvshow_img"
+                 th:unless = "${tv.getBackdrop_path() ne null and tv.getBackdrop_path() ne 'null' and tv.getBackdrop_path() ne ''}"
+                 th:src = "@{'/image/default-w600.png'}" width="300" height="auto" />
+            <a th:href = "@{/tv/{id}(id = ${tv.getId()})}" class = "text-decoration-none">
+              <section class = "card-img-overlay">
+                <div class = "card-body">
+                  <p class = "card-title fs-5 text-white" th:text="${tv.getName()}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:text="${tv.getFirst_air_date()}"></p>
+                </div>
+              </section>
+            </a>
+          </li>
+        </ol>
+      </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
 
   <div class = "p-4 div1">
     <div>A</div>
@@ -230,6 +592,60 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const container = document.querySelectorAll(".ott-container");
+    const scrollers = document.querySelectorAll(".scroller");
+    const scrollDistance = 500;
+
+    // 버튼 클릭 시 이벤트 핸들러 함수
+    function handleButtonClick(direction, index) {
+      const currentScroll = scrollers[index].scrollLeft;
+
+      // 왼쪽으로 이동
+      if (direction === "prev" && currentScroll  >= 0) {
+        scrollers[index].scrollTo({
+          left: currentScroll - scrollDistance,
+          behavior: "smooth" // 부드러운 스크롤 적용
+        });
+      }
+
+      // 오른쪽으로 이동
+      if (direction === "next" && currentScroll + scrollDistance <=
+              scrollers[index].scrollWidth - scrollers[index].clientWidth + scrollDistance) {
+        scrollers[index].scrollTo({
+          left: currentScroll + scrollDistance,
+          behavior: "smooth" // 부드러운 스크롤 적용
+        });
+      }
+    }
+
+    document.querySelectorAll(".btn-prev").forEach(function ( button, index ) {
+      button.addEventListener("click", function (){
+        handleButtonClick("prev", index);
+      });
+    });
+
+    document.querySelectorAll(".btn-next").forEach(function ( button, index ) {
+      button.addEventListener("click", function (){
+        handleButtonClick("next", index);
+      });
+    });
+
+
+    // // 이전 버튼 클릭 시
+    // document.querySelector(".btn-prev").addEventListener("click", function () {
+    //   handleButtonClick("prev");
+    // });
+    //
+    // // 다음 버튼 클릭 시
+    // document.querySelector(".btn-next").addEventListener("click", function () {
+    //   handleButtonClick("next");
+    // });
+
+  });
+
 </script>
 </body>
 </html>

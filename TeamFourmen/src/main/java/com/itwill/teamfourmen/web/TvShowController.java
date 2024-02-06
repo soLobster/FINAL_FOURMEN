@@ -75,6 +75,44 @@ public class TvShowController {
 	public String getTvShowMain(Model model){
 		log.info("GET TV SHOW MAIN VIEW");
 
+		// Random 객체 생성 -> 랜덤한 페이지를 보내기 위해
+		Random random = new Random();
+
+		// 넷플릭스 tv 리스트를 MAIN으로 보냄
+		TvShowListDTO NetflixListDTO = apiUtil.getOttTvShowList("netfilx", random.nextInt(10) + 1);
+		List<TvShowDTO> Netfilx = NetflixListDTO.getResults();
+		model.addAttribute("Netfilx", Netfilx);
+
+		// 디즈니 tv 리스트를 Main으로 보냄
+		TvShowListDTO DisenyPlusListDto = apiUtil.getOttTvShowList("disney_plus", random.nextInt(5) +1);
+		List<TvShowDTO> Disney = DisenyPlusListDto.getResults();
+		model.addAttribute("Disney", Disney);
+
+		// 애플 tv 리스트를 Main으로 보냄
+		TvShowListDTO AppleTvListDto = apiUtil.getOttTvShowList("apple_tv", random.nextInt(5) +1);
+		List<TvShowDTO> Apple = AppleTvListDto.getResults();
+		model.addAttribute("Apple", Apple);
+
+		// 아마존 tv 리스트를 Main으로 보냄
+		TvShowListDTO AmazoneListDto = apiUtil.getOttTvShowList("amazone_prime", random.nextInt(5) +1);
+		List<TvShowDTO> Amazone = AmazoneListDto.getResults();
+		model.addAttribute("Amazone", Amazone);
+
+		// Watcha 리스트를 Main으로 보냄
+		TvShowListDTO WatchaListDto = apiUtil.getOttTvShowList("watcha", random.nextInt(4)+1);
+		List<TvShowDTO> Watcha = WatchaListDto.getResults();
+		model.addAttribute("Watcha", Watcha);
+
+		// Wavve 리스트를 Main으로 보냄
+		TvShowListDTO WavveListDto = apiUtil.getOttTvShowList("wavve" , random.nextInt(5)+1);
+		List<TvShowDTO> Wavve = WavveListDto.getResults();
+		model.addAttribute("Wavve", Wavve);
+
+		// 이 주의 인기 리스트
+		TvShowListDTO PopularThisWeekTvShowList = apiUtil.getTrendTvShowList("week",1);
+		List<TvShowDTO> popularThisWeekDto = PopularThisWeekTvShowList.getResults();
+		model.addAttribute("popularThisWeek", popularThisWeekDto);
+
 		return "tvshow/tvshow-main";
 	}
 
