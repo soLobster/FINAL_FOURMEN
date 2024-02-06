@@ -11,7 +11,7 @@
     <link th:href="@{/css/movie/movie-list-search.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-main.css}" rel="stylesheet">
     <link th:href="@{/css/accordion/accordion.css}" rel="stylesheet">
-	
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
 </head>
 <body>
     <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
@@ -165,6 +165,7 @@
     <script th:inline="javascript">
     	const totalPages = [[${listDto.totalPages}]];
 	</script>
+	<script th:src="@{/js/navbar.js}"></script>
 	<script th:src="@{/js/movie/movie-list.js}"></script>
 	<script th:src="@{/js/accordion/accordion.js}"></script>
 	

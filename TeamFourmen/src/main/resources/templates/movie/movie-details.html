@@ -6,6 +6,7 @@
 	
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-detail.css}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
@@ -288,6 +289,7 @@
     <script th:inline="javascript">
     	const backdropPath = [[${movieDetailsDto.backdropPath}]];
     </script>
+    <script th:src="@{/js/navbar.js}"></script>
     <script th:src="@{/js/image/img-dominant-color.js}"></script>
     <script th:src="@{/js/movie/movie-image-slide.js}"></script>
 	
