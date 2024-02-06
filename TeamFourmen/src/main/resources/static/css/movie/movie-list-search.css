@@ -1,0 +1,171 @@
+@charset "UTF-8";
+
+
+.content-container {
+    width: 90%;
+    margin: 0 auto;
+    display:flex;
+    align-items: start;
+    height: auto;
+    /*display: grid;
+    grid-template-columns: 1fr 4fr;*/
+    
+}
+
+
+/* 필터, 검색을 위한 컨테이너 */
+.search-container {
+    width: 260px;
+    min-width: 260px;
+    height: auto;
+    margin-right: 36px;
+}
+
+/* 영화 리스트 보여주는 컨테이너 */
+.content-container main {
+    flex-grow: 1;
+}
+.list-container {
+    width: 100%;
+    height: auto;
+    
+}   
+
+
+/* 필터 카드 커스텀 */
+.custom-card {
+    background-color: inherit;
+    color: inherit;
+    margin-bottom: 16px;
+}
+
+.custom-card-header {
+    border: 0.5px solid #fff;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    
+    
+}
+
+/* 필터의 각 항목 컨테이너. 카드처럼 border를 줌 */
+.custom-card-body {
+    padding: 0;
+    border: 0.5px solid #fff;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.card-body-container {
+    width: 100%;
+}
+
+.card-each-item-container {
+    padding: 14px 16px;
+    border-top: solid #adb5bd 1.6px;
+    height: auto;
+}
+
+/* 필터의 각 제목 css */
+.card-each-item-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+    /* 영화 정렬 select포함한 div */
+.div-movie-sort select {
+    width: 100%;
+}
+
+
+    /* 개봉일 from-to label과 date input 좌우정렬 */
+.div-release {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+    /* 장르 아이템들 flex로 설정해서 자유롭게 배치 */
+.genre-list {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: inherit;
+    
+}
+
+.genre-list li {
+    display: inline-block;
+    margin: 4px 4px;
+}
+
+    /* 장르 체크박스 스타일 */
+.checkbox-genre-label {
+    border: solid #495057 2px;
+    border-radius: 14px;
+    padding: 6px;
+}
+
+.checkbox-genre-label:hover {
+    background-color: #495057;
+    font-weight: 500;
+    color: #fff;
+}
+
+	/*선택된 장르 배경색 진하게 */
+.checkbox-genre:checked  + label {
+    background-color: #495057;
+    font-weight: 700;
+    color: #fff;
+}
+
+    /* 콤보박스 언어선택 */
+.combobox-language {
+    width: 100%;
+}
+
+    /* 런타임 관련 */
+.runtime-range {
+    margin-bottom: 16px;
+}
+
+    /* 필터 검색 버튼 꾸미기 */
+.filter-btn {
+    display: block;
+    margin: 0;
+    width: 100%;
+    background-color: #fbc500;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: none;
+    color: #102770;
+    font-size: 1.1rem;
+    font-weight: 600;        
+}
+
+
+/* 검색관련 */
+.movie-search-input {
+    position: relative;
+}
+
+.movie-search-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.movie-search-btn button {
+    background-color: transparent;
+    border: none;
+}

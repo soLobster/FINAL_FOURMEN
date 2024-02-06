@@ -1,0 +1,604 @@
+@charset "UTF-8";
+
+
+#movie-details-header {
+    width: 100%;
+    
+    background-position: left calc((50vw - 170px) - 340px) top;
+    background-repeat: no-repeat;    
+    background-size: cover;
+}
+
+#movie-background-color-div {
+    width: 100%;    
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 3% 10%;
+}
+
+/* 포스터부분 css */
+.movie-details-poster-container {
+    width: 300px;
+    min-width: 300px;
+}
+
+.movie-details-poster-container img {
+    width: 100%;
+    min-width: 100%;
+}
+
+
+
+
+/* 영화 설명부분 css */
+.movie-details-description-container {
+    width: calc(100% - 300px);
+    display: flex;
+    align-items: center;
+}
+
+.movie-description-inner-container {
+    padding-left: 56px;
+}
+
+.movie-title-etc {
+    margin-bottom: 36px;
+}
+
+.movie-title {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    font-size: 1.5em;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.movie-title-year {
+    font-size: 1.25em;
+}
+
+.movie-etc-info {
+    font-size: 0.9em;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.movie-etc-info div {
+    margin-right: 16px;
+}
+
+.div-movie-certificate {
+    display: inline-block;
+    border: 0.5px solid #fff;
+    padding: 2px 4px;
+}
+
+.movie-tagline {
+    font-size: 1.2em;
+    font-style: italic;
+    margin-bottom: 16px;
+    color: #adb5bd;
+}
+
+.movie-description {
+    margin-bottom: 24px; 
+}
+
+
+/* 영화설명 및 감독리스트 */
+.movie-director-container h5 {
+    font-weight: 600;
+}
+
+.movie-director-name-container {
+    display: flex;
+    justify-content: start;    
+}
+
+.movie-director-name {
+    width: 33%;
+}
+
+
+
+	/* 영화 설명부분 중 좋아요, 저장, 트레일러 등 부분 */
+ .movie-like-trailer-container {
+    display: flex;
+    flex-wrap: nowrap;
+ }
+ 
+ .movie-like-trailer-container i {
+    font-size: 1.3em;
+    display: inline-block;
+    
+ }
+ 
+ .movie-like-item {
+    margin-right: 16px;
+    display: flex;
+    position: relative;
+    width: 46px;
+    height: 46px;
+    margin-right: 24px;
+    margin-bottom: 36px;
+    border-radius: 50%;
+    background-color: #013a63;
+}
+
+.movie-like-item i {    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    
+}
+
+.movie-trailer-item {
+    margin-right: 24px;
+    margin-bottom: 36px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 46px;
+    margin-left: 64px;
+    
+    
+}
+
+.movie-trailer-item:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 1s easy-out;
+}
+
+
+.movie-trailer-item a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+}
+
+.movie-trailer {
+    height: 46px;
+    display: flex;
+    align-items: center;    
+}
+
+
+.movie-trailer-item span {
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 700;
+}
+
+.movie-trailer-item i {
+    /*
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    */
+    padding-right: 12px;    
+    font-size: 1em;
+    transform: translateY(-1px);
+}
+
+	/* 트레일러 모달 관련 */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+
+.modal-dialog {
+    width: 100%;
+    position: relative;
+    
+}
+
+.modal-header {
+    background-color: rgb(31, 32, 41);
+    color: rgb(196, 195, 202);
+    width: 100%;    
+    padding: 16px 0;
+    font-weight: 700;
+}
+
+.modal-header h3 {
+    margin-left: 16px;
+    font-weight: 600;
+}
+
+
+.div-btn-close {
+    margin-right: 0 8px 0 0;
+    right: 24px;
+    top: 0;
+    padding: 0;
+}
+
+.btn-header-close {
+    background-color: rgb(31, 32, 41);
+    margin: 0;
+    margin-right: 32px;
+    font-size: 1.2em;
+    border: none;
+    color: #dee2e6;
+    
+}
+
+
+.btn-header-close:active {
+  border-style: none;
+  
+}
+
+
+.modal-body {
+    
+    background-color: rgb(31, 32, 41);
+    color: rgb(196, 195, 202);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%; 
+}
+
+.iframe-movie-trailer-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;    
+}
+
+
+
+/* 메인바디 줄 나누는 div */
+.div-horizontal-line {
+    width: 100%;
+    min-width: 100%;
+    height: 0.5px;
+    background-color: #6c757d;
+    border: none;    
+}
+
+/* 메인바디 (포스터와 간략설명 뒤) */
+.movie-body-content {
+    width: 80%;
+    margin: 3% auto;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.movie-main-container {
+    width: 70%;    
+}
+
+
+/* 섹션 마진 정의 */
+.main-section {
+    width: 100%;
+    height: auto;
+    margin: 5% 0 5% 0;
+    
+}
+
+    /* 영화 출연진 관련 */ /* 사진슬라이드 관련도 아래 css사용하면 됨! */ 
+.movie-card-container {
+    position: relative;    
+}
+
+.movie-whole-cards-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+
+        /* 슬라이드 버튼 관련 */
+.btn-slide-image {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    
+    background-color: transparent;
+    
+    border: none;
+    color: #e9ecef;
+    opacity: 0.8;
+    font-size: 40px;
+    z-index: 2;
+    
+    line-height: 50px;
+    
+}        
+
+.btn-prev {
+    left: -56px;
+    display: none;
+}
+
+.btn-next {
+    right: -56px;
+}
+
+		/* scrollbar꾸미기 */
+.movie-whole-cards-container::-webkit-scrollbar {
+      height: 6px;    
+}
+
+.movie-whole-cards-container::-webkit-scrollbar-track {
+   background: #f1f1f1;
+   border-radius: 3px;
+}
+
+.movie-whole-cards-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+} 
+    
+
+.movie-whole-cards-container::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
+.div-each-card {
+    width: 180px;
+    min-width: 140px;
+    margin: 0 24px 8px 0;
+}
+
+.movie-card-image-container {
+    width: 100%;
+    min-width: 100%;
+    border-color: none;
+    border-radius: 8px;
+    
+    position: relative;
+    
+    /* 이미지에 border-radius 적용 위해 */
+    overflow: hidden;
+}
+
+.div-movie-card-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+}
+
+.movie-card-image-container:hover .div-movie-card-overlay {
+    visibility:visible;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: all 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;    
+}
+
+.img-movie-card {
+    width: 100%;
+    min-width: 100%;
+}
+
+
+
+.movie-card-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+/* 영화컬렉션 사이즈조절 */
+.movie-collection-container {
+    display: block;
+}
+
+.movie-poster-card {
+    height: 0;
+    padding-bottom: 150%;
+}
+
+.movie-collection-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.img-movie-collection-card {
+    position: absolute;
+    height: 100%;    
+}
+
+.movie-collection-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+.movie-collection-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* 사이드바 CSS 시작 */
+.movie-aisde-container {
+    width: 100%;
+    max-width: 320px;
+    min-width: 260px;
+    margin-left: 50px;
+}
+
+
+.aside-section {
+    margin: 5% 0 8% 5%;
+}
+
+
+	/* 소셜미디어 관련 */ 
+.movie-social-media-section {
+    width: 100%;
+    display: flex;
+}
+
+.movie-social-media-each-container {
+    margin-right: 16px;
+}
+
+.movie-social-media-each-container a {
+    text-decoration: none;    
+    color: inherit;
+    font-size: 1.8em;    
+}
+
+            /* 말풍선 관련 */
+.bubble-inner-container {
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.bubble-inner-container .speech-bubble-top {
+    position: absolute;
+        
+    background-color: #fff;
+    
+    padding: 6px 6px;
+    border-radius: 6px;
+              
+    font-size: 1em;
+    font-weight: 600;
+    
+    text-align: center;
+    color: #003f88;
+    opacity: 0;
+    
+    pointer-events: none;
+        
+    z-index: 2;
+        
+}
+
+.bubble-inner-container .speech-bubble-top::before {
+    content: "";
+    
+    position: absolute;
+    background-color: #fff;
+    display: block;
+    width: 15px;
+    height: 15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    bottom: -8px;
+}
+
+
+.bubble-inner-container:hover .speech-bubble-top {
+    opacity: 1;
+    pointer-events: auto;
+    
+}
+
+
+    	/* 소셜미디어 말풍선 위치 설정 */
+.speech-bubble-social-media-position {
+    top: -48px;
+}    	
+
+        /* 각 말풍선 넓이 설정 */
+#speech-bubble-instagram {
+    width: 100px;
+}
+
+#speech-bubble-facebook {
+    width: 80px;
+}
+
+#speech-bubble-x {
+    width: 42px;
+}
+
+
+#speech-bubble-imdb {
+    width: 60px;
+}
+
+
+	/* provider 관련 */
+.movie-provider-logo-container {
+    width: 100%;
+    
+}
+
+.movie-provider-logo-container {
+    width: 100%;
+    display: flex;        
+}
+
+.div-provider-each {
+    margin-right: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.div-provider-each-logo {
+    width: 50px;
+}
+
+.movie-provider-logo {
+    width: 100%;
+    min-width: 100%;
+}
+
+.bubble-provider-position {
+    bottom: 72px;
+}
+
+
+.speech-bubble-provider {
+    width: 120px;    
+}
+
+.provider-name {
+    font-size: 0.8em;
+    font-weight: 700;
+    margin: 0;
+}
+
+.provider-option {
+    font-size: 0.7em;
+    margin: 0;
+    font-style: italic;    
+}
+
+	/* 사이드바 영화 상세 정보 관련 */
+.movie-detailed-description div h5 {
+    font-weight: 600;
+}
+
+.movie-detailed-description > div {
+    margin: 24px 0;
+}
