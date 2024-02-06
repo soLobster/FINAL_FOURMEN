@@ -1,25 +1,34 @@
 package com.itwill.teamfourmen.config;
 
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+
 import org.springframework.security.web.SecurityFilterChain;
+
+
+
+import lombok.RequiredArgsConstructor;
 
 
 // Spring 컨테이너에서 Bean(객체)을 생성, 관리 -> 필요한 곳에 DI (의존성 주입)
 // Component의 자식임
 @Configuration
 @EnableMethodSecurity // 컨트롤러 메서드 애너테이션을 사용한 권한 부여, 인증 활성화
+@RequiredArgsConstructor
+@Configurable
 public class SecurityConfig {
     
+
+
+	
     // Spring security 5 버전부터 비밀번호는 반드시 암호화를 해야 함.
     // 비밀번호를 암호화하지 않으면 HTTP 403(access denied, 접근 거부)
     // HTTP 500 (내부 서버 오류, internal server error) 에러가 발생함.
@@ -74,11 +83,25 @@ public class SecurityConfig {
         // http.formLogin(Customizer.withDefaults());
         
         // 로그인 (폼) 페이지를 Custom 페이지(우리가 작성하는 페이지)로 설정.
-        http.formLogin((x) -> x.loginPage("/member/login")); // 로그인 할 페이지를 설정
+        http.formLogin((x) -> 
+        		x.loginPage("/login")
+        		  .loginProcessingUrl("/login")); // 로그인 할 페이지를 설정
+        
+        
         
         // 로그아웃 이후에 이동할 페이지 설정 - 홈 페이지(/)
-        http.logout((logout) -> logout.logoutSuccessUrl("/"));
-        
+//        http.logout((logout) -> logout.logoutSuccessUrl("/"));
+//        http
+//        .authorizeHttpRequests(request -> request
+//            .requestMatchers("/", "/index","/login", "/oauth2/**").permitAll()
+//            .anyRequest().authenticated())
+//        .oauth2Login(oauth2 -> oauth2
+//        		.loginPage("/signin")
+//        	.authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/oauth2"))
+//            .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+//            .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
+//            .successHandler(oAuth2successhandler)
+//        		);
         // 페이지 접근 권한, 인증 설정
         // 1. authorizeHttpRequests() 메서드에서 직접 설정하는 방법.
         // -> 단점: 새로운 요청 경로가 생길때 마다 설정 코드(requestMatchers())를 변경.
