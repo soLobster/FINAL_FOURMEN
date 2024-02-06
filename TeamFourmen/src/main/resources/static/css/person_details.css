@@ -1,0 +1,26 @@
+@charset "UTF-8";
+@import "reset.css";
+/* details.html 에 포함 */
+
+/* div 가로로 배치하기 */
+.content_wrapper {
+    display: flex;
+}
+
+/* social links 스타일링 */
+.social_links div {
+    margin-top: 10px;
+}
+.social_links span a {
+    text-decoration: none;
+    margin-right: 10px;
+    color: black;
+}
+.social_links a i {
+    font-size: 1.75rem;
+}
+
+/* 인물 정보 스타일링 */
+.person_info p {
+    margin: 0.1rem 0 1rem 0;
+}

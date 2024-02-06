@@ -1,0 +1,120 @@
+@charset "UTF-8";
+@import "reset.css";
+/* lists.html 에 포함 */
+
+/* 페이지 배경색 설정 */
+body {
+    background-color: black;
+}
+
+.container-fluid {
+    display: flex;
+    justify-content: center;
+}
+
+.inner_block {
+    margin: 20px 6rem;
+}
+
+.inner_block .inner_content .content {
+    padding: 0 100px;
+}
+
+.fifty_square {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 5px;
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+/* 상단 제목(인기 인물) 스타일링 */
+.inner_block .inner_content .content h2 {
+    font-weight: 700;
+    font-size: 30px;
+    margin-bottom: 2.5rem;
+    color: white;
+}
+
+/* 4(열)x5(행) 그리드 생성 */
+.results_profile_card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4개의 열 생성 */
+    grid-template-rows: repeat(5, 1fr); /* 5개의 행 생성 */
+    gap: 16px; /* 격자 간격 설정 */
+    width: 100%; /* 컨테이너의 너비를 100%로 설정 */
+    margin: auto; /* 컨테이너를 중앙 정렬 */
+    align-items: start; /* 그리드 아이템의 높이가 다를 경우를 대비 */
+}
+
+/* 카드 스타일링 */
+.item_profile_card {
+    background: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1); /* 그림자 효과 */
+    align-items: stretch; /* 모든 그리드 아이템을 컨테이너 높이에 맞춤 */
+    min-height: 350px; /* 최소 높이 설정 */
+    overflow: auto; /* 내용이 넘치면 스크로바 표시 */
+}
+
+/* 카드 내 이미지 스타일링 */
+.item_profile_card img {
+    width: 100%; /* 이미지 너비를 컨테이너에 맞춤 */
+    height: auto; /* 높이를 자동으로 설정하여 비율 유지 */
+    object-fit: cover; /* 이미지가 컨테이너를 꽉 채우도록 설정 */
+}
+
+/* 카드 내 글(인물 이름) 스타일링 */
+.meta .name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+}
+.meta p a {
+    text-decoration-line: none;
+    color: black;
+}
+
+/* 카드 내 글(주요 작품 목록_3개까지 표시) 스타일링 */
+.meta .known_for {
+    font-size: 1rem;
+    font-weight: 400;
+    color: cadetblue;
+    display: block;
+    margin-top: 0;
+    margin-bottom: 2.5px;
+    margin-left: 10px;
+}
+
+/* 반응형 스타일링 */
+/* 화면 크기가 1024px 미만일 때 */
+@media (max-width: 1024px) {
+    .results_profile_card {
+        grid-template-columns: repeat(3, 1fr); /* 3개의 열로 변경 */
+        grid-template-rows: repeat(5, 1fr); /* 필요에 따라 행 수 조정 */
+    }
+    .item_profile_card {
+        width: 100%; /* 열의 너비를 조정하여 카드가 컨테이너를 꽉 채우도록 함 */
+    }
+}
+
+/* 화면 크기가 768px 미만일 때 */
+@media (max-width: 768px) {
+    .results_profile_card {
+        grid-template-columns: repeat(2, 1fr); /* 2개의 열로 변경 */
+        grid-template-rows: repeat(5, 1fr); /* 필요에 따라 행 수 조정 */
+    }
+}
+
+/* 화면 크기가 480px 미만일 때 */
+@media (max-width: 480px) {
+    .results_profile_card {
+        grid-template-columns: 1fr; /* 1개의 열로 변경 */
+        grid-template-rows: repeat(5, 1fr); /* 필요에 따라 행 수 조정 */
+    }
+}
