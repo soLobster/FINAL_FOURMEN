@@ -1,9 +1,18 @@
 /**
  * movie-list.js
+ * 
+ * 스크롤 가능한 총 높이
+ * -> document.body.scrollHeight
+ * 
+ * 컴퓨터 스크린 상의 웹 페이지 높이
+ * -> document.documentElement.clientHeight
+ * 
+ * 현재 스크롤 위치
+ * -> window.scrollY
  */
 
-document.addEventListener('DOMContentLoaded', function() {
-      
+window.addEventListener('DOMContentLoaded', function() {
+    
     let page = 1;   // default로 1 page에서 시작, load할수록 page 증가.
     let originPath = location.origin;
     let pathname = location.pathname;   // 현재 있는 주소(query string제외)
@@ -14,24 +23,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const listContainer = document.querySelector('.list-container');
     const btnMorePost = document.querySelector('#btn-more-post');
     
-    const observer = new IntersectionObserver(async (entries) => {
+    // Throttle함수
+    const throttle = (cb, delay=1000) => {       
+        let shouldWait = false;
         
-        const fourthLastElement = entries[0];
-        
-        if (!fourthLastElement.isIntersecting) {
-            return;
+        return (...args) => {
+            if (shouldWait) {
+                return;
+            }
+            
+            cb(...args);
+            shouldWait = true;
+            
+            setTimeout(() => {
+                shouldWait = false;
+            }, delay)
         }
-            observer.unobserve(document.querySelector('.movie-item-container:nth-last-child(4)'))
-            await getAdditionalList();                
-            //observer.unobserve(fourthLastElement.target);
-            observer.observe(document.querySelector('.movie-item-container:nth-last-child(4)'));
-
-    });
-    
-    if (totalPages > 1) {
-        observer.observe(document.querySelector('.movie-item-container:nth-last-child(4)'));    
-    }
-    
+        
+    };
     
     
     // 영화리스트 가져오는 async함수;
@@ -45,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         let innerHtml = '';
         
         if (page < totalPages) {
-            
-            await axios.get(url + queryString)
+			
+			await axios.get(url + queryString)
             .then((response) => {
                 page = response.data.page;
                 console.log(`page=${page}`);
@@ -55,13 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     innerHtml += `
                         <div class="movie-item-container">
                             <div class="movie-item-image-container">
-                                <a href='${originPath}/movie/details?id=${movie.id}'>
-                                    <img src='https://image.tmdb.org/t/p/original/${movie.poster_path}'>
+                            	<a href='${originPath}/movie/details?id=${movie.id}'>
+                                	<img src='https://image.tmdb.org/t/p/original/${movie.poster_path}'>
                                 </a>
                             </div>
                             <div class="movie-description-container">
-                                <a href='${originPath}/movie/details?id=${movie.id}'>
-                                    <div class="movie-title">${movie.title}</div>
+                            	<a href='${originPath}/movie/details?id=${movie.id}'>
+                                	<div class="movie-title">${movie.title}</div>
                                 </a>
                                 <div>${movie.release_date}</div>
                             </div>                            
@@ -74,24 +83,31 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch((error) => {
                 console.log(`ERROR 발생!! ${error}`)
-            })              
-        } else {
-            btnMorePost.classList.add('d-none');
-        }
+            })            	
+		} else {
+			btnMorePost.classList.add('d-none');
+		}
         
     };
     
     
-    if (btnMorePost) {
-        btnMorePost.addEventListener('click', async() => {
+    document.addEventListener('scroll', throttle(function() {
         
+        const totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
+        const currentHeight = window.scrollY;
+        if ((totalHeight - currentHeight) < 1200) {
+            getAdditionalList();
+        }
         
-            observer.unobserve(document.querySelector('.movie-item-container:nth-last-child(4)'));
-            await getAdditionalList();
-            observer.observe(document.querySelector('.movie-item-container:nth-last-child(4)'));        
-        });        
-    }
-
+    }, 1000));
+    
+    
+    btnMorePost.addEventListener('click', getAdditionalList);
+    
+    
    
     
+    
+    
+     
 });
