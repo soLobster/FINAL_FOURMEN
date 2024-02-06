@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Tv Show List</title>
+
+	 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet" 
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+        crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+
+
+
+	<style>
+
+		@font-face {
+			font-family: 'Pretendard-Regular';
+			src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+			font-weight: 400;
+			font-style: normal;
+		}
+
+		html{
+			scroll-behavior: smooth;
+		}
+
+		body {
+			font-family: 'Pretendard-Regular';
+			background-color: black ;
+		}
+
+		main {
+			color: white;
+		}
+
+		.layout {
+			padding-left: 3rem;
+			padding-right: 3rem;
+			width: 100vw;
+			height: auto;
+			display: grid;
+			grid:
+				"sidebar body" 1fr
+				/ 1fr 4fr;
+			gap: 8px;
+		}
+
+		.search_section {
+			grid-area: sidebar;
+			background-color: cornflowerblue;
+			width: 250px;
+			min-width: 250px;
+		}
+		.Tv_Show_Section {
+			/*width: 100%;*/
+			/*margin-left: 20px;*/
+			/*grid-area: body;*/
+			/*background-color: cadetblue;*/
+
+			width: 100%;
+			grid-area: body;
+			display: flex; /* 부모 컨테이너를 flex 컨테이너로 설정 */
+			flex-direction: column; /* 자식 요소들을 세로로 배치 */
+			align-items: center; /* 가운데 정렬 */
+		}
+
+		.flex-container {
+			/*height: auto;*/
+			/*margin-right: 0;*/
+			/*display: flex;*/
+			/*flex-direction: row;*/
+			/*flex-wrap: wrap;*/
+
+			width: 100%; /* flex-container의 너비를 100%로 설정 */
+			margin-right: 0;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+
+		.flex_box {
+			width: 200px;
+			/*표기되는 포스터 높이*/
+			height: 350px;
+			margin-left: 10px;
+			margin-right: 10px;
+			margin-bottom: 35px;
+			object-fit: contain;
+		}
+
+		img.show_poster {
+			max-width: 100%;
+			object-fit: cover;
+		}
+
+		.load_tvShow_button {
+			/*padding-left: 10px;*/
+			/*padding-right: 20px;*/
+
+			width: 100%; /* load_tvShow_button의 너비를 100%로 설정 */
+			padding-left: 10px;
+			padding-right: 20px;
+		}
+
+		button#btn-load-tvShow{
+			width: 100%;
+		}
+
+		.back_to_top{
+			width: 10px;
+			height: 10px;
+			position: fixed;
+			bottom: 2rem;
+			right: 2rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 0.5rem;
+			padding: 0.5rem;
+			text-decoration: none;
+			transition: 0.2s ease-out;
+			z-index: 999;
+		}
+
+		.back_to_top span {
+			color: white;
+			font-size: 3rem;
+			transition: 0.2s ease-out;
+		}
+
+		.back_to_top i {
+			color: darkgray;
+			opacity: 0.7;
+		}
+
+		.back_to_top i:hover {
+			color: lightgray;
+		}
+		.back_to_top:hover span {
+			transform: translateY(-4px);
+		}
+
+	</style>
+</head>
+
+<body>
+	<h1>TV SHOW LIST</h1>
+
+	<main>
+		<h3>TV SHOW LIST</h3>
+
+		<a th:href="@{/}">HOME</a>
+
+		<section class="layout">
+			<div class = "search_section">
+				검색 공간임
+			</div>
+
+			<div class = "Tv_Show_Section">
+				<div class = "flex-container">
+					<div class = "rounded border-0 card text-bg-dark flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
+						<a th:href = "@{/tv/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none">
+							<img class = "rounded-top show_poster" th:if="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
+								 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="200" height="273" />
+							<img class = "rounded-top show_poster" th:unless="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
+								 th:src = "@{'/image/default.png'}" width="200" height="273" />
+							<div class="card-body">
+								<p class = "fs-border mb-0 card-title text-white" th:utext="${#strings.abbreviate(tvshow.getName(), 11)}"></p>
+								<p class = "fst-italic card-text text-white-50" th:text="${tvshow.getFirst_air_date()}"></p>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class = "load_tvShow_button">
+					<button id = "btn-load-tvShow" class="fs-bolder fs-3 btn btn-secondary opacity-50">Load More Tv-Show</button>
+				</div>
+			</div>
+
+			<!-- back to top button -->
+			<a href="javascript:void(0)" class="back_to_top" onclick="scrollToTop()">
+				<span><i class="fa-solid fa-circle-up"></i></span>
+			</a>
+
+		</section>
+	</main>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+	<script>
+
+		function scrollToTop() {
+			window.scrollTo({
+				top: 0,
+				behavior: "smooth"
+			});
+		}
+
+	</script>
+
+	<script th:inline="javascript">
+		const totalPages = /*[[@{${listDTO.total_pages}}]]*/ '0';
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="/js/tvshow/tv-show-list.js"></script>
+
+</body>
+</html>
