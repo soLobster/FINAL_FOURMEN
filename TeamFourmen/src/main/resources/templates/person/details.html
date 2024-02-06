@@ -146,11 +146,12 @@
                                     <section>
                                         <h3>유명 분야</h3>
                                         <div>
-
                                             <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 8}">
                                                 <a>
                                                     <img class="poster_img" th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}" alt="poster_img">
                                                 </a>
+                                            </span>
+                                            <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 8}">
                                                 <p th:text="${uniqueCast.popularity}"></p>
                                             </span>
                                         </div>
