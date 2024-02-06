@@ -1,0 +1,166 @@
+@charset "UTF-8";
+
+#navbar-container {
+    max-width: 100%;
+    min-width: 100%;
+    /*background-color: #001f54;*/
+    font-weight: 600;
+    padding: 8px 0;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+#navbar-inner-container {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    font-size: 1rem;
+    gap: 1.5%;
+}
+
+/* 텍스트 포함한 부분들 넓이 설정 */
+.nav-div-width-adjustment {
+    min-width: min-content;
+    white-space: nowrap;
+}
+
+/* navbar에 있는 a태그 관련 */
+.navbar-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* 로고 이미지 관련 */
+#navbar-logo-container {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    margin-left: auto;
+    margin-right: 0.5rem;
+    flex-grow: 1;
+}
+
+.navbar-logo-image {
+    width: 100%;
+}
+
+/* 메뉴 버튼 관련 */
+#navbar-menu-outer-container {
+    margin: 0 0.5rem;
+    flex-grow: 1;
+}
+
+.navbar-menu-btn {
+    border: none;
+    background-color: inherit;
+    color: inherit;
+    font-weight: inherit;
+}
+
+.navbar-menu-text-icon-span {
+    white-space: nowrap;
+    cursor: pointer;
+    
+}
+
+.navbar-menu-hamburger-icon {
+    display: inline;    
+}
+
+
+/* 검색 부분 */
+.navbar-search-container {
+    flex-grow: 4;
+    margin: 0 8px;    
+}
+
+.navbar-search-inner-container {
+    position: relative;
+    width: 90%;
+    margin: 0 auto;    
+}
+
+.navbar-search-input-container {
+    border-radius: 8px;
+    overflow: hidden;    
+}
+
+.navbar-search-input {
+    width: 100%;
+}
+
+.navbar-search-button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    background-color: transparent;
+    border: none;
+    transform: translateY(-50%);
+    color: #66666e;
+}
+
+
+/* 유저관련(로그인, 로그아웃, 등등) */
+.navbar-user-div {
+    padding: 0 1rem;
+    flex: 1;
+}
+
+
+/* 메뉴 버튼 토글 관련, 디테일 메뉴(누르면 디테일 메뉴 보여줌) */
+#navbar-detailed-menu {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1024px;
+    width: 0;
+    margin: 0 auto;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    
+    transition: height 0.6s ease-in-out;
+}
+
+.navbar-detailed-menu-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar-detailed-menu-title span {
+    color: #fbc500;
+    width: 24px;
+    font-size: 1.3rem;
+    display: inline-block;    
+}
+
+	/* 토글버튼 메뉴 아이템들 */
+.navbar-detailed-menu-items {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.navbar-detailed-menu-list {
+    list-style-type: none;
+    line-height: 2.5rem;
+    padding-left: 2.6rem;
+    font-size: 1.1rem;
+}
+
+
+
+.navbar-each-menu-item:hover a {
+    text-decoration: underline;
+}
+
+.navbar-detailed-menu-items a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
