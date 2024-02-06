@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 public class MovieCreditsDto {
 
-    private List<MovieCreditsCastDTO> cast;
-    private List<MovieCreditsCrewDTO> crew;
+    private List<MovieCreditsCastDto> cast;
+    private List<MovieCreditsCrewDto> crew;
     private int id;
 
 }

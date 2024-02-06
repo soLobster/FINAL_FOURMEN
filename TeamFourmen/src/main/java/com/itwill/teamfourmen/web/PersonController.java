@@ -13,7 +13,8 @@ import com.itwill.teamfourmen.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -34,19 +35,20 @@ public class PersonController {
 		}
 
 		// 서비스 메서드 호출 (항상 "popular"를 파라미터로 전달)
-		PageAndListDto pageAndListDto = personService.getPersonList("popular", page);
+		PageAndListDto pageAndListDto = personService.getPersonList(page);
 
 		model.addAttribute("pageInfo", pageAndListDto.getPage());
 		model.addAttribute("personList", pageAndListDto.getResults());
 
-		return "person/list";
+		return "person/lists";
 
 	} // end list
 
 	@GetMapping("/details/{id}")
-	public String details (
+	public String details(
 			@PathVariable("id") int id,
-			@RequestParam(name = "orginalName", required = false) String originalName,
+			@RequestParam(name = "originalName", required = false) String originalName,
+			@RequestParam(name = "language", required = false) String language,
 			Model model
 	) {
 		log.info("details(id={})", id);
@@ -55,28 +57,60 @@ public class PersonController {
 		}
 
 		// 서비스 메서드 호출 (인물의 id 값을 파라미터로 전달)
-		DetailsPersonDto detailsPersonDto = personService.getPersonDetails(id);
+		DetailsPersonDto detailsPersonDto = personService.getPersonDetails(language, id);
 		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 		MovieCreditsDto movieCreditsDto = personService.getMovieCredits(id);
-		MovieCreditsCastDTO movieCreditsCastDTO = personService.getMovieCreditsCast(id);
+		MovieCreditsCastDto movieCreditsCastDTO = personService.getMovieCreditsCast(id);
 		TvCreditsDto tvCreditsDto = personService.getTvCredits(id);
-		TvCreditsCastDTO tvCreditsCastDTO = personService.getTvCreditsCast(id);
+		TvCreditsCastDto tvCreditsCastDTO = personService.getTvCreditsCast(id);
 		CombinedCreditsDto combinedCreditsDto = personService.getCombinedCredits(id);
+		CombinedCreditsCastDto combinedCreditsCastDto = personService.getCombinedCreditsCast(id);
 
-		// 값 출력 테스트.
-		String dto = movieCreditsCastDTO.getTitle();
-		log.info("dto 출력 테스트: {}", dto);
+		// CombinedCast를 처리하는 코드.
+		List<CombinedCreditsCastDto> castList = combinedCreditsDto.getCast();
+		List<CombinedCreditsCastDto> sortedCastList = new ArrayList<>(castList);
+		sortedCastList.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getPopularity).reversed());
 
+		// MovieCast를 처리하는 코드.
+		List<MovieCreditsCastDto> movieCastList = movieCreditsDto.getCast();
+		List<MovieCreditsCastDto> sortedMovieCastList = new ArrayList<>(movieCastList);
+		sortedMovieCastList.sort(Comparator.comparingDouble(MovieCreditsCastDto::getPopularity).reversed());
+
+		// TvCast를 처리하는 코드.
+		List<TvCreditsCastDto> tvCastList = tvCreditsDto.getCast();
+		List<TvCreditsCastDto> sortedTvCastList = new ArrayList<>(tvCastList);
+		sortedTvCastList.sort(Comparator.comparingDouble(TvCreditsCastDto::getPopularity).reversed());
+
+		// 중복 요소를 허용하지 않는 컬렉션(HastSet)을 사용하여, 포스터 경로(path)가 고유한지 확인.
+		Set<String> uniquePosterPath = new HashSet<>();
+
+		// Cast 필터링. (중복X, 고유한 값을 가지도록 필터링함)
+		List<CombinedCreditsCastDto> uniqueCastList = castList.stream()
+				.filter(cast -> uniquePosterPath.add(cast.getPosterPath()))
+				.collect(Collectors.toList());
+
+		// 필터링한 Cast를 popularity 기준 내림차순 정렬.
+		uniqueCastList.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getPopularity).reversed());
+
+		// 인기순으로 정렬된 castList를 모델에 추가.
+		model.addAttribute("sortedCastList", sortedCastList);
+		model.addAttribute("sortedMovieCastList", sortedMovieCastList);
+		model.addAttribute("sortedTvCastList", sortedTvCastList);
+		// 필터링한 CastList를 모델에 추가.
+		model.addAttribute("uniqueCastList", uniqueCastList);
 
 		model.addAttribute("detailsPerson", detailsPersonDto);
 		model.addAttribute("externalIDs", externalIDsDto);
 		model.addAttribute("movieCredits", movieCreditsDto);
-		model.addAttribute("movieCreditsCast",movieCreditsCastDTO);
+		model.addAttribute("movieCreditsCast", movieCreditsCastDTO);
 		model.addAttribute("tvCredits", tvCreditsDto);
 		model.addAttribute("tvCreditsCast", tvCreditsCastDTO);
 		model.addAttribute("combinedCredits", combinedCreditsDto);
+		model.addAttribute("combinedCreditsCast", combinedCreditsCastDto);
 
 		return "person/details";
 	} // end details
+
+
 
 }

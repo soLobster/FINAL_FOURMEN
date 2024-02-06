@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class MovieCreditsCrewDTO {
+public class TvCreditsCastDto {
 
     private boolean adult;
     @JsonProperty("backdrop_path")
@@ -14,18 +14,19 @@ public class MovieCreditsCrewDTO {
     @JsonProperty("genre_ids")
     private List<Integer> genreIds;
     private int id;
+    @JsonProperty("origin_country")
+    private List<String> originCountry;
     @JsonProperty("original_language")
     private String originalLanguage;
-    @JsonProperty("original_title")
-    private String originalTitle;
+    @JsonProperty("original_name")
+    private String originalName;
     private String overview;
     private double popularity;
     @JsonProperty("poster_path")
     private String posterPath;
-    @JsonProperty("release_date")
-    private String releaseDate;
-    private String title;
-    private boolean video;
+    @JsonProperty("first_air_date")
+    private String firstAirDate;
+    private String name;
     @JsonProperty("vote_average")
     private double voteAverage;
     @JsonProperty("vote_count")
@@ -33,8 +34,7 @@ public class MovieCreditsCrewDTO {
     private String character;
     @JsonProperty("credit_id")
     private String creditId;
-    private int order;
-    private String department;
-    private String job;
+    @JsonProperty("episode_count")
+    private int episodeCount;
 
 }

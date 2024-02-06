@@ -1,5 +1,6 @@
 @charset "UTF-8";
-/* list.html 에 포함 */
+@import "reset.css";
+/* lists.html 에 포함 */
 
 /* 페이지 배경색 설정 */
 body {

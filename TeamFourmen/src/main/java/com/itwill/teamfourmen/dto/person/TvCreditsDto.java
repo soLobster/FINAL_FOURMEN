@@ -7,8 +7,8 @@ import java.util.List;
 @Data
 public class TvCreditsDto {
 
-    private List<TvCreditsCastDTO> cast;
-    private List<TvCreditsCrewDTO> crew;
+    private List<TvCreditsCastDto> cast;
+    private List<TvCreditsCrewDto> crew;
     private int id;
 
 }
