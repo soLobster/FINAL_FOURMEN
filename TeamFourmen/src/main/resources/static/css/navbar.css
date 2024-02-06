@@ -3,14 +3,14 @@
 #navbar-container {
     max-width: 100%;
     min-width: 100%;
-    /*background-color: #001f54;*/
+    background-color: #001f54;
     font-weight: 600;
     padding: 8px 0;
     position: relative;
     margin-bottom: 2rem;
 }
 
-#navbar-inner-container {
+.navbar-inner-container {
     width: 85%;
     margin: 0 auto;
     display: flex;
@@ -34,7 +34,7 @@
 }
 
 /* 로고 이미지 관련 */
-#navbar-logo-container {
+.navbar-logo-container {
     width: 80px;
     min-width: 80px;
     max-width: 80px;
@@ -48,7 +48,7 @@
 }
 
 /* 메뉴 버튼 관련 */
-#navbar-menu-outer-container {
+.navbar-menu-outer-container {
     margin: 0 0.5rem;
     flex-grow: 1;
 }
@@ -111,18 +111,24 @@
 
 
 /* 메뉴 버튼 토글 관련, 디테일 메뉴(누르면 디테일 메뉴 보여줌) */
-#navbar-detailed-menu {
+.navbar-detailed-menu {
     display: flex;
     justify-content: space-between;
     max-width: 1024px;
-    width: 0;
     margin: 0 auto;
+    width: 85%;
     height: 0;
-    opacity: 0;
+    /*opacity: 0;*/
     overflow: hidden;
-    
+        
     transition: height 0.6s ease-in-out;
 }
+
+
+.navbar-detailed-x-div {
+    display: none;
+}
+
 
 .navbar-detailed-menu-title {
     font-size: 1.8rem;
@@ -137,6 +143,14 @@
     width: 24px;
     font-size: 1.3rem;
     display: inline-block;    
+}
+
+.navbar-chevron-down {
+    display: none;
+}
+
+.navbar-chevron-up {
+    display: none;
 }
 
 	/* 토글버튼 메뉴 아이템들 */
@@ -162,5 +176,75 @@
     text-decoration: none;
     color: inherit;
 }
+
+
+@media(max-width: 1024px) {
+    
+    .navbar-detailed-menu {
+        display: block;
+        justify-content: none;
+        width: 280px;
+        height: 100vh;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        
+        border: 2px solid #e9ecef;
+        
+        background-color: #001f54;
+        
+    }
+    
+    .navbar-detailed-x-div {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        padding-right: 1rem;
+        min-height: 3.5rem;
+        
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    
+    	/* 제목관련 */
+    .navbar-detailed-menu-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .navbar-detailed-menu-title span {
+        color: #fbc500;
+        width: 24px;
+        font-size: 1.1rem;
+        
+        display: inline-block;    
+    }
+    
+    .navbar-chevron-div {
+        display: flex;
+        justify-content: end;
+        flex-grow: 1;
+    }
+    
+    .navbar-chevron-down {
+        display: block;
+        margin-right: 1rem;
+    }
+    
+    
+    .navbar-detailed-menu-list {
+        font-size: 1rem;
+    }
+    
+    .navbar-detailed-menu-section-container {
+        margin-left: 1rem;
+    }
+    
+}
+
 
 

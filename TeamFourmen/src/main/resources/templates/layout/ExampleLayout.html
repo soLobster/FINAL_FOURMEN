@@ -7,13 +7,13 @@
 </head>
 <body>
     <nav id="navbar-container" th:fragment="navigation-bar">
-        <div id="navbar-inner-container">
+        <div class="navbar-inner-container">
             <a th:href="@{/}">      
-                <div id="navbar-logo-container">
+                <div class="navbar-logo-container">
                     <img class="navbar-logo-image" src="https://www.logoground.com/uploads10/dv10y2021183902021-06-223711428superpanda.jpg">
                 </div>
             </a>
-            <div id="navbar-menu-outer-container nav-div-width-adjustment">
+            <div class="navbar-menu-outer-container nav-div-width-adjustment">
                 <button class="navbar-menu-btn">       
                     <span class="navbar-menu-text-icon-span nav-div-width-adjustment">
                         <i class="fa-solid fa-bars navbar-menu-hamburger-icon"></i> Menu
@@ -44,11 +44,20 @@
             </div>
         </div>
          <!-- 디테일 메뉴들 -->
-        <div id="navbar-detailed-menu">
-            <div id="navbar-detailed-movie-menu-container">
+        <div class="navbar-detailed-menu">
+            <div class="navbar-detailed-x-div">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <div class="navbar-detailed-menu-section-container">
                 <div class="navbar-detailed-menu-title">
-                    <span><i class="fa-solid fa-film"></i></span>
-                    Movie
+                    <div>
+                        <span><i class="fa-solid fa-film"></i></span>
+                        Movie
+                    </div>
+                    <div class="navbar-chevron-div">
+                        <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                        <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                    </div>
                 </div>
                 <div class="navbar-detailed-menu-items">
                     <ul class="navbar-detailed-menu-list">
@@ -59,10 +68,16 @@
                     </ul>
                 </div>
             </div>
-            <div id="navbar-detailed-tv-show-container">
+            <div class="navbar-detailed-menu-section-container">
                 <div class="navbar-detailed-menu-title">
-                    <span><i class="fa-solid fa-tv"></i></span>
-                    TV Show                    
+                    <div>
+                        <span><i class="fa-solid fa-tv"></i></span>
+                        TV Show
+                    </div>
+                    <div class="navbar-chevron-div">
+                        <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                        <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                    </div>                    
                 </div>
                 <div class="navbar-detailed-menu-items">
                     <ul class="navbar-detailed-menu-list">
@@ -74,14 +89,20 @@
                         <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/apple_tv}">TV SHOW Watch Apple Tv</a></li>
                         <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/amazon_prime}">TV SHOW Watch on Amazon Prime Video</a></li>
                         <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/watcha}">TV SHOW Watch on Watcha</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/wavve}">TV SHOW Watch on Wavve</a></li>                                     
+                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/wavve}">TV SHOW Watch on Wavve</a></li>                        
                     </ul>
                 </div>
             </div>
-            <div id="navbar-detailed-people-container">
+            <div class="navbar-detailed-menu-section-container">
                 <div class="navbar-detailed-menu-title">
-                    <span><i class="fa-solid fa-user-group"></i></span>
-                    People
+                    <div>
+                        <span><i class="fa-solid fa-user-group"></i></span>
+                        People
+                    </div>
+                    <div class="navbar-chevron-div">
+                        <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                        <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                    </div>
                 </div>
                 <div class="navbar-detailed-menu-items">
                     <ul class="navbar-detailed-menu-list">
