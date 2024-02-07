@@ -99,13 +99,13 @@ window.addEventListener('DOMContentLoaded', function (){
 
     };
 
-    document.addEventListener('scroll', throttle(function () {
+    document.addEventListener('scroll', throttle(async function () {
 
         const totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
         const currentHeight = window.scrollY;
 
         if ((totalHeight - currentHeight) < 1000) {
-            getAdditionalTvShowList();
+            await getAdditionalTvShowList();
         }
 
     }, 500));

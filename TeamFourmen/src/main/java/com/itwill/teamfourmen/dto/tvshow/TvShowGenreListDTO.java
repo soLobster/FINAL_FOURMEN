@@ -7,9 +7,8 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TvShowGenreDTO {
+public class TvShowGenreListDTO {
 
-    private int id;
-    private String name;
+    List<TvShowGenreDTO> genres;
 
 }

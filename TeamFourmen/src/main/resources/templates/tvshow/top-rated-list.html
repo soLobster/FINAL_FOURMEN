@@ -12,8 +12,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
 	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
 
-
-
 	<style>
 
 		@font-face {
@@ -50,10 +48,13 @@
 
 		.search_section {
 			grid-area: sidebar;
-			background-color: cornflowerblue;
-			width: 250px;
-			min-width: 250px;
+			/*background-color: cornflowerblue;*/
+			width: 280px;
+			min-width: 280px;
+			display: flex;
+			flex-direction: column;
 		}
+
 		.Tv_Show_Section {
 			/*width: 100%;*/
 			/*margin-left: 20px;*/
@@ -143,6 +144,29 @@
 			transform: translateY(-4px);
 		}
 
+		ul.multi_select {
+			list-style-type: none;
+			padding-left: 0;
+			display: flex;
+			flex-flow: wrap;
+		}
+
+		button.accordion-button {
+			background-color: #66666e;
+			color: white;
+		}
+
+		.checkbox-genre + label {
+			background-color: #66666e;
+			color: white;
+			cursor: pointer;
+		}
+
+		.checkbox-genre:checked + label {
+			background-color: #3ba4fa;
+			color: white;
+			font-style: italic;
+		}
 	</style>
 </head>
 
@@ -155,9 +179,101 @@
 		<a th:href="@{/}">HOME</a>
 
 		<section class="layout">
-			<div class = "search_section">
-				검색 공간임
+
+			<div class = "p-2 search_section">
+				<form action="../tv/filter">
+					<div class = "accordion mb-2" id = "accordion-filter">
+						<div class = "accordion-item border-0" style="background-color: #2a2b38" >
+							<h2 class = "accordion-header">
+								<button class = "accordion-button collapsed fs-4 border-0 accordion_BTN" type = "button" data-bs-toggle = "collapse"
+								data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collaspeOne">
+									필터
+								</button>
+							</h2>
+							<div id = "collapseOne" class = "accordion-collapse collapse">
+								<div class="accordion-body text-white">
+
+									<div class = "genre-filter">
+										<h4> 장르 </h4>
+										<hr>
+											<div class="p-0 genres">
+												<ul class = "multi_select text">
+													<li th:each=" genre : ${tvShowGenreDTO} " th:value="${genre.getId()}">
+														<input class="d-none checkbox-genre" type="checkbox" th:id = "${genre.getId()}" th:value="${genre.getId()}" />
+														<label class = "m-1 badge checkbox-genre-label fs-5" th:for = "${genre.getId()}" th:text="${genre.getName()}"></label>
+													</li>
+												</ul>
+											</div>
+										<hr>
+									</div>
+
+									<div class = "language-filter">
+										<div class = "origin-language" style="display: flex">
+										<h4 class = "me-2">원어</h4>
+										<span><i class="fa-solid fa-circle-question"></i></span>
+										</div>
+										<select class="form-select" aria-label="Default select example">
+											<option selected="selected" value="">언어를 선택해주세요</option>
+											<option value="ko">한국어</option>
+											<option value="en">영어</option>
+											<option value="es">스페인어</option>
+											<option value="ja">일본어</option>
+											<option value="zh">중국어</option>
+											<option value="fr">프랑스어</option>
+											<option value="de">독일어</option>
+										</select>
+										<hr>
+									</div>
+
+									<div class = "air-date-filter">
+										<h4> 방영 일자 </h4>
+										<hr>
+											<div class = "date" style="display: flex; flex-direction: column">
+												<div class = "from" style="display: flex; justify-content: space-between">
+													<span>FROM</span>
+													<input class = "mb-2" type="date" />
+												</div>
+												<div class = "to" style="display: flex; justify-content: space-between">
+													<span>TO</span>
+													<input type="date" />
+												</div>
+											</div>
+										<hr>
+									</div>
+
+									<div class = "filter-button">
+										<button class = "btn btn-primary" style="width: 100%">필터링하기</button>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+
+				<div class = "accordion" id = "accordion-search">
+				<div class = "accordion-item border-0" style="background-color: #2a2b38">
+					<h2 class = "accordion-header">
+						<button class = "accordion-button collapsed fs-4 border-0 accordion_BTN" type = "button" data-bs-toggle = "collapse"
+								data-bs-target="#collapse-accordion-search" aria-expanded="false"
+								aria-controls="collapse-accordion-search">
+							검색
+						</button>
+					</h2>
+					<div id = "collapse-accordion-search" class = "accordion-collapse collapse">
+						<div class="accordion-body p-3">
+							<form class = "d-flex" role="search">
+								<input class= "form-control me-2 search-bar" type = "search"
+									   placeholder="Search" aria-label="Search" style="width: 181px;">
+								<button class = "btn btn-sm btn-primary" type="submit">검색</button>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
+			</div>
+
+
 
 			<div class = "Tv_Show_Section">
 				<div class = "flex-container">

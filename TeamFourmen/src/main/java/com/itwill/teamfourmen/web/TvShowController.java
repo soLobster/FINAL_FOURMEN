@@ -148,6 +148,14 @@ public class TvShowController {
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
+		TvShowGenreListDTO tvShowGenreListDTO = apiUtil.getTvShowGenreList("ko-KR");
+
+		List<TvShowGenreDTO> tvShowGenre = tvShowGenreListDTO.getGenres();
+
+		log.info("tvShow Genre = {}", tvShowGenre);
+
+		model.addAttribute("tvShowGenreDTO", tvShowGenre);
+
 		return "tvshow/top-rated-list";
 	}
 

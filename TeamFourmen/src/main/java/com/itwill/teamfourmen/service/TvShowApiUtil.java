@@ -1,9 +1,6 @@
 package com.itwill.teamfourmen.service;
 
-import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
-import com.itwill.teamfourmen.dto.tvshow.TvShowEpisodeDTO;
-import com.itwill.teamfourmen.dto.tvshow.TvShowListDTO;
-import com.itwill.teamfourmen.dto.tvshow.TvShowSeasonDTO;
+import com.itwill.teamfourmen.dto.tvshow.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,6 +23,8 @@ public class TvShowApiUtil {
     private String API_KEY;
 
     private TvShowDTO tvShowDTO;
+
+    private final String BASE_URL = "https://api.themoviedb.org/3";
 
     /**
      * Tv Show List를 TvShowListDTO 객체로 돌려주는 메서드
@@ -38,7 +38,9 @@ public class TvShowApiUtil {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String baseUrl = "https://api.themoviedb.org/3/tv";
+        String baseUrl =  BASE_URL + "/tv";
+
+        //"https://api.themoviedb.org/3/tv";
 
         String targetUrl = "";
 
@@ -192,6 +194,53 @@ public class TvShowApiUtil {
 
         return tvShowListDTO;
     }
+
+    // 장르 가져오기
+    public TvShowGenreListDTO getTvShowGenreList (String language) {
+        log.info("get TvShowGenreList - Language = {}", language);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String baseUrl = BASE_URL + "/genre/tv/list";
+
+        String targetUrl = "";
+
+        targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                .queryParam("language", language)
+                .queryParam("api_key", API_KEY)
+                .toUriString();
+        log.info("TARGET URL = {}", targetUrl);
+
+        TvShowGenreListDTO tvShowGenreListDTO = restTemplate.getForObject(targetUrl, TvShowGenreListDTO.class);
+
+        return tvShowGenreListDTO;
+    }
+
+    // 장르별 TvShowList 출력
+    public TvShowListDTO getGenreTvShowList (String genre, int page) {
+        log.info("get GenreTvShowList - Genre = {}, page = {}", genre, page);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String baseUrl = "https://api.themoviedb.org/3/discover/tv";
+
+        String targetUrl = "";
+
+        targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                .queryParam("language", "ko-KR")
+                .queryParam("page", page)
+                .queryParam("sort_by", "vote_count.desc")
+                .queryParam("watch_region", "KR")
+                .queryParam("with_genres", genre)
+                .queryParam("api_key", API_KEY)
+                .toUriString();
+        log.info("TARGET URL = {}", targetUrl);
+
+        TvShowListDTO tvShowListDTO = restTemplate.getForObject(targetUrl,TvShowListDTO.class);
+        return  tvShowListDTO;
+    }
+
+
     public TvShowDTO getTvShowDetails (int tvshow_id) {
         log.info("get TvShow Season Detail - TVSHOW ID = {}", tvshow_id);
 
