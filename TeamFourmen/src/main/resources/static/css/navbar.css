@@ -125,7 +125,7 @@
 }
 
 
-.navbar-detailed-x-div {
+.navbar-detailed-x {
     display: none;
 }
 
@@ -161,9 +161,12 @@
 
 .navbar-detailed-menu-list {
     list-style-type: none;
-    line-height: 2.5rem;
     padding-left: 2.6rem;
     font-size: 1.1rem;
+}
+
+.navbar-each-menu-item {
+    margin-bottom: 1rem;
 }
 
 
@@ -182,28 +185,46 @@
     
     .navbar-detailed-menu {
         display: block;
-        justify-content: none;
+        
         width: 280px;
         height: 100vh;
         margin: 0;
         position: absolute;
         top: 0;
         left: 0;
+        transform: translateX(-100%);
         
         border: 2px solid #e9ecef;
+        border-radius: 8px;
         
         background-color: #001f54;
         
+        overflow-y: auto;
+        
+        z-index: 5;
+        
+        transition: transform 0.5s ease-in-out;
     }
     
-    .navbar-detailed-x-div {
+    .navbar-detailed-menu-open {
+        transform: translateX(0);
+    }
+    
+    
+    .navbar-detailed-x-container {
+        border-bottom: 1px solid #e9ecef;        
+    }
+    
+    
+    .navbar-detailed-x {
         display: flex;
         align-items: center;
         justify-content: end;
-        padding-right: 1rem;
+        position: relative;
+        right: 1rem;
         min-height: 3.5rem;
         
-        border-bottom: 1px solid #e9ecef;
+        cursor: pointer;        
     }
     
     
@@ -238,6 +259,10 @@
     
     .navbar-detailed-menu-list {
         font-size: 1rem;
+    }
+    
+    .navbar-each-menu-item {
+        margin-bottom: 0.8rem;
     }
     
     .navbar-detailed-menu-section-container {
