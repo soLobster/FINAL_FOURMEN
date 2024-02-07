@@ -121,11 +121,12 @@
     /*opacity: 0;*/
     overflow: hidden;
         
-    transition: height 0.6s ease-in-out;
+    /*transition: height 0.6s ease-in-out;*/
+    transition: none;
 }
 
 
-.navbar-detailed-x {
+.navbar-detailed-x-div {
     display: none;
 }
 
@@ -187,44 +188,76 @@
         display: block;
         
         width: 280px;
-        height: 100vh;
         margin: 0;
         position: absolute;
         top: 0;
         left: 0;
         transform: translateX(-100%);
         
-        border: 2px solid #e9ecef;
-        border-radius: 8px;
-        
         background-color: #001f54;
-        
+                
         overflow-y: auto;
+        
+        border: 2px solid #e9ecef;        
+        border-radius: 8px; 
+        height: 100vh;
         
         z-index: 5;
         
-        transition: transform 0.5s ease-in-out;
+        /*transition: transform 0.5s ease-in-out;*/
+        transition: none;
     }
     
     .navbar-detailed-menu-open {
         transform: translateX(0);
+        height: 100vh;
+        border: 2px solid #e9ecef;        
+        border-radius: 8px; 
     }
     
+    
+    .body-element-navbar {
+        position: fixed;
+    }
+    
+    .body-detailed-menu-open {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(250, 250, 250, 0.8);
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        z-index: 2;
+    }
+        
     
     .navbar-detailed-x-container {
         border-bottom: 1px solid #e9ecef;        
     }
     
     
-    .navbar-detailed-x {
+    .navbar-detailed-x-div {
         display: flex;
-        align-items: center;
-        justify-content: end;
-        position: relative;
+        align-items: center;        
+        position: relative;        
+        min-height: 3.5rem;                     
+    }
+    
+    .navbar-detailed-x {
+        position: absolute;
+        cursor: pointer;
         right: 1rem;
-        min-height: 3.5rem;
+    }
+    
+    
+    .navbar-detailed-menu-list {
+        height: 0;
+        transition: height 0.5s ease-in-out;
+    }
+    
+    .navbar-detailed-menu-list-open {
         
-        cursor: pointer;        
     }
     
     
@@ -235,7 +268,9 @@
         display: flex;
         align-items: center;
         gap: 1rem;
+        cursor: pointer;
     }
+        
     
     .navbar-detailed-menu-title span {
         color: #fbc500;
@@ -256,17 +291,78 @@
         margin-right: 1rem;
     }
     
+    .navbar-detailed-menu-items {   /* 아코디언을 위해 숨김 */
+        height: 0;
+        transition: all 0.5s ease-in-out;
+        overflow: hidden;        
+    }
+    
+    .navbar-detailed-menu-items-open { /* 아코디언 열때있는 클래스 */
+        
+    }    
     
     .navbar-detailed-menu-list {
         font-size: 1rem;
+        display: block 
     }
     
     .navbar-each-menu-item {
         margin-bottom: 0.8rem;
+        display: block;
     }
     
     .navbar-detailed-menu-section-container {
         margin-left: 1rem;
+    }
+    
+}
+
+
+@media (max-width: 880px) {
+    
+    .navbar-inner-container {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5%;
+    }
+    
+    .navbar-inner-container {
+        font-size: 0.8rem;
+    }
+    
+    .navbar-search-inner-container {
+        width: 100%;
+    }
+    
+    /* 로고 이미지 관련 */
+    /*.navbar-logo-container {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+        margin-left: auto;
+        margin-right: 0.5rem;
+        flex-grow: 1;
+    }*/
+    
+    
+    /* 메뉴 버튼 관련 */
+    .navbar-menu-outer-container {
+        margin: 0;
+        flex-grow: 0.5;
+        
+    }
+    
+    /* 검색 부분 */
+    .navbar-search-container {
+        flex-grow: 8;
+        margin: 0 0.5rem;
+        margin: 0    
+    }
+    
+    /* 유저관련(로그인, 로그아웃, 등등) */
+    .navbar-user-div {
+        padding: 0 1rem;
+        flex: 1;
     }
     
 }

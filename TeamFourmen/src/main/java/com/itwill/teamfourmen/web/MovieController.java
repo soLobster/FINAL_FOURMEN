@@ -241,7 +241,7 @@ public class MovieController {
 		paramDto.setListCategory(pageName);
 		
 		MovieListDto listDto = apiUtil.getMovieList(paramDto);
-		log.info("listDto={}", listDto);		
+		//log.info("listDto={}", listDto);		
 				
 		List<MovieGenreDto> movieGenreList = apiUtil.getMovieGenreList();
 		
@@ -263,9 +263,10 @@ public class MovieController {
 		
 		
 		MovieListDto listDto = apiUtil.getMovieList(paramDto);
-		log.info("listDto={}", listDto);		
+		// log.info("listDto={}", listDto);		
 				
 		List<MovieGenreDto> movieGenreList = apiUtil.getMovieGenreList();
+				
 		model.addAttribute("listDto", listDto);
 		model.addAttribute("movieGenreList", movieGenreList);
 	}
