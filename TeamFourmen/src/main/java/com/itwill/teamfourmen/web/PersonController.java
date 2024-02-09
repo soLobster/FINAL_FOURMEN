@@ -48,7 +48,6 @@ public class PersonController {
 	public String details(
 			@PathVariable("id") int id,
 			@RequestParam(name = "originalName", required = false) String originalName,
-			@RequestParam(name = "language", required = false) String language,
 			Model model
 	) {
 		log.info("details(id={})", id);
@@ -57,14 +56,14 @@ public class PersonController {
 		}
 
 		// 서비스 메서드 호출 (인물의 id 값을 파라미터로 전달)
-		DetailsPersonDto detailsPersonDto = personService.getPersonDetails(language, id);
+		DetailsPersonDto detailsPersonDto = personService.getPersonDetails(id);
 		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 		MovieCreditsDto movieCreditsDto = personService.getMovieCredits(id);
 		MovieCreditsCastDto movieCreditsCastDTO = personService.getMovieCreditsCast(id);
 		TvCreditsDto tvCreditsDto = personService.getTvCredits(id);
 		TvCreditsCastDto tvCreditsCastDTO = personService.getTvCreditsCast(id);
 		CombinedCreditsDto combinedCreditsDto = personService.getCombinedCredits(id);
-		CombinedCreditsCastDto combinedCreditsCastDto = personService.getCombinedCreditsCast(id);
+		List<CombinedCreditsCastDto> combinedCreditsCastList = personService.getCombinedCreditsCast(id);
 
 		// CombinedCast를 처리하는 코드.
 		List<CombinedCreditsCastDto> castList = combinedCreditsDto.getCast();
@@ -92,6 +91,9 @@ public class PersonController {
 		// 필터링한 Cast를 popularity 기준 내림차순 정렬.
 		uniqueCastList.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getPopularity).reversed());
 
+		// firstAirDate, releaseDate만을 저장하는 리스트 생성.
+
+
 		// 인기순으로 정렬된 castList를 모델에 추가.
 		model.addAttribute("sortedCastList", sortedCastList);
 		model.addAttribute("sortedMovieCastList", sortedMovieCastList);
@@ -106,7 +108,7 @@ public class PersonController {
 		model.addAttribute("tvCredits", tvCreditsDto);
 		model.addAttribute("tvCreditsCast", tvCreditsCastDTO);
 		model.addAttribute("combinedCredits", combinedCreditsDto);
-		model.addAttribute("combinedCreditsCast", combinedCreditsCastDto);
+		model.addAttribute("combinedCreditsCastList", combinedCreditsCastList);
 
 		return "person/details";
 	} // end details

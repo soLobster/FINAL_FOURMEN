@@ -1,5 +1,8 @@
 package com.itwill.teamfourmen.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.teamfourmen.dto.person.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -32,7 +38,7 @@ public class PersonService {
     public PageAndListDto getPersonList(int page) {
     	
     	// API 요청 주소 생성. (인물의 리스트를 받아옴)
-    	String uri = String.format(apiUrl + "/person/" + POPULAR + "?api_key=%s&language=ko&page=%d", apiKey, page);
+    	String uri = String.format(apiUrl + "/person/" + POPULAR + "?api_key=%s&language=ko-KR&page=%d", apiKey, page);
 
     	PageAndListDto pageAndListDto;
         pageAndListDto = webClient.get()
@@ -52,10 +58,10 @@ public class PersonService {
 	 * @param "language" and "id"
 	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 detailsPersonDto 객체.
 	 */
-	public DetailsPersonDto getPersonDetails(String language, int id) {
+	public DetailsPersonDto getPersonDetails(int id) {
 
 		// API 요청 주소 생성. (각 인물의 상세 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "?api_key=%s&language=ko-KR", apiKey);
 
 		DetailsPersonDto detailsPersonDto;
 		detailsPersonDto = webClient.get()
@@ -78,7 +84,7 @@ public class PersonService {
 	public ExternalIDsDto getExternalIDs(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s&language=ko-KR", apiKey);
 
 		ExternalIDsDto externalIDsDto;
 		externalIDsDto = webClient.get()
@@ -94,7 +100,7 @@ public class PersonService {
 	public MovieCreditsDto getMovieCredits(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=ko", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
 		MovieCreditsDto movieCreditsDto;
 		movieCreditsDto = webClient.get()
@@ -110,7 +116,7 @@ public class PersonService {
 	public MovieCreditsCastDto getMovieCreditsCast(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=ko", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
 		MovieCreditsCastDto movieCreditsCastDTO;
 		movieCreditsCastDTO = webClient.get()
@@ -126,7 +132,7 @@ public class PersonService {
 	public TvCreditsDto getTvCredits(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=ko", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
 		TvCreditsDto tvCreditsDto;
 		tvCreditsDto = webClient.get()
@@ -142,7 +148,7 @@ public class PersonService {
 	public TvCreditsCastDto getTvCreditsCast(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=ko", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
 		TvCreditsCastDto tvCreditsCastDTO;
 		tvCreditsCastDTO = webClient.get()
@@ -158,7 +164,7 @@ public class PersonService {
 	public CombinedCreditsDto getCombinedCredits(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
 		CombinedCreditsDto combinedCreditsDto;
 		combinedCreditsDto = webClient.get()
@@ -171,26 +177,36 @@ public class PersonService {
 
 	}
 
-	public CombinedCreditsCastDto getCombinedCreditsCast(int id) {
+	public List<CombinedCreditsCastDto> getCombinedCreditsCast(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
 		CombinedCreditsCastDto combinedCreditsCastDto;
-		combinedCreditsCastDto = webClient.get()
+		JsonNode node = webClient.get()
 				.uri(uri)
 				.retrieve()
-				.bodyToMono(CombinedCreditsCastDto.class)
+				.bodyToMono(JsonNode.class)
 				.block();
 
-		return combinedCreditsCastDto;
+		JsonNode castNode = node.get("cast");
+
+		ObjectMapper mapper = new ObjectMapper();
+        try {
+            CombinedCreditsCastDto[] castArray = mapper.treeToValue(castNode, CombinedCreditsCastDto[].class);
+			List<CombinedCreditsCastDto> castList = Arrays.asList(castArray);
+			return castList;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+			return null;
+        }
 
 	}
 
 	public CombinedCreditsCrewDto getCombinedCreditsCrew(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
 		CombinedCreditsCrewDto combinedCreditsCrewDto;
 		combinedCreditsCrewDto = webClient.get()
