@@ -35,7 +35,7 @@
 		}
 
 		.layout {
-			padding-left: 3rem;
+			padding-left: 5rem;
 			padding-right: 3rem;
 			width: 100vw;
 			height: auto;
@@ -49,8 +49,8 @@
 		.search_section {
 			grid-area: sidebar;
 			/*background-color: cornflowerblue;*/
-			width: 280px;
-			min-width: 280px;
+			width: 290px;
+			min-width: 290px;
 			display: flex;
 			flex-direction: column;
 		}
@@ -76,25 +76,39 @@
 			/*flex-wrap: wrap;*/
 
 			width: 100%; /* flex-container의 너비를 100%로 설정 */
-			margin-right: 0;
 			display: flex;
 			flex-wrap: wrap;
-			justify-content: center;
+			justify-content: flex-start;
 		}
 
 		.flex_box {
 			width: 200px;
 			/*표기되는 포스터 높이*/
-			height: 350px;
+			height: 353px;
 			margin-left: 10px;
 			margin-right: 10px;
 			margin-bottom: 35px;
-			object-fit: contain;
+			object-fit: cover;
+			box-sizing: border-box;
+		}
+
+		.poster-a-tag{
+			transition: border-color 0.3s ease-in-out;
+			display: inline-block;
+			box-sizing: border-box;
+		}
+
+		.poster-a-tag:hover {
+			z-index: 99;
+			border: 3px solid lime;
+			box-shadow: inset 0 0 1px 1px rgba(20, 24, 28, .125);
+			border-radius: .25rem;
 		}
 
 		img.show_poster {
 			max-width: 100%;
 			object-fit: cover;
+			box-sizing: border-box;
 		}
 
 		.load_tvShow_button {
@@ -162,11 +176,84 @@
 			cursor: pointer;
 		}
 
-		.checkbox-genre:checked + label {
+		.checkbox-genre:checked + label,
+		.checkbox-genre:hover + label {
 			background-color: #3ba4fa;
 			color: white;
 			font-style: italic;
 		}
+
+		.ott {
+			position: relative;
+		}
+
+		.ott .ott-logo-img {
+			width: 70px;
+			height: 70px;
+			padding: 7px;
+			border-radius: 1rem;
+		}
+
+		.check-icon {
+			font-size: 30px;
+			font-weight: bolder;
+			position: absolute;
+			visibility: hidden;
+			width: 56px;
+			height: 56px;
+			padding: 5px;
+			border-radius: .5rem;
+			top: 10%;
+			left: 10%;
+			text-align: center;
+		}
+
+		.checkbox-ott + label {
+			cursor: pointer;
+		}
+
+		.tooltipText{
+			position: absolute;
+			font-weight: bolder;
+			left: 50%;
+			top: 0%;
+			transform: translateX(-50%);
+			background-color: #001d3d;
+			color: #fff;
+			white-space: nowrap;
+			padding: 10px 15px;
+			border-radius: .5rem;
+			visibility: hidden;
+			opacity: 0;
+			transition: opacity 0.5s ease;
+		}
+
+		.tooltipText::before{
+			content: "";
+			position: absolute;
+			left: 50%;
+			top: 80%;
+			transform: translateX(-50%);
+			border: 15px solid;
+			border-color: #001d3d #0000 #0000 #0000;
+		}
+
+		.checkbox-ott:hover + label{
+			.tooltipText {
+				top:-65%;
+				visibility: visible;
+				opacity: 1;
+			}
+		}
+
+		.checkbox-ott:checked + label,
+		.checkbox-ott:hover + label {
+			.check-icon {
+				visibility: visible;
+				background-color: rgba(2, 182, 247, 0.6);
+			}
+		}
+
 	</style>
 </head>
 
@@ -181,17 +268,101 @@
 		<section class="layout">
 
 			<div class = "p-2 search_section">
+
 				<form action="../tv/filter">
 					<div class = "accordion mb-2" id = "accordion-filter">
 						<div class = "accordion-item border-0" style="background-color: #2a2b38" >
 							<h2 class = "accordion-header">
-								<button class = "accordion-button collapsed fs-4 border-0 accordion_BTN" type = "button" data-bs-toggle = "collapse"
-								data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collaspeOne">
+								<button class = "accordion-button fs-4 border-0 accordion_BTN" type = "button" data-bs-toggle = "collapse"
+								data-bs-target="#collapseOne" aria-expanded="true"  aria-controls="collapseOne">
 									필터
 								</button>
 							</h2>
-							<div id = "collapseOne" class = "accordion-collapse collapse">
+							<div id = "collapseOne" class = "accordion-collapse collapse show">
 								<div class="accordion-body text-white">
+
+									<div class = "order-list">
+										<h4>정렬</h4>
+										<hr>
+											<select class="form-select" aria-label="Default select example" name = "sortBy">
+												<option selected="selected" value="">정렬 순서</option>
+												<option value="popularity.asc">인기도 오름차순</option>
+												<option value="popularity.desc">인기도 내림차순</option>
+												<option value="first_air_date.asc">방영일 오름차순</option>
+												<option value="first_air_date.desc">방영일 내림차순</option>
+												<option value="name.asc">이름 오름차순</option>
+												<option value="name.desc">이름 내림차순</option>
+												<option value="vote_count.asc">TMDB 투표 오름차순</option>
+												<option value="vote_count.desc">TMDB 투표 내림차순</option>
+											</select>
+										<hr>
+									</div>
+
+									<div class = "ott-filter">
+										<h4>OTT</h4>
+										<hr>
+											<div class = "p-0 mx-2 my-0 ott">
+												<ul class = "multi_select ott-logo">
+													<li class = "ott">
+														<input type = "checkbox" value = "8" name = "with_watch_provider" id = "ott-8" class="checkbox-ott d-none"/>
+														<label for = "ott-8" class = "checkbox-ott-label">
+															<img src = "https://image.tmdb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg" class = "ott-logo-img" alt = "netflix logo">
+															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+															<span class = "tooltipText">Netfilx</span>
+														</label>
+													</li>
+													<li class = "ott">
+														<input type = "checkbox" value = "337" name = "with_watch_provider" id = "ott-337" class="checkbox-ott d-none"/>
+														<label for = "ott-337" class = "checkbox-ott-label">
+															<img src = "https://image.tmdb.org/t/p/original/7YPdUs60C9qQQQfOFCgxpnF07D9.jpg" class = "ott-logo-img" alt = "disney plus logo">
+															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+															<span class = "tooltipText">Disney Plus</span>
+														</label>
+													</li>
+													<li class = "ott">
+														<input type = "checkbox" value = "119" name = "with_watch_provider" id = "ott-119" class="checkbox-ott d-none"/>
+														<label for = "ott-119" class = "checkbox-ott-label">
+															<img src = "https://image.tmdb.org/t/p/original/dQeAar5H991VYporEjUspolDarG.jpg" class = "ott-logo-img" alt = "amazon prime logo">
+															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+															<span class = "tooltipText">Amazon Prime Video</span>
+														</label>
+													</li>
+													<li class = "ott">
+														<input type = "checkbox" value = "356" name = "with_watch_provider" id = "ott-356" class="checkbox-ott d-none"/>
+														<label for = "ott-356" class = "checkbox-ott-label">
+															<img src = "https://image.tmdb.org/t/p/original/hPcjSaWfMwEqXaCMu7Fkb529Dkc.jpg" class = "ott-logo-img" alt = "wavve logo">
+															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+															<span class = "tooltipText">Wavve</span>
+														</label>
+													</li>
+													<li class = "ott">
+														<input type = "checkbox" value = "97" name = "with_watch_provider" id = "ott-97" class="checkbox-ott d-none"/>
+														<label for = "ott-97" class = "checkbox-ott-label">
+															<img src = "https://image.tmdb.org/t/p/original/5gmEivxOGPdq4Afpq1f8ktLtEW1.jpg" class = "ott-logo-img" alt = "watcha logo">
+															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+															<span class = "tooltipText">Watcha</span>
+														</label>
+													</li>
+													<li class = "ott">
+														<input type = "checkbox" value = "350" name = "with_watch_provider" id = "ott-350" class="checkbox-ott d-none"/>
+														<label for = "ott-350" class = "checkbox-ott-label">
+															<img src = "https://image.tmdb.org/t/p/original/2E03IAZsX4ZaUqM7tXlctEPMGWS.jpg" class = "ott-logo-img" alt = "apple tv logo">
+															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+															<span class = "tooltipText">Apple Tv Plus</span>
+														</label>
+													</li>
+<!--													<li class = "ott">-->
+<!--														<input type = "checkbox" value = "96" name = "with_watch_provider" id = "ott-96" class="checkbox-ott d-none"/>-->
+<!--														<label for = "ott-96" class = "checkbox-ott-label">-->
+<!--															<img src = "https://image.tmdb.org/t/p/original/crFbxg6jkiKc14gpIGMkre9Y3mu.jpg" class = "ott-logo-img" alt = "naver store logo">-->
+<!--															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>-->
+<!--															<span class = "tooltipText">Naver Store</span>-->
+<!--														</label>-->
+<!--													</li>-->
+												</ul>
+											</div>
+										<hr>
+									</div>
 
 									<div class = "genre-filter">
 										<h4> 장르 </h4>
@@ -199,7 +370,7 @@
 											<div class="p-0 genres">
 												<ul class = "multi_select text">
 													<li th:each=" genre : ${tvShowGenreDTO} " th:value="${genre.getId()}">
-														<input class="d-none checkbox-genre" type="checkbox" th:id = "${genre.getId()}" th:value="${genre.getId()}" />
+														<input class="d-none checkbox-genre" type="checkbox" th:id = "${genre.getId()}" th:value="${genre.getId()}" name="with_genres"/>
 														<label class = "m-1 badge checkbox-genre-label fs-5" th:for = "${genre.getId()}" th:text="${genre.getName()}"></label>
 													</li>
 												</ul>
@@ -210,10 +381,9 @@
 									<div class = "language-filter">
 										<div class = "origin-language" style="display: flex">
 										<h4 class = "me-2">원어</h4>
-										<span><i class="fa-solid fa-circle-question"></i></span>
 										</div>
-										<select class="form-select" aria-label="Default select example">
-											<option selected="selected" value="">언어를 선택해주세요</option>
+										<select class="form-select" aria-label="Default select example" name = "with_original_language">
+											<option selected="selected" value="">선택 안함</option>
 											<option value="ko">한국어</option>
 											<option value="en">영어</option>
 											<option value="es">스페인어</option>
@@ -221,6 +391,7 @@
 											<option value="zh">중국어</option>
 											<option value="fr">프랑스어</option>
 											<option value="de">독일어</option>
+											<option value="it">이탈리아어</option>
 										</select>
 										<hr>
 									</div>
@@ -231,18 +402,32 @@
 											<div class = "date" style="display: flex; flex-direction: column">
 												<div class = "from" style="display: flex; justify-content: space-between">
 													<span>FROM</span>
-													<input class = "mb-2" type="date" />
+													<input class = "mb-2" type="date" name = "first_air_date_gte"/>
 												</div>
 												<div class = "to" style="display: flex; justify-content: space-between">
 													<span>TO</span>
-													<input type="date" />
+													<input type="date" name = "first_air_date_lte"/>
 												</div>
 											</div>
 										<hr>
 									</div>
 
+									<div class = "season_status_filter">
+										<h4>방영 상태</h4>
+										<select class="form-select" aria-label="Default select example" name = "with_status">
+											<option selected="selected" value="">선택 안함</option>
+											<option value="0">Returning Series</option>
+											<option value="1">Planned</option>
+											<option value="2">In Production</option>
+											<option value="3">Ended</option>
+											<option value="4">Canceled</option>
+											<option value="5">Pilot</option>
+										</select>
+										<hr>
+									</div>
+
 									<div class = "filter-button">
-										<button class = "btn btn-primary" style="width: 100%">필터링하기</button>
+										<input type="submit" class = "btn btn-primary" style="width: 100%" value="필터링하기"/>
 									</div>
 
 								</div>
@@ -262,9 +447,10 @@
 					</h2>
 					<div id = "collapse-accordion-search" class = "accordion-collapse collapse">
 						<div class="accordion-body p-3">
-							<form class = "d-flex" role="search">
+							<form action="../tv/search" class = "d-flex" role="search">
 								<input class= "form-control me-2 search-bar" type = "search"
-									   placeholder="Search" aria-label="Search" style="width: 181px;">
+									   placeholder="Search" aria-label="Search" name = "query"
+									   style="width: 191px;">
 								<button class = "btn btn-sm btn-primary" type="submit">검색</button>
 							</form>
 						</div>
@@ -278,7 +464,7 @@
 			<div class = "Tv_Show_Section">
 				<div class = "flex-container">
 					<div class = "rounded border-0 card text-bg-dark flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
-						<a th:href = "@{/tv/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none">
+						<a th:href = "@{/tv/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none poster-a-tag">
 							<img class = "rounded-top show_poster" th:if="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
 								 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="200" height="273" />
 							<img class = "rounded-top show_poster" th:unless="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
@@ -309,14 +495,12 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 
 	<script>
-
 		function scrollToTop() {
 			window.scrollTo({
 				top: 0,
 				behavior: "smooth"
 			});
 		}
-
 	</script>
 
 	<script th:inline="javascript">

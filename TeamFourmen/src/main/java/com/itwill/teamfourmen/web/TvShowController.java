@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -33,43 +30,6 @@ public class TvShowController {
 	private String API_KEY; 
 
 	private final TvShowApiUtil apiUtil;
-
-//	@GetMapping("/list")
-//	public void getTvShowList(Model model) {
-//		log.info("GET TV SHOW LIST ()");
-//
-//		WebClient webClient = WebClient.create("https://api.themoviedb.org/3/tv/top_rated?language=ko&api_key=390e779304bcd53af3b649f4e27c6452");
-//		Flux<TvShowListDTO> tvShowList = webClient.get().accept(MediaType.APPLICATION_JSON)
-//				.retrieve().bodyToFlux(TvShowListDTO.class);
-//
-//		List<TvShowListDTO> list = tvShowList.collectList().block();
-//
-//		log.info(list.toString());
-//
-//	}
-	
-//	@GetMapping("/details/{id}")
-//	public String getTvShow(Model model, @PathVariable (name = "id") int id) {
-//		log.info("GET TV SHOW () ID = {}", id);
-//
-//		log.info("API KEY - {}",API_KEY);
-//
-//		int seriesId = id;
-//
-//		WebClient webClient = WebClient.create("https://api.themoviedb.org/3/tv");
-//
-//		Mono<TvShowDTO> tvShow = webClient.get()
-//				.uri("/{seriesId}?language=ko&api_key={api_key}", seriesId, API_KEY)
-//				.accept(MediaType.APPLICATION_JSON)
-//				.retrieve()
-//				.bodyToMono(TvShowDTO.class);
-//
-//		TvShowDTO tvShowDto = tvShow.block();
-//
-//		model.addAttribute("tvShowDto", tvShowDto);
-//
-//		return "tvshow/details";
-//	}
 
 	@GetMapping("/main")
 	public String getTvShowMain(Model model){
@@ -116,6 +76,41 @@ public class TvShowController {
 		return "tvshow/tvshow-main";
 	}
 
+	@GetMapping("/top_rated")
+	public String getTopRatedTvShowList(Model model) throws ParseException {
+		log.info("GET Top Rated Tv Show List");
+
+//		TvShowListDTO listDTO = apiUtil.getTvShowList("top_rated", 1);
+//		//log.info("listDto = {}", listDTO);
+//		model.addAttribute("listDTO", listDTO);
+//		List<TvShowDTO> tvShowDto = listDTO.getResults();
+//		model.addAttribute("tvShowDto", tvShowDto);
+//		TvShowGenreListDTO tvShowGenreListDTO = apiUtil.getTvShowGenreList("ko-KR");
+//		List<TvShowGenreDTO> tvShowGenre = tvShowGenreListDTO.getGenres();
+//		log.info("tvShow Genre = {}", tvShowGenre);
+//		model.addAttribute("tvShowGenreDTO", tvShowGenre);
+
+		getInitialList("top_rated", model);
+
+		return "tvshow/top-rated-list";
+	}
+
+//	@GetMapping("/ott/{platform}")
+//	public String getOttTvShowList(Model model, @PathVariable String platform){
+//		log.info("Get Tv Show From OTT Platform = {}", platform);
+//
+//		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
+//
+//		log.info("list={}", listDTO);
+//
+//		model.addAttribute("listDTO", listDTO);
+//
+//		List<TvShowDTO> ottTvShowList = listDTO.getResults();
+//
+//		model.addAttribute("tvShowDto", ottTvShowList);
+//
+//		return "tvshow/ott-list";
+//	}
 
 	@GetMapping("/trending/{timeWindow}")
 	public String getPopularTvShowList(Model model, @PathVariable String timeWindow){
@@ -135,45 +130,30 @@ public class TvShowController {
 		return "tvshow/trend-list";
 	}
 
-	@GetMapping("/top_rated")
-	public String getTopRatedTvShowList(Model model) throws ParseException {
-		log.info("GET Top Rated Tv Show List");
+	/*
+	필터링 -> TvShow 리스트 반영
+	 */
 
-		TvShowListDTO listDTO = apiUtil.getTvShowList("top_rated", 1);
-		//log.info("listDto = {}", listDTO);
+	@GetMapping("/filter")
+	public String getFilterTvShowList(Model model, @ModelAttribute TvShowQueryParamDTO filterDTO) {
+		log.info("Get Filter Tv Show List - Filter Dto = {}", filterDTO);
 
-		model.addAttribute("listDTO", listDTO);
+		filterDTO.setListCategory("filter");
 
-		List<TvShowDTO> tvShowDto = listDTO.getResults();
-
-		model.addAttribute("tvShowDto", tvShowDto);
-
-		TvShowGenreListDTO tvShowGenreListDTO = apiUtil.getTvShowGenreList("ko-KR");
-
-		List<TvShowGenreDTO> tvShowGenre = tvShowGenreListDTO.getGenres();
-
-		log.info("tvShow Genre = {}", tvShowGenre);
-
-		model.addAttribute("tvShowGenreDTO", tvShowGenre);
+		getInitialList(filterDTO, model);
 
 		return "tvshow/top-rated-list";
 	}
 
-	@GetMapping("/ott/{platform}")
-	public String getOttTvShowList(Model model, @PathVariable String platform){
-		log.info("Get Tv Show From OTT Platform = {}", platform);
+	@GetMapping("/search")
+	public String getSearchTvShowList(Model model, @ModelAttribute TvShowQueryParamDTO searchDTO) {
+		log.info("Get Search Tv Show List - Search Dto = {}", searchDTO);
 
-		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
+		searchDTO.setListCategory("search");
 
-		log.info("list={}", listDTO);
+		getInitialList(searchDTO, model);
 
-		model.addAttribute("listDTO", listDTO);
-
-		List<TvShowDTO> ottTvShowList = listDTO.getResults();
-
-		model.addAttribute("tvShowDto", ottTvShowList);
-
-		return "tvshow/ott-list";
+		return "tvshow/top-rated-list";
 	}
 
 	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
@@ -188,16 +168,6 @@ public class TvShowController {
 
 		String apiUri = "https://api.themoviedb.org/3/tv";
 		// 드라마 정보
-//		String targetUrl = UriComponentsBuilder.fromUriString(apiUri)
-//				.path("/{seriesId}")
-//				.queryParam("language", "ko")
-//				.queryParam("api_key", API_KEY)
-//				.buildAndExpand(String.valueOf(seriesId))
-//				.toUriString();
-//
-//		log.info(targetUrl);
-//
-//		TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
 		TvShowDTO tvShowDTO = apiUtil.getTvShowDetails(id);
 
 		log.info("tvShowDto = {}", tvShowDTO.toString());
@@ -207,6 +177,29 @@ public class TvShowController {
 		model.addAttribute("tvShowDto", tvShowDTO);
 
 		model.addAttribute("seasonList", seasonList);
+
+		// OTT 정보 (WatchProvider)
+
+		TvShowWatchProviderListDTO tvShowWatchProviderListDTO = apiUtil.getTvShowProvider(id);
+
+		String watchRegion = "KR";
+
+		TvShowWatchProviderRegionDTO tvShowWatchProviderRegionDTO = tvShowWatchProviderListDTO.getResults().get(watchRegion);
+
+		TvShowWatchProviderDTO[] tvShowWatchProviderDTO;
+
+		try {
+			tvShowWatchProviderDTO = tvShowWatchProviderRegionDTO.getFlatrate();
+			model.addAttribute("watch_provider_list",tvShowWatchProviderDTO);
+
+		} catch (NullPointerException e){
+			e.printStackTrace();
+		}
+
+//		for(TvShowWatchProviderDTO ott: tvShowWatchProviderDTO){
+//			log.info("ott = {}",ott.toString());
+//		}
+
 
 		// 시청 등급
 		String contentRatingsUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -324,7 +317,6 @@ public class TvShowController {
 
 		model.addAttribute("tvShowDto", tvShowDto);
 
-
 		TvShowSeasonDTO getSeasonDto = apiUtil.getTvShowSeasonDetail(id, season_number);
 
 		log.info("SEASON DETAIL = {}", getSeasonDto);
@@ -362,13 +354,36 @@ public class TvShowController {
 
 	private void getInitialList(String pageName, Model model) {
 
-		TvShowListDTO listDTO = apiUtil.getTvShowList(pageName, 1);
-		log.info("list={}", listDTO);
+		TvShowQueryParamDTO paramDTO = new TvShowQueryParamDTO();
+		paramDTO.setListCategory(pageName);
 
-		List<TvShowDTO> tvShowDTOList = listDTO.getResults();
+		TvShowListDTO listDTO = apiUtil.getTvShowList(paramDTO);
 
-		model.addAttribute("tvShowDTOList", tvShowDTOList);
+		List<TvShowDTO> tvShowDto = listDTO.getResults();
+
+		TvShowGenreListDTO tvShowGenreListDTO = apiUtil.getTvShowGenreList("ko-KR");
+
+		List<TvShowGenreDTO> tvShowGenre = tvShowGenreListDTO.getGenres();
+
+		model.addAttribute("listDTO", listDTO);
+		model.addAttribute("tvShowDto", tvShowDto);
+		model.addAttribute("tvShowGenreDTO", tvShowGenre);
 	}
 
 
+
+	private void getInitialList(TvShowQueryParamDTO paramDTO, Model model) {
+
+		TvShowListDTO listDTO = apiUtil.getTvShowList(paramDTO);
+
+		List<TvShowDTO> tvShowDto = listDTO.getResults();
+
+		TvShowGenreListDTO tvShowGenreList = apiUtil.getTvShowGenreList("ko-KR");
+
+		List<TvShowGenreDTO> tvShowGenre = tvShowGenreList.getGenres();
+
+		model.addAttribute("listDTO", listDTO);
+		model.addAttribute("tvShowDto", tvShowDto);
+		model.addAttribute("tvShowGenreDTO", tvShowGenre);
+	}
 }

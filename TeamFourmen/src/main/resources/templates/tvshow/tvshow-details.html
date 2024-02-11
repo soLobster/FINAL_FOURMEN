@@ -254,6 +254,59 @@
 			text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.4);
 		}
 
+		div.ott-provider-container .ott-providers {
+			display: flex;
+			flex-direction: row;
+			/*background-color: #8dabfb;*/
+			padding-left: 0;
+			margin-left: 0;
+		}
+
+		.ott-provider-container .ott-logo-img{
+			width: 55px;
+			height: 55px;
+			padding: 3px;
+			border-radius: .5rem;
+		}
+
+		.ott-logo-img-container{
+			position: relative;
+		}
+
+		.tooltipText{
+			position: absolute;
+			font-weight: bolder;
+			left: 50%;
+			top: 0%;
+			transform: translateX(-50%);
+			background-color: #27187e;
+			color: white;
+			white-space: nowrap;
+			padding: 10px 15px;
+			border-radius: .5rem;
+			visibility: hidden;
+			opacity: 0;
+			transition: opacity 0.5s ease;
+		}
+
+		.tooltipText::before {
+			content: "";
+			position: absolute;
+			left: 50%;
+			top: 80%;
+			transform: translateX(-50%);
+			border: 15px solid;
+			border-color: #27187e #0000 #0000 #0000;
+		}
+
+		li.ott-logo-img-container:hover {
+			.tooltipText{
+				top:-95%;
+				visibility: visible;
+				opacity: 1;
+			}
+		}
+
 		div.cast_scroller {
 			margin-top: 20px;
 			margin-left: 0;
@@ -548,6 +601,21 @@
 						<span><i class="fs-2 fa-sharp fa-solid fa-link"></i></span>
 					</a>
 				</div>
+			</div>
+
+			<div class = "ms-3 ott-provider-container">
+				<p class="my-0 me-3">Now Streaming</p>
+				<ul class = "my-0 ott-providers">
+					<li th:if = "${watch_provider_list ne null}" th:each=" ott : ${watch_provider_list}" class="ott-logo-img-container">
+						<img th:src = "@{'https://image.tmdb.org/t/p/original' + ${ott.getLogo_path()}}" class = "ott-logo-img" alt = "ott_logo"/>
+						<span class = "tooltipText" th:text="${ott.getProvider_name()}"></span>
+					</li>
+					<small th:unless = "${watch_provider_list ne null}">한국에서 정식 스트리밍 서비스를 제공하지 않습니다.</small>
+				</ul>
+				<small class = "my-0">Powered By</small><br>
+				<a th:href="@{'https://www.justwatch.com/kr'}" target="_blank">
+				<span><img th:src = "@{'/image/justwatch.svg'}" width="auto" height="15"/></span>
+				</a>
 			</div>
 
 			<div class = "ms-3">
