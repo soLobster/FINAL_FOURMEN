@@ -1,14 +1,17 @@
 package com.itwill.teamfourmen;
 
 import com.itwill.teamfourmen.dto.person.CombinedCreditsCastDto;
+import com.itwill.teamfourmen.dto.person.CombinedCreditsDto;
 import com.itwill.teamfourmen.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -20,44 +23,28 @@ class TeamFourmenApplicationTests {
 
 	@Test
 	void contextLoads() {
-		List<CombinedCreditsCastDto> list = personService.getCombinedCreditsCast(115440);
-		log.info("====================================================================");
-		log.info("리스트 출력={}", list);
+//		CombinedCreditsDto allList = personService.getCombinedCredits(2416);
+		List<CombinedCreditsCastDto> list = personService.getCombinedCreditsCast(115440, "en");
 
-		for (int i=0; i<list.size(); i++) {
-			if (((list.get(i).getMediaType().equals("tv")) && list.get(i).getFirstAirDate() == null) ||
-			((list.get(i).getMediaType().equals("movie") && list.get(i).getReleaseDate() == null))) {
-				log.info("====================================================================");
-				System.out.println("테스트 성공");
+		// 오류 데이터 출력 테스트.
+//		log.info("============================================");
+//		log.info("오류 데이터 출력={}", list.get(41));
+//		log.info("============================================");
+//		log.info("오류 데이터 출력={}", list.get(124));
+
+		// 데이터 출력 테스트.
+		for (int i = 0; i < list.size(); i++) {
+			Year year = list.get(i).getYear(); // 먼저 날짜 객체를 가져옵니다.
+			if (year != null) {
+				String result = year.toString(); // null이 아닐 때만 toString 호출
+				log.info("============================================");
+				log.info("{}번째 데이터 출력 결과={}", i, result);
 			} else {
-				log.info("====================================================================");
-				System.out.println("테스트 실패");
+				log.info("============================================");
+				log.info("{}번째 데이터 출력값이 null 입니다...", i);
 			}
 		}
-		log.info("listSize={}", list.size());
 
-		// tv면 첫 방송 날짜, movie면 출시일을 저장하는 리스트 생성.
-		List<CombinedCreditsCastDto> firstAirOrReleaseDate = new ArrayList<>();
-
-		// releaseDate가 null인 것만 필터링하여 출력.
-//		List<CombinedCreditsCastDto> nullList = list.stream().filter((x) -> x.getReleaseDate() == null).toList();
-//		log.info("*** NULL 값들만 필터링하여 출력 *** nullList={}", nullList);
-//		log.info("====================================================================");
-//
-        // notNull만 필터링하여 출력.
-//		List<CombinedCreditsCastDto> notNullList = new ArrayList<>(list.stream().filter((x) -> x.getReleaseDate() != null).toList());
-//		log.info("notNullList before Sorting = {}", notNullList);
-//		log.info("====================================================================");
-
-		// firstAirDate가 null인 것만 리스트 생성.
-//		List<CombinedCreditsCastDto> releaseDateNotNullList =
-
-		//
-//		Collections.sort(notNullList, CombinedCreditsCastDto.SORT_RELEASE_DATE_ASC);
-//		log.info("notNullList after Sorting = {}", notNullList);
-//		log.info("====================================================================");
-
-
-	}
+	} // end contextLoads()
 
 }

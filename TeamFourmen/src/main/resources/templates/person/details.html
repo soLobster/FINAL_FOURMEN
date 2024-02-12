@@ -149,12 +149,17 @@
                                         <h3>유명 분야</h3>
                                         <div>
                                             <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 6}">
-                                                <a>
+                                                <a th:if="${uniqueCast.mediaType} == 'tv'" th:href="@{/tv/{id}(id=${uniqueCast.id})}">
+                                                    <img class="poster_img" th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}" alt="poster_img">
+                                                </a>
+                                                <a th:if="${uniqueCast.mediaType} == 'movie'" th:href="@{/movie/details(id=${uniqueCast.id})}">
                                                     <img class="poster_img" th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}" alt="poster_img">
                                                 </a>
                                                 <p>
-                                                    <a>
+                                                    <a th:if="${uniqueCast.mediaType} == 'tv'" th:href="@{/tv/{id}(id=${uniqueCast.id})}">
                                                         <bdi th:text="${uniqueCast.getTitle()}"></bdi>
+                                                    </a>
+                                                    <a th:if="${uniqueCast.mediaType} == 'movie'" th:href="@{/movie/details(id=${uniqueCast.id})}">
                                                         <bdi th:text="${uniqueCast.getName()}"></bdi>
                                                     </a>
                                                 </p>
@@ -165,24 +170,30 @@
                                         <div>
                                             <h3>연기</h3>
                                             <table>
-                                                <tbody>
+                                                <tbody th:each="castList: ${combinedCreditsCastList}">
                                                     <tr>
                                                         <td>
                                                             <table>
                                                                 <tbody>
-                                                                    <tr th:each="cast : ${combinedCreditsCastList}">
-                                                                        <td class="year" th:if="${cast.mediaType.equals('tv') && cast.firstAirDate != ''}" th:text="${#strings.substring(cast.firstAirDate, 0, 4)}"></td>
-                                                                        <td class="year" th:if="${cast.mediaType.equals('tv') && cast.firstAirDate == ''}" th:text="${'-'}"></td>
-                                                                        <td class="year" th:if="${cast.mediaType.equals('movie') && cast.releaseDate != ''}" th:text="${#strings.substring(cast.releaseDate, 0, 4)}"></td>
-                                                                        <td class="year" th:if="${cast.mediaType.equals('movie') && cast.releaseDate == ''}" th:text="${'-'}"></td>
-
-                                                                        <td class="titleOrName" th:if="${cast.mediaType.equals('tv')}" th:text="${cast.name}"></td>
-                                                                        <td class="titleOrName" th:if="${cast.mediaType.equals('movie')}" th:text="${cast.title}"></td>
+                                                                    <tr>
+                                                                        <td th:if="${castList.year == null}">-</td>
+                                                                        <td th:unless="${castList.year == null}" th:text="${castList.year}">연도</td>
+                                                                        <td>
+                                                                            <a th:href="@{/movie/details(id=${castList.id})}">
+                                                                                <p th:if="${castList.title != null}" class="title" th:text="${castList.title}"></p>
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>
+                                                                            <a th:href="@{/tv/{id}(id=${castList.id})}">
+                                                                                <p th:if="${castList.name != null}" class="name" th:text="${castList.name}"></p>
+                                                                            </a>
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
                                                         </td>
                                                     </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>
