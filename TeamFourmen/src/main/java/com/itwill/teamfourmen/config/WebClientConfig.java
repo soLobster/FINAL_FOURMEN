@@ -12,6 +12,7 @@ public class WebClientConfig {
 //    public WebClient webClient() {
 //        return WebClient.create();
 //    }
+    // WebClient의 최대 버퍼 크기를 증가시켜 API 요청으로 받아온 데이터를 처리 가능하게 하는 방법.
     public WebClient customWebClient() {
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer
