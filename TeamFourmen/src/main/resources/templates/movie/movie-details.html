@@ -22,16 +22,6 @@
                     <img class="detail_poster"
                         th:src="@{~/api/image/proxy(url='https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${movieDetailsDto.posterPath})}" alt="포스터">
                 </div>
-                <!-- <div class="movie-provider-container" th:if="${movieProviderList != null}">
-                    <div class="each-provider-container"  th:each="provider : ${movieProviderList}">
-                        <div class="div-movie-provider-logo">
-                            <img class="movie-provider-logo" th:src="@{https://media.themoviedb.org/t/p/original{logoPath} (logoPath = ${provider.logoPath})}">
-                        </div>
-                        <div class="div-movie-provider-options">
-                            <span th:each="option : ${provider.options}" th:text="${!optionStat.last ? option + ', ' : option}"></span>
-                        </div>
-                    </div>
-                </div>  -->
             </div>
             <section class="movie-details-description-container">
                 <div class="movie-description-inner-container">            
@@ -39,9 +29,11 @@
                         <h2 th:text="|${movieDetailsDto.title} (${movieDetailsDto.releaseDate.year})|" class="movie-title" th:if="${movieDetailsDto.releaseDate != null}"></h2>
                         <h2 th:text="${movieDetailsDto.title}" class="movie-title" th:if="movieDetailsDto.releaseDate == null"></h2>
                         <div class="movie-etc-info">
-                            <div class="div-movie-certificate" th:if="${releaseItemDto != null}">
-                                <span th:text="|${releaseItemDto.certification}+|"></span>
-                            </div>
+                            <th:block th:if="${releaseItemDto != null}">
+                                <div class="div-movie-certificate" th:if="${releaseItemDto.certification != ''}">
+                                    <span th:text="|${releaseItemDto.certification}+|"></span>
+                                </div>
+                            </th:block>
                             <div>
                                 <span th:text="${movieDetailsDto.releaseDate}"></span>
                             </div>
@@ -58,12 +50,18 @@
                         <div class="movie-like-item">
                             <i class="fa-solid fa-list"></i>
                         </div>
-                        <div  class="movie-like-item">
+                        <div class="movie-like-item">
                             <i class="fa-regular fa-heart"></i>
                         </div>
-                        <div  class="movie-like-item">
+                        <div class="movie-like-item">
                             <i class="fa-solid fa-star"></i>
                         </div>
+                        <div class="movie-like-item">
+                            <button class="movie-like-button btn-open-chat">                                                
+                                <i class="fa-regular fa-comment"></i>
+                            </button>                            
+                        </div>
+    
                         
                         <!-- 트레일러가 있는 경우에만 이 버튼과 모달 보여주기 -->
                         <th:block th:if="${!#lists.isEmpty(movieTrailerList) and movieTrailerList != null}">
@@ -287,11 +285,13 @@
 	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <script th:inline="javascript">
+    	const movieId = [[${movieDetailsDto.id}]];
     	const backdropPath = [[${movieDetailsDto.backdropPath}]];
     </script>
     <script th:src="@{/js/navbar.js}"></script>
     <script th:src="@{/js/image/img-dominant-color.js}"></script>
     <script th:src="@{/js/movie/movie-image-slide.js}"></script>
+    <script th:src="@{/js/movie/movie-detail.js}"></script>
 	
 	
 </body>

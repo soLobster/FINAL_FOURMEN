@@ -115,12 +115,21 @@
     
  }
  
+ .movie-like-button {
+    background-color: transparent;
+    border: none;
+    width: 46px;
+    height: 46px;
+ }
+ 
  .movie-like-item {
     margin-right: 16px;
     display: flex;
     position: relative;
     width: 46px;
+    min-width: 46px;
     height: 46px;
+    min-height: 46px;
     margin-right: 24px;
     margin-bottom: 36px;
     border-radius: 50%;
@@ -168,7 +177,8 @@
 .movie-trailer {
     height: 46px;
     display: flex;
-    align-items: center;    
+    align-items: center;
+    white-space: nowrap;
 }
 
 
