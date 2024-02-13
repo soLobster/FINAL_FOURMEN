@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.ParseException;
@@ -25,6 +26,9 @@ public class TvShowApiUtil {
 
     @Value("${api.themoviedb.api-key}")
     private String API_KEY;
+
+    @Value("${api.themoviedb.api-token}")
+    private String TOKEN;
 
     private TvShowDTO tvShowDTO;
 
@@ -74,6 +78,8 @@ public class TvShowApiUtil {
 
         }
 
+        String path_URI = pathUri;
+
         List<Integer> genreList = paramDTO.getWith_genres();
         if(genreList != null) {
             genreVariable =genreList.stream().map((x) -> x.toString()).collect(Collectors.joining("|"));
@@ -99,25 +105,49 @@ public class TvShowApiUtil {
 
         String watchRegion = watchRegionVariable;
 
-        targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
-                .path(pathUri)
-                .queryParam("page", paramDTO.getPage())
-                .queryParam("language", "ko-KR")
-                .queryParam("sort_by" , paramDTO.getSortBy())
-                .queryParam("first_air_date.gte", paramDTO.getFirst_air_date_gte())
-                .queryParam("first_air_date.lte", paramDTO.getFirst_air_date_lte())
-                .queryParam("with_genres", genres)
-                .queryParam("with_status", paramDTO.getWith_status())
-                .queryParam("watch_region" ,  watchRegionVariable)
-                .queryParam("with_watch_providers", providers)
-                .queryParam("with_original_language", paramDTO.getWith_original_language())
-                .queryParam("query", paramDTO.getQuery())
-                .queryParam("api_key", API_KEY)
-                .toUriString();
-        log.info("targetURL = {}", targetUrl);
+        WebClient client = WebClient.create(BASE_URL);
 
-        TvShowListDTO tvShowListDTO = restTemplate.getForObject(targetUrl, TvShowListDTO.class);
+        TvShowListDTO tvShowListDTO = client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(path_URI)
+                                .queryParam("page", paramDTO.getPage())
+                                .queryParam("language", "ko-KR")
+                                .queryParam("sort_by" , paramDTO.getSortBy())
+                                .queryParam("first_air_date.gte", paramDTO.getFirst_air_date_gte())
+                                .queryParam("first_air_date.lte", paramDTO.getFirst_air_date_lte())
+                                .queryParam("with_genres", genres)
+                                .queryParam("with_status", paramDTO.getWith_status())
+                                .queryParam("watch_region" ,  watchRegion)
+                                .queryParam("with_watch_providers", providers)
+                                .queryParam("with_original_language", paramDTO.getWith_original_language())
+                                .queryParam("query", paramDTO.getQuery())
+                                .queryParam("api_key", API_KEY)
+                                .build())
+                .header("Authorization", TOKEN)
+                .retrieve()
+                .bodyToMono(TvShowListDTO.class)
+                .block();
 
+        // RestTemplate의 문제였음...webFlux webClient 사용하니 잘 됨....
+
+//        targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
+//                .path(pathUri)
+//                .queryParam("page", paramDTO.getPage())
+//                .queryParam("language", "ko-KR")
+//                .queryParam("sort_by" , paramDTO.getSortBy())
+//                .queryParam("first_air_date.gte", paramDTO.getFirst_air_date_gte())
+//                .queryParam("first_air_date.lte", paramDTO.getFirst_air_date_lte())
+//                .queryParam("with_genres", genres)
+//                .queryParam("with_status", paramDTO.getWith_status())
+//                .queryParam("watch_region" ,  watchRegionVariable)
+//                .queryParam("with_watch_providers", providers)
+//                .queryParam("with_original_language", paramDTO.getWith_original_language())
+//                .queryParam("query", paramDTO.getQuery())
+//                .queryParam("api_key", API_KEY)
+//                .toUriString();
+//        log.info("targetURL = {}", targetUrl);
+//
+//        TvShowListDTO tvShowListDTO = restTemplate.getForObject(targetUrl, TvShowListDTO.class);
         return tvShowListDTO;
     }
 

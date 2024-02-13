@@ -35,7 +35,7 @@
 		}
 
 		.layout {
-			padding-left: 5rem;
+			padding-left: 3rem;
 			padding-right: 3rem;
 			width: 100vw;
 			height: auto;
@@ -190,8 +190,8 @@
 		.ott .ott-logo-img {
 			width: 70px;
 			height: 70px;
-			padding: 7px;
-			border-radius: 1rem;
+			padding: 4px;
+			border-radius: 0.75rem;
 		}
 
 		.check-icon {
@@ -199,12 +199,12 @@
 			font-weight: bolder;
 			position: absolute;
 			visibility: hidden;
-			width: 56px;
-			height: 56px;
+			width: 62px;
+			height: 62px;
 			padding: 5px;
 			border-radius: .5rem;
-			top: 10%;
-			left: 10%;
+			top: 6%;
+			left: 6%;
 			text-align: center;
 		}
 
@@ -268,8 +268,8 @@
 		<section class="layout">
 
 			<div class = "p-2 search_section">
-
-				<form th:action= "@{'../tv/filter'}">
+					<form action="/tv/filter">
+<!--				<form action="/tv/filter" th:action= "@{'../tv/filter'}">-->
 					<div class = "accordion mb-2" id = "accordion-filter">
 						<div class = "accordion-item border-0" style="background-color: #2a2b38" >
 							<h2 class = "accordion-header">

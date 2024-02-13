@@ -34,7 +34,7 @@
     width: 100vw;
     height: 600px;
 
-    display: flex;
+    /*display: flex;*/
   }
 
   img.backdropImg {
@@ -45,18 +45,20 @@
     top: 0;
     left: 0;
     filter: brightness(0.6);
+    z-index: -1;
   }
 
   div.season_details{
     margin-left: 10rem;
-    margin-right: 10rem;
-    width: 100vw;
+    margin-right: 5rem;
+    width: fit-content;
     z-index: 1;
     display: flex;
   }
 
   section.poster {
-    width: 30%;
+    width: 330px;
+    min-width: 330px;
     margin-top: 50px;
     display: flex;
     flex-direction: column;
@@ -64,11 +66,16 @@
   }
 
   section.over-view {
-    margin-top: 120px;
+    margin-top: 100px;
     margin-left: 50px;
+    margin-bottom: 50px;
+    width: 70%;
+    min-width: 250px;
+    height: 500px;
     display: flex;
     flex-direction: column;
     font-weight: bold;
+    overflow: auto;
   }
 
   div.poster_img{
@@ -175,9 +182,9 @@
       </div>
 
       <div>
-        <p class = "fs-3 fw-bold mt-5 mb-0">OVERVIEW</p>
+        <p class = "fs-5 fw-bold mt-5 mb-0">OVERVIEW</p>
         <p class = "mt-0" th:text="${seasonDto.getOverview()}"></p>
-        <p class = "fs-3 fw-bold mt-5 mb-0" th:text="${ 'Episode Number  : ' + seasonDto.getEpisodes().size()}"></p>
+        <p class = "fs-5 fw-bold mt-5 mb-0" th:text="${ 'Episode Number  : ' + seasonDto.getEpisodes().size()}"></p>
       </div>
     </section>
   </div>

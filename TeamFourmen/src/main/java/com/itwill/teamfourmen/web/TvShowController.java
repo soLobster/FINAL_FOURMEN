@@ -351,7 +351,6 @@ public class TvShowController {
 		return "tvshow/season-details";
 	}
 
-
 	private void getInitialList(String pageName, Model model) {
 
 		TvShowQueryParamDTO paramDTO = new TvShowQueryParamDTO();
@@ -369,8 +368,6 @@ public class TvShowController {
 		model.addAttribute("tvShowDto", tvShowDto);
 		model.addAttribute("tvShowGenreDTO", tvShowGenre);
 	}
-
-
 
 	private void getInitialList(TvShowQueryParamDTO paramDTO, Model model) {
 
