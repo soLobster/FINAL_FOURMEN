@@ -8,6 +8,7 @@
 	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
+    <link th:href="@{/css/review-star/review-star.css}" rel="stylesheet">
 	<link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-detail.css}" rel="stylesheet">
     
@@ -54,14 +55,15 @@
                             <i class="fa-regular fa-heart"></i>
                         </div>
                         <div class="movie-like-item">
-                            <i class="fa-solid fa-star"></i>
+                            <button type="button" class="btn-movie-review" data-bs-toggle="modal" data-bs-target="#movie-review">                            
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
                         </div>
                         <div class="movie-like-item">
                             <button class="movie-like-button btn-open-chat">                                                
                                 <i class="fa-regular fa-comment"></i>
                             </button>                            
-                        </div>
-    
+                        </div>                                                                          
                         
                         <!-- 트레일러가 있는 경우에만 이 버튼과 모달 보여주기 -->
                         <th:block th:if="${!#lists.isEmpty(movieTrailerList) and movieTrailerList != null}">
@@ -84,7 +86,85 @@
                             </div>
                         </th:block>           
                     </div>
-                        
+                    
+                    <!-- 리뷰 남기기 모달 -->
+                    <div class="modal fade" id="movie-review" tabindex="-1" aria-labelledby="movie-review" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5 movie-review-modal-title" th:text="Review"></h1>
+                                    <button type="button" class="btn-header-close" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="fa-solid fa-xmark"></i>                                    
+                                    </button>
+                                </div>
+                                <div class="modal-body movie-review-modal-body">
+                                    <!-- 모달 몸체 작성 -->
+                                    <div class="review-poster-container">
+                                        <div class="div-moview-review-poster">
+                                            <img th:src="@{https://image.tmdb.org/t/p/w342/{posterPath} (posterPath=${movieDetailsDto.posterPath})}">
+                                        </div>
+                                    </div>
+                                    <div class="div-movie-review-comment">
+                                        <h4 th:text="${movieDetailsDto.title}"></h4>
+                                        
+                                        <form class="review-form">
+                                            <div class="textarea-count-characters-container">
+                                                <textarea class="text-area-review-comment" placeholder="리뷰 작성를 남겨 주세요. (1000자)" maxlength="1000" name="reviewComment"></textarea>
+                                                <div class="div-review-count-characters"><span class="span-review-count-characthers">0</span> / 1000자</div>
+                                            </div>
+                                            <div class="review-spoiler-rating-title-container">
+                                                <div class="div-movie-review-spoiler-checkbox">
+                                                    <input type="checkbox" name="includeSpoiler" id="checkboxSpoiler">
+                                                    <label for="checkboxSpoiler">스포일러가 포함되어 있습니까?</label>
+                                                </div>
+                                                <h5>평점</h5>
+                                            </div>
+                                            <div class="review-stars-container">
+                                                <fieldset class="rating">                            
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star5" value="5" required>
+                                                    <label for="star5" class="full" title="5 stars"></label>                                        
+                                                                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star4half" value="4.5" required>
+                                                    <label for="star4half" class="half" title="4.5 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star4" value="4" required>
+                                                    <label for="star4" class="full" title="4 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star3half" value="3.5" required>
+                                                    <label for="star3half" class="half" title="3.5 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star3" value="3" required>
+                                                    <label for="star3" class="full" title="3 stars"></label>
+                                                                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star2half" value="2.5" required>
+                                                    <label for="star2half" class="half" title="2.5 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star2" value="2" required>
+                                                    <label for="star2" class="full" title="2 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star1half" value="1.5" required>
+                                                    <label for="star1half" class="half" title="1.5 stars"></label>
+                                                                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star1" value="1" required>
+                                                    <label for="star1" class="full" title="1 stars"></label>
+                                                                                        
+                                                    <input type="radio" name="rating" class="review-checkbox" id="starhalf" value="0.5" required>
+                                                    <label for="starhalf" class="half" title="0.5 stars"></label>
+                                                </fieldset>                                            
+                                            </div>
+                                        </form>
+                                    </div>      
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    <button type="button" class="btn btn-primary">저장</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
                     <!-- 트레일러 동영상을 위한 Modal -->
                     <th:block th:if="${!#lists.isEmpty(movieTrailerList) and movieTrailerList != null}">
                         <div class="modal fade" id="movieTrailerModal" tabindex="-1" data-bs-backdrop="static" data-keyboard="false"
@@ -292,6 +372,7 @@
     <script th:src="@{/js/image/img-dominant-color.js}"></script>
     <script th:src="@{/js/movie/movie-image-slide.js}"></script>
     <script th:src="@{/js/movie/movie-detail.js}"></script>
+    <script th:src="@{/js/review-star/review-star.js}"></script>
 	
 	
 </body>
