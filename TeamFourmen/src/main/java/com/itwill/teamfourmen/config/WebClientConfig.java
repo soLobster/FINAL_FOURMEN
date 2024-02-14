@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
 
     @Bean
+    // 기존 코드
 //    public WebClient webClient() {
 //        return WebClient.create();
 //    }

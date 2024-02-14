@@ -6,26 +6,18 @@
     <meta charset="UTF-8">
     <script src="https://kit.fontawesome.com/7542e28415.js" crossorigin="anonymous"></script>
     <title>인물 상세정보</title>
-    <link rel="stylesheet" th:href="@{/css/person/person_details.css}"> <!-- 스타일시트 연결 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" th:href="@{/css/person/person_details.css}"> <!-- 스타일시트 연결 -->
     <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous">
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous">
 </head>
 <body>
     <div>
         <header>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    언어
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/?language=en">en</a></li>
-                    <li><a class="dropdown-item" href="/?language=ko">ko</a></li>
-                </ul>
-            </div>
+
         </header>
         <main>
             <section>
@@ -52,31 +44,31 @@
                                             <div>
                                                 <span>
                                                     <a
-                                                       th:if="${externalIDs.getFacebookId() != null}"
+                                                       th:if="${externalIDs.facebookId != null}"
                                                        th:href="'https://www.facebook.com/' + ${externalIDs.getFacebookId()}">
                                                         <i class="fa-brands fa-facebook"></i>
                                                     </a>
 
                                                     <a
-                                                       th:if="${externalIDs.getTwitterId() != null}"
+                                                       th:if="${externalIDs.twitterId != null}"
                                                        th:href="'https://twitter.com/' + ${externalIDs.getTwitterId()}">
                                                         <i class="fa-brands fa-twitter"></i>
                                                     </a>
 
                                                     <a
-                                                       th:if="${externalIDs.getInstagramId() != null}"
+                                                       th:if="${externalIDs.instagramId != null}"
                                                        th:href="'https://www.instagram.com/' + ${externalIDs.getInstagramId()}">
                                                         <i class="fa-brands fa-instagram"></i>
                                                     </a>
 
                                                     <a
-                                                       th:if="${externalIDs.getTiktokId() != null}"
+                                                       th:if="${externalIDs.tiktokId != null}"
                                                        th:href="'https://www.tiktok.com/@' + ${externalIDs.getTiktokId()}">
                                                         <i class="fa-brands fa-tiktok"></i>
                                                     </a>
 
                                                     <a
-                                                       th:if="${externalIDs.getYoutubeId() != null}"
+                                                       th:if="${externalIDs.youtubeId != null}"
                                                        th:href="'https://www.youtube.com/' + ${externalIDs.getYoutubeId()}">
                                                         <i class="fa-brands fa-youtube"></i>
                                                     </a>
@@ -92,16 +84,26 @@
                                                     <bdi style="margin: 0">유명 분야</bdi>
                                                 </strong>
                                             </p>
-                                            <p th:text="${detailsPerson.getKnownForDepartment()}"></p>
+
+                                            <p th:switch="${detailsPerson.getKnownForDepartment()}">
+                                                <span th:case="'Acting'">연기</span>
+                                                <span th:case="'Art'">미술</span>
+                                                <span th:case="'Camera'">카메라</span>
+                                                <span th:case="'Costume & Make-Up'">의상 & 분장</span>
+                                                <span th:case="'Crew'">제작진</span>
+                                                <span th:case="'Directing'">연출</span>
+                                                <span th:case="'Editing'">편집</span>
+                                                <span th:case="'Lighting'">조명</span>
+                                                <span th:case="'Sound'">음향</span>
+                                                <span th:case="'Visual Effects'">시각 효과</span>
+                                            </p>
 
                                             <p>
                                                 <strong>
                                                     <bdi>참여 작품 수</bdi>
                                                 </strong>
                                             </p>
-                                            <p th:text="${movieCredits.getCast().size()} + ${tvCredits.getCast().size()}"></p>
-                                            <p th:if="${movieCredits.getCast() == null or tvCredits.getCast() == null or
-                                            movieCredits.getCast().isEmpty() or tvCredits.getCast().isEmpty()}">-</p>
+                                            <p th:text="${uniqueKnownCreditsNameORTitleList.size()}"></p>
 
                                             <p>
                                                 <strong>
@@ -116,6 +118,13 @@
                                                 </strong>
                                             </p>
                                             <p th:text="${detailsPerson.getBirthday() != null ? detailsPerson.getBirthday() : '-'}"></p>
+
+                                            <p th:if="${detailsPerson.getDeathday() != null}">
+                                                <strong>
+                                                    <bdi>사망일</bdi>
+                                                </strong>
+                                            </p>
+                                            <p th:if="${detailsPerson.getDeathday() != null}" th:text="${detailsPerson.getDeathday()}"></p>
 
                                             <p>
                                                 <strong>
@@ -143,61 +152,165 @@
                                         </h3>
                                         <div>
                                             <p th:text="${detailsPerson.getBiography()}"></p>
+                                            <p th:if="${detailsPerson.getBiography().isEmpty()}" th:text="${detailsPerson.getName()} + '의 약력 란이 비어있습니다.'"></p>
                                         </div>
                                     </section>
                                     <section>
                                         <h3>유명 분야</h3>
-                                        <div>
-                                            <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 6}">
-                                                <a th:if="${uniqueCast.mediaType} == 'tv'" th:href="@{/tv/{id}(id=${uniqueCast.id})}">
-                                                    <img class="poster_img" th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}" alt="poster_img">
-                                                </a>
-                                                <a th:if="${uniqueCast.mediaType} == 'movie'" th:href="@{/movie/details(id=${uniqueCast.id})}">
-                                                    <img class="poster_img" th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}" alt="poster_img">
-                                                </a>
-                                                <p>
-                                                    <a th:if="${uniqueCast.mediaType} == 'tv'" th:href="@{/tv/{id}(id=${uniqueCast.id})}">
-                                                        <bdi th:text="${uniqueCast.getTitle()}"></bdi>
+                                        <div th:if="${detailsPerson.getKnownForDepartment().equals('Acting')}">
+                                            <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 8}">
+
+                                                <div class="media-item">
+                                                    <a th:if="${uniqueCast.mediaType eq 'tv'} or ${uniqueCast.mediaType eq 'movie'}"
+                                                       th:href="@{/${uniqueCast.mediaType}/{id}(id=${uniqueCast.id})}">
+                                                        <img class="poster_img"
+                                                             th:if="${uniqueCast.posterPath ne null and uniqueCast.posterPath ne 'null' and uniqueCast.posterPath ne ''}"
+                                                             th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}"
+                                                             alt="poster_img">
+                                                        <img class="poster_img"
+                                                             th:unless="${uniqueCast.posterPath ne null and uniqueCast.posterPath ne 'null' and uniqueCast.posterPath ne ''}"
+                                                             th:src="@{/image/person_default_image_01.png}"
+                                                             alt="poster_img">
+                                                        <div th:if="${uniqueCast.mediaType eq 'tv'}" class="name" th:text="${uniqueCast.name}"></div>
+                                                        <div th:if="${uniqueCast.mediaType eq 'movie'}" class="title" th:text="${uniqueCast.title}"></div>
                                                     </a>
-                                                    <a th:if="${uniqueCast.mediaType} == 'movie'" th:href="@{/movie/details(id=${uniqueCast.id})}">
-                                                        <bdi th:text="${uniqueCast.getName()}"></bdi>
+                                                </div>
+
+                                            </span>
+                                        </div>
+                                        <div th:if="${!detailsPerson.getKnownForDepartment().equals('Acting')}">
+                                            <span th:each="uniqueCrew, iterStat : ${uniqueCrewList}" th:if="${iterStat.index lt 8}">
+
+                                                <div class="media-item">
+                                                    <a th:if="${uniqueCrew.mediaType eq 'tv'} or ${uniqueCrew.mediaType eq 'movie'}"
+                                                       th:href="@{/${uniqueCrew.mediaType}/{id}(id=${uniqueCrew.id})}">
+                                                        <img class="poster_img"
+                                                             th:if="${uniqueCrew.posterPath ne null and uniqueCrew.posterPath ne 'null' and uniqueCrew.posterPath ne ''}"
+                                                             th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCrew.posterPath}"
+                                                             alt="poster_img">
+                                                        <img class="poster_img"
+                                                             th:unless="${uniqueCrew.posterPath ne null and uniqueCrew.posterPath ne 'null' and uniqueCrew.posterPath ne ''}"
+                                                             th:src="@{/image/person_default_image_01.png}" width="300" height="auto"
+                                                             alt="poster_img">
+                                                        <div th:if="${uniqueCrew.mediaType eq 'tv'}" class="name" th:text="${uniqueCrew.name}"></div>
+                                                        <div th:if="${uniqueCrew.mediaType eq 'movie'}" class="title" th:text="${uniqueCrew.title}"></div>
                                                     </a>
-                                                </p>
+                                                </div>
+
                                             </span>
                                         </div>
                                     </section>
                                     <section>
-                                        <div>
-                                            <h3>연기</h3>
+
+                                        <div th:if="${detailsPerson.getKnownForDepartment().equals('Acting')}">
+                                            <h3 th:switch="${detailsPerson.getKnownForDepartment()}">
+                                                <span th:case="'Acting'">연기</span>
+                                                <span th:case="'Art'">미술</span>
+                                                <span th:case="'Camera'">카메라</span>
+                                                <span th:case="'Costume & Make-Up'">의상 & 분장</span>
+                                                <span th:case="'Crew'">제작진</span>
+                                                <span th:case="'Directing'">연출</span>
+                                                <span th:case="'Editing'">편집</span>
+                                                <span th:case="'Lighting'">조명</span>
+                                                <span th:case="'Sound'">음향</span>
+                                                <span th:case="'Visual Effects'">시각 효과</span>
+                                            </h3>
                                             <table>
-                                                <tbody th:each="castList: ${combinedCreditsCastList}">
-                                                    <tr>
+
+                                                <tbody>
+                                                    <tr th:each="combinedCastList: ${combinedCreditsCastList}" th:object="${combinedCastList}">
                                                         <td>
                                                             <table>
                                                                 <tbody>
+
                                                                     <tr>
-                                                                        <td th:if="${castList.year == null}">-</td>
-                                                                        <td th:unless="${castList.year == null}" th:text="${castList.year}">연도</td>
                                                                         <td>
-                                                                            <a th:href="@{/movie/details(id=${castList.id})}">
-                                                                                <p th:if="${castList.title != null}" class="title" th:text="${castList.title}"></p>
-                                                                            </a>
+                                                                            <span th:if="${combinedCastList.year == null}">-</span>
+                                                                            <span th:unless="${combinedCastList.year == null}" th:text="${combinedCastList.year}">연도</span>
                                                                         </td>
                                                                         <td>
-                                                                            <a th:href="@{/tv/{id}(id=${castList.id})}">
-                                                                                <p th:if="${castList.name != null}" class="name" th:text="${castList.name}"></p>
+                                                                            <a th:href="@{/movie/details(id=${combinedCastList.id})}" th:if="${combinedCastList.title != null}">
+                                                                                <span class="title" th:text="${combinedCastList.title}"></span>
+                                                                            </a>
+                                                                            <a th:href="@{/tv/{id}(id=${combinedCastList.id})}" th:if="${combinedCastList.name != null}">
+                                                                                <span class="name" th:text="${combinedCastList.name}"></span>
                                                                             </a>
                                                                         </td>
                                                                     </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                            <span th:if="${combinedCastList.mediaType.equals('tv')}">
+                                                                                <span th:if="${combinedCastList.episodeCount != null}">
+                                                                                    <a th:href="@{/tv/{id}(id=${combinedCastList.id})}"
+                                                                                       th:text="'(' + ${combinedCastList.episodeCount} + ' 화' + ')'"></a>
+                                                                                </span>
+                                                                                <span th:if="${combinedCastList.character != null}"
+                                                                                      th:text="${combinedCastList.character} + ' 역'"></span>
+                                                                            </span>
+                                                                            <span th:if="${combinedCastList.mediaType.equals('movie') && !combinedCastList.character.isEmpty()}"
+                                                                                    th:text="${combinedCastList.character} + ' 역'"></span>
+                                                                        </td>
+                                                                    </tr>
+
                                                                 </tbody>
                                                             </table>
                                                         </td>
                                                     </tr>
-
                                                 </tbody>
+
                                             </table>
                                         </div>
-                                        <div class="credit_filters"></div>
+
+                                        <div th:if="${combinedCreditsCrewList != null}">
+                                            <h3>
+                                                <span>제작 및 지원</span>
+                                            </h3>
+                                            <table>
+
+                                                <tbody>
+                                                <tr th:each="combinedCrewList: ${combinedCreditsCrewList}" th:object="${combinedCrewList}">
+                                                    <td>
+                                                        <table>
+                                                            <tbody>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <span th:if="${combinedCrewList.year == null}">-</span>
+                                                                    <span th:unless="${combinedCrewList.year == null}" th:text="${combinedCrewList.year}">연도</span>
+                                                                </td>
+                                                                <td>
+                                                                    <a th:href="@{/movie/details(id=${combinedCrewList.id})}" th:if="${combinedCrewList.title != null}">
+                                                                        <span class="title" th:text="${combinedCrewList.title}"></span>
+                                                                    </a>
+                                                                    <a th:href="@{/tv/{id}(id=${combinedCrewList.id})}" th:if="${combinedCrewList.name != null}">
+                                                                        <span class="name" th:text="${combinedCrewList.name}"></span>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                            <span th:if="${combinedCrewList.mediaType.equals('tv')}">
+                                                                                <span th:if="${combinedCrewList.episodeCount != null}">
+                                                                                    <a th:href="@{/tv/{id}(id=${combinedCrewList.id})}"
+                                                                                       th:text="'(' + ${combinedCrewList.episodeCount} + ' 화' + ')'"></a>
+                                                                                </span>
+                                                                                <span th:if="${combinedCrewList.job != null}"
+                                                                                      th:text="${combinedCrewList.job}"></span>
+                                                                            </span>
+                                                                    <span th:if="${combinedCrewList.mediaType.equals('movie') && !combinedCrewList.job.isEmpty()}"
+                                                                          th:text="${combinedCrewList.job}"></span>
+                                                                </td>
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
                                     </section>
                                 </div>
                             </div>

@@ -14,8 +14,8 @@ public class DetailsPersonDto {
     @JsonAlias("also_known_as")
     private List<String> alsoKnownAs;
     private String biography;
-    private Date birthday;
-    private Date deathday;
+    private String birthday;
+    private String deathday;
     private int gender;
     private String homepage;
     private int id;

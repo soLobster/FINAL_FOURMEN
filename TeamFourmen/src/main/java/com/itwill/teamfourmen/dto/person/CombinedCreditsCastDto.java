@@ -47,6 +47,8 @@ public class CombinedCreditsCastDto {
 
     private String title;
     private String name;
+    @JsonProperty("video")
+    private boolean video;
     @JsonProperty("vote_average")
     private double voteAverage;
     @JsonProperty("vote_count")
