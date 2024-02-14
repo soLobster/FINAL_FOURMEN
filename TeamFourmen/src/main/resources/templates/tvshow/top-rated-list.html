@@ -218,7 +218,7 @@
 			left: 50%;
 			top: 0%;
 			transform: translateX(-50%);
-			background-color: #001d3d;
+			background-color: #013a63;
 			color: #fff;
 			white-space: nowrap;
 			padding: 10px 15px;
@@ -235,12 +235,12 @@
 			top: 80%;
 			transform: translateX(-50%);
 			border: 15px solid;
-			border-color: #001d3d #0000 #0000 #0000;
+			border-color: #013a63 #0000 #0000 #0000;
 		}
 
 		.checkbox-ott:hover + label{
 			.tooltipText {
-				top:-65%;
+				top:-75%;
 				visibility: visible;
 				opacity: 1;
 			}
@@ -252,6 +252,12 @@
 				visibility: visible;
 				background-color: rgba(2, 182, 247, 0.6);
 			}
+		}
+
+		.filter-status {
+			padding: 10px 0 10px 10px;
+			margin-top: 30px;
+			border-radius: .5rem;
 		}
 
 	</style>
@@ -268,195 +274,247 @@
 		<section class="layout">
 
 			<div class = "p-2 search_section">
-					<form action="/tv/filter">
-<!--				<form action="/tv/filter" th:action= "@{'../tv/filter'}">-->
+				<form action="/tv/filter">
+	<!--				<form action="/tv/filter" th:action= "@{'../tv/filter'}">-->
 					<div class = "accordion mb-2" id = "accordion-filter">
 						<div class = "accordion-item border-0" style="background-color: #2a2b38" >
 							<h2 class = "accordion-header">
 								<button class = "accordion-button fs-4 border-0 accordion_BTN" type = "button" data-bs-toggle = "collapse"
-								data-bs-target="#collapseOne" aria-expanded="true"  aria-controls="collapseOne">
-									필터
+									data-bs-target="#collapseOne" aria-expanded="true"  aria-controls="collapseOne">
+										필터
 								</button>
 							</h2>
-							<div id = "collapseOne" class = "accordion-collapse collapse show">
-								<div class="accordion-body text-white">
+								<div id = "collapseOne" class = "accordion-collapse collapse show">
+									<div class="accordion-body text-white">
 
-									<div class = "order-list">
-										<h4>정렬</h4>
-										<hr>
-											<select class="form-select" aria-label="Default select example" name = "sortBy">
-												<option selected="selected" value="">정렬 순서</option>
-												<option value="popularity.asc">인기도 오름차순</option>
-												<option value="popularity.desc">인기도 내림차순</option>
-												<option value="first_air_date.asc">방영일 오름차순</option>
-												<option value="first_air_date.desc">방영일 내림차순</option>
-												<option value="name.asc">이름 오름차순</option>
-												<option value="name.desc">이름 내림차순</option>
-												<option value="vote_count.asc">TMDB 투표 오름차순</option>
-												<option value="vote_count.desc">TMDB 투표 내림차순</option>
-											</select>
-										<hr>
-									</div>
-
-									<div class = "ott-filter">
-										<h4>OTT</h4>
-										<hr>
-											<div class = "p-0 mx-2 my-0 ott">
-												<ul class = "multi_select ott-logo">
-													<li class = "ott">
-														<input type = "checkbox" value = "8" name = "with_watch_provider" id = "ott-8" class="checkbox-ott d-none"/>
-														<label for = "ott-8" class = "checkbox-ott-label">
-															<img src = "https://image.tmdb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg" class = "ott-logo-img" alt = "netflix logo">
-															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
-															<span class = "tooltipText">Netfilx</span>
-														</label>
-													</li>
-													<li class = "ott">
-														<input type = "checkbox" value = "337" name = "with_watch_provider" id = "ott-337" class="checkbox-ott d-none"/>
-														<label for = "ott-337" class = "checkbox-ott-label">
-															<img src = "https://image.tmdb.org/t/p/original/7YPdUs60C9qQQQfOFCgxpnF07D9.jpg" class = "ott-logo-img" alt = "disney plus logo">
-															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
-															<span class = "tooltipText">Disney Plus</span>
-														</label>
-													</li>
-													<li class = "ott">
-														<input type = "checkbox" value = "119" name = "with_watch_provider" id = "ott-119" class="checkbox-ott d-none"/>
-														<label for = "ott-119" class = "checkbox-ott-label">
-															<img src = "https://image.tmdb.org/t/p/original/dQeAar5H991VYporEjUspolDarG.jpg" class = "ott-logo-img" alt = "amazon prime logo">
-															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
-															<span class = "tooltipText">Amazon Prime Video</span>
-														</label>
-													</li>
-													<li class = "ott">
-														<input type = "checkbox" value = "356" name = "with_watch_provider" id = "ott-356" class="checkbox-ott d-none"/>
-														<label for = "ott-356" class = "checkbox-ott-label">
-															<img src = "https://image.tmdb.org/t/p/original/hPcjSaWfMwEqXaCMu7Fkb529Dkc.jpg" class = "ott-logo-img" alt = "wavve logo">
-															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
-															<span class = "tooltipText">Wavve</span>
-														</label>
-													</li>
-													<li class = "ott">
-														<input type = "checkbox" value = "97" name = "with_watch_provider" id = "ott-97" class="checkbox-ott d-none"/>
-														<label for = "ott-97" class = "checkbox-ott-label">
-															<img src = "https://image.tmdb.org/t/p/original/5gmEivxOGPdq4Afpq1f8ktLtEW1.jpg" class = "ott-logo-img" alt = "watcha logo">
-															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
-															<span class = "tooltipText">Watcha</span>
-														</label>
-													</li>
-													<li class = "ott">
-														<input type = "checkbox" value = "350" name = "with_watch_provider" id = "ott-350" class="checkbox-ott d-none"/>
-														<label for = "ott-350" class = "checkbox-ott-label">
-															<img src = "https://image.tmdb.org/t/p/original/2E03IAZsX4ZaUqM7tXlctEPMGWS.jpg" class = "ott-logo-img" alt = "apple tv logo">
-															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
-															<span class = "tooltipText">Apple Tv Plus</span>
-														</label>
-													</li>
-<!--													<li class = "ott">-->
-<!--														<input type = "checkbox" value = "96" name = "with_watch_provider" id = "ott-96" class="checkbox-ott d-none"/>-->
-<!--														<label for = "ott-96" class = "checkbox-ott-label">-->
-<!--															<img src = "https://image.tmdb.org/t/p/original/crFbxg6jkiKc14gpIGMkre9Y3mu.jpg" class = "ott-logo-img" alt = "naver store logo">-->
-<!--															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>-->
-<!--															<span class = "tooltipText">Naver Store</span>-->
-<!--														</label>-->
-<!--													</li>-->
-												</ul>
-											</div>
-										<hr>
-									</div>
-
-									<div class = "genre-filter">
-										<h4> 장르 </h4>
-										<hr>
-											<div class="p-0 genres">
-												<ul class = "multi_select text">
-													<li th:each=" genre : ${tvShowGenreDTO} " th:value="${genre.getId()}">
-														<input class="d-none checkbox-genre" type="checkbox" th:id = "${genre.getId()}" th:value="${genre.getId()}" name="with_genres"/>
-														<label class = "m-1 badge checkbox-genre-label fs-5" th:for = "${genre.getId()}" th:text="${genre.getName()}"></label>
-													</li>
-												</ul>
-											</div>
-										<hr>
-									</div>
-
-									<div class = "language-filter">
-										<div class = "origin-language" style="display: flex">
-										<h4 class = "me-2">원어</h4>
+										<div class = "order-list">
+											<h4>정렬</h4>
+											<hr>
+												<select class="form-select" aria-label="Default select example" name = "sortBy">
+													<option selected="selected" value="">정렬 순서</option>
+													<option value="popularity.asc">인기도 오름차순</option>
+													<option value="popularity.desc">인기도 내림차순</option>
+													<option value="first_air_date.asc">방영일 오름차순</option>
+													<option value="first_air_date.desc">방영일 내림차순</option>
+													<option value="name.asc">이름 오름차순</option>
+													<option value="name.desc">이름 내림차순</option>
+													<option value="vote_count.asc">TMDB 투표 오름차순</option>
+													<option value="vote_count.desc">TMDB 투표 내림차순</option>
+												</select>
+											<hr>
 										</div>
-										<select class="form-select" aria-label="Default select example" name = "with_original_language">
-											<option selected="selected" value="">선택 안함</option>
-											<option value="ko">한국어</option>
-											<option value="en">영어</option>
-											<option value="es">스페인어</option>
-											<option value="ja">일본어</option>
-											<option value="zh">중국어</option>
-											<option value="fr">프랑스어</option>
-											<option value="de">독일어</option>
-											<option value="it">이탈리아어</option>
-										</select>
-										<hr>
-									</div>
 
-									<div class = "air-date-filter">
-										<h4> 방영 일자 </h4>
-										<hr>
-											<div class = "date" style="display: flex; flex-direction: column">
-												<div class = "from" style="display: flex; justify-content: space-between">
-													<span>FROM</span>
-													<input class = "mb-2" type="date" name = "first_air_date_gte"/>
+										<div class = "ott-filter">
+											<h4>OTT</h4>
+											<hr>
+												<div class = "p-0 mx-2 my-0 ott">
+													<ul class = "multi_select ott-logo">
+														<li class = "ott">
+															<input type = "checkbox" value = "8" name = "with_watch_provider" id = "ott-8" class="checkbox-ott d-none"/>
+															<label for = "ott-8" class = "checkbox-ott-label">
+																<img src = "https://image.tmdb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg" class = "ott-logo-img" alt = "netflix logo">
+																<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+																<span class = "tooltipText">Netfilx</span>
+															</label>
+														</li>
+														<li class = "ott">
+															<input type = "checkbox" value = "337" name = "with_watch_provider" id = "ott-337" class="checkbox-ott d-none"/>
+															<label for = "ott-337" class = "checkbox-ott-label">
+																<img src = "https://image.tmdb.org/t/p/original/7YPdUs60C9qQQQfOFCgxpnF07D9.jpg" class = "ott-logo-img" alt = "disney plus logo">
+																<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+																<span class = "tooltipText">Disney Plus</span>
+															</label>
+														</li>
+														<li class = "ott">
+															<input type = "checkbox" value = "119" name = "with_watch_provider" id = "ott-119" class="checkbox-ott d-none"/>
+															<label for = "ott-119" class = "checkbox-ott-label">
+																<img src = "https://image.tmdb.org/t/p/original/dQeAar5H991VYporEjUspolDarG.jpg" class = "ott-logo-img" alt = "amazon prime logo">
+																<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+																<span class = "tooltipText">Amazon Prime Video</span>
+															</label>
+														</li>
+														<li class = "ott">
+															<input type = "checkbox" value = "356" name = "with_watch_provider" id = "ott-356" class="checkbox-ott d-none"/>
+															<label for = "ott-356" class = "checkbox-ott-label">
+																<img src = "https://image.tmdb.org/t/p/original/hPcjSaWfMwEqXaCMu7Fkb529Dkc.jpg" class = "ott-logo-img" alt = "wavve logo">
+																<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+																<span class = "tooltipText">Wavve</span>
+															</label>
+														</li>
+														<li class = "ott">
+															<input type = "checkbox" value = "97" name = "with_watch_provider" id = "ott-97" class="checkbox-ott d-none"/>
+															<label for = "ott-97" class = "checkbox-ott-label">
+																<img src = "https://image.tmdb.org/t/p/original/5gmEivxOGPdq4Afpq1f8ktLtEW1.jpg" class = "ott-logo-img" alt = "watcha logo">
+																<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+																<span class = "tooltipText">Watcha</span>
+															</label>
+														</li>
+														<li class = "ott">
+															<input type = "checkbox" value = "350" name = "with_watch_provider" id = "ott-350" class="checkbox-ott d-none"/>
+															<label for = "ott-350" class = "checkbox-ott-label">
+																<img src = "https://image.tmdb.org/t/p/original/2E03IAZsX4ZaUqM7tXlctEPMGWS.jpg" class = "ott-logo-img" alt = "apple tv logo">
+																<div class = "check-icon"><i class="fa-solid fa-check"></i></div>
+																<span class = "tooltipText">Apple Tv Plus</span>
+															</label>
+														</li>
+	<!--													<li class = "ott">-->
+	<!--														<input type = "checkbox" value = "96" name = "with_watch_provider" id = "ott-96" class="checkbox-ott d-none"/>-->
+	<!--														<label for = "ott-96" class = "checkbox-ott-label">-->
+	<!--															<img src = "https://image.tmdb.org/t/p/original/crFbxg6jkiKc14gpIGMkre9Y3mu.jpg" class = "ott-logo-img" alt = "naver store logo">-->
+	<!--															<div class = "check-icon"><i class="fa-solid fa-check"></i></div>-->
+	<!--															<span class = "tooltipText">Naver Store</span>-->
+	<!--														</label>-->
+	<!--													</li>-->
+													</ul>
 												</div>
-												<div class = "to" style="display: flex; justify-content: space-between">
-													<span>TO</span>
-													<input type="date" name = "first_air_date_lte"/>
+											<hr>
+										</div>
+
+										<div class = "genre-filter">
+											<h4> 장르 </h4>
+											<hr>
+												<div class="p-0 genres">
+													<ul class = "multi_select text">
+														<li th:each=" genre : ${tvShowGenreDTO} " th:value="${genre.getId()}">
+															<input class="d-none checkbox-genre" type="checkbox" th:id = "${genre.getId()}" th:value="${genre.getId()}" name="with_genres"/>
+															<label class = "m-1 badge checkbox-genre-label fs-5" th:for = "${genre.getId()}" th:text="${genre.getName()}"></label>
+														</li>
+													</ul>
 												</div>
+											<hr>
+										</div>
+
+										<div class = "language-filter">
+											<div class = "origin-language" style="display: flex">
+											<h4 class = "me-2">원어</h4>
 											</div>
-										<hr>
-									</div>
+											<select class="form-select" aria-label="Default select example" name = "with_original_language">
+												<option selected="selected" value="">선택 안함</option>
+												<option value="ko">한국어</option>
+												<option value="en">영어</option>
+												<option value="es">스페인어</option>
+												<option value="ja">일본어</option>
+												<option value="zh">중국어</option>
+												<option value="fr">프랑스어</option>
+												<option value="de">독일어</option>
+												<option value="it">이탈리아어</option>
+											</select>
+											<hr>
+										</div>
 
-									<div class = "season_status_filter">
-										<h4>방영 상태</h4>
-										<select class="form-select" aria-label="Default select example" name = "with_status">
-											<option selected="selected" value="">선택 안함</option>
-											<option value="0">Returning Series</option>
-											<option value="1">Planned</option>
-											<option value="2">In Production</option>
-											<option value="3">Ended</option>
-											<option value="4">Canceled</option>
-											<option value="5">Pilot</option>
-										</select>
-										<hr>
-									</div>
+										<div class = "air-date-filter">
+											<h4> 방영 일자 </h4>
+											<hr>
+												<div class = "date" style="display: flex; flex-direction: column">
+													<div class = "from" style="display: flex; justify-content: space-between">
+														<span>FROM</span>
+														<input class = "mb-2" type="date" name = "first_air_date_gte"/>
+													</div>
+													<div class = "to" style="display: flex; justify-content: space-between">
+														<span>TO</span>
+														<input type="date" name = "first_air_date_lte"/>
+													</div>
+												</div>
+											<hr>
+										</div>
 
-									<div class = "filter-button">
-										<input type="submit" class = "btn btn-primary" style="width: 100%" value="필터링하기"/>
-									</div>
+										<div class = "season_status_filter">
+											<h4>방영 상태</h4>
+											<select class="form-select" aria-label="Default select example" name = "with_status">
+												<option selected="selected" value="">선택 안함</option>
+												<option value="0">Returning Series</option>
+												<option value="1">Planned</option>
+												<option value="2">In Production</option>
+												<option value="3">Ended</option>
+												<option value="4">Canceled</option>
+												<option value="5">Pilot</option>
+											</select>
+											<hr>
+										</div>
 
+										<div class = "filter-button">
+											<input type="submit" class = "btn btn-primary" style="width: 100%" value="필터링하기"/>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</form>
+					</form>
 
-				<div class = "accordion" id = "accordion-search">
-				<div class = "accordion-item border-0" style="background-color: #2a2b38">
-					<h2 class = "accordion-header">
-						<button class = "accordion-button collapsed fs-4 border-0 accordion_BTN" type = "button" data-bs-toggle = "collapse"
-								data-bs-target="#collapse-accordion-search" aria-expanded="false"
-								aria-controls="collapse-accordion-search">
-							검색
-						</button>
-					</h2>
-					<div id = "collapse-accordion-search" class = "accordion-collapse collapse">
-						<div class="accordion-body p-3">
-							<form action="../tv/search" class = "d-flex" role="search">
-								<input class= "form-control me-2 search-bar" type = "search"
-									   placeholder="Search" aria-label="Search" name = "query"
-									   style="width: 191px;">
-								<button class = "btn btn-sm btn-primary" type="submit">검색</button>
-							</form>
+					<div class = "accordion" id = "accordion-search">
+					<div class = "accordion-item border-0" style="background-color: #2a2b38">
+						<h2 class = "accordion-header">
+							<button class = "accordion-button collapsed fs-4 border-0 accordion_BTN" type = "button" data-bs-toggle = "collapse"
+									data-bs-target="#collapse-accordion-search" aria-expanded="false"
+									aria-controls="collapse-accordion-search">
+								검색
+							</button>
+						</h2>
+						<div id = "collapse-accordion-search" class = "accordion-collapse collapse">
+							<div class="accordion-body p-3">
+								<form action="../tv/search" class = "d-flex" role="search">
+									<input class= "form-control me-2 search-bar" type = "search"
+										   placeholder="Search" aria-label="Search" name = "query"
+										   style="width: 191px;">
+									<button class = "btn btn-sm btn-primary" type="submit">검색</button>
+								</form>
+							</div>
 						</div>
 					</div>
+
+					<div class = "bg-dark filter-status" th:if="${params ne null}">
+						<h4>현재 필터링 항목</h4>
+
+						<hr>
+
+						<section>
+							<h5>정렬 순서</h5>
+							<p th:if="${params.getSortBy() ne null}" th:text="${params.getSortBy()}"></p>
+							<hr>
+
+							<h5>장르</h5>
+							<div th:if="${params.getWith_genres() ne null}">
+								<div th:each=" genre : ${params.getWith_genres()}">
+									<div th:each=" genreName : ${tvShowGenreDTO}">
+										<p class="my-0" th:if = "${genre eq genreName.getId()}" th:text="${genreName.getName()}"></p>
+									</div>
+								</div>
+							</div>
+
+							<hr>
+
+							<h5>방영상태</h5>
+								<div th:if="${params.getWith_status() ne null}">
+									<div th:each=" status  : ${params.getWith_status()}">
+										<p th:if = "${status eq '0'}">Returning Series</p>
+										<p th:if="${status eq '1'}">Planned</p>
+										<p th:if="${status eq '2'}">In Production</p>
+										<p th:if="${status eq '3'}">Ended</p>
+										<p th:if="${status eq '4'}">Canceled</p>
+										<p th:if="${status eq '5'}">Pilot</p>
+									</div>
+								</div>
+
+							<hr>
+
+
+
+							<hr>
+
+							<h5>OTT</h5>
+							<div th:if="${params.getWith_watch_provider() ne null}">
+								<div class = "mt-0" th:each=" OTT : ${params.getWith_watch_provider()}">
+									<p class="my-0" th:if = "${OTT eq 8}">Netflix</p>
+									<p class="my-0" th:if = "${OTT eq 337}">Diseny Plus</p>
+									<p class="my-0" th:if = "${OTT eq 119}">Amazon Prime Video</p>
+									<p class="my-0" th:if = "${OTT eq 356}">Wavve</p>
+									<p class="my-0" th:if = "${OTT eq 97}">Watcha</p>
+									<p class="my-0" th:if = "${OTT eq 350}">Apple Tv Plus</p>
+								</div>
+							</div>
+						</section>
+					</div>
 				</div>
-			</div>
 			</div>
 
 

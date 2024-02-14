@@ -233,7 +233,7 @@
 			}
 		}
 
-		#custom-like:active .fa-heart,
+		#custom-like:checked .fa-heart,
 		#custom-like:hover .fa-heart {
 			color: red;
 		}
@@ -375,7 +375,7 @@
 			left: 50%;
 			top: 0%;
 			transform: translateX(-50%);
-			background-color: #27187e;
+			background-color: #013a63;
 			color: white;
 			white-space: nowrap;
 			padding: 10px 15px;
@@ -392,12 +392,12 @@
 			top: 80%;
 			transform: translateX(-50%);
 			border: 15px solid;
-			border-color: #27187e #0000 #0000 #0000;
+			border-color: #013a63 #0000 #0000 #0000;
 		}
 
 		li.ott-logo-img-container:hover {
 			.tooltipText{
-				top:-70%;
+				top:-80%;
 				visibility: visible;
 				opacity: 1;
 			}
@@ -406,6 +406,10 @@
 		.tvContainer {
 			position: relative;
 			display: block;
+		}
+
+		.p-subtitle {
+			margin-left: 40px;
 		}
 
 		div.List_scroller {
@@ -535,9 +539,101 @@
 			max-width: 100%;
 		}
 
+		.textarea-box {
+			position: relative;
+			display: inline-block;
+			width: 100%;
+			background-color: white;
+			border-radius: .25rem;
+		}
+
+		.textarea-box textarea {
+			width: 100%;
+			height: 170px;
+			font-size: 18px;
+			padding: 10px 10px 25px 10px;
+			margin-bottom: 25px;
+			border-radius: .25rem;
+			resize: none;
+			border: none;
+		}
+
+		input:focus {
+			outline: none;
+		}
+
+		textarea:focus {
+			outline: none;
+			box-shadow: none;
+		}
+
+		.textarea-box .count {
+			position: absolute;
+			right: 5px;
+			bottom: 3px;
+			color: #888888;
+			font-size: 15px;
+		}
+
+		.star-rating-div{
+			max-width: 200px;
+			width: 100%;
+			position: relative;
+		}
+
+		.star-rating {
+			position: absolute;
+			/*border: 1px solid white;*/
+		}
+
+		.star-rating > input {
+			display: none;
+		}
+
+		.star-rating > label::before {
+			content: '\f005';
+			display: inline-block;
+			font-family: fontAwesome;
+			margin: 5px 5px 5px;
+			font-size: 1.5em;
+		}
+
+		.star-rating > .half::before {
+			content: '\f089';
+			position: absolute;
+		}
+
+		.star-rating>label {
+			float: right;
+			text-align: center;
+			color: #bfbfbf;
+			cursor: pointer;
+		}
+
+		.star-rating>[id^="star"]:checked~label,
+		.star-rating:not(:checked)>label:hover,
+		.star-rating:not(:checked)>label:hover~label {
+			color: #ffd700;
+		}
+
+		.star-rating>[id^="star"]:checked+label:hover,
+		.star-rating>[id^="star"]:checked~label:hover,
+		.star-rating>label:hover~[id^="star"]:checked~label,
+		.star-rating>[id^="star"]:checked~label:hover~label{
+			color: #ffed85;
+		}
+
 		::-webkit-scrollbar {
 			width: 5px; /* 스크롤바 너비 */
 			height: 6px;
+		}
+
+		textarea::-webkit-scrollbar-thumb {
+			background-color: rgba(200,200,200, 0.5);
+		}
+
+		textarea::-webkit-scrollbar-track{
+			background-color: white;
 		}
 
 		::-webkit-scrollbar-thumb { /* 스크롤바 색상, 모서리 곡선 */
@@ -592,7 +688,7 @@
 					</div>
 				</div>
 				<div class = "mb-4 user_custom_bar">
-					<div class = "tool-tip-custom-bar" id = "custom-list">
+					<div class = "tool-tip-custom-bar" id = "custom-list" data-bs-toggle="modal" data-bs-target="#playListModal">
 						<i class="fa-solid fa-list"></i>
 						<span class = "custom-bar-text">플레이 리스트 저장</span>
 					</div>
@@ -606,14 +702,14 @@
 					</div>
 				</div>
 
-				<p class = "my-0 fs-5 fst-italic" th:text="${tvShowDto.getTagline()}"></p>
+				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:text="${tvShowDto.getTagline()}" style="color: rgba(244 ,244, 244, 0.8)"></p>
 				<div>
 					<div class = "over-view">
 						<p class = "fs-4 fw-bold mb-0">개요</p>
 						<p class = "mt-0" th:text = "${tvShowDto.getOverview()}"></p>
 					</div>
 					<ul>
-						<li class = "createdBy" th:each = " createdBy : ${tvShowDto.getCreated_by()} " th:object=" ${createdBy} ">
+						<li class = "me-2 createdBy" th:each = " createdBy : ${tvShowDto.getCreated_by()} " th:object=" ${createdBy} ">
 							<div class = "profile-wrapper">
 								<a th:href="@{''}"><p th:text="*{name}" class = "profile fw-bold fs-5 ms-0"></p></a>
 								<span class = "profile-creator ms-0">창작자</span>
@@ -786,7 +882,7 @@
 	</section>
 </main>
 
-<!-- 모달 -->
+<!-- 리뷰 모달 -->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content bg-dark">
@@ -796,20 +892,56 @@
 			</div>
 			<form>
 				<div class="modal-body" style="width: 100%; display: flex; flex-direction: row;">
-					<section class = "ms-3 me-5 modal-tvshow-poster">
+					<section class = "mx-3 modal-tvshow-poster">
 						<img th:src="@{'https://image.tmdb.org/t/p/original' + ${tvShowDto.getPoster_path()}}" width="250" height="auto" style="border-radius: .5rem">
 					</section>
-					<section class = "modal-tvshow-review" style="width: 500px; display: flex; flex-direction: column;">
-						<h5 class = "mb-3" th:text="${tvShowDto.getOriginal_name() + '(' + releaseYear  + ')'}" style="color: #eeeeee"></h5>
-						<textarea class="form-control" placeholder="Leave a Review here" style="height: 200px; width: 95%;" autofocus required></textarea>
-						<div class = "rating-div">
-							<p class="mt-4 fs-5" style="color: #eeeeee">Rating</p>
-							<div class = "mt-0 fs-3 rating-stars" style="display: flex; color: white;" >
-								<span><i class="fa-solid fa-star"></i></i></span>
-								<span><i class="fa-solid fa-star"></i></span>
-								<span><i class="fa-solid fa-star"></i></span>
-								<span><i class="fa-solid fa-star"></i></span>
-								<span><i class="fa-solid fa-star"></i></span>
+					<section class = "mx-3 modal-tvshow-review" style="width: 550px; display: flex; flex-direction: column;">
+						<h4 class = "mb-2" th:text="${tvShowDto.getName() + '(' + releaseYear  + ')'}" style="color: #eeeeee"></h4>
+						<input class = "d-none" th:value="${tvShowDto.getId()}" th:id="${tvShowDto.getName()}" name="tvShow_ID">
+						<div class = "textarea-box">
+							<textarea placeholder="리뷰를 남겨 주세요. (1000자)" style=" outline: none"></textarea>
+							<div class = "count">
+								<span>0</span>/1000
+							</div>
+						</div>
+						<div class = "star-rating-and-spoiler" style="display: flex; flex-direction: row;">
+							<div class = "star-rating-div">
+								<p class="mt-3 fs-4" style="color: #eeeeee">평점</p>
+								<fieldset class =  "star-rating">
+									<input type = "radio" name="rating" id="star5" value = "5">
+									<label for= "star5" class = "full" title = "5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star4half" value = "4.5">
+									<label for= "star4half" class = "half" title = "4.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star4" value = "4">
+									<label for= "star4" class = "full" title = "4 Stars"></label>
+
+									<input type = "radio" name="rating" id="star3half" value = "3.5">
+									<label for= "star3half" class = "half" title = "3.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star3" value = "3">
+									<label for= "star3" class = "full" title = "3 Stars"></label>
+
+									<input type = "radio" name="rating" id="star2half" value = "2.5">
+									<label for= "star2half" class = "half" title = "2.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star2" value = "2">
+									<label for= "star2" class = "full" title = "2 Stars"></label>
+
+									<input type = "radio" name="rating" id="star1half" value = "1.5">
+									<label for= "star1half" class = "half" title = "1.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star1" value = "1">
+									<label for= "star1" class = "full" title = "1 Stars"></label>
+
+									<input type = "radio" name="rating" id="star0half" value = "0.5">
+									<label for= "star0half" class = "half" title = "0.5 Stars"></label>
+								</fieldset>
+							</div>
+							<div class = "mt-3 form-check spoiler-div" style="width: 100%; min-width: 160px; margin-left: 25px;">
+								<input class = "form-check-input" type = "checkbox" value = "true" id = "flexCheckDefault">
+								<label class = "text-white form-check-label" for="flexCheckDefault">스포일러가 포함되어 있습니까?</label>
 							</div>
 						</div>
 					</section>
@@ -818,12 +950,43 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
-				<!-- 다른 버튼 등을 필요에 따라 추가할 수 있습니다. -->
 			</div>
 		</div>
 	</div>
 </div>
-<!-- 모달 끝 -->
+<!-- 리뷰 모달 끝 -->
+
+<!-- 플레이 리스트 모달 -->
+<div class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content bg-dark">
+			<div class="modal-header">
+				<h5 class="modal-title text-white" id="playListModalLabel">Play List</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form>
+				<div class="modal-body" >
+					<div class = "border-bottom none-play-list">
+						<p class = "text-white">생성된 재생 목록이 없습니다.</p>
+						<a th:href="@{''}" class="text-decoration-none text-white fs-4">
+							<i class="fa-solid fa-folder-plus"></i><span class="ms-3">재생 목록을 만들어 보세요.</span>
+						</a>
+						<p class="text-info fs-5 fst-italic">TODO : 마이페이지 재생 목록 생성 페이지로 이동.</p>
+					</div>
+					<div class = "exist-play-list">
+						<p class="text-info fs-5 fst-italic">TODO : 생성된 재생목록 표기</p>
+					</div>
+				</div>
+			</form>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -862,6 +1025,19 @@
 			}
 		});
 	});
+
+	// textarea-box 글자수 count
+	document.querySelector('.textarea-box textarea').addEventListener('input', function (){
+		let content = this.value;
+		document.querySelector('.textarea-box .count span').textContent = content.length;
+		if(content.length > 1000) {
+			alert("최대 1000자까지 입력 가능합니다...!");
+			this.value = content.substring(0, 1000);
+			document.querySelector('.textarea-box .count span').textContent = 1000;
+		}
+	});
+
+
 </script>
 
 

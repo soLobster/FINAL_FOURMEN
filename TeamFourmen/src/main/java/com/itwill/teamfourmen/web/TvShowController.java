@@ -375,10 +375,13 @@ public class TvShowController {
 
 		List<TvShowDTO> tvShowDto = listDTO.getResults();
 
+		log.info("PARAMS = {}", paramDTO.toString());
+
 		TvShowGenreListDTO tvShowGenreList = apiUtil.getTvShowGenreList("ko-KR");
 
 		List<TvShowGenreDTO> tvShowGenre = tvShowGenreList.getGenres();
 
+		model.addAttribute("params", paramDTO);
 		model.addAttribute("listDTO", listDTO);
 		model.addAttribute("tvShowDto", tvShowDto);
 		model.addAttribute("tvShowGenreDTO", tvShowGenre);
