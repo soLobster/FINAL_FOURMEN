@@ -30,7 +30,7 @@ public class MovieRestController {
 		log.info("getAdditionalList(param={})", paramDto);
 		
 		MovieListDto listDto = util.getMovieList(paramDto);
-		log.info("listDto={}", listDto);
+		// log.info("listDto={}", listDto);
 		
 		
 		return ResponseEntity.ok(listDto);		

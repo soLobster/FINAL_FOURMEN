@@ -1,5 +1,8 @@
 package com.itwill.teamfourmen.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.teamfourmen.dto.person.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,6 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -18,9 +26,35 @@ public class PersonService {
     private static final String apiUrl = "https://api.themoviedb.org/3";
 	private final WebClient webClient;
 
+	// 인물 리스트 페이징 처리를 위한 변수 선언.
+	int pagesShowInBar = 10; // 페이징 바에 얼마큼씩 보여줄 건지 설정. (10개씩 보여줄 것임)
+
 	@Autowired
 	public PersonService(WebClient webClient) {
 		this.webClient = webClient;
+	}
+
+	/**
+	 * 페이징 처리를 위한 코드.
+	 */
+	public PersonPagingDto paging(int page) {
+
+		int startPage = (int) Math.ceil( ((double) page / pagesShowInBar) - 1 ) * pagesShowInBar + 1;
+		int totalPage = 500;
+		int endPage = 0;
+		if ((startPage + pagesShowInBar - 1) >= totalPage) {
+			endPage = totalPage;
+		} else {
+			endPage = startPage + pagesShowInBar - 1;
+		}
+
+		PersonPagingDto pagingDto = PersonPagingDto.builder()
+				.startPage(startPage).endPage(endPage)
+				.totalPage(totalPage).pagesShowInBar(pagesShowInBar)
+				.build();
+
+		return pagingDto;
+
 	}
 
     /**
@@ -29,10 +63,10 @@ public class PersonService {
      * @param "popular" and "page"(for paging)
      * @return API 요청으로 받아온 JSON 데이터를 매핑한 pageAndListDto 객체.
      */
-    public PageAndListDto getPersonList(int page) {
-    	
+    public PageAndListDto getPersonList(int page, String language) {
+
     	// API 요청 주소 생성. (인물의 리스트를 받아옴)
-    	String uri = String.format(apiUrl + "/person/" + POPULAR + "?api_key=%s&language=ko&page=%d", apiKey, page);
+    	String uri = String.format(apiUrl + "/person/" + POPULAR + "?api_key=%s&language=%s&page=%d", apiKey, language, page);
 
     	PageAndListDto pageAndListDto;
         pageAndListDto = webClient.get()
@@ -52,7 +86,7 @@ public class PersonService {
 	 * @param "language" and "id"
 	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 detailsPersonDto 객체.
 	 */
-	public DetailsPersonDto getPersonDetails(String language, int id) {
+	public DetailsPersonDto getPersonDetails(int id, String language) {
 
 		// API 요청 주소 생성. (각 인물의 상세 정보를 받아옴)
 		String uri = String.format(apiUrl + "/person/" + id + "?api_key=%s&language=%s", apiKey, language);
@@ -75,10 +109,10 @@ public class PersonService {
 	 * @param "id"
 	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDto 객체.
 	 */
-	public ExternalIDsDto getExternalIDs(int id) {
+	public ExternalIDsDto getExternalIDs(int id, String language) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s&language=%s", apiKey, language);
 
 		ExternalIDsDto externalIDsDto;
 		externalIDsDto = webClient.get()
@@ -91,10 +125,17 @@ public class PersonService {
 
 	}
 
-	public MovieCreditsDto getMovieCredits(int id) {
+	/**
+	 * JSON 데이터를 받아 MovieCreditsDto 객체로 변환.
+	 * 파라미터는 인물의 id와 language 값.
+	 *
+	 * @param id, language
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDto 객체.
+	 */
+	public MovieCreditsDto getMovieCredits(int id, String language) {
 
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=ko", apiKey);
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=%s", apiKey, language);
 
 		MovieCreditsDto movieCreditsDto;
 		movieCreditsDto = webClient.get()
@@ -107,10 +148,10 @@ public class PersonService {
 
 	}
 
-	public MovieCreditsCastDto getMovieCreditsCast(int id) {
+	public MovieCreditsCastDto getMovieCreditsCast(int id, String language) {
 
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=ko", apiKey);
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=%s", apiKey, language);
 
 		MovieCreditsCastDto movieCreditsCastDTO;
 		movieCreditsCastDTO = webClient.get()
@@ -123,10 +164,10 @@ public class PersonService {
 
 	}
 
-	public TvCreditsDto getTvCredits(int id) {
+	public TvCreditsDto getTvCredits(int id, String language) {
 
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=ko", apiKey);
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=%s", apiKey, language);
 
 		TvCreditsDto tvCreditsDto;
 		tvCreditsDto = webClient.get()
@@ -139,10 +180,10 @@ public class PersonService {
 
 	}
 
-	public TvCreditsCastDto getTvCreditsCast(int id) {
+	public TvCreditsCastDto getTvCreditsCast(int id, String language) {
 
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=ko", apiKey);
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=%s", apiKey, language);
 
 		TvCreditsCastDto tvCreditsCastDTO;
 		tvCreditsCastDTO = webClient.get()
@@ -155,10 +196,10 @@ public class PersonService {
 
 	}
 
-	public CombinedCreditsDto getCombinedCredits(int id) {
+	public CombinedCreditsDto getCombinedCredits(int id, String language) {
 
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko", apiKey);
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=%s", apiKey, language);
 
 		CombinedCreditsDto combinedCreditsDto;
 		combinedCreditsDto = webClient.get()
@@ -171,38 +212,58 @@ public class PersonService {
 
 	}
 
-	public CombinedCreditsCastDto getCombinedCreditsCast(int id) {
+	public List<CombinedCreditsCastDto> getCombinedCreditsCast(int id, String language) {
 
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko", apiKey);
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=%s", apiKey, language);
 
 		CombinedCreditsCastDto combinedCreditsCastDto;
-		combinedCreditsCastDto = webClient.get()
+		JsonNode node = webClient.get()
 				.uri(uri)
 				.retrieve()
-				.bodyToMono(CombinedCreditsCastDto.class)
+				.bodyToMono(JsonNode.class)
 				.block();
 
-		return combinedCreditsCastDto;
+		JsonNode castNode = node.get("cast");
+
+		ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            CombinedCreditsCastDto[] castArray = mapper.treeToValue(castNode, CombinedCreditsCastDto[].class);
+			List<CombinedCreditsCastDto> castList = Arrays.asList(castArray);
+			return castList;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+			return null;
+        }
 
 	}
 
-	public CombinedCreditsCrewDto getCombinedCreditsCrew(int id) {
+	public List<CombinedCreditsCrewDto> getCombinedCreditsCrew(int id, String language) {
 
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko", apiKey);
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=%s", apiKey, language);
 
 		CombinedCreditsCrewDto combinedCreditsCrewDto;
-		combinedCreditsCrewDto = webClient.get()
+		JsonNode node = webClient.get()
 				.uri(uri)
 				.retrieve()
-				.bodyToMono(CombinedCreditsCrewDto.class)
+				.bodyToMono(JsonNode.class)
 				.block();
 
-		return combinedCreditsCrewDto;
+		JsonNode crewNode = node.get("crew");
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			CombinedCreditsCrewDto[] crewArray = mapper.treeToValue(crewNode, CombinedCreditsCrewDto[].class);
+			List<CombinedCreditsCrewDto> crewList = Arrays.asList(crewArray);
+			return crewList;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
 
 	}
-
-
 
 }

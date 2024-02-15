@@ -115,12 +115,21 @@
     
  }
  
+ .movie-like-button {
+    background-color: transparent;
+    border: none;
+    width: 46px;
+    height: 46px;
+ }
+ 
  .movie-like-item {
     margin-right: 16px;
     display: flex;
     position: relative;
     width: 46px;
+    min-width: 46px;
     height: 46px;
+    min-height: 46px;
     margin-right: 24px;
     margin-bottom: 36px;
     border-radius: 50%;
@@ -168,7 +177,8 @@
 .movie-trailer {
     height: 46px;
     display: flex;
-    align-items: center;    
+    align-items: center;
+    white-space: nowrap;
 }
 
 
@@ -187,6 +197,94 @@
     padding-right: 12px;    
     font-size: 1em;
     transform: translateY(-1px);
+}
+
+.btn-movie-review {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+}
+
+    /* 리뷰 모달 관련 */
+.movie-review-modal-title {
+    padding-left: 1rem;
+    font-weight: 700;
+}
+
+.movie-review-modal-body {
+    background-color: rgb(31, 32, 41);
+    color: rgb(196, 195, 202);
+    
+    padding: 24px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 24px;
+}
+            /* 리뷰 모달 포스터부분 */
+.review-poster-container {
+    width: 40%;
+}
+
+.div-moview-review-poster {
+    width: 100%;
+}
+
+.div-moview-review-poster img {
+    width: 100%;
+}
+
+            /* 리뷰 모달 커멘트부분 */
+.div-movie-review-comment {
+    width: 60%;
+}
+
+.textarea-count-characters-container {
+    position: relative;
+    background-color: #fff;
+    border-radius: 6px;   
+    overflow: hidden; 
+}
+
+.text-area-review-comment {
+    width: 100%;
+    height: 300px;
+    resize: none;
+    padding: 4px;
+    padding-bottom: 24px;
+    border: none;
+}
+
+.text-area-review-comment:focus {
+    outline:none;
+    border: none;
+    padding-bottom: 0;
+}
+
+.div-review-count-characters {    
+    
+    text-align: right;
+    border-radius: 0;
+    color: #000;
+    border: none;
+    padding: 0 8px 0 8px;
+    
+}
+
+.review-spoiler-rating-title-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.div-movie-review-spoiler-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+#checkboxSpoiler {
+    margin-right: 8px;
 }
 
 	/* 트레일러 모달 관련 */
@@ -242,7 +340,7 @@
 }
 
 
-.modal-body {
+#movieTrailerModal .modal-body {
     
     background-color: rgb(31, 32, 41);
     color: rgb(196, 195, 202);
@@ -250,6 +348,11 @@
     overflow: hidden;
     width: 100%;
     padding-top: 56.25%; 
+}
+
+.modal-footer {
+    background-color: rgb(31, 32, 41);
+    color: rgb(196, 195, 202);    
 }
 
 .iframe-movie-trailer-video {

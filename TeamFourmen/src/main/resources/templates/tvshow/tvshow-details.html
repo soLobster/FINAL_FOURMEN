@@ -8,8 +8,7 @@
 		  rel="stylesheet"
 		  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
 		  crossorigin="anonymous">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
-	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+
 
 	<style>
 
@@ -34,7 +33,7 @@
 			width: 100vw;
 			height: 600px;
 
-			display: flex;
+			/*display: flex;*/
 		}
 
 		.mid_layout{
@@ -84,19 +83,20 @@
 		.tvShow_Details {
 			margin-left: 10rem;
 			margin-right: 5rem;
-			width: 100vw;
+			width: fit-content;
 			/* background-color: blanchedalmond; */
-			z-index: 1;
+			z-index: -1;
 			display: flex;
+			flex-direction: row;
 		}
 
 		section.poster {
-			width: 30%;
-			margin-top: 75px;
-			/* background-color: white; */
-			display: flex;
-			flex-direction: column;
+			/*position: absolute;*/
+			width: 330px;
+			min-width: 330px;
+			margin-top: 50px;
 			border-radius: 10px;
+			z-index: 1;
 		}
 
 		.poster_ott{
@@ -108,17 +108,21 @@
 
 		#poster_img{
 			position: relative;
-			width: 300px;
-			height: 450px;
+			width: 330px;
+			height: 500px;
 		}
 
 		#poster_img_none{
 			position: relative;
-			width: 300px;
-			height: 450px;
+			width: 330px;
+			height: 500px;
 		}
 
 		section.overView {
+			/*position: absolute;*/
+			width: 100%;
+			min-width: 700px;
+			z-index: 1;
 			margin-top: 45px;
 			display: flex;
 			flex-direction: column;
@@ -132,7 +136,7 @@
 			/* background-color: gainsboro; */
 		}
 
-		section.overView p{
+		.tool-tip-custom-bar{
 			margin-left: 40px;
 			margin-right: 30px;
 			margin-top: 10px;
@@ -143,8 +147,101 @@
 			margin-top: 0;
 		}
 
+		/*.tooltipText{*/
+		/*	position: absolute;*/
+		/*	font-weight: bolder;*/
+		/*	left: 50%;*/
+		/*	top: 0%;*/
+		/*	transform: translateX(-50%);*/
+		/*	background-color: #27187e;*/
+		/*	color: white;*/
+		/*	white-space: nowrap;*/
+		/*	padding: 10px 15px;*/
+		/*	border-radius: .5rem;*/
+		/*	visibility: hidden;*/
+		/*	opacity: 0;*/
+		/*	transition: opacity 0.5s ease;*/
+		/*}*/
+
+		/*.tooltipText::before {*/
+		/*	content: "";*/
+		/*	position: absolute;*/
+		/*	left: 50%;*/
+		/*	top: 80%;*/
+		/*	transform: translateX(-50%);*/
+		/*	border: 15px solid;*/
+		/*	border-color: #27187e #0000 #0000 #0000;*/
+		/*}*/
+
+		/*li.ott-logo-img-container:hover {*/
+		/*	.tooltipText{*/
+		/*		top:-70%;*/
+		/*		visibility: visible;*/
+		/*		opacity: 1;*/
+		/*	}*/
+		/*}*/
+
+
 		div.user_custom_bar {
+			position: relative;
 			display: flex;
+			text-align: center;
+			justify-content: start;
+		}
+
+		.user_custom_bar > div {
+			background-color: #013a63;
+			width: 40px;
+			height: 40px;
+			padding: 7px;
+			font-size: 18px;
+			border-radius: 2rem;
+			cursor: pointer;
+			position: relative;
+		}
+
+		.custom-bar-text {
+			position: absolute;
+			font-weight: bolder;
+			left: 50%;
+			top:0%;
+			transform: translateX(-50%);
+			background-color: #013a63;
+			color: white;
+			white-space: nowrap;
+			padding: 10px 15px;
+			border-radius: .5rem;
+			visibility: hidden;
+			opacity: 0;
+			transition: opacity 0.5s ease;
+		}
+
+		.custom-bar-text:before {
+			content: "";
+			position: absolute;
+			left: 50%;
+			top: 80%;
+			transform: translateX(-50%);
+			border: 15px solid;
+			border-color: #013a63 #0000 #0000 #0000;
+		}
+
+		div.tool-tip-custom-bar:hover {
+			.custom-bar-text {
+				visibility: visible;
+				top: -150%;
+				opacity: 1;
+			}
+		}
+
+		#custom-like:checked .fa-heart,
+		#custom-like:hover .fa-heart {
+			color: red;
+		}
+
+		.over-view {
+			margin-left: 40px;
+			margin-right: 30px;
 		}
 
 		ul {
@@ -254,12 +351,100 @@
 			text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.4);
 		}
 
-		div.cast_scroller {
+		div.ott-provider-container .ott-providers {
+			display: flex;
+			flex-direction: row;
+			/*background-color: #8dabfb;*/
+			padding-left: 0;
+			margin-left: 0;
+		}
+
+		.ott-provider-container .ott-logo-img{
+			width: 65px;
+			height: 65px;
+			padding: 3px;
+			border-radius: .5rem;
+		}
+
+		.ott-logo-img-container{
+			position: relative;
+		}
+
+		.tooltipText{
+			position: absolute;
+			font-weight: bolder;
+			left: 50%;
+			top: 0%;
+			transform: translateX(-50%);
+			background-color: #013a63;
+			color: white;
+			white-space: nowrap;
+			padding: 10px 15px;
+			border-radius: .5rem;
+			visibility: hidden;
+			opacity: 0;
+			transition: opacity 0.5s ease;
+		}
+
+		.tooltipText::before {
+			content: "";
+			position: absolute;
+			left: 50%;
+			top: 80%;
+			transform: translateX(-50%);
+			border: 15px solid;
+			border-color: #013a63 #0000 #0000 #0000;
+		}
+
+		li.ott-logo-img-container:hover {
+			.tooltipText{
+				top:-80%;
+				visibility: visible;
+				opacity: 1;
+			}
+		}
+
+		.tvContainer {
+			position: relative;
+			display: block;
+		}
+
+		.p-subtitle {
+			margin-left: 40px;
+		}
+
+		div.List_scroller {
 			margin-top: 20px;
 			margin-left: 0;
 			padding: 0 0 0 0;
 			overflow-x: auto;
 			white-space: nowrap;
+		}
+
+		.btn-slide-image {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: absolute;
+			background-color: transparent;
+			font-size: 30px;
+			top: 50%;
+			width: 50px;
+			height: 50px;
+			padding: 0 10px 0 10px;
+			border: none;
+			color: #e9ecef;
+			opacity: 0.8;
+			z-index: 2;
+		}
+
+		.btn-prev{
+			left: -25px;
+			/*display: none;*/
+		}
+
+		.btn-next{
+			right: -25px;
 		}
 
 		ol.people_scroller{
@@ -309,12 +494,12 @@
 			/* background-color: cornflowerblue; */
 		}
 
-		div.seasonList_scroller{
-			margin-left: 0;
-			padding: 0 0 0 0;
-			overflow-x: auto;
-			white-space: nowrap;
-		}
+		/*div.seasonList_scroller{*/
+		/*	margin-left: 0;*/
+		/*	padding: 0 0 0 0;*/
+		/*	overflow-x: auto;*/
+		/*	white-space: nowrap;*/
+		/*}*/
 
 		ol.season_scroller {
 			padding-left: 0;
@@ -334,12 +519,12 @@
 			/*background-color: cornflowerblue;*/
 		}
 
-		div.recommendationList_scroller {
-			margin-left: 0;
-			padding: 0 0 0 0;
-			overflow-x: auto;
-			white-space: nowrap;
-		}
+		/*div.recommendationList_scroller {*/
+		/*	margin-left: 0;*/
+		/*	padding: 0 0 0 0;*/
+		/*	overflow-x: auto;*/
+		/*	white-space: nowrap;*/
+		/*}*/
 
 		ol.recommendation_scroller {
 			padding-left: 0;
@@ -355,9 +540,101 @@
 			max-width: 100%;
 		}
 
+		.textarea-box {
+			position: relative;
+			display: inline-block;
+			width: 100%;
+			background-color: white;
+			border-radius: .25rem;
+		}
+
+		.textarea-box textarea {
+			width: 100%;
+			height: 170px;
+			font-size: 18px;
+			padding: 10px 10px 25px 10px;
+			margin-bottom: 25px;
+			border-radius: .25rem;
+			resize: none;
+			border: none;
+		}
+
+		input:focus {
+			outline: none;
+		}
+
+		textarea:focus {
+			outline: none;
+			box-shadow: none;
+		}
+
+		.textarea-box .count {
+			position: absolute;
+			right: 5px;
+			bottom: 3px;
+			color: #888888;
+			font-size: 15px;
+		}
+
+		.star-rating-div{
+			max-width: 200px;
+			width: 100%;
+			position: relative;
+		}
+
+		.star-rating {
+			position: absolute;
+			/*border: 1px solid white;*/
+		}
+
+		.star-rating > input {
+			display: none;
+		}
+
+		.star-rating > label::before {
+			content: '\f005';
+			display: inline-block;
+			font-family: fontAwesome;
+			margin: 5px 5px 5px;
+			font-size: 1.5em;
+		}
+
+		.star-rating > .half::before {
+			content: '\f089';
+			position: absolute;
+		}
+
+		.star-rating>label {
+			float: right;
+			text-align: center;
+			color: #bfbfbf;
+			cursor: pointer;
+		}
+
+		.star-rating>[id^="star"]:checked~label,
+		.star-rating:not(:checked)>label:hover,
+		.star-rating:not(:checked)>label:hover~label {
+			color: #ffd700;
+		}
+
+		.star-rating>[id^="star"]:checked+label:hover,
+		.star-rating>[id^="star"]:checked~label:hover,
+		.star-rating>label:hover~[id^="star"]:checked~label,
+		.star-rating>[id^="star"]:checked~label:hover~label{
+			color: #ffed85;
+		}
+
 		::-webkit-scrollbar {
 			width: 5px; /* 스크롤바 너비 */
 			height: 6px;
+		}
+
+		textarea::-webkit-scrollbar-thumb {
+			background-color: rgba(200,200,200, 0.5);
+		}
+
+		textarea::-webkit-scrollbar-track{
+			background-color: white;
 		}
 
 		::-webkit-scrollbar-thumb { /* 스크롤바 색상, 모서리 곡선 */
@@ -369,13 +646,14 @@
 			background-color: black; /* 스크롤바 트랙 색상 */
 		}
 
-
 	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
 </head>
 <body class = "ko v4">
 <header>
 	<h1>TV SHOW Details</h1>
-	<a th:href="@{'../'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
+	<a th:href="@{'../tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
 	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
 </header>
 
@@ -391,7 +669,7 @@
 
 		<div class = "tvShow_Details">
 			<!-- 포스터 영역 -->
-			<section class = "poster">
+			<section class = "me-3 poster">
 				<div class = "poster_ott">
 					<img id = "poster_img"  class = "detail_poster rounded"
 						 th:if = "${tvShowDto.getPoster_path() ne null and tvShowDto.getPoster_path() ne 'null' and tvShowDto.getPoster_path() ne ''}"
@@ -404,24 +682,39 @@
 			<!-- 글 영역 -->
 			<section class = "overView">
 				<div>
-					<h1 class="mb-0" th:text= "${tvShowDto.getName() + '(' + releaseYear + ')'}"></h1>
+					<h1 class="mb-2" th:text= "${tvShowDto.getName() + '(' + releaseYear + ')'}"></h1>
 					<div class = "genres_rating">
 						<p class = "rating mt-0 ms-0 me-2 border border-1" th:text = "${rating.getRating()} + '+' "></p>
 						<p class = "genres mt-0 ms-0" th:text="${genres}"></p>
 					</div>
 				</div>
-				<div class = "user_custom_bar">
-					<p>평점</p>
-					<p><i class="fa-solid fa-list"></i></p>
-					<p><i class="fa-solid fa-heart"></i></p>
-					<p><i class="fa-solid fa-star"></i></p>
+				<div class = "mb-4 user_custom_bar">
+					<div class = "tool-tip-custom-bar" id = "custom-list" data-bs-toggle="modal" data-bs-target="#playListModal">
+						<i class="fa-solid fa-list"></i>
+						<span class = "custom-bar-text">플레이 리스트 저장</span>
+					</div>
+					<div class = "tool-tip-custom-bar" id = "custom-like">
+						<i class="fa-solid fa-heart"></i>
+						<span class = "custom-bar-text">Like</span>
+					</div>
+					<div class = "tool-tip-custom-bar" id = "custom-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
+						<i class="fa-solid fa-pen"></i>
+						<span class = "custom-bar-text">리뷰 남기기</span>
+					</div>
+					<div class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
+						<i class="fa-solid fa-play"></i>
+						<span class="custom-bar-text">트레일러</span>
+					</div>
 				</div>
-				<p class = "my-0 fs-5 fst-italic" th:text="${tvShowDto.getTagline()}"></p>
+
+				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:text="${tvShowDto.getTagline()}" style="color: rgba(244 ,244, 244, 0.8)"></p>
 				<div>
-					<p class = "fs-4 fw-bold mb-0">개요</p>
-					<p class = "mt-0" th:text = "${tvShowDto.getOverview()}"></p>
+					<div class = "over-view">
+						<p class = "fs-4 fw-bold mb-0">개요</p>
+						<p class = "mt-0" th:text = "${tvShowDto.getOverview()}"></p>
+					</div>
 					<ul>
-						<li class = "createdBy" th:each = " createdBy : ${tvShowDto.getCreated_by()} " th:object=" ${createdBy} ">
+						<li class = "me-2 createdBy" th:each = " createdBy : ${tvShowDto.getCreated_by()} " th:object=" ${createdBy} ">
 							<div class = "profile-wrapper">
 								<a th:href="@{''}"><p th:text="*{name}" class = "profile fw-bold fs-5 ms-0"></p></a>
 								<span class = "profile-creator ms-0">창작자</span>
@@ -435,31 +728,34 @@
 	<section class= "mid_layout">
 
 		<div class = "mid_container">
-			<div class = "tvShow_actors pb-0">
+			<div class = "tvShow_actors tvContainer">
 				<h3>캐스팅</h3>
-				<div class = "cast_scroller">
-					<ol class = "people_scroller">
-						<li class="border-0 card people_card" th:each=" people : ${tvShowCast} " th:object=" ${people} ">
-							<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273"/>
-							<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
-							<a th:href="@{''}" class="text-decoration-none" target="_blank">
-								<section class = "card-img-overlay">
-									<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
-									<p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
-								</section>
-							</a>
-						</li>
-					</ol>
-				</div>
-				<a th:href="@{''}"} class="text-decoration-none text-secondary mt-2" target="_blank"><span>총 출연진 & 제작자 바로가기</span></a>
+				<button th:if=" ${tvShowCast.size() > 5} "class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
+				<div class = "cast List_scroller">
+						<ol class = "people_scroller">
+							<li class="border-0 card people_card" th:each=" people : ${tvShowCast} " th:object=" ${people} ">
+								<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273"/>
+								<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
+								<a th:href="@{../person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
+									<section class = "card-img-overlay">
+										<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
+										<p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
+									</section>
+								</a>
+							</li>
+						</ol>
+					</div>
+				<button th:if=" ${tvShowCast.size() > 5}" class="btn-slide-image btn-next"><i class="fa-solid fa-chevron-right"></i></button>
 			</div>
-			<div class = "mt-0 py-0">
+
+			<div class = "py-0">
 				<hr class = "break_line border-1 opacity-50">
 			</div>
 
-			<div class = "tvShow_seasons pt-2">
+			<div class = "pt-2 tvShow_seasons tvContainer" >
 				<h3>시즌</h3>
-				<div class = "seasonList_scroller mt-3">
+				<button th:if=" ${seasonList.size() > 5} "class="btn-slide-image btn-prev" style="top:45%;"><i class="fa-solid fa-chevron-left"></i></button>
+				<div class = "season List_scroller mt-3">
 					<ol class = "season_scroller">
 						<li class = "border-0 card season_card" th:each=" season : ${seasonList} " th:object="${season}">
 							<img class="season_img" th:if="${season.poster_path ne null and season.poster_path ne 'null'}"  th:src=" @{'https:/image.tmdb.org/t/p/original' + ${season.getPoster_path()}} " width="180" height="273" />
@@ -473,6 +769,7 @@
 						</li>
 					</ol>
 				</div>
+				<button th:if=" ${seasonList.size() > 5}" class="btn-slide-image btn-next" style="top:45%;"><i class="fa-solid fa-chevron-right"></i></button>
 			</div>
 
 			<div class = "mt-0 py-0">
@@ -495,9 +792,10 @@
 				<hr class = "break_line border-1 opacity-50">
 			</div>
 
-			<div class = "tvShow_recommendations pt-2" th:if = "${tvShowReco.size() ne 0 }">
+			<div class = "pt-2 tvShow_recommendations tvContainer" th:if = "${tvShowReco.size() ne 0 }">
 				<h3>추천</h3>
-				<div class = "recommendationList_scroller mt-3">
+				<button th:if=" ${tvShowReco.size() > 4} "class="btn-slide-image btn-prev" style="top: 40%;"><i class="fa-solid fa-chevron-left"></i></button>
+				<div class = "recommendation List_scroller mt-3">
 					<ol class= "recommendation_scroller">
 						<li class = "border-0 card recommendation_card" th:each=" recommendation : ${tvShowReco} " th:object="${recommendation}">
 							<img class = "recommendation_img"
@@ -515,6 +813,7 @@
 						</li>
 					</ol>
 				</div>
+				<button th:if=" ${tvShowReco.size() > 4}" class="btn-slide-image btn-next" style="top: 40%;"><i class="fa-solid fa-chevron-right"></i></button>
 			</div>
 		</div> <!-- 미드 콘테이너 -->
 
@@ -550,6 +849,21 @@
 				</div>
 			</div>
 
+			<div class = "ms-3 ott-provider-container">
+				<p class="my-0 me-3 fs-5">Available Now on</p>
+				<ul class = "my-0 ott-providers">
+					<li th:if = "${watch_provider_list ne null}" th:each=" ott : ${watch_provider_list}" class="ott-logo-img-container">
+						<img th:src = "@{'https://image.tmdb.org/t/p/original' + ${ott.getLogo_path()}}" class = "ott-logo-img" alt = "ott_logo"/>
+						<span class = "tooltipText" th:text="${ott.getProvider_name()}"></span>
+					</li>
+					<small th:unless = "${watch_provider_list ne null}">한국에서 정식 스트리밍 서비스를 제공하지 않습니다.</small>
+				</ul>
+				<small class = "my-0">Powered By</small><br>
+				<a th:href="@{'https://www.justwatch.com/kr'}" target="_blank">
+				<span><img th:src = "@{'/image/justwatch.svg'}" width="auto" height="15"/></span>
+				</a>
+			</div>
+
 			<div class = "ms-3">
 				<p class = "my-0">원제</p>
 				<p class = "mt-0 fs-5" th:text="${tvShowDto.getOriginal_name()}"></p>
@@ -560,9 +874,10 @@
 				<p class = "my-0">상태</p>
 				<p class = "mt-0 fs-4" th:text="${tvShowDto.getStatus()}"></p>
 				<p class = "my-0">방송사</p>
-				<section th:each=" network : ${networkList} " th:object="${network}">
+				<section class = "p-0" th:each=" network : ${networkList} " th:object="${network}">
 					<a th:href="@{''}" target="_blank" class="text-white text-decoration-none">
-						<span class = "my-3 fs-5" th:text="${network.getName()}"></span>
+<!--						<span class = "my-3 fs-5" th:text="${network.getName()}"></span><br>-->
+						<img class = "mt-2 mb-0 pt-0" th:src="@{'https://image.tmdb.org/t/p/original' + ${network.getLogo_path()}}" width="110" height="auto" style="background-color: white; border: 3px solid white">
 					</a>
 				</section>
 				<p class = "mt-3 mb-0">원어</p>
@@ -572,8 +887,196 @@
 	</section>
 </main>
 
+<!-- 리뷰 모달 -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content bg-dark">
+			<div class="modal-header">
+				<h5 class="modal-title text-white" id="reviewModalLabel">Review</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form>
+				<div class="modal-body" style="width: 100%; display: flex; flex-direction: row;">
+					<section class = "mx-3 modal-tvshow-poster">
+						<img th:src="@{'https://image.tmdb.org/t/p/original' + ${tvShowDto.getPoster_path()}}" width="250" height="auto" style="border-radius: .5rem">
+					</section>
+					<section class = "mx-3 modal-tvshow-review" style="width: 550px; display: flex; flex-direction: column;">
+						<h4 class = "mb-2" th:text="${tvShowDto.getName() + '(' + releaseYear  + ')'}" style="color: #eeeeee"></h4>
+						<input class = "d-none" th:value="${tvShowDto.getId()}" th:id="${tvShowDto.getName()}" name="tvShow_ID">
+						<div class = "textarea-box">
+							<textarea placeholder="리뷰를 남겨 주세요. (1000자)" style=" outline: none"></textarea>
+							<div class = "count">
+								<span>0</span>/1000
+							</div>
+						</div>
+						<div class = "star-rating-and-spoiler" style="display: flex; flex-direction: row;">
+							<div class = "star-rating-div">
+								<p class="mt-3 fs-4" style="color: #eeeeee">평점</p>
+								<fieldset class =  "star-rating">
+									<input type = "radio" name="rating" id="star5" value = "5">
+									<label for= "star5" class = "full" title = "5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star4half" value = "4.5">
+									<label for= "star4half" class = "half" title = "4.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star4" value = "4">
+									<label for= "star4" class = "full" title = "4 Stars"></label>
+
+									<input type = "radio" name="rating" id="star3half" value = "3.5">
+									<label for= "star3half" class = "half" title = "3.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star3" value = "3">
+									<label for= "star3" class = "full" title = "3 Stars"></label>
+
+									<input type = "radio" name="rating" id="star2half" value = "2.5">
+									<label for= "star2half" class = "half" title = "2.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star2" value = "2">
+									<label for= "star2" class = "full" title = "2 Stars"></label>
+
+									<input type = "radio" name="rating" id="star1half" value = "1.5">
+									<label for= "star1half" class = "half" title = "1.5 Stars"></label>
+
+									<input type = "radio" name="rating" id="star1" value = "1">
+									<label for= "star1" class = "full" title = "1 Stars"></label>
+
+									<input type = "radio" name="rating" id="star0half" value = "0.5">
+									<label for= "star0half" class = "half" title = "0.5 Stars"></label>
+								</fieldset>
+							</div>
+							<div class = "mt-3 form-check spoiler-div" style="width: 100%; min-width: 160px; margin-left: 25px;">
+								<input class = "form-check-input" type = "checkbox" value = "true" id = "flexCheckDefault">
+								<label class = "text-white form-check-label" for="flexCheckDefault">스포일러가 포함되어 있습니까?</label>
+							</div>
+						</div>
+					</section>
+				</div>
+			</form>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 리뷰 모달 끝 -->
+
+<!-- 플레이 리스트 모달 -->
+<div class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content bg-dark">
+			<div class="modal-header">
+				<h5 class="modal-title text-white" id="playListModalLabel">Play List</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form>
+				<div class="modal-body" >
+					<div class = "border-bottom none-play-list">
+						<p class = "text-white">생성된 재생 목록이 없습니다.</p>
+						<a th:href="@{''}" class="text-decoration-none text-white fs-4">
+							<i class="fa-solid fa-folder-plus"></i><span class="ms-3">재생 목록을 만들어 보세요.</span>
+						</a>
+						<p class="text-info fs-5 fst-italic">TODO : 마이페이지 재생 목록 생성 페이지로 이동.</p>
+					</div>
+					<div class = "exist-play-list">
+						<p class="text-info fs-5 fst-italic">TODO : 생성된 재생목록 표기</p>
+					</div>
+				</div>
+			</form>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 트레일러 모달 -->
+<div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content bg-dark">
+			<div class="border-0 modal-header">
+				<h5 class="modal-title text-white" id="trailerModalLabel">Trailer</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="p-0 modal-body" style="width: 1280px; color: white">
+				<iframe width="800" height="auto"
+						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()}" style="width: 800px; height: 600px" ></iframe>
+			</div>
+			<div class="border-0 modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 </script>
+<script>
+	// JavaScript 코드 작성
+	// 좌우 버튼 클릭하여 횡스크롤 가능한 카드 리스트 스크롤
+	document.addEventListener("DOMContentLoaded", function() {
+		const scrollDistance = 300; // 스크롤 거리
+		const scrollDuration = 300; // 스크롤 지속 시간
+		const containers = document.querySelectorAll('.List_scroller');
+
+		// 모든 버튼에 대해 이벤트 리스너 설정
+		containers.forEach(container => {
+			const btnPrev = container.previousElementSibling;
+			const btnNext = container.nextElementSibling;
+
+			// 버튼이 존재하는 경우에만 이벤트 리스너 설정
+			if (btnPrev && btnNext) {
+				// 좌측 버튼 클릭 시 스크롤
+				btnPrev.addEventListener('click', function() {
+					container.scrollBy({
+						left: -scrollDistance,
+						behavior: 'smooth'
+					});
+				});
+
+				// 우측 버튼 클릭 시 스크롤
+				btnNext.addEventListener('click', function() {
+					container.scrollBy({
+						left: scrollDistance,
+						behavior: 'smooth'
+					});
+				});
+			}
+		});
+	});
+
+	// textarea-box 글자수 count
+	document.querySelector('.textarea-box textarea').addEventListener('input', function (){
+		let content = this.value;
+		document.querySelector('.textarea-box .count span').textContent = content.length;
+		if(content.length > 1000) {
+			alert("최대 1000자까지 입력 가능합니다...!");
+			this.value = content.substring(0, 1000);
+			document.querySelector('.textarea-box .count span').textContent = 1000;
+		}
+	});
+
+	// 트레일러 모달 창을 닫을 때 재생되는 Youtube가 정지 되도록 함.
+	document.addEventListener('DOMContentLoaded', function() {
+		var modal = document.getElementById('trailerModal');
+		modal.addEventListener('hidden.bs.modal', function() {
+			var iframe = modal.querySelector('iframe');
+			var src = iframe.src;
+			iframe.src = src; // YouTube 재생 중지
+		});
+	});
+
+
+</script>
+
+// JS로 Axios post 전송을 위한 tvshowid
+// const tvShowId
+
+
 </body>
 </html>
