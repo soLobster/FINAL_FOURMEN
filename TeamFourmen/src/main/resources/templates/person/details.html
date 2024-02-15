@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" >
-<!--      xmlns="http://www.w3.org/1999/html" lang="ko"-->
 
 <head>
     <meta charset="UTF-8">
     <script src="https://kit.fontawesome.com/7542e28415.js" crossorigin="anonymous"></script>
     <title>인물 상세정보</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-    <link rel="stylesheet" th:href="@{/css/person/person_details.css}"> <!-- 스타일시트 연결 -->
     <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
     crossorigin="anonymous">
+    <!-- css 파일 연결 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" th:href="@{/css/person/person_details.css}">
 </head>
 <body>
     <div>
         <header>
-
+            <p>헤더</p>
         </header>
         <main>
             <section>
@@ -28,6 +28,8 @@
                     <div>
                         <div class="content_wrapper">
                             <div>
+
+                                <!-- A: 프로필 이미지: 없으면 디폴트 이미지로 대체 -->
                                 <div class="a">
                                     <section>
                                         <div class="content_profile_img">
@@ -44,6 +46,8 @@
                                         </div>
                                     </section>
                                 </div>
+
+                                <!-- B: 인물 정보 -->
                                 <div class="b">
                                     <section>
                                         <div th:each="externalIDs : ${externalIDs}" class="social_links">
@@ -78,6 +82,7 @@
                                                        th:href="'https://www.youtube.com/' + ${externalIDs.getYoutubeId()}">
                                                         <i class="fa-brands fa-youtube"></i>
                                                     </a>
+                                                    <!-- TODO: 인물의 홈페이지는 어떻게 할까? -->
                                                 </span>
                                             </div>
                                         </div>
@@ -87,10 +92,9 @@
                                         <section class="person_info">
                                             <p>
                                                 <strong>
-                                                    <bdi style="margin: 0">유명 분야</bdi>
+                                                    <bdi>유명 분야</bdi>
                                                 </strong>
                                             </p>
-
                                             <p th:switch="${detailsPerson.getKnownForDepartment()}">
                                                 <span th:case="'Acting'">연기</span>
                                                 <span th:case="'Art'">미술</span>
@@ -102,6 +106,8 @@
                                                 <span th:case="'Lighting'">조명</span>
                                                 <span th:case="'Sound'">음향</span>
                                                 <span th:case="'Visual Effects'">시각 효과</span>
+                                                <span th:case="'Production'">각본</span>
+                                                <span th:case="'Writing'">창작자</span>
                                             </p>
 
                                             <p>
@@ -145,6 +151,7 @@
                                 </div>
                             </div>
 
+                            <!-- C: 인물의 정보를 자세히 출력하는 메인 부분 -->
                             <div class="c">
                                 <div>
                                     <section>
@@ -157,12 +164,14 @@
                                             약력
                                         </h3>
                                         <div>
+                                            <!-- TODO: 약력 부분은 ko 데이터가 없으면 en 데이터로 받아오기. -->
                                             <p th:text="${detailsPerson.getBiography()}"></p>
                                             <p th:if="${detailsPerson.getBiography().isEmpty()}" th:text="${detailsPerson.getName()} + '의 약력 란이 비어있습니다.'"></p>
                                         </div>
                                     </section>
                                     <section>
                                         <h3>유명 분야</h3>
+                                        <!-- TODO: 반복문과 조건문을 사용해서 유명 분야 상세 정보 출력 -->
                                         <div th:if="${detailsPerson.getKnownForDepartment().equals('Acting')}">
                                             <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 8}">
 
@@ -207,7 +216,7 @@
                                         </div>
                                     </section>
                                     <section>
-
+                                        <!-- TODO: 문제의 부분... 어떻게 인물 약력의 상세 정보들을 올바르게 출력할 수 있을까? -->
                                         <div th:if="${detailsPerson.getKnownForDepartment().equals('Acting')}">
                                             <h3 th:switch="${detailsPerson.getKnownForDepartment()}">
                                                 <span th:case="'Acting'">연기</span>
@@ -223,6 +232,17 @@
                                                 <span th:case="'Production'">각본</span>
                                                 <span th:case="'Writing'">창작자</span>
                                             </h3>
+
+                                            <table>
+
+                                                <tbody>
+
+
+
+                                                </tbody>
+
+                                            </table>
+
                                             <table>
 
                                                 <tbody>
