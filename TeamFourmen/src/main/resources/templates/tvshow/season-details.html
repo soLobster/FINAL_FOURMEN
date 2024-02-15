@@ -34,7 +34,7 @@
     width: 100vw;
     height: 600px;
 
-    display: flex;
+    /*display: flex;*/
   }
 
   img.backdropImg {
@@ -45,18 +45,20 @@
     top: 0;
     left: 0;
     filter: brightness(0.6);
+    z-index: -1;
   }
 
   div.season_details{
     margin-left: 10rem;
-    margin-right: 10rem;
-    width: 100vw;
+    margin-right: 5rem;
+    width: fit-content;
     z-index: 1;
     display: flex;
   }
 
   section.poster {
-    width: 30%;
+    width: 330px;
+    min-width: 330px;
     margin-top: 50px;
     display: flex;
     flex-direction: column;
@@ -64,11 +66,16 @@
   }
 
   section.over-view {
-    margin-top: 120px;
+    margin-top: 100px;
     margin-left: 50px;
+    margin-bottom: 50px;
+    width: 70%;
+    min-width: 250px;
+    height: 500px;
     display: flex;
     flex-direction: column;
     font-weight: bold;
+    overflow: auto;
   }
 
   div.poster_img{
@@ -88,6 +95,86 @@
     position: relative;
     width: 330px;
     height: 500px;
+  }
+
+  .btn-slide-image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background-color: transparent;
+    font-size: 40px;
+    top: 45%;
+    width: 50px;
+    height: 50px;
+    padding: 0 10px 0 10px;
+    border: none;
+    color: #e9ecef;
+    opacity: 0.8;
+    z-index: 2;
+  }
+
+  .btn-prev{
+    left: -50px;
+    /*display: none;*/
+  }
+
+  .btn-next{
+    right: -50px;
+  }
+
+  .season_casting-list {
+    position: relative;
+    display: block;
+  }
+
+  .casting {
+    margin-top: 20px;
+    margin-left: 0;
+    padding: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+  }
+
+  ol.people_scroller {
+    padding-left: 0;
+  }
+
+  li.people_card {
+    display: inline-block;
+    overflow: hidden;
+    margin-right: 10px;
+  }
+
+  .people_img{
+    max-width: 100%;
+  }
+
+  .card-img-overlay{
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+  }
+
+  .card:hover .card-img-overlay {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .card-title, .card-text {
+    white-space: normal;
   }
 
   div.episode-list-container {
@@ -138,6 +225,19 @@
     transform: translateY(-4px);
   }
 
+  .casting::-webkit-scrollbar{
+    width: 5px;
+    height: 6px;
+  }
+
+  .casting::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 6px;
+  }
+
+  .casting::-webkit-scrollbar-track {
+    background-color: black;
+  }
 
   </style>
 </head>
@@ -175,9 +275,9 @@
       </div>
 
       <div>
-        <p class = "fs-3 fw-bold mt-5 mb-0">OVERVIEW</p>
+        <p class = "fs-5 fw-bold mt-5 mb-0">OVERVIEW</p>
         <p class = "mt-0" th:text="${seasonDto.getOverview()}"></p>
-        <p class = "fs-3 fw-bold mt-5 mb-0" th:text="${ 'Episode Number  : ' + seasonDto.getEpisodes().size()}"></p>
+        <p class = "fs-5 fw-bold mt-5 mb-0" th:text="${ 'Episode Number  : ' + seasonDto.getEpisodes().size()}"></p>
       </div>
     </section>
   </div>
@@ -199,6 +299,26 @@
        class="ms-auto p-2 btn btn-outline-light btn-sm backward_season_button"
        th:href = "@{'../season/' + ${seasonDto.getSeason_number() + 1} }">Next Season</a>
 
+  </div>
+
+  <div class = "my-4 season_casting-list">
+    <h3>시즌 캐스팅</h3>
+    <button th:if="${castingList.size() > 6}" class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
+    <section class = "casting List-scroller">
+      <ol class = "px-3 mb-1 people_scroller">
+        <li class = "border-0 card people_card" th:each=" people : ${castingList}">
+          <img class = "people_img" th:if="${people.getProfile_path() ne null and people.getProfile_path() ne 'null'}" th:src=" 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273" />
+          <img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
+          <a th:href="@{/person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
+            <section class = "card-img-overlay">
+              <p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
+              <p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
+            </section>
+          </a>
+        </li>
+      </ol>
+    </section>
+    <button th:if=" ${castingList.size() > 6}" class="btn-slide-image btn-next"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
   <div class = "mt-5 episode-list">
@@ -248,6 +368,28 @@
       behavior: "smooth"
     });
   }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const scrollDistance = 300; // 스크롤 거리
+    const scrollDuration = 300; // 스크롤 지속 시간
+    const container = document.querySelector('.casting');
+
+    // 좌측 버튼 클릭 시 스크롤
+    document.querySelector('.btn-prev').addEventListener('click', function() {
+      container.scrollBy({
+        left: -scrollDistance,
+        behavior: 'smooth'
+      });
+    });
+
+    // 우측 버튼 클릭 시 스크롤
+    document.querySelector('.btn-next').addEventListener('click', function() {
+      container.scrollBy({
+        left: scrollDistance,
+        behavior: 'smooth'
+      });
+    });
+  });
 
 </script>
 </body>
