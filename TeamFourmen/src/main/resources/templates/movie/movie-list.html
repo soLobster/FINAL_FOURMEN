@@ -11,7 +11,7 @@
     <link th:href="@{/css/movie/movie-list-search.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-main.css}" rel="stylesheet">
     <link th:href="@{/css/accordion/accordion.css}" rel="stylesheet">
-	
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
 </head>
 <body>
     <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
@@ -41,6 +41,75 @@
                                         <option value="primary_release_date.asc">최신(오름차순)</option>                                                                                
                                     </select>
                                 </div>                        
+                            </div>
+                            <div class="card-each-item-container">
+                                <div class="card-each-item-title">플랫폼</div>
+                                <ul class="provider-list">
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">Netflix</div>
+                                        <input type="checkbox" value="8" name="withWatchProviders" id="provider-8" class="checkbox-provider d-none">
+                                        <label for="provider-8" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg" class="movie-provider-img" alt="Netflix logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">Disney Plus</div>
+                                        <input type="checkbox" value="337" name="withWatchProviders" id="provider-337" class="checkbox-provider d-none">
+                                        <label for="provider-337" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/7YPdUs60C9qQQQfOFCgxpnF07D9.jpg" class="movie-provider-img" alt="Disney Plus logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">Google Play Movies</div>
+                                        <input type="checkbox" value="3" name="withWatchProviders" id="provider-3" class="checkbox-provider d-none">
+                                        <label for="provider-3" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/8z7rC8uIDaTM91X0ZfkRf04ydj2.jpg" class="movie-provider-img" alt="Google Play Movies logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">wavve</div>
+                                        <input type="checkbox" value="356" name="withWatchProviders" id="provider-356" class="checkbox-provider d-none">
+                                        <label for="provider-356" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/hPcjSaWfMwEqXaCMu7Fkb529Dkc.jpg" class="movie-provider-img" alt="wavve logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">Watcha</div>
+                                        <input type="checkbox" value="97" name="withWatchProviders" id="provider-97" class="checkbox-provider d-none">
+                                        <label for="provider-97" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/5gmEivxOGPdq4Afpq1f8ktLtEW1.jpg" class="movie-provider-img" alt="Watcha logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">Naver Store</div>
+                                        <input type="checkbox" value="96" name="withWatchProviders" id="provider-96" class="checkbox-provider d-none">
+                                        <label for="provider-96" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/crFbxg6jkiKc14gpIGMkre9Y3mu.jpg" class="movie-provider-img" alt="Naver Store logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">Amazon Prime Video</div>
+                                        <input type="checkbox" value="119" name="withWatchProviders" id="provider-119" class="checkbox-provider d-none">
+                                        <label for="provider-119" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/dQeAar5H991VYporEjUspolDarG.jpg" class="movie-provider-img" alt="Amazon Prime Video logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                    <li class="provider-list-item">
+                                        <div class="movie-provider-speech-bubble">Apple Tv</div>
+                                        <input type="checkbox" value="2" name="withWatchProviders" id="provider-2" class="checkbox-provider d-none">
+                                        <label for="provider-2" class="checkbox-provider-label">
+                                            <img src="https://media.themoviedb.org/t/p/original/9ghgSC0MA082EL6HLCW3GalykFD.jpg" class="movie-provider-img" alt="Apple Tv logo">
+                                            <div class="div-provider-selected"><i class="fa-solid fa-check"></i></div>
+                                        </label>
+                                    </li>
+                                </ul>
                             </div>
                             <div class="card-each-item-container">
                                 <div class="card-each-item-title">개봉일자</div>
@@ -165,6 +234,7 @@
     <script th:inline="javascript">
     	const totalPages = [[${listDto.totalPages}]];
 	</script>
+	<script th:src="@{/js/navbar.js}"></script>
 	<script th:src="@{/js/movie/movie-list.js}"></script>
 	<script th:src="@{/js/accordion/accordion.js}"></script>
 	

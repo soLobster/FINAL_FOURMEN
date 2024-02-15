@@ -34,18 +34,6 @@ public class ProcessDuplicates {
         return processedCombinedCastDtoList;
     }
 
-//    // 각 인물이 출연한 작품 수 계산해보기...
-//    // 중복 제거 처리가 안 된 인물이 출연한 총 작품 수. (캐스트 리스트의 크기)
-//    int combinedCreditsCastSize = CombinedCreditsDto.getcast().size();
-//
-//    // 중복이 제거된 리스트.
-//    private List<CombinedCreditsCastDto> processedCombinedCastDtoList = new ArrayList<>();
-//
-//		for (int i = 0; i < combinedCreditsCastSize; i++) {
-//        List<CombinedCreditsCastDto> processedDuplicates = processDuplicates(combinedCreditsDto, i);
-//        processedCombinedCastDtoList.addAll(processedDuplicates);
-//    }
-
     private List<CombinedCreditsCastDto> processDuplicates(CombinedCreditsDto dto, int i) {
         boolean isDuplicate = false;
         // 값이 중복되는 인덱스들을 넣기 위한 리스트 선언.
@@ -64,7 +52,7 @@ public class ProcessDuplicates {
                 isDuplicate = true;
                 duplicatedIndex.add(n);
             } else {
-                log.info("The data appears to be empty or the value is null...");
+                log.info("데이터가 비어있거나 null인 것 같습니다.");
             }
         }
 

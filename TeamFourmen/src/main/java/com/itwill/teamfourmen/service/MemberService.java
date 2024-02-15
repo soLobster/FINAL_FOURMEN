@@ -1,12 +1,18 @@
 package com.itwill.teamfourmen.service;
 
 import java.util.Optional;
-
+import java.util.UUID;
+import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
@@ -14,6 +20,7 @@ import com.itwill.teamfourmen.domain.MemberRole;
 import com.itwill.teamfourmen.domain.MemberSecurityDto;
 import com.itwill.teamfourmen.dto.MemberCreateDto;
 import com.itwill.teamfourmen.dto.MemberCreateNaverDto;
+import com.itwill.teamfourmen.dto.MemberModifyDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -136,11 +143,51 @@ public class MemberService implements UserDetailsService {
 
         return null;
     }
+      	
+    
      	
    }
 
-    	
+    @Transactional
+    //-> 검색한 엔터티의 변화가 생기면 트랜잭션이 종료될 때 update 쿼리가 자동으로 실행.
+    public void update(MemberModifyDto dto, String sDirectory) throws IllegalStateException, IOException {
+        log.info("update(dto={})", dto);
+        List<MultipartFile> files = dto.getUpload_photo();
+		log.debug("files={}", files);
+		for(MultipartFile file : files) {
+		if(!file.isEmpty()) {
+		String originalFileName = file.getOriginalFilename();
+		
+		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+		
+		String savedFileName = UUID.randomUUID().toString() + extension;
+		
+		String absolutePath = sDirectory + File.separator + savedFileName;
+		log.info("absolutPath={}",absolutePath);
+		file.transferTo(new File(absolutePath));
+		
+		dto.setUsersaveprofile(savedFileName);
+		
+		
+		
+		}
+		}
+		 Member entity = memberDao.findByEmail(dto.getEmail()).orElseThrow();
+	        //-> DB에서 저장되어 있는 업데이트 전의 엔터티
+		  if (dto.getUsersaveprofile() != null) {
+		        entity.update(dto.getEmail(), dto.getName(), dto.getNickname(), dto.getPhone(), dto.getUsersaveprofile());
+		    }
+		  if (dto.getUsersaveprofile() == null) {
+			  entity.updatewithout(dto.getEmail(), dto.getName() ,dto.getNickname(), dto.getPhone());
+		  }
+	       
+	        //-> DB에서 검색한 엔터티의 속성(필드)들의 값을 변경.
+	        //-> PostRepository.save 메서드를 호출하지 않음.
+	        //-> @Transactional 애너테이션이 있기 때문에 변경 내용이 자동으로 저장됨!
+       
+    }
     
+	
     	
 
 }

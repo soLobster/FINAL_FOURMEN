@@ -113,7 +113,7 @@ public class TvShowController {
 //	}
 
 	@GetMapping("/trending/{timeWindow}")
-	public String getPopularTvShowList(Model model, @PathVariable String timeWindow){
+	public String getPopularTvShowList(Model model, @PathVariable(name = "timeWindow") String timeWindow){
 		log.info("GET Trending Tv Show List");
 
 		TvShowListDTO listDTO = apiUtil.getTrendTvShowList(timeWindow, 1);
@@ -145,16 +145,27 @@ public class TvShowController {
 		return "tvshow/top-rated-list";
 	}
 
-	@GetMapping("/search")
+  @GetMapping("/search")
 	public String getSearchTvShowList(Model model, @ModelAttribute TvShowQueryParamDTO searchDTO) {
 		log.info("Get Search Tv Show List - Search Dto = {}", searchDTO);
-
+  
 		searchDTO.setListCategory("search");
 
 		getInitialList(searchDTO, model);
 
 		return "tvshow/top-rated-list";
 	}
+
+	@GetMapping("/ott/{platform}")
+	public String getOttTvShowList(Model model, @PathVariable (name = "platform") String platform){
+		log.info("Get Tv Show From OTT Platform = {}", platform);
+
+		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
+
+		log.info("list={}", listDTO);
+
+		model.addAttribute("listDTO", listDTO);
+    
 
 	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
 	@GetMapping(value = {"/{id}" })
