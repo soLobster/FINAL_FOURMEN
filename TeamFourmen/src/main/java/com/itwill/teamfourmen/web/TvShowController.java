@@ -118,7 +118,7 @@ public class TvShowController {
 
 
 	@GetMapping("/trending/{timeWindow}")
-	public String getPopularTvShowList(Model model, @PathVariable String timeWindow){
+	public String getPopularTvShowList(Model model, @PathVariable(name = "timeWindow") String timeWindow){
 		log.info("GET Trending Tv Show List");
 
 		TvShowListDTO listDTO = apiUtil.getTrendTvShowList(timeWindow, 1);
@@ -152,7 +152,7 @@ public class TvShowController {
 	}
 
 	@GetMapping("/ott/{platform}")
-	public String getOttTvShowList(Model model, @PathVariable String platform){
+	public String getOttTvShowList(Model model, @PathVariable (name = "platform") String platform){
 		log.info("Get Tv Show From OTT Platform = {}", platform);
 
 		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);

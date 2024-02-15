@@ -66,4 +66,24 @@ public class Member {
 	        return this;
 	    }
 	   
+	    
+	    public Member update(String email, String name, String nickname, String phone, String usersaveprofile) {
+	        this.email = email;
+	        this.name = name;
+	        this.nickname = nickname;
+	        this.phone= phone;
+	        this.usersaveprofile = usersaveprofile;
+	        
+	        return this;
+	    }
+	    
+	    public Member updatewithout(String email, String name, String nickname, String phone) {
+	        this.email = email;
+	        this.name = name;
+	        this.nickname = nickname;
+	        this.phone= phone;
+
+	        
+	        return this;
+	    }
 }
