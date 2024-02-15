@@ -11,6 +11,6 @@ import com.itwill.teamfourmen.domain.TmdbLike;
 
 public interface TmdbLikeDao extends JpaRepository<TmdbLike, Long> {
 	
-	Optional<TmdbLike> findByEmailAndCategoryAndTmdbId(String email, String category, Long id);
+	Optional<TmdbLike> findByMemberEmailAndCategoryAndTmdbId(String email, String category, Long tmdbId);
 	
 }

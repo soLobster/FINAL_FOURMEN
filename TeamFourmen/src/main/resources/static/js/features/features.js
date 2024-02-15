@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			email: 'cirche1@naver.com'	// 나중에 유저 가져오기			
 		}
 		
-		axios.post('/review/post', data)
+		axios.post('/feature/review/post', data)
 			.then((response) => {
 				
 				const btnClose = document.querySelector('.btn-header-close');
