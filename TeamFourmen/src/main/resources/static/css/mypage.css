@@ -1,0 +1,176 @@
+
+@charset "UTF-8";
+/* forum-search-area.css */
+/* 게시판 검색창에 관한 css */
+
+.search {
+    padding-top: 3.5rem;
+    padding-right: 18.5rem;
+
+}
+
+.forum-top-area {
+	display: flex;
+    justify-content : center;
+    padding-left: 20%;
+
+}
+
+.forum-top-area .forum-search-area .forum-search-select-area {
+    display: inline-block;
+}
+
+.forum-search-area{
+	padding-top: 20px;
+	width: 50%;
+	height: 70%;
+	background-color: #2a2b38;
+	    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg);
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-size: 300%;
+}
+
+.img-card{
+	padding: 10px;
+	margin-left: 20px;
+	width: 30%;
+	height: 40%;
+		background-color: #2a2b38;
+	    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg);
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-size: 300%;
+}
+
+.oneinfo{
+	display: block;
+	padding-bottom:20px;
+	padding-right:20px; 
+	padding-left:20px;
+}
+
+.search .forum-top-area .forum-search-area .forum-search-select-area .forum-select-box {
+    border: none;
+    text-align: left;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: white;
+}
+
+.search .forum-top-area .forum-search-area .forum-search-form-area {
+    padding-left: 0.5rem;
+    display:flex;
+    align-items: center;
+}
+
+.search .forum-top-area .forum-search-area .forum-search-form-area .forum-search-input {
+    border: none;
+    border-radius: 7px;
+    background-color: #E6E6E6;
+    padding: 0.5rem;
+    
+}
+.forum-search-nochange{
+	border: none;
+    border-radius: 7px;
+    background-color: darkgrey;
+    padding: 0.5rem;
+    width:100%;
+}
+
+.search .forum-top-area .forum-search-area .forum-search-btn-area {
+    display: inline-block;
+    padding-left: 0.3rem;
+    align-items: center;
+}
+
+.search .forum-top-area .forum-search-area .forum-search-btn-area .forum-search-btn {
+    border: none;
+    background-color: transparent;
+}
+
+.forum-search-form-area{
+	width: 100%;
+}
+.forum-search-input{
+	width: 100%
+}
+.card-img{
+	width: 100%;
+	height: 100%;
+}
+.detailbutton{
+	padding-right: 25%;
+	padding-top: 10px;
+	text-align:right;
+}
+.btn{
+	margin-right: 5px;
+}
+.detail-end{
+	margin:30px;
+}
+.radioselect{
+	margin: 5px;
+}
+.phonetime{
+	text-align: center;
+	color: red;
+}
+.phonenumberwrong{
+	text-align: center;
+	color: red;
+	display:none;
+}
+.phonenumbercorrect{
+	text-align: center;
+	color: #ffeba7;
+	display:none;
+}
+.failid{
+	color: red;
+	text-align: center;
+}
+.successid{
+	color: #ffeba7;
+	text-align:center;
+	
+}	
+#ifphoneinsert{
+	display: none;
+}
+#userphone{
+	display: none;
+}
+#orginpassword{
+	display:none;
+}
+body{
+	background-color: rgb(31, 32, 41);
+}
+	.files{
+    
+    padding-top: 1rem;
+    width:100%;
+    color:white;
+    
+	}
+	        .imgbox {
+            width: 330px; /* 원하는 너비 */
+            height: 330px; /* 원하는 높이 */
+             display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 넘치는 이미지를 자르기 위해 overflow 속성 사용 */
+        }
+
+        #previewImage {
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            
+        }
+        #fileInput{
+        width:80%;
+        }
