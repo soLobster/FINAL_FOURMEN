@@ -11,8 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	const divCountCharacters = document.querySelector('.div-review-count-characters');	// 캐릭터 수 세는 div.
 	const spanCountCharacters = document.querySelector('.span-review-count-characthers');	// 캐릭터 수 세는 span
 	const contextRoot = location.origin;
+	const pathName = location.pathname;
 	
-
+	const movieId = pathName.split('/')[3];
+	
+	console.log(movieId);	
 		
 	btnOpenChat.addEventListener('click', function() {
 		

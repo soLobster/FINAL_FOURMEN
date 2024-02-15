@@ -115,12 +115,13 @@
     
  }
  
- .movie-like-button {
+.movie-like-button {
     background-color: transparent;
     border: none;
     width: 46px;
     height: 46px;
  }
+ 
  
  .movie-like-item {
     margin-right: 16px;
@@ -144,6 +145,12 @@
     color: #ffffff;
     
 }
+
+            /* 만약 유저가 좋아요를 이미 눌렀을 경우 추가되는 클래스 */
+.user-liked-already i {
+    color: #ef233c;
+}
+
 
 .movie-trailer-item {
     margin-right: 24px;

@@ -197,12 +197,12 @@
             <div class="list-container">
                 <div class="movie-item-container" th:each="movie : ${listDto.results}">
                     <div class="movie-item-image-container">
-                        <a th:href="@{/movie/details(id=${movie.id})}">
+                        <a th:href="@{/movie/details/{id} (id=${movie.id})}">
                             <img th:src="@{https://image.tmdb.org/t/p/w220_and_h330_face/{posterPath} (posterPath=${movie.posterPath})}">
                         </a>                    
                     </div>
                     <div class="movie-description-container">
-                        <a th:href="@{/movie/details(id=${movie.id})}">
+                        <a th:href="@{/movie/details/{id} (id=${movie.id})}">
                             <div th:text="${movie.title}" class="movie-title"></div>
                         </a>
                         <div th:text="${movie.releaseDate}"></div>

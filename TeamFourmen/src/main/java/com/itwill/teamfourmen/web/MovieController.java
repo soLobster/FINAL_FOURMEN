@@ -2,15 +2,20 @@ package com.itwill.teamfourmen.web;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.movie.MovieCastDto;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
@@ -24,6 +29,7 @@ import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
+import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.MovieApiUtil;
 import com.itwill.teamfourmen.service.MovieDetailService;
 
@@ -38,6 +44,7 @@ public class MovieController {
 	
 	private final MovieApiUtil apiUtil;
 	private final MovieDetailService detailService;
+	private final FeatureService featureService;
 	
 	
 	/**
@@ -151,8 +158,8 @@ public class MovieController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("/details")
-	public String movieDetails(@RequestParam(name = "id") int id, Model model) {
+	@GetMapping("/details/{id}")
+	public String movieDetails(@PathVariable(name = "id") int id, Model model) {
 		
 		log.info("movieDetails(id={})", id);
 		
@@ -212,6 +219,11 @@ public class MovieController {
 		List<MovieDetailsDto> recommendedList = apiUtil.getRecommendedMovie(id);
 		
 		// 좋아요 눌렀는지 여부 가져옴
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "movie", id);	// 만약 좋아요 이미 눌렀으면 TmdbLike객체 리턴됨
+		log.info("tmdbLike = {}", tmdbLike);
 		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
@@ -222,6 +234,7 @@ public class MovieController {
 		model.addAttribute("movieExternalIdDto", movieExternalIdDto);
 		model.addAttribute("recommendedList", recommendedList);
 		model.addAttribute("releaseItemDto", releaseItemDto);
+		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
 		
 		return "/movie/movie-details";
 	}

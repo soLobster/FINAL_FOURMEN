@@ -72,7 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			// TODO: 나중에 alert전용 html파일만들어서 거기로 보내고 window.close()시켜버리기
 			if (message.sender === nickname) {
-				alert('세션이 종료되었습니다.');	
+				alert('세션이 종료되었습니다.');
+				window.close();	
 			}
 			
 			

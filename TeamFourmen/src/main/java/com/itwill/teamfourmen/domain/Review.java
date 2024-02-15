@@ -36,7 +36,7 @@ public class Review {
 	private Long reviewId;
 	
 	@Basic(optional = false)
-	private Long tmdbId;
+	private Integer tmdbId;
 	
 	@Basic(optional = false)
 	private String category;

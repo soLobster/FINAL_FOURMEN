@@ -30,15 +30,35 @@ public class FeatureService {
 	}
 	
 	
-	public TmdbLike didLikeTmdb(Member member, String category, Long tmdbId) {
+	public TmdbLike didLikeTmdb(Member member, String category, int tmdbId) {
 		
 		log.info("didLikeTmdb(member={})", member);
 		
-		Optional<TmdbLike> tmdbLike = tmdbLikeDao.findByMemberEmailAndCategoryAndTmdbId(member.getEmail(), category, tmdbId);
+		Optional<TmdbLike> tmdbLikeOptional = tmdbLikeDao.findByMemberEmailAndCategoryAndTmdbId(member.getEmail(), category, tmdbId);		
+		
+		TmdbLike tmdbLike = tmdbLikeOptional.orElse(null);
+		log.info("tmdbLike={}", tmdbLike);
 		
 		
+		return tmdbLike;
+	}
+	
+	
+	public void addLike(TmdbLike tmdbLike) {
 		
-		return null;
+		log.info("addLike(tmdbLike={})", tmdbLike);
+		
+		tmdbLike = tmdbLikeDao.save(tmdbLike);
+		
+		log.info("저장된 tmdbLike={}", tmdbLike);
+		
+	}
+	
+	public void deleteLike(TmdbLike tmdbLike) {
+		
+		log.info("deleteLike(tmdbLike={})", tmdbLike);
+		tmdbLikeDao.deleteByMemberEmailAndCategoryAndTmdbId(tmdbLike.getMember().getEmail(), tmdbLike.getCategory(), tmdbLike.getTmdbId());
+		
 	}
 	
 }
