@@ -99,7 +99,7 @@ window.addEventListener('DOMContentLoaded', function (){
 
     };
 
-    document.addEventListener('scroll', throttle(function () {
+    document.addEventListener('scroll', throttle( async function () {
 
         const totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
         const currentHeight = window.scrollY;
