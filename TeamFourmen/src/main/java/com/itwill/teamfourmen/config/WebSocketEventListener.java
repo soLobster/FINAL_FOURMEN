@@ -47,11 +47,17 @@ public class WebSocketEventListener {
 		if (nickname != null) {
 			
 			ChatMessageDto chatMessage = ChatMessageDto.builder().sender(nickname).type("LEAVE").build();
-			
+						
 			ChatRoomDto roomDto = chatService.userLeft(category, roomId, nickname);
 			
 			messagingTemplate.convertAndSend("/topic/" + category + "/" + roomId, chatMessage);
-			messagingTemplate.convertAndSend("/topic/" + category + "/" + roomId, roomDto.getUsers().size());
+			
+			if (roomDto != null) {
+				messagingTemplate.convertAndSend("/topic/" + category + "/" + roomId, roomDto.getUsers().size());	
+			}
+			
+			
+			
 		}
 		
 	}

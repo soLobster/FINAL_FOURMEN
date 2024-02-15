@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const spanCountCharacters = document.querySelector('.span-review-count-characthers');	// 캐릭터 수 세는 span
 	const contextRoot = location.origin;
 	
-	
+
 		
 	btnOpenChat.addEventListener('click', function() {
 		
