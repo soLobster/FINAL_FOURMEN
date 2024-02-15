@@ -871,6 +871,7 @@ function kakaologin(){
  
  
 			 });
+			 
 		 }
 	});
 	
@@ -883,7 +884,7 @@ function kakaologin(){
                 kakaologinLink.addEventListener('click', function (event) {
                     event.preventDefault(); // 기본 동작 방지
                     kakaologin(); // 카카오 로그인 함수 호출
-         
+         			
          document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 	//TODO 로그인시 쿠키에 계속 아이디정보가 남아있어서 자동로그인이 되는데 로그아웃시에 남아있던 아이디정보를 없애고 리셋시키고 싶다 
         var accessToken = Kakao.Auth.getAccessToken();
