@@ -54,6 +54,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	
+	// WebSocket사용을 위한 의존성 설정.
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	
 	
 	// Querydsl ----
 	

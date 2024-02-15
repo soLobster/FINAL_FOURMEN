@@ -7,13 +7,13 @@
 </head>
 <body>
     <nav id="navbar-container" th:fragment="navigation-bar">
-        <div id="navbar-inner-container">
+        <div class="navbar-inner-container">
             <a th:href="@{/}">      
-                <div id="navbar-logo-container">
+                <div class="navbar-logo-container">
                     <img class="navbar-logo-image" src="https://www.logoground.com/uploads10/dv10y2021183902021-06-223711428superpanda.jpg">
                 </div>
             </a>
-            <div id="navbar-menu-outer-container nav-div-width-adjustment">
+            <div class="navbar-menu-outer-container nav-div-width-adjustment">
                 <button class="navbar-menu-btn">       
                     <span class="navbar-menu-text-icon-span nav-div-width-adjustment">
                         <i class="fa-solid fa-bars navbar-menu-hamburger-icon"></i> Menu
@@ -32,7 +32,7 @@
                     </form>
                 </div>
             </div>
-            <div class="nav-user-div nav-div-width-adjustment">
+            <div class="navbar-user-div nav-div-width-adjustment">
                 <a href="#" class="navbar-link">
                     <span>Sign In</span>
                 </a>
@@ -44,49 +44,75 @@
             </div>
         </div>
          <!-- 디테일 메뉴들 -->
-        <div id="navbar-detailed-menu">
-            <div id="navbar-detailed-movie-menu-container">
-                <div class="navbar-detailed-menu-title">
-                    <span><i class="fa-solid fa-film"></i></span>
-                    Movie
-                </div>
-                <div class="navbar-detailed-menu-items">
-                    <ul class="navbar-detailed-menu-list">
-                        <li class="navbar-each-menu-item"><a th:href="@{/movie/popular}">인기 영화</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/movie/now_playing}">현재 상영 영화</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/movie/top_rated}">최고 평점 영화</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/movie/upcoming}">상영 예정 영화</a></li>
-                    </ul>
+         <div class="navbar-background"></div>
+        <div class="navbar-detailed-menu">
+            <div class="navbar-detailed-x-container">
+                <div class="navbar-detailed-x-div">
+                    <i class="fa-solid fa-xmark navbar-detailed-x"></i>
                 </div>
             </div>
-            <div id="navbar-detailed-tv-show-container">
+            <div class="navbar-detailed-menu-section-container">
                 <div class="navbar-detailed-menu-title">
-                    <span><i class="fa-solid fa-tv"></i></span>
-                    TV Show                    
+                    <div>
+                        <span><i class="fa-solid fa-film"></i></span>
+                        Movie
+                    </div>
+                    <div class="navbar-chevron-div">
+                        <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                        <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                    </div>
                 </div>
                 <div class="navbar-detailed-menu-items">
-                    <ul class="navbar-detailed-menu-list">
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/trending/day}">TV SHOW Trending Day LIST</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/trending/week}">TV SHOW Trending Week LIST</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV SHOW Top_rated LIST</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/netflix}">TV SHOW Watch on Netflix</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/disney_plus}">TV SHOW Watch on Disney Plus</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/apple_tv}">TV SHOW Watch Apple Tv</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/amazone_prime}">TV SHOW Watch on Amazon Prime Video</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/watcha}">TV SHOW Watch on Watcha</a></li>
-                        <li class="navbar-each-menu-item"><a th:href="@{/tv/ott/wavve}">TV SHOW Watch on Wavve</a></li>                                     
-                    </ul>
+                    <div class="navbar-detailed-menu-list">
+                        <div class="navbar-each-menu-item"><a th:href="@{/movie/popular}">인기 영화</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/movie/now_playing}">현재 상영 영화</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/movie/top_rated}">최고 평점 영화</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/movie/upcoming}">상영 예정 영화</a></div>
+                    </div>
                 </div>
             </div>
-            <div id="navbar-detailed-people-container">
+            <div class="navbar-detailed-menu-section-container">
                 <div class="navbar-detailed-menu-title">
-                    <span><i class="fa-solid fa-user-group"></i></span>
-                    People
+                    <div>
+                        <span><i class="fa-solid fa-tv"></i></span>
+                        TV Show
+                    </div>
+                    <div class="navbar-chevron-div">
+                        <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                        <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                    </div>                    
                 </div>
                 <div class="navbar-detailed-menu-items">
-                    <ul class="navbar-detailed-menu-list">
-                        <li class="navbar-each-menu-item"><a th:href="@{/person/list?language=ko}">Popular</a></li>
-                    </ul>
+
+                    <div class="navbar-detailed-menu-list">
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/day}">TV SHOW Trending Day LIST</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/week}">TV SHOW Trending Week LIST</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV SHOW Top_rated LIST</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/netflix}">TV SHOW Watch on Netflix</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/disney_plus}">TV SHOW Watch on Disney Plus</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/apple_tv}">TV SHOW Watch Apple Tv</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/amazon_prime}">TV SHOW Watch on Amazon Prime Video</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/watcha}">TV SHOW Watch on Watcha</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/wavve}">TV SHOW Watch on Wavve</a></div>                        
+                    </div>
+
+                </div>
+            </div>
+            <div class="navbar-detailed-menu-section-container">
+                <div class="navbar-detailed-menu-title">
+                    <div>
+                        <span><i class="fa-solid fa-user-group"></i></span>
+                        People
+                    </div>
+                    <div class="navbar-chevron-div">
+                        <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                        <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                    </div>
+                </div>
+                <div class="navbar-detailed-menu-items">
+                    <div class="navbar-detailed-menu-list">
+                        <div class="navbar-each-menu-item"><a th:href="@{/person/list?language=ko}">Popular</a></div>
+                    </div>
                 </div>
             </div>                    
         </div>

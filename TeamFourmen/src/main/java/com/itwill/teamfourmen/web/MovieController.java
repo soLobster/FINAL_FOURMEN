@@ -39,6 +39,7 @@ public class MovieController {
 	private final MovieApiUtil apiUtil;
 	private final MovieDetailService detailService;
 	
+	
 	/**
 	 * 인기영화 리스트 컨트롤러
 	 * @param model
@@ -210,6 +211,8 @@ public class MovieController {
 		// 해당 영화와 관련된 추천영화 목록 가져옴
 		List<MovieDetailsDto> recommendedList = apiUtil.getRecommendedMovie(id);
 		
+		// 좋아요 눌렀는지 여부 가져옴
+		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
 		model.addAttribute("directorList", directorList);
@@ -241,7 +244,7 @@ public class MovieController {
 		paramDto.setListCategory(pageName);
 		
 		MovieListDto listDto = apiUtil.getMovieList(paramDto);
-		log.info("listDto={}", listDto);		
+		//log.info("listDto={}", listDto);		
 				
 		List<MovieGenreDto> movieGenreList = apiUtil.getMovieGenreList();
 		
@@ -263,9 +266,10 @@ public class MovieController {
 		
 		
 		MovieListDto listDto = apiUtil.getMovieList(paramDto);
-		log.info("listDto={}", listDto);		
+		// log.info("listDto={}", listDto);		
 				
 		List<MovieGenreDto> movieGenreList = apiUtil.getMovieGenreList();
+				
 		model.addAttribute("listDto", listDto);
 		model.addAttribute("movieGenreList", movieGenreList);
 	}
