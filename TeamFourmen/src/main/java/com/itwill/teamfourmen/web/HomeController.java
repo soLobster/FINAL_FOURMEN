@@ -76,7 +76,6 @@ public class HomeController {
 		log.info("HOME()");
 
 	        
-
 	}
 
 	@GetMapping("/login/email/{email}")
