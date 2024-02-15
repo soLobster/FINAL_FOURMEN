@@ -90,7 +90,7 @@
             </div>
             
             <div class="card img-card imgbox">
-            	<img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
+         	<!-- <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
          					th:src="${member.usersaveprofile}" 
          					id="previewImage" 
          					class="card-img" 
@@ -99,8 +99,8 @@
          			th:src="@{'/image?photo=' + ${member.usersaveprofile}}" 
         			 id="previewImage" 
          				class="card-img" 
-         				alt="...">
-            	
+         				alt="..."> -->
+            	<img  th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="previewImage" class="card-img" alt="...">
             	<input type="file" id="fileInput" name="upload_photo" class="files">
             </div>
             
