@@ -61,7 +61,7 @@
     <div class="profile-picture">
 
      <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
-    <img th:unless="${member.usersaveprofile.startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_img" class="profile-image" alt="User Profile">
+    <img th:unless="${member.usersaveprofile.startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_a_img" class="profile-image" alt="User Profile">
 	</div>
 	</div>
 	
