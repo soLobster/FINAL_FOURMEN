@@ -32,8 +32,14 @@
                                     <section>
                                         <div class="content_profile_img">
                                             <div>
-                                                <img class="profile_img" th:src="@{'https://media.themoviedb.org/t/p/w300_and_h450_bestv2' + ${detailsPerson.profilePath}}"
-                                                     alt="Sydney Sweeney">
+                                                <img class="profile_img"
+                                                     th:if="${detailsPerson.profilePath ne null and detailsPerson.profilePath ne 'null' and detailsPerson.profilePath ne ''}"
+                                                     th:src="@{'https://media.themoviedb.org/t/p/w300_and_h450_bestv2' + ${detailsPerson.profilePath}}"
+                                                     alt="profile_img">
+                                                <img class="profile_img"
+                                                     th:unless="${detailsPerson.profilePath ne null and detailsPerson.profilePath ne 'null' and detailsPerson.profilePath ne ''}"
+                                                     th:src="@{/image/person_default_image_01.png}" width="300" height="450"
+                                                     alt="profile_img">
                                             </div>
                                         </div>
                                     </section>
@@ -169,7 +175,7 @@
                                                              alt="poster_img">
                                                         <img class="poster_img"
                                                              th:unless="${uniqueCast.posterPath ne null and uniqueCast.posterPath ne 'null' and uniqueCast.posterPath ne ''}"
-                                                             th:src="@{/image/person_default_image_01.png}"
+                                                             th:src="@{/image/default-w600.png}" width="130" height="195"
                                                              alt="poster_img">
                                                         <div th:if="${uniqueCast.mediaType eq 'tv'}" class="name" th:text="${uniqueCast.name}"></div>
                                                         <div th:if="${uniqueCast.mediaType eq 'movie'}" class="title" th:text="${uniqueCast.title}"></div>
@@ -190,7 +196,7 @@
                                                              alt="poster_img">
                                                         <img class="poster_img"
                                                              th:unless="${uniqueCrew.posterPath ne null and uniqueCrew.posterPath ne 'null' and uniqueCrew.posterPath ne ''}"
-                                                             th:src="@{/image/person_default_image_01.png}" width="300" height="auto"
+                                                             th:src="@{/image/default-w600.png}" width="130" height="195"
                                                              alt="poster_img">
                                                         <div th:if="${uniqueCrew.mediaType eq 'tv'}" class="name" th:text="${uniqueCrew.name}"></div>
                                                         <div th:if="${uniqueCrew.mediaType eq 'movie'}" class="title" th:text="${uniqueCrew.title}"></div>
@@ -214,6 +220,8 @@
                                                 <span th:case="'Lighting'">조명</span>
                                                 <span th:case="'Sound'">음향</span>
                                                 <span th:case="'Visual Effects'">시각 효과</span>
+                                                <span th:case="'Production'">각본</span>
+                                                <span th:case="'Writing'">창작자</span>
                                             </h3>
                                             <table>
 

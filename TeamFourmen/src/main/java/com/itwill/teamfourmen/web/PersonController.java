@@ -27,26 +27,30 @@ public class PersonController {
 
 	@GetMapping("/list")
 	public String list(
-			@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
 			@RequestParam(name = "language", required = false, defaultValue = "ko") String language,
 			Model model) {
-
-		// 클라이언트가 page 파라미터를 전달하지 않았을 때 page 값을 1로 설정.
-		if (page == null) {
-			page = 1; // 기본 페이지를 1로 설정.
-		}
 
 		// 서비스 메서드 호출 (항상 "popular"를 파라미터로 전달)
 		PageAndListDto pageAndListDto = personService.getPersonList(page, language);
 
-		// 결과가 비어있는지 확인
-		if (pageAndListDto.getResults() == null || pageAndListDto.getResults().isEmpty()) {
-			// 결과가 비어있다면 영어("en")로 다시 요청
-			pageAndListDto = personService.getPersonList(page, "en");
-		}
+		// 페이징 처리 관련 서비스 메서드 호출
+		PersonPagingDto pagingDto = personService.paging(page);
+
+//		// 결과가 비어있는지 확인
+//		if (pageAndListDto.getResults() == null || pageAndListDto.getResults().isEmpty()) {
+//			// 결과가 비어있다면 영어("en")로 다시 요청
+//			pageAndListDto = personService.getPersonList(page, "en");
+//		}
+
+		// pageInfo 정체 밝히기:
+		log.info("==============================================");
+		log.info("pageInfo 정체 밝히기:{}", pageAndListDto.getPage());
 
 		model.addAttribute("pageInfo", pageAndListDto.getPage());
 		model.addAttribute("personList", pageAndListDto.getResults());
+		model.addAttribute("personPageAndList", pageAndListDto);
+		model.addAttribute("paging", pagingDto);
 
 		return "person/lists";
 

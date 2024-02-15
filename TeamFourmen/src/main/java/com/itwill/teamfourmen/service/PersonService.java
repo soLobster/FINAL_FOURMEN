@@ -26,9 +26,35 @@ public class PersonService {
     private static final String apiUrl = "https://api.themoviedb.org/3";
 	private final WebClient webClient;
 
+	// 인물 리스트 페이징 처리를 위한 변수 선언.
+	int pagesShowInBar = 10; // 페이징 바에 얼마큼씩 보여줄 건지 설정. (10개씩 보여줄 것임)
+
 	@Autowired
 	public PersonService(WebClient webClient) {
 		this.webClient = webClient;
+	}
+
+	/**
+	 * 페이징 처리를 위한 코드.
+	 */
+	public PersonPagingDto paging(int page) {
+
+		int startPage = (int) Math.ceil( ((double) page / pagesShowInBar) - 1 ) * pagesShowInBar + 1;
+		int totalPage = 500;
+		int endPage = 0;
+		if ((startPage + pagesShowInBar - 1) >= totalPage) {
+			endPage = totalPage;
+		} else {
+			endPage = startPage + pagesShowInBar - 1;
+		}
+
+		PersonPagingDto pagingDto = PersonPagingDto.builder()
+				.startPage(startPage).endPage(endPage)
+				.totalPage(totalPage).pagesShowInBar(pagesShowInBar)
+				.build();
+
+		return pagingDto;
+
 	}
 
     /**
