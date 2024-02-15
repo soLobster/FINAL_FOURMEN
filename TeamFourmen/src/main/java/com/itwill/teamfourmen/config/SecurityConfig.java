@@ -87,8 +87,7 @@ public class SecurityConfig {
         		x.loginPage("/login")
         		  .loginProcessingUrl("/login")); // 로그인 할 페이지를 설정
         
-        
-        
+           
         // 로그아웃 이후에 이동할 페이지 설정 - 홈 페이지(/)
 //        http.logout((logout) -> logout.logoutSuccessUrl("/"));
 //        http
