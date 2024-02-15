@@ -300,6 +300,26 @@ public class TvShowController {
 
 		model.addAttribute("tvShowReco", tvShowRecoDTO);
 
+		// Tv Show 트레일러 가져오기
+		TvShowVideoListDTO tvShowVideoDTOList = apiUtil.getTvShowVideo(id);
+
+		List<TvShowVideoDTO> tvShowTrailerList = tvShowVideoDTOList.getResults();
+
+		log.info("TV SHOW TRAILER LIST = {}" , tvShowTrailerList);
+
+		List<TvShowVideoDTO> realTrailer = new ArrayList<>();
+
+		for(TvShowVideoDTO trailer : tvShowTrailerList) {
+			if(trailer.getType().equalsIgnoreCase("Trailer")){
+				realTrailer.add(trailer);
+			} else if (trailer.getName().startsWith("International")) {
+				realTrailer.add(trailer);
+			}
+		}
+
+		log.info("REAL TRAILER = {}",realTrailer);
+		model.addAttribute("trailer", realTrailer);
+
 		return "tvshow/tvshow-details";
 	}
 
@@ -308,6 +328,7 @@ public class TvShowController {
 	@GetMapping("/{id}/season/{season_number}")
 	public String getTvShowSeasonDetails(Model model, @PathVariable(name= "id") int id , @PathVariable(name = "season_number") int season_number){
 
+		String apiUri = "https://api.themoviedb.org/3/tv";
 
 		log.info("GET TV SHOW SEASON DETAILS - ID = {} , SEASON_NUM = {}", id, season_number);
 
@@ -347,6 +368,25 @@ public class TvShowController {
 		log.info("EPISODE DETAIL = {}", episodeDTO.getStill_path());
 
 		model.addAttribute("episodeDTO", episodeDTO);
+
+		// 시즌 별 배우 목록 가져오기
+
+		String getTvShowCreditUrl = UriComponentsBuilder.fromUriString(apiUri)
+				.path("/{seriesId}/season/{season_number}/credits")
+				.queryParam("language", "ko-KR")
+				.queryParam("api_key", API_KEY)
+				.buildAndExpand(String.valueOf(id), String.valueOf(season_number))
+				.toUriString();
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		TvShowCreditListDTO tvShowCreditListDTO = restTemplate.getForObject(getTvShowCreditUrl, TvShowCreditListDTO.class);
+
+		List<TvShowCreditDTO> tvShowCast = tvShowCreditListDTO.getCast();
+
+		log.info("Season Tv Show Cast = {}",tvShowCast);
+
+		model.addAttribute("castingList", tvShowCast);
 
 		return "tvshow/season-details";
 	}

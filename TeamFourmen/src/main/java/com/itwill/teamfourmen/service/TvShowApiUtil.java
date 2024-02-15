@@ -1,6 +1,7 @@
 package com.itwill.teamfourmen.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.teamfourmen.dto.tvshow.*;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,7 +129,6 @@ public class TvShowApiUtil {
                 .retrieve()
                 .bodyToMono(TvShowListDTO.class)
                 .block();
-
         // RestTemplate의 문제였음...webFlux webClient 사용하니 잘 됨....
 
 //        targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
@@ -382,6 +383,47 @@ public class TvShowApiUtil {
 
         return  tvShowDTO;
     }
+
+    public TvShowVideoListDTO getTvShowVideo (int id){
+        log.info ("get TvShow Trailer Video - TVSHOW ID = {}", id);
+
+        String baseUrl = BASE_URL + "/tv";
+
+//        WebClient client = WebClient.create(baseUrl);
+
+//        String json = client.get()
+//                .uri(id + "/videos")
+//                .header("Authorization", TOKEN)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .block();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String json = UriComponentsBuilder.fromUriString(baseUrl)
+                .path("/{id}/videos")
+                .queryParam("api_key",API_KEY)
+                .buildAndExpand(String.valueOf(id))
+                .toUriString();
+
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(json, String.class);
+        String jsonString = responseEntity.getBody();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        TvShowVideoListDTO tvShowVideoDTOList = null;
+
+        try {
+            tvShowVideoDTOList = mapper.readValue(jsonString, TvShowVideoListDTO.class);
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
+
+        log.info("TVSHOW TRAILER VIDEO LIST = {}", tvShowVideoDTOList);
+
+        return tvShowVideoDTOList;
+    }
+
 
     public TvShowWatchProviderListDTO getTvShowProvider(int tvshow_id){
         log.info ("get TvShow Watch Provider List - TVSHOW_ID = {}", tvshow_id);

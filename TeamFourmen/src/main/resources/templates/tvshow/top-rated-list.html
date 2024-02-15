@@ -79,6 +79,7 @@
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: flex-start;
+			margin-top: 5px;
 		}
 
 		.flex_box {
@@ -255,7 +256,7 @@
 		}
 
 		.filter-status {
-			padding: 10px 0 10px 10px;
+			padding: 10px 10px 10px 10px;
 			margin-top: 30px;
 			border-radius: .5rem;
 		}
@@ -463,28 +464,75 @@
 					</div>
 
 					<div class = "bg-dark filter-status" th:if="${params ne null}">
-						<h4>현재 필터링 항목</h4>
-
+						<h4>현재 필터링 및 검색 항목</h4>
 						<hr>
+						<section th:if="${params ne null and params.getListCategory().equalsIgnoreCase('filter')}">
+							<div th:if="${params.getSortBy() ne ''}">
+								<h5>정렬 순서</h5>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('popularity.asc')}">인기도 오름차순</p>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('popularity.desc')}">인기도 내림차순</p>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('first_air_date.asc')}">방영일 오름차순</p>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('first_air_date.desc')}">방영일 내림차순</p>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('name.asc')}">이름 오름차순</p>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('name.desc')}">이름 내림차순</p>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('vote_count.asc')}">TMDB 투표 오름차순</p>
+									<p th:if="${params.getSortBy().equalsIgnoreCase('vote_count.desc')}">TMDB 투표 내림차순</p>
+								<hr>
+							</div>
 
-						<section>
-							<h5>정렬 순서</h5>
-							<p th:if="${params.getSortBy() ne null}" th:text="${params.getSortBy()}"></p>
-							<hr>
+							<div th:if="${params.getWith_watch_provider() ne null}">
+								<h5>OTT</h5>
+								<div>
+									<div class = "mt-0" th:each=" OTT : ${params.getWith_watch_provider()}">
+										<p class="my-0" th:if = "${OTT eq 8}">Netflix</p>
+										<p class="my-0" th:if = "${OTT eq 337}">Diseny Plus</p>
+										<p class="my-0" th:if = "${OTT eq 119}">Amazon Prime Video</p>
+										<p class="my-0" th:if = "${OTT eq 356}">Wavve</p>
+										<p class="my-0" th:if = "${OTT eq 97}">Watcha</p>
+										<p class="my-0" th:if = "${OTT eq 350}">Apple Tv Plus</p>
+									</div>
+								</div>
+								<hr>
+							</div>
 
-							<h5>장르</h5>
 							<div th:if="${params.getWith_genres() ne null}">
+							<h5>장르</h5>
 								<div th:each=" genre : ${params.getWith_genres()}">
 									<div th:each=" genreName : ${tvShowGenreDTO}">
 										<p class="my-0" th:if = "${genre eq genreName.getId()}" th:text="${genreName.getName()}"></p>
 									</div>
 								</div>
+								<hr>
 							</div>
 
-							<hr>
+							<div th:if="${params.getWith_original_language() ne ''}">
+								<div>
+									<h5>원어</h5>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('ko')}">한국어</p>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('en')}">영어</p>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('es')}">스페인어</p>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('ja')}">일본어</p>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('zh')}">중국어</p>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('fr')}">프랑스어</p>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('de')}">독일어</p>
+									<p th:if="${params.getWith_original_language().equalsIgnoreCase('it')}">이탈리아어</p>
+									<hr>
+								</div>
+							</div>
 
-							<h5>방영상태</h5>
-								<div th:if="${params.getWith_status() ne null}">
+							<div th:if="${params.getFirst_air_date_gte() ne null or params.getFirst_air_date_lte() ne null}">
+								<div>
+									<h5>방영 일자</h5>
+									<p th:if="${params.getFirst_air_date_lte() ne null and params.getFirst_air_date_gte() ne null}" th:text=" ${params.getFirst_air_date_gte()} + ' ~ ' + ${params.getFirst_air_date_lte()}"></p>
+									<p th:if="${params.getFirst_air_date_lte() ne null and params.getFirst_air_date_gte() eq null}" th:text=" 'TO ' + ${params.getFirst_air_date_lte()} " ></p>
+									<p th:if="${params.getFirst_air_date_lte() eq null and params.getFirst_air_date_gte() ne null}" th:text=" 'From ' + ${params.getFirst_air_date_gte()} "></p>
+								</div>
+								<hr>
+							</div>
+
+							<div th:if="${params.getWith_status() ne ''}">
+								<h5>방영상태</h5>
+								<div>
 									<div th:each=" status  : ${params.getWith_status()}">
 										<p th:if = "${status eq '0'}">Returning Series</p>
 										<p th:if="${status eq '1'}">Planned</p>
@@ -494,24 +542,26 @@
 										<p th:if="${status eq '5'}">Pilot</p>
 									</div>
 								</div>
-
-							<hr>
-
-
-
-							<hr>
-
-							<h5>OTT</h5>
-							<div th:if="${params.getWith_watch_provider() ne null}">
-								<div class = "mt-0" th:each=" OTT : ${params.getWith_watch_provider()}">
-									<p class="my-0" th:if = "${OTT eq 8}">Netflix</p>
-									<p class="my-0" th:if = "${OTT eq 337}">Diseny Plus</p>
-									<p class="my-0" th:if = "${OTT eq 119}">Amazon Prime Video</p>
-									<p class="my-0" th:if = "${OTT eq 356}">Wavve</p>
-									<p class="my-0" th:if = "${OTT eq 97}">Watcha</p>
-									<p class="my-0" th:if = "${OTT eq 350}">Apple Tv Plus</p>
-								</div>
+								<hr>
 							</div>
+
+							<div>
+								<a th:href="@{'../tv/top_rated'}" class = "btn btn-warning" style="width: 100%">필터 초기화</a>
+							</div>
+						</section>
+
+						<section th:if="${params ne null and params.getListCategory().equalsIgnoreCase('search')}">
+
+							<h5>검색어</h5>
+							<div th:if="${params.getQuery() ne ''}">
+								<p th:text="${params.getQuery()}"></p>
+							</div>
+							<hr>
+
+							<div>
+								<a th:href="@{'../tv/top_rated'}" class = "btn btn-warning" style="width: 100%">검색 초기화</a>
+							</div>
+
 						</section>
 					</div>
 				</div>

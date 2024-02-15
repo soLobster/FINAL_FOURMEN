@@ -120,7 +120,8 @@
 
 		section.overView {
 			/*position: absolute;*/
-			width: 70%;
+			width: 100%;
+			min-width: 700px;
 			z-index: 1;
 			margin-top: 45px;
 			display: flex;
@@ -652,7 +653,7 @@
 <body class = "ko v4">
 <header>
 	<h1>TV SHOW Details</h1>
-	<a th:href="@{'../'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
+	<a th:href="@{'../tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
 	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
 </header>
 
@@ -668,7 +669,7 @@
 
 		<div class = "tvShow_Details">
 			<!-- 포스터 영역 -->
-			<section class = "me-5 poster">
+			<section class = "me-3 poster">
 				<div class = "poster_ott">
 					<img id = "poster_img"  class = "detail_poster rounded"
 						 th:if = "${tvShowDto.getPoster_path() ne null and tvShowDto.getPoster_path() ne 'null' and tvShowDto.getPoster_path() ne ''}"
@@ -699,6 +700,10 @@
 					<div class = "tool-tip-custom-bar" id = "custom-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
 						<i class="fa-solid fa-pen"></i>
 						<span class = "custom-bar-text">리뷰 남기기</span>
+					</div>
+					<div class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
+						<i class="fa-solid fa-play"></i>
+						<span class="custom-bar-text">트레일러</span>
 					</div>
 				</div>
 
@@ -731,7 +736,7 @@
 							<li class="border-0 card people_card" th:each=" people : ${tvShowCast} " th:object=" ${people} ">
 								<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273"/>
 								<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
-								<a th:href="@{''}" class="text-decoration-none" target="_blank">
+								<a th:href="@{../person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
 									<section class = "card-img-overlay">
 										<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
 										<p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
@@ -986,6 +991,25 @@
 	</div>
 </div>
 
+<!-- 트레일러 모달 -->
+<div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content bg-dark">
+			<div class="border-0 modal-header">
+				<h5 class="modal-title text-white" id="trailerModalLabel">Trailer</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="p-0 modal-body" style="width: 1280px; color: white">
+				<iframe width="800" height="auto"
+						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()}" style="width: 800px; height: 600px" ></iframe>
+			</div>
+			<div class="border-0 modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 
 
@@ -1037,10 +1061,21 @@
 		}
 	});
 
+	// 트레일러 모달 창을 닫을 때 재생되는 Youtube가 정지 되도록 함.
+	document.addEventListener('DOMContentLoaded', function() {
+		var modal = document.getElementById('trailerModal');
+		modal.addEventListener('hidden.bs.modal', function() {
+			var iframe = modal.querySelector('iframe');
+			var src = iframe.src;
+			iframe.src = src; // YouTube 재생 중지
+		});
+	});
+
 
 </script>
 
-
+// JS로 Axios post 전송을 위한 tvshowid
+// const tvShowId
 
 
 </body>
