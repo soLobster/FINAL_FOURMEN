@@ -1,0 +1,200 @@
+@charset "UTF-8";
+
+main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.open-chat-header {
+    width: 100%;
+    height: 64px;      
+    
+    padding: 0 1.2rem;
+    
+    background-color: #343a40;
+    
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    color: #e6e6e9;
+}
+
+/* 채팅 나오는 곳 */
+.open-chat-body {
+    width: 100%;
+    flex-grow: 1;
+    background-color: #04052e;
+    overflow-y: auto;
+}
+    /* 스크롤바 꾸미기 */
+.open-chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.open-chat-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.open-chat-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.open-chat-body::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+.div-chat-users-num {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* 개별 채팅 관련 */
+.each-chat-container {
+    width: 100%;
+    
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    padding-top: 1.5rem;
+    padding-left: 8px;
+    
+    padding: 1.5rem 8px 8px 8px;
+}
+
+
+    /* 내가 보낸 채팅인 경우 flex방향을 거꾸로 해줌 */
+.chat-by-me-container {
+    flex-direction: row-reverse;
+}
+
+
+    /* 개별 메세지 이벤트 관련(방 나가고 들어옴) */
+.each-chat-event-container {
+    padding: 8px 8px 0 8px;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #9999a1;
+}
+
+
+    /* 프로필 이미지 관련 */
+.div-profile-photo {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+
+    /* 개별 메세지 관련 */
+.msg-nickname-by-others-container {
+    width: 60%;
+    color: #e6e6e9;
+    padding: 16px 16px;
+    background-color: #5a5a66;
+    position: relative;
+    
+    border-radius: 16px;
+}
+
+
+.msg-nickname-by-others-container::before {
+    content: "";
+    
+    background-color: #5a5a66;    
+    
+    width: 16px;
+    height: 20px;
+    
+    position: absolute;
+    
+    left: -6px;
+    top: 32px;
+    transform: skew(0deg, 50deg) rotate(45deg);
+    
+    border-radius: 8px;
+}
+
+
+.msg-nickname-by-me-container {
+    width: 60%;
+    color: #e6e6e9;
+    padding: 16px 16px;
+    background-color: #155d27;
+    position: relative;
+    
+    border-radius: 16px;
+}
+
+
+.msg-nickname-by-me-container::before {
+    content: "";
+    
+    background-color: #155d27;
+    
+    width: 16px;
+    height: 20px;
+    
+    position: absolute;
+    
+    right: -6px;
+    top: 32px;
+    transform: skew(0deg, -50deg) rotate(45deg);
+    
+    border-radius: 7px;
+}
+
+
+.chat-nickname {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+
+/* 채팅 보내기(form) 관련 */
+.div-chat-form {
+    width: 100%;
+    padding: 1.3rem 1.3rem;
+    background-color: #04052e;
+}
+
+
+.form-chat {
+    width: 100%;
+    
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;    
+    justify-content: space-between;
+}
+
+
+.input-chat-form {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-chat-send {
+    border: none;
+    background-color: transparent;
+    color: #fbc500;
+    
+    font-size: 1.2rem;
+    
+}

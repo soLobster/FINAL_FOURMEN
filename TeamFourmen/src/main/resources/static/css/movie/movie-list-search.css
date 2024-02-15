@@ -79,6 +79,96 @@
     width: 100%;
 }
 
+    /* 플랫폼 필터 관련 */
+.provider-list {
+    margin: inherit;
+    margin-top: 0.5rem;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    row-gap: 1rem;
+    
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+ .provider-list-item {
+    position: relative;
+ }
+
+.checkbox-provider-label {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+.movie-provider-img {
+    width: 100%;
+}
+
+.div-provider-selected {
+    display: none;
+}
+
+.checkbox-provider:hover + .checkbox-provider-label {
+    cursor: pointer;
+}
+
+.checkbox-provider:checked + .checkbox-provider-label .div-provider-selected {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+
+        /* 플랫폼 말풍선 관련 */
+.movie-provider-speech-bubble {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    text-align: center;
+    color: #003f88;
+    background-color: #fff;
+    padding: 4px;
+    z-index: 2;
+    border-radius: 4px;
+    
+    bottom: 65px;
+    
+    pointer-events: none;
+}
+
+.movie-provider-speech-bubble::before {
+    content: "";
+    
+    position: absolute;
+    background-color: #fff;
+    display: block;
+    width: 15px;
+    height: 15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    bottom: -8px;
+}
+            
+
+.provider-list-item:hover .movie-provider-speech-bubble {
+    display: block;
+    
+}
+
 
     /* 개봉일 from-to label과 date input 좌우정렬 */
 .div-release {
@@ -114,6 +204,7 @@
     background-color: #495057;
     font-weight: 500;
     color: #fff;
+    cursor: pointer;
 }
 
 	/*선택된 장르 배경색 진하게 */
