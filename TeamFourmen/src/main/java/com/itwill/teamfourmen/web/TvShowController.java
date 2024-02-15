@@ -156,16 +156,16 @@ public class TvShowController {
 		return "tvshow/top-rated-list";
 	}
 
-	@GetMapping("/ott/{platform}")
-	public String getOttTvShowList(Model model, @PathVariable (name = "platform") String platform){
-		log.info("Get Tv Show From OTT Platform = {}", platform);
-
-		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
-
-		log.info("list={}", listDTO);
-
-		model.addAttribute("listDTO", listDTO);
-    
+//	@GetMapping("/ott/{platform}")
+//	public String getOttTvShowList(Model model, @PathVariable (name = "platform") String platform) {
+//		log.info("Get Tv Show From OTT Platform = {}", platform);
+//
+//		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
+//
+//		log.info("list={}", listDTO);
+//
+//		model.addAttribute("listDTO", listDTO);
+//	}
 
 	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
 	@GetMapping(value = {"/{id}" })
