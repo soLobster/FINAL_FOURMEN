@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
 <meta charset="UTF-8">
 <title>TEAM FOURMEN LAYOUT</title>
@@ -32,15 +33,29 @@
                     </form>
                 </div>
             </div>
-            <div class="navbar-user-div nav-div-width-adjustment">
-                <a th:href="@{/login}" class="navbar-link">
-                    <span>Sign In</span>
-                </a>
-            </div>
-            <div class="navbar-user-div nav-div-width-adjustment">
-                <a href="#" class="navbar-link">
-                    <span>Sign Up</span>
-                </a>
+            <div class="navbar-user-div">
+                <th:block sec:authorize="isAnonymous()">
+                    <div class="nav-div-width-adjustment">
+                        <a th:href="@{/login}" class="navbar-link">
+                            <span>Sign In</span>
+                        </a>
+                    </div>
+                    <div class="nav-div-width-adjustment">
+                        <a href="#" class="navbar-link">
+                            <span>Sign Up</span>
+                        </a>
+                    </div>
+                </th:block>
+                <th:block sec:authorize="isAuthenticated()">
+                    <div class="nav-div-width-adjustment">
+                        <a th:href="@{/logout}" class="navbar-link">
+                            <span>Sign out</span>
+                        </a>
+                    </div>
+                    <div class="div-profile-image" th:nickname="${member.nickname}" th:email="${member.email}">
+                        <img th:src="@{https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg}">
+                    </div>
+                </th:block>
             </div>
         </div>
          <!-- 디테일 메뉴들 -->

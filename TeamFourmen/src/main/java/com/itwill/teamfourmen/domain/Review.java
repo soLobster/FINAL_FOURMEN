@@ -13,6 +13,8 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -42,7 +44,9 @@ public class Review {
 	private String category;
 	
 	@Basic(optional = false)
-	private String email;
+	@ManyToOne
+	@JoinColumn(name = "email")
+	private Member member;
 	
 	@Basic(optional = false)
 	private String content;

@@ -193,7 +193,7 @@ public class MovieApiUtil {
 			.bodyToMono(MovieDetailsDto.class)
 			.block();
 		
-		log.info("movieDetailsDto={}", movieDetailsDto);
+		// log.info("movieDetailsDto={}", movieDetailsDto);
 		
 		return movieDetailsDto;
 	}
@@ -219,7 +219,7 @@ public class MovieApiUtil {
 				.bodyToMono(MovieCreditDto.class)
 				.block();
 		
-		log.info("movieCreditDto={}", movieCreditDto);
+		// log.info("movieCreditDto={}", movieCreditDto);
 		
 		return movieCreditDto;
 	}

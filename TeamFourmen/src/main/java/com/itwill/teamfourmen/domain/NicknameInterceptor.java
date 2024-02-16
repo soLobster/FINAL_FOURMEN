@@ -29,18 +29,17 @@ public class NicknameInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
     	if (modelAndView != null) {
             Principal principal = request.getUserPrincipal();
-            String nickname = "Guest"; // 기본값 설정
-
+            
             if (principal != null) {
                 String username = principal.getName();
                 Optional<Member> optionalMember = homeservice.findByemail(username);
                 if (optionalMember.isPresent()) {
                     memberInfo = optionalMember.get(); // memberInfo에 값을 할당
-                    nickname = memberInfo.getNickname();
                 }
+            } else {
+            	memberInfo = null;
             }
 
-            modelAndView.addObject("nickname", nickname);
             modelAndView.addObject("member", memberInfo);
         }
     }

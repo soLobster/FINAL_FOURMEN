@@ -549,6 +549,45 @@
     color: inherit;
 }
 
+    /* 리뷰 부분 */
+.each-review-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 16px 0;
+    border-bottom: 1px solid #495057;
+      
+}
+
+.each-review-container:last-child {
+    border-bottom: none;
+}
+
+.review-user-profile-image-container {
+    width: 60px;
+}
+
+.div-review-user-profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+
+.review-user-profile-image {
+    width: 100%;
+    object-fit: cover;
+}
+
+.div-reviewer-rating {
+    margin-bottom: 8px;
+}
+
+.reviewer-nickname {
+    font-weight: 700;
+    margin-right: 1rem;
+}
 
 /* 사이드바 CSS 시작 */
 .movie-aisde-container {

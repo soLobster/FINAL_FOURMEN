@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itwill.teamfourmen.domain.NicknameInterceptor;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.service.FeatureService;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/feature")
 public class FeatureRestController {
     
+	private final NicknameInterceptor nicknameInterceptor;
 	private final FeatureService featureService;
 	
 	@PostMapping("/review/post")
@@ -36,6 +38,8 @@ public class FeatureRestController {
 	public void addLike(@RequestBody TmdbLike tmdbLike) {
 		
 		log.info("addLike(tmdbLike = {})", tmdbLike);
+		
+		nicknameInterceptor.getMember().addRole(null);
 		
 		featureService.addLike(tmdbLike);
 		
