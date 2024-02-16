@@ -559,9 +559,9 @@
       
 }
 
-.each-review-container:last-child {
+.each-review-container:nth-last-child(2) {
     border-bottom: none;
-}
+}   
 
 .review-user-profile-image-container {
     width: 60px;
@@ -588,6 +588,24 @@
     font-weight: 700;
     margin-right: 1rem;
 }
+
+.review-user-rating {
+    color: #e4ff1a;
+    font-size: 0.8rem;
+}
+
+.div-see-more-review {
+    display: flex;
+    justify-content: end;
+    margin-top: 16px;
+}
+
+.btn-review-add-like {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+}
+
 
 /* 사이드바 CSS 시작 */
 .movie-aisde-container {

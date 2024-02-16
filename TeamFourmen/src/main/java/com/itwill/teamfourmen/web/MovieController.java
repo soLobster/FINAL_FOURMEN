@@ -236,6 +236,9 @@ public class MovieController {
 		List<Review> movieReviewList = featureService.getReviews("movie", id);
 		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
 		
+		// 내가 좋아요 누른 리뷰들 가져옴
+		
+		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
 		model.addAttribute("directorList", directorList);

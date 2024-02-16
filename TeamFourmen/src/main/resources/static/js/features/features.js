@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const divDidReviewedAlready = document.querySelector('.div-review');
     const btnMovieReview =  document.querySelector('.btn-movie-review');
     
+    const btnReviewAddLike = document.querySelectorAll('.btn-review-add-like');
+    
     const pathName = location.pathname;	// 컨텍스트 루트 제외한 주소 가져옴
     const category = pathName.split('/')[1];
     const tmdbId = pathName.split('/')[3];
@@ -125,6 +127,40 @@ document.addEventListener('DOMContentLoaded', function() {
 			return;
 		}
 			
+		
+	});
+	
+	// 리뷰 좋아요 눌렀을 때
+	btnReviewAddLike.forEach((btn) => {
+		
+		btn.addEventListener('click', function() {
+			
+			const authorEmail = btn.getAttribute('author');
+			const reviewId = btn.getAttribute('reviewId')
+			
+			if (authorEmail === signedInUser.getAttribute('email')) {
+				alert('내 리뷰에는 좋아요를 누를 수 없습니다.');
+				return;
+			}
+			
+			data = {
+				reviewId:reviewId,
+				member: {
+					email: signedInUser.getAttribute('email')
+				} 
+			};
+			
+			axios.post('/feature/review/like/add', data)
+				.then((response) => {
+					
+					
+					
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`)
+				})
+			
+		});
 		
 	});
 	
