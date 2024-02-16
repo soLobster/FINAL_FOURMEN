@@ -59,7 +59,7 @@ public class PersonController {
 	@GetMapping("/details/{id}")
 	public String details(
 			@PathVariable("id") int id,
-			@RequestParam(name = "language", required = false, defaultValue = "ko") String language,
+			@RequestParam(name = "language", required = false, defaultValue = "en") String language,
 			Model model
 	) {
 
@@ -73,9 +73,9 @@ public class PersonController {
 		MovieCreditsCastDto movieCreditsCastDTO = personService.getMovieCreditsCast(id, language);
 		TvCreditsDto tvCreditsDto = personService.getTvCredits(id, language);
 		TvCreditsCastDto tvCreditsCastDTO = personService.getTvCreditsCast(id, language);
-		CombinedCreditsDto combinedCreditsDto = personService.getCombinedCredits(id, language);
-		List<CombinedCreditsCastDto> combinedCreditsCastList = personService.getCombinedCreditsCast(id, language);
-		List<CombinedCreditsCrewDto> combinedCreditsCrewList = personService.getCombinedCreditsCrew(id, language);
+		CombinedCreditsDto combinedCreditsDto = personService.getCombinedCredits(id, "ko");
+		List<CombinedCreditsCastDto> combinedCreditsCastList = personService.getCombinedCreditsCast(id, "ko");
+		List<CombinedCreditsCrewDto> combinedCreditsCrewList = personService.getCombinedCreditsCrew(id, "ko");
 
 		// CombinedCast를 처리하는 코드.
 		List<CombinedCreditsCastDto> castList = combinedCreditsDto.getCast();

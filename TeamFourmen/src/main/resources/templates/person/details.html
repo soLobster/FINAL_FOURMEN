@@ -176,8 +176,8 @@
                                             <span th:each="uniqueCast, iterStat : ${uniqueCastList}" th:if="${iterStat.index lt 8}">
 
                                                 <div class="media-item">
-                                                    <a th:if="${uniqueCast.mediaType eq 'tv'} or ${uniqueCast.mediaType eq 'movie'}"
-                                                       th:href="@{/${uniqueCast.mediaType}/{id}(id=${uniqueCast.id})}">
+                                                    <a
+                                                       th:href="@{/{mediaType}/{id}(mediaType=${uniqueCast.mediaType}, id=${uniqueCast.id})}">
                                                         <img class="poster_img"
                                                              th:if="${uniqueCast.posterPath ne null and uniqueCast.posterPath ne 'null' and uniqueCast.posterPath ne ''}"
                                                              th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uniqueCast.posterPath}"
