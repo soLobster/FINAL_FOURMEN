@@ -717,7 +717,7 @@
 						<i class="fa-solid fa-pen"></i>
 						<span class = "custom-bar-text">리뷰 남기기</span>
 					</div>
-					<div class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
+					<div th:if ="${trailer ne null}" class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
 						<i class="fa-solid fa-play"></i>
 						<span class="custom-bar-text">트레일러</span>
 					</div>
@@ -1015,7 +1015,7 @@
 				<h5 class="modal-title text-white" id="trailerModalLabel">Trailer</h5>
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="p-0 modal-body" style="width: 1280px; color: white">
+			<div th:if="${trailer ne null}" class="p-0 modal-body" style="width: 1280px; color: white">
 				<iframe width="800" height="auto"
 						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()}" style="width: 800px; height: 600px" ></iframe>
 			</div>

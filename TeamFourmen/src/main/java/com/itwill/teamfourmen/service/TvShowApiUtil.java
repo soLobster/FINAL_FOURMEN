@@ -395,15 +395,6 @@ public class TvShowApiUtil {
 
         String baseUrl = BASE_URL + "/tv";
 
-//        WebClient client = WebClient.create(baseUrl);
-
-//        String json = client.get()
-//                .uri(id + "/videos")
-//                .header("Authorization", TOKEN)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .block();
-
         RestTemplate restTemplate = new RestTemplate();
 
         String json = UriComponentsBuilder.fromUriString(baseUrl)

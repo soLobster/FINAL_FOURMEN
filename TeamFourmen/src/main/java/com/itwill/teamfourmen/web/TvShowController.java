@@ -27,9 +27,9 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 @RequestMapping("/tv")
 public class TvShowController {
-	
+
 	@Value("${api.themoviedb.api-key}")
-	private String API_KEY; 
+	private String API_KEY;
 
 	private final TvShowApiUtil apiUtil;
 
@@ -127,7 +127,7 @@ public class TvShowController {
   @GetMapping("/search")
 	public String getSearchTvShowList(Model model, @ModelAttribute TvShowQueryParamDTO searchDTO) {
 		log.info("Get Search Tv Show List - Search Dto = {}", searchDTO);
-  
+
 		searchDTO.setListCategory("search");
 
 		getInitialList(searchDTO, model);
@@ -137,7 +137,7 @@ public class TvShowController {
 
 	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
 	@GetMapping(value = {"/{id}" })
-	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
+	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id) {
 		log.info("Get Tv Show Details = {}", id);
 //		log.info("API KEY = {}", API_KEY);
 
@@ -169,9 +169,9 @@ public class TvShowController {
 
 		try {
 			tvShowWatchProviderDTO = tvShowWatchProviderRegionDTO.getFlatrate();
-			model.addAttribute("watch_provider_list",tvShowWatchProviderDTO);
+			model.addAttribute("watch_provider_list", tvShowWatchProviderDTO);
 
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 
@@ -188,23 +188,23 @@ public class TvShowController {
 
 		TvShowContentRatingsDTO rating = new TvShowContentRatingsDTO();
 
-		for(TvShowContentRatingsDTO r : results ){
-				if(r.getIso_3166_1().equals("KR")){
-					rating = r;
-					break;
-				} else if(r.getIso_3166_1().equals("US")) {
-					rating = r;
-				}
+		for (TvShowContentRatingsDTO r : results) {
+			if (r.getIso_3166_1().equals("KR")) {
+				rating = r;
+				break;
+			} else if (r.getIso_3166_1().equals("US")) {
+				rating = r;
+			}
 		}
 
-		model.addAttribute("rating",rating);
+		model.addAttribute("rating", rating);
 		//log.info("rating = {}", rating);
 
 		// 방송사? 배급사?
 		//log.info("network?? = {}",tvShowDTO.getNetworks().get(0));
 		List<TvShowNetworkDTO> networkList = tvShowDTO.getNetworks();
 
-		model.addAttribute("networkList" ,networkList);
+		model.addAttribute("networkList", networkList);
 
 		// SNS 불러오기
 		String getTvShowSnsUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -258,7 +258,7 @@ public class TvShowController {
 			String year = yearFormat.format(date);
 
 			model.addAttribute("releaseYear", year);
-		} catch (ParseException e){
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
@@ -283,25 +283,27 @@ public class TvShowController {
 		// Tv Show 트레일러 가져오기
 		TvShowVideoListDTO tvShowVideoDTOList = apiUtil.getTvShowVideo(id);
 
-		List<TvShowVideoDTO> tvShowTrailerList = tvShowVideoDTOList.getResults();
-
-		//log.info("TV SHOW TRAILER LIST = {}" , tvShowTrailerList);
-
 		List<TvShowVideoDTO> realTrailer = new ArrayList<>();
 
-		for(TvShowVideoDTO trailer : tvShowTrailerList) {
-			if(trailer.getType().equalsIgnoreCase("Trailer")){
-				realTrailer.add(trailer);
-			} else if (trailer.getName().startsWith("International")) {
-				realTrailer.add(trailer);
+		List<TvShowVideoDTO> tvShowTrailerList = tvShowVideoDTOList.getResults();
+
+		log.info("TVSHOWTRAILERLIST is empty? ={}", tvShowTrailerList.isEmpty());
+
+
+		if (!tvShowTrailerList.isEmpty()) {
+			for (TvShowVideoDTO trailer : tvShowTrailerList) {
+				if (trailer.getType().equalsIgnoreCase("Trailer")) {
+					realTrailer.add(trailer);
+					model.addAttribute("trailer", realTrailer);
+				}
 			}
+		} else {
+			log.info("TV SHOW TRAILER IS EMPTY");
+			model.addAttribute("trailer", null);
 		}
-
-		//log.info("REAL TRAILER = {}",realTrailer);
-		model.addAttribute("trailer", realTrailer);
-
 		return "tvshow/tvshow-details";
 	}
+
 
 
 
