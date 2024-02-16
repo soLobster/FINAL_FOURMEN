@@ -37,6 +37,16 @@
                     <input class="forum-search-nochange"  type="text" name="name" id="name" th:value="${member.name}" readonly>
                 </div>
                 </div>
+
+                <div class="oneinfo">
+                <div class="forum-search-select-area">
+                <div class="forum-select-box">LOGIN TYPE</div>
+                </div>
+                <div></div>
+                <div class="forum-search-form-area">
+                    <input class="forum-search-nochange" type="text" id="type" th:value="${member.type}" readonly />
+                </div>	
+          		</div>
                 <div class="oneinfo">	
                  <div class="forum-search-select-area">
                 <div class="forum-select-box">NICKNAME</div>
@@ -44,7 +54,7 @@
                 <div></div>
                 <div class="forum-search-form-area">
                     <input class="forum-search-input"  type="text" name="nickname" id="nickname" th:value="${member.nickname}">
-               `
+               
                 </div>
                 <div id="checkNicknameResult"></div>	
                 </div>
@@ -88,19 +98,55 @@
                  
 			
             </div>
+            <div id="directbye" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="directbyeclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Membership Withdrawal</p>
+    					<p>Please enter your Password</p>
+    					<div class="newpasswordbox">
+    					<input class="newpassword" id="lastcheck" type="password" placeholder="password" required />
+    					 
+    					 </div>
+					
+    					 <a class="deletebye" id="deletedirectbye" href="#">delete</a>
+
+    					</div>
+						</div>	
+            
+            
+            
+            <div id="finallyfindpassword" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="finallyfindpasswordclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Membership Withdrawal</p>
+    					<p>Send your authentication number to the email</p>
+    					<div class="newpasswordbox">
+    					<p class="newpasswordmatchgood" th:text="${member.email}"></p><a id="emailinsert" class="btnchange">send</a>
+    					</div>
+    					<div class="ifclick" id="ifemailinsert">
+    					<div class="newpasswordbox">
+    					<input class="newpassword" id="checkemail" type="text" placeholder="verification number" required />
+    					 <a class="btnchange" id="emailcheckbtn">check</a>
+    					 </div>
+    					 <p id="emailcountdown">Please enter the verification number within 180 seconds</p>
+    					 </div>
+    					  <p id="emailchecksuccess">Authentication completed</p>
+    					 <a class="deletebye" id="deleteemailbye" href="#">delete</a>
+    					</div>
+						</div>	
             
             <div class="card img-card imgbox">
-         	<!-- <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
+         	 <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
          					th:src="${member.usersaveprofile}" 
          					id="previewImage" 
          					class="card-img" 
          					alt="...">
-    			<img th:unless="${member.usersaveprofile.startsWith('http')}"
+    			<img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}"
          			th:src="@{'/image?photo=' + ${member.usersaveprofile}}" 
         			 id="previewImage" 
          				class="card-img" 
-         				alt="..."> -->
-            	<img  th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="previewImage" class="card-img" alt="...">
+         				alt="..."> 
+            	<!--<img  th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="previewImage" class="card-img" alt="...">  -->
             	<input type="file" id="fileInput" name="upload_photo" class="files">
             </div>
             

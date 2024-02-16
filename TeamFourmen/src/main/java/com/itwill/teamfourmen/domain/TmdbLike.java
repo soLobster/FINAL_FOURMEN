@@ -20,8 +20,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @SequenceGenerator(name = "tmdb_likes_seq", sequenceName = "tmdb_likes_seq", allocationSize = 1)
-@Table(name = "tmdb_like")
+@Table(name = "tmdb_likes")
 public class TmdbLike {
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tmdb_likes_seq")
@@ -36,6 +37,6 @@ public class TmdbLike {
 	private String category;
 	
 	@Basic(optional = false)
-	private Long tmdbId;
+	private Integer tmdbId;
 	
 }

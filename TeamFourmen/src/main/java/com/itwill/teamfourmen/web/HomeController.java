@@ -119,28 +119,7 @@ public class HomeController {
 		}
     }
 	
-	@GetMapping("login/kakao/{email}/{name}/{password}/{nickname}/{phone}")
-	@ResponseBody
-	public ResponseEntity<String> getAllSeats(
-	        @PathVariable("email") String email,
-	        @PathVariable("name") String name,
-	        @PathVariable("password") String password,
-	        @PathVariable("nickname") String nickname,
-	        @PathVariable("phone") String phone
-	        ) {
 
-	   
-	    
-	    String result= memberservice.createkakao(email, password, name, nickname, phone);
-	    log.debug("result={}",result);
-	    
-	    if (result.equals("Y")) {
-	        // 값이 없는 경우 빈 문자열 반환
-	        return ResponseEntity.ok("good");
-	    } else {
-	    	return null;
-	    }
-	}
 	
 	
 	@PostMapping("login/naver")
@@ -152,7 +131,7 @@ public class HomeController {
 		membercreatenaverdto.setNickname(naverData.get("nickname"));
 		membercreatenaverdto.setPhone(naverData.get("phone"));
 		membercreatenaverdto.setUsersaveprofile(naverData.get("usersaveprofile"));
-
+		membercreatenaverdto.setType(naverData.get("type"));
 	    
 	    String result =memberservice.createnaver(membercreatenaverdto);
 	    log.debug("result={}",result);
@@ -284,8 +263,20 @@ public class HomeController {
 		    }
 	    }
 	
-		
-		
+		@GetMapping("/checkpassword/{password}")
+	    @ResponseBody
+	    public ResponseEntity<String> checkpassword(@PathVariable("password") String password){
+			 String orginpassword= interceptor.getMember().getPassword();
+			 
+		    boolean result = passwordEncoder.matches(password, orginpassword);
+		    
+		    if (result == true) {
+		        // 값이 없는 경우 빈 문자열 반환
+		        return ResponseEntity.ok("Y");
+		    } else {
+		    	return ResponseEntity.ok("N");
+		    }
+	    }
 		
     @PostMapping("/signup")
     public String signup(@ModelAttribute MemberCreateDto dto) {
@@ -297,5 +288,12 @@ public class HomeController {
         return "redirect:/login";
     }
     
-
+    @GetMapping("/delete")
+    public String delete(@RequestParam(name = "email") String email) {
+        log.info("delete(id={})", id);
+        
+        memberservice.deleteById(id);
+        
+        return "redirect:/post/list";
+    }
 }

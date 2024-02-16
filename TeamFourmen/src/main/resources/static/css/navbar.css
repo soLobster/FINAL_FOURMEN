@@ -106,7 +106,25 @@
 /* 유저관련(로그인, 로그아웃, 등등) */
 .navbar-user-div {
     padding: 0 1rem;
-    flex: 1;
+    flex: 2;
+    display: flex;
+    gap: 32px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: end;
+}
+
+.div-profile-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.div-profile-image img {
+    width: 100%;
+    object-fit: cover;
+    min-width: 100%;
 }
 
 
@@ -317,6 +335,13 @@
     
 }
 
+
+@media (max-width: 1048px) {
+    .navbar-search-container {
+        flex-grow: 8;
+        margin: 0;
+    }
+}
 
 @media (max-width: 880px) {
     

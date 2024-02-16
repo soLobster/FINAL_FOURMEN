@@ -2,17 +2,24 @@ package com.itwill.teamfourmen.web;
 
 import java.util.List;
 
+
 import com.itwill.teamfourmen.domain.ImdbRatings;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.movie.MovieCastDto;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
@@ -26,6 +33,7 @@ import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
+import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.MovieApiUtil;
 import com.itwill.teamfourmen.service.MovieDetailService;
 
@@ -40,6 +48,7 @@ public class MovieController {
 	
 	private final MovieApiUtil apiUtil;
 	private final MovieDetailService detailService;
+	private final FeatureService featureService;
 	
 	// IMDB RATING을 가져오기 위함.
 	private String category = "movie";
@@ -156,18 +165,18 @@ public class MovieController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("/details")
-	public String movieDetails(@RequestParam(name = "id") int id, Model model) {
+	@GetMapping("/details/{id}")
+	public String movieDetails(@PathVariable(name = "id") int id, Model model) {
 		
 		log.info("movieDetails(id={})", id);
 		
 		// 영화 디테일 정보 가져오기
 		MovieDetailsDto movieDetailsDto = apiUtil.getMovieDetails(id);
-		log.info("movieDetailsDto={}", movieDetailsDto);
+		//log.info("movieDetailsDto={}", movieDetailsDto);
 		
 		// TODO: 만약 credit dto가 없을 리가 있을까 생각해보자..
 		MovieCreditDto movieCreditDto = apiUtil.getMovieCredit(id);
-		log.info("movieCreditDto={}", movieCreditDto);
+		//log.info("movieCreditDto={}", movieCreditDto);
 		List<MovieCrewDto> directorList = movieCreditDto.getCrew().stream().filter((x) -> x.getJob().equals("Director")).toList();	// 감독만 꺼내온 리스트
 		List<MovieCastDto> castList = movieCreditDto.getCast();	// 출연진만 꺼내온 리스트
 		
@@ -179,7 +188,7 @@ public class MovieController {
 			movieTrailerList = movieVideoList.stream().filter((x) -> x.getType().equals("Trailer")).toList();
 		}
 		
-		log.info("movieVideoList = {}", movieVideoList);
+		//log.info("movieVideoList = {}", movieVideoList);
 		
 		
 		// 영화 provider 리스트 가져오기
@@ -217,6 +226,15 @@ public class MovieController {
 		List<MovieDetailsDto> recommendedList = apiUtil.getRecommendedMovie(id);
 		
 		// 좋아요 눌렀는지 여부 가져옴
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "movie", id);	// 만약 좋아요 이미 눌렀으면 TmdbLike객체 리턴됨
+		
+		
+		// 관련 리뷰 가져옴
+		List<Review> movieReviewList = featureService.getReviews("movie", id);
+		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
 		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
@@ -239,6 +257,11 @@ public class MovieController {
 		// IMDB 아이콘은 static/icons/imdb-icon.svg 파일...!
 		model.addAttribute("imdbRatings", imdbRatings);
 
+		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
+    
+		model.addAttribute("movieReviewList", movieReviewList);
+		model.addAttribute("myReview", myReview);
+		
 		return "/movie/movie-details";
 	}
 	

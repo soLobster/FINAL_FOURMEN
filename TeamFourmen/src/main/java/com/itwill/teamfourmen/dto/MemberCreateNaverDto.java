@@ -16,7 +16,7 @@ public class MemberCreateNaverDto {
 	    private String nickname;
 	    private String phone;
 	    private String usersaveprofile;
-	    
+	    private String type;
 	    
 	    public Member createnaver(PasswordEncoder encoder) {
 	        return Member.builder()
@@ -25,6 +25,7 @@ public class MemberCreateNaverDto {
 	                .name(name)
 	                .nickname(nickname)
 	                .phone(phone)
+	                .type(type)
 	                .usersaveprofile(usersaveprofile)
 	                .build();
 	         }

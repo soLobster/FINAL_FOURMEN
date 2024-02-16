@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -29,16 +30,55 @@ public class FeatureService {
 		
 	}
 	
+	public List<Review> getReviews(String category, int tmdbId) {
+		
+		log.info("getReviews(category={}, id={})", category, tmdbId);
+		
+		List<Review> tmdbReviewList = reviewDao.findByCategoryAndTmdbId(category, tmdbId);
+		
+		return tmdbReviewList;
+	}
 	
-	public TmdbLike didLikeTmdb(Member member, String category, Long tmdbId) {
+	public Review getMyReviewInTmdbWork(String email, String category, int tmdbId) {
+		
+		log.info("getMyReviewInTmdbWork(email={}, category={}, tmdbId={}", email, category, tmdbId);
+		
+		Optional<Review> myTmdbReviewOptional = reviewDao.findByMemberEmailAndCategoryAndTmdbId(email, category, tmdbId);
+		Review myTmdbReview = myTmdbReviewOptional.orElse(null);
+		
+		return myTmdbReview;
+	}
+	
+	
+	public TmdbLike didLikeTmdb(Member member, String category, int tmdbId) {
 		
 		log.info("didLikeTmdb(member={})", member);
 		
-		Optional<TmdbLike> tmdbLike = tmdbLikeDao.findByMemberEmailAndCategoryAndTmdbId(member.getEmail(), category, tmdbId);
+		Optional<TmdbLike> tmdbLikeOptional = tmdbLikeDao.findByMemberEmailAndCategoryAndTmdbId(member.getEmail(), category, tmdbId);		
+		
+		TmdbLike tmdbLike = tmdbLikeOptional.orElse(null);
+		log.info("tmdbLike={}", tmdbLike);
 		
 		
+		return tmdbLike;
+	}
+	
+	
+	public void addLike(TmdbLike tmdbLike) {
 		
-		return null;
+		log.info("addLike(tmdbLike={})", tmdbLike);
+		
+		tmdbLike = tmdbLikeDao.save(tmdbLike);
+		
+		log.info("저장된 tmdbLike={}", tmdbLike);
+		
+	}
+	
+	public void deleteLike(TmdbLike tmdbLike) {
+		
+		log.info("deleteLike(tmdbLike={})", tmdbLike);
+		tmdbLikeDao.deleteByMemberEmailAndCategoryAndTmdbId(tmdbLike.getMember().getEmail(), tmdbLike.getCategory(), tmdbLike.getTmdbId());
+		
 	}
 	
 }
