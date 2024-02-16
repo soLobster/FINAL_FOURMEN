@@ -51,16 +51,19 @@
                         <div class="movie-like-item">
                             <i class="fa-solid fa-list"></i>
                         </div>
-                        <div class="movie-like-item">
+                        <!-- 좋아요 -->
+                        <div class="movie-like-item div-like" th:classappend="${tmdbLike} != null ? 'user-liked-already'">
                             <button class="movie-like-button btn-add-like" type="button">
-                                <i class="fa-regular fa-heart"></i>
+                                <i class="fa-solid fa-heart"></i>
                             </button>
                         </div>
-                        <div class="movie-like-item">
+                        <!-- 리뷰 -->
+                        <div class="movie-like-item div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'">
                             <button type="button" class="btn-movie-review" data-bs-toggle="modal" data-bs-target="#movie-review">                            
                                 <i class="fa-solid fa-pen"></i>
                             </button>
                         </div>
+                        <!-- 오픈채팅 -->
                         <div class="movie-like-item">
                             <button class="movie-like-button btn-open-chat">                                                
                                 <i class="fa-regular fa-comment"></i>
@@ -88,9 +91,8 @@
                             </div>
                         </th:block>           
                     </div>
-                    
                     <!-- 리뷰 남기기 모달 -->
-                    <div class="modal fade" id="movie-review" tabindex="-1" aria-labelledby="movie-review" aria-hidden="true">
+                    <div class="modal fade" id="movie-review" th:if="${member != null && myReview == null}" tabindex="-1" aria-labelledby="movie-review" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -267,7 +269,26 @@
             
             <!-- TODO: 한줄평 작성 구현하기 -->
             <section class="main-section">
-                <div>한줄평 작성 예정</div>
+                <h3>최신 리뷰</h3>
+                <div class="each-review-container" th:each="review : ${movieReviewList}" th:if="${!#lists.isEmpty(movieReviewList)}">
+                    <div class="review-user-profile-image-container">
+                        <!-- TODO: 나중에 유저별 프로필사진으로 업로드 -->
+                        <div class="div-review-user-profile-image">
+                            <img class="review-user-profile-image" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg">
+                        </div>
+                    </div>
+                    <div class="div-review-info">
+                        <div class="div-reviewer-rating">
+                            <span>reviewed by </span>
+                            <span class="reviewer-nickname" th:text="${review.member.nickname}"></span>
+                            <span th:text="${review.rating}">
+                            </span>                            
+                        </div>
+                        <div class="div-review-content" th:text="${review.content}">
+                            
+                        </div>
+                    </div>
+                </div>
             </section>
             
             <div class="div-horizontal-line" th:if="${!#lists.isEmpty(recommendedList)}"></div>
@@ -368,7 +389,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <script th:inline="javascript">
-    	const movieId = [[${movieDetailsDto.id}]];
     	const backdropPath = [[${movieDetailsDto.backdropPath}]];
     </script>
     <script th:src="@{/js/navbar.js}"></script>

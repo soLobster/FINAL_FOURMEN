@@ -4,6 +4,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	
+	const signedInUser = document.querySelector('.div-profile-image');		// 닉네임을 포함하고 있는 유저 로그인했을 때 프로필사진 컨테이너
+	
 	const chatBody = document.querySelector('.open-chat-body');
 	const btnSend = document.querySelector('.btn-chat-send');
 	const numOfPeople = document.querySelector('.chat-num-people');
@@ -72,7 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			// TODO: 나중에 alert전용 html파일만들어서 거기로 보내고 window.close()시켜버리기
 			if (message.sender === nickname) {
-				alert('세션이 종료되었습니다.');	
+				alert('세션이 종료되었습니다.');
+				window.close();	
 			}
 			
 			
@@ -117,6 +120,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	
 	function sendMessage(event) {
+		
+		console.log(`signedInUser=${signedInUser}`)
+		if (!signedInUser) {
+			alert('오픈채팅에 참여하고 싶으면 로그인해주세요.');
+			return;
+		}
+		
 		event.preventDefault();
 		
 		const messageInput = document.querySelector('.input-chat-form');
