@@ -1,8 +1,10 @@
 package com.itwill.teamfourmen.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.itwill.teamfourmen.dto.tvshow.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -31,6 +34,9 @@ public class TvShowApiUtil {
 
     @Value("${api.themoviedb.api-token}")
     private String TOKEN;
+
+    @Value("${api.simkl.client-id}")
+    private String SIMKL_CLIENT_ID;
 
     private TvShowDTO tvShowDTO;
 
@@ -389,15 +395,6 @@ public class TvShowApiUtil {
 
         String baseUrl = BASE_URL + "/tv";
 
-//        WebClient client = WebClient.create(baseUrl);
-
-//        String json = client.get()
-//                .uri(id + "/videos")
-//                .header("Authorization", TOKEN)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .block();
-
         RestTemplate restTemplate = new RestTemplate();
 
         String json = UriComponentsBuilder.fromUriString(baseUrl)
@@ -423,7 +420,6 @@ public class TvShowApiUtil {
 
         return tvShowVideoDTOList;
     }
-
 
     public TvShowWatchProviderListDTO getTvShowProvider(int tvshow_id){
         log.info ("get TvShow Watch Provider List - TVSHOW_ID = {}", tvshow_id);
@@ -453,7 +449,7 @@ public class TvShowApiUtil {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-//        TvShowWatchProviderListDTO tvShowWatchProviderListDTO = restTemplate.getForObject(targetUrl, TvShowWatchProviderListDTO.class);
+
         return tvShowWatchProviderListDTO;
     }
 

@@ -2,6 +2,9 @@ package com.itwill.teamfourmen.web;
 
 import java.util.List;
 
+
+import com.itwill.teamfourmen.domain.ImdbRatings;
+import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,7 +50,10 @@ public class MovieController {
 	private final MovieDetailService detailService;
 	private final FeatureService featureService;
 	
-	
+	// IMDB RATING을 가져오기 위함.
+	private String category = "movie";
+	private final ImdbRatingUtil imdbRatingUtil;
+
 	/**
 	 * 인기영화 리스트 컨트롤러
 	 * @param model
@@ -239,8 +245,20 @@ public class MovieController {
 		model.addAttribute("movieExternalIdDto", movieExternalIdDto);
 		model.addAttribute("recommendedList", recommendedList);
 		model.addAttribute("releaseItemDto", releaseItemDto);
+
+		// imdb rating을 가져오기 위함...
+		// id = TMDB의 movie id , category = 제일 상단에 이미 선언 "movie"
+		String imdbId = imdbRatingUtil.getImdbId(id, category);
+		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
+
+		log.info("IMDB RATINGS = {}", imdbRatings.toString());
+
+		// 객체로 넘어감. 원하는 값은 imdbRatings -> getter를 통해서
+		// IMDB 아이콘은 static/icons/imdb-icon.svg 파일...!
+		model.addAttribute("imdbRatings", imdbRatings);
+
 		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
-		
+    
 		model.addAttribute("movieReviewList", movieReviewList);
 		model.addAttribute("myReview", myReview);
 		

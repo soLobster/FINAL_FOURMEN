@@ -241,7 +241,7 @@
 
 		.over-view {
 			margin-left: 40px;
-			margin-right: 30px;
+			margin-right: 60px;
 		}
 
 		ul {
@@ -681,8 +681,24 @@
 			</section>
 			<!-- 글 영역 -->
 			<section class = "overView">
+				<div style="display: flex; margin-left: 40px; margin-bottom: 10px; gap: 40px;">
+					<section th:if = "${imdbRatings ne null}" style="display: flex; gap: 20px">
+						<h2><img th:src = "@{'/icons/imdb-icon.svg'}" width="42" height="42"/></h2>
+						<div style="display: flex; flex-direction: column;">
+							<span th:text="${imdbRatings.getAveragerating() + ' / 10'}"></span>
+							<span th:text="${imdbRatings.getNumvotes()}"></span>
+						</div>
+					</section>
+					<section style="display: flex; gap: 20px">
+						<h2 style="padding-top: 4px"><i class="fa-solid fa-users fa-lg"></i></h2>
+						<div style="display: flex; flex-direction: column">
+							<span>포맨 평점 / 5</span>
+							<span>포맨 투표수</span>
+						</div>
+					</section>
+				</div>
 				<div>
-					<h1 class="mb-2" th:text= "${tvShowDto.getName() + '(' + releaseYear + ')'}"></h1>
+					<h1 class="mt-0 mb-2" th:text= "${tvShowDto.getName() + '(' + releaseYear + ')'}"></h1>
 					<div class = "genres_rating">
 						<p class = "rating mt-0 ms-0 me-2 border border-1" th:text = "${rating.getRating()} + '+' "></p>
 						<p class = "genres mt-0 ms-0" th:text="${genres}"></p>
@@ -701,13 +717,13 @@
 						<i class="fa-solid fa-pen"></i>
 						<span class = "custom-bar-text">리뷰 남기기</span>
 					</div>
-					<div class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
+					<div th:if ="${trailer ne null}" class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
 						<i class="fa-solid fa-play"></i>
 						<span class="custom-bar-text">트레일러</span>
 					</div>
 				</div>
 
-				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:text="${tvShowDto.getTagline()}" style="color: rgba(244 ,244, 244, 0.8)"></p>
+				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:if = "${tvShowDto.getTagline() ne ''}" th:text="${tvShowDto.getTagline()}" style="color: rgba(244 ,244, 244, 0.8)"></p>
 				<div>
 					<div class = "over-view">
 						<p class = "fs-4 fw-bold mb-0">개요</p>
@@ -999,7 +1015,7 @@
 				<h5 class="modal-title text-white" id="trailerModalLabel">Trailer</h5>
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="p-0 modal-body" style="width: 1280px; color: white">
+			<div th:if="${trailer ne null}" class="p-0 modal-body" style="width: 1280px; color: white">
 				<iframe width="800" height="auto"
 						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()}" style="width: 800px; height: 600px" ></iframe>
 			</div>
@@ -1063,10 +1079,10 @@
 
 	// 트레일러 모달 창을 닫을 때 재생되는 Youtube가 정지 되도록 함.
 	document.addEventListener('DOMContentLoaded', function() {
-		var modal = document.getElementById('trailerModal');
+		let modal = document.getElementById('trailerModal');
 		modal.addEventListener('hidden.bs.modal', function() {
-			var iframe = modal.querySelector('iframe');
-			var src = iframe.src;
+			let iframe = modal.querySelector('iframe');
+			let src = iframe.src;
 			iframe.src = src; // YouTube 재생 중지
 		});
 	});
@@ -1074,8 +1090,8 @@
 
 </script>
 
-// JS로 Axios post 전송을 위한 tvshowid
-// const tvShowId
+<!--// JS로 Axios post 전송을 위한 tvshowid-->
+<!--// const tvShowId-->
 
 
 </body>

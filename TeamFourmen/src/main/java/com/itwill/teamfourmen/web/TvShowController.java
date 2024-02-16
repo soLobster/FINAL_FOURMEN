@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.itwill.teamfourmen.domain.ImdbRatings;
 import com.itwill.teamfourmen.dto.tvshow.*;
+import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.TvShowApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +27,15 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 @RequestMapping("/tv")
 public class TvShowController {
-	
+
 	@Value("${api.themoviedb.api-key}")
-	private String API_KEY; 
+	private String API_KEY;
 
 	private final TvShowApiUtil apiUtil;
+
+	private final ImdbRatingUtil imdbRatingUtil;
+
+	private String category = "tv";
 
 	@GetMapping("/main")
 	public String getTvShowMain(Model model){
@@ -80,44 +86,17 @@ public class TvShowController {
 	public String getTopRatedTvShowList(Model model) throws ParseException {
 		log.info("GET Top Rated Tv Show List");
 
-//		TvShowListDTO listDTO = apiUtil.getTvShowList("top_rated", 1);
-//		//log.info("listDto = {}", listDTO);
-//		model.addAttribute("listDTO", listDTO);
-//		List<TvShowDTO> tvShowDto = listDTO.getResults();
-//		model.addAttribute("tvShowDto", tvShowDto);
-//		TvShowGenreListDTO tvShowGenreListDTO = apiUtil.getTvShowGenreList("ko-KR");
-//		List<TvShowGenreDTO> tvShowGenre = tvShowGenreListDTO.getGenres();
-//		log.info("tvShow Genre = {}", tvShowGenre);
-//		model.addAttribute("tvShowGenreDTO", tvShowGenre);
-
 		getInitialList("top_rated", model);
 
 		return "tvshow/top-rated-list";
 	}
-
-//	@GetMapping("/ott/{platform}")
-//	public String getOttTvShowList(Model model, @PathVariable String platform){
-//		log.info("Get Tv Show From OTT Platform = {}", platform);
-//
-//		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
-//
-//		log.info("list={}", listDTO);
-//
-//		model.addAttribute("listDTO", listDTO);
-//
-//		List<TvShowDTO> ottTvShowList = listDTO.getResults();
-//
-//		model.addAttribute("tvShowDto", ottTvShowList);
-//
-//		return "tvshow/ott-list";
-//	}
 
 	@GetMapping("/trending/{timeWindow}")
 	public String getPopularTvShowList(Model model, @PathVariable(name = "timeWindow") String timeWindow){
 		log.info("GET Trending Tv Show List");
 
 		TvShowListDTO listDTO = apiUtil.getTrendTvShowList(timeWindow, 1);
-		log.info("listDto = {}", listDTO);
+		//log.info("listDto = {}", listDTO);
 
 		model.addAttribute("listDTO", listDTO);
 
@@ -148,7 +127,7 @@ public class TvShowController {
   @GetMapping("/search")
 	public String getSearchTvShowList(Model model, @ModelAttribute TvShowQueryParamDTO searchDTO) {
 		log.info("Get Search Tv Show List - Search Dto = {}", searchDTO);
-  
+
 		searchDTO.setListCategory("search");
 
 		getInitialList(searchDTO, model);
@@ -156,22 +135,11 @@ public class TvShowController {
 		return "tvshow/top-rated-list";
 	}
 
-//	@GetMapping("/ott/{platform}")
-//	public String getOttTvShowList(Model model, @PathVariable (name = "platform") String platform) {
-//		log.info("Get Tv Show From OTT Platform = {}", platform);
-//
-//		TvShowListDTO listDTO = apiUtil.getOttTvShowList(platform, 1);
-//
-//		log.info("list={}", listDTO);
-//
-//		model.addAttribute("listDTO", listDTO);
-//	}
-
 	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
 	@GetMapping(value = {"/{id}" })
-	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
+	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id) {
 		log.info("Get Tv Show Details = {}", id);
-		log.info("API KET = {}", API_KEY);
+//		log.info("API KEY = {}", API_KEY);
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -181,7 +149,7 @@ public class TvShowController {
 		// 드라마 정보
 		TvShowDTO tvShowDTO = apiUtil.getTvShowDetails(id);
 
-		log.info("tvShowDto = {}", tvShowDTO.toString());
+		//log.info("tvShowDto = {}", tvShowDTO.toString());
 
 		List<TvShowSeasonDTO> seasonList = tvShowDTO.getSeasons();
 
@@ -201,16 +169,11 @@ public class TvShowController {
 
 		try {
 			tvShowWatchProviderDTO = tvShowWatchProviderRegionDTO.getFlatrate();
-			model.addAttribute("watch_provider_list",tvShowWatchProviderDTO);
+			model.addAttribute("watch_provider_list", tvShowWatchProviderDTO);
 
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
-
-//		for(TvShowWatchProviderDTO ott: tvShowWatchProviderDTO){
-//			log.info("ott = {}",ott.toString());
-//		}
-
 
 		// 시청 등급
 		String contentRatingsUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -225,23 +188,23 @@ public class TvShowController {
 
 		TvShowContentRatingsDTO rating = new TvShowContentRatingsDTO();
 
-		for(TvShowContentRatingsDTO r : results ){
-				if(r.getIso_3166_1().equals("KR")){
-					rating = r;
-					break;
-				} else if(r.getIso_3166_1().equals("US")) {
-					rating = r;
-				}
+		for (TvShowContentRatingsDTO r : results) {
+			if (r.getIso_3166_1().equals("KR")) {
+				rating = r;
+				break;
+			} else if (r.getIso_3166_1().equals("US")) {
+				rating = r;
+			}
 		}
 
-		model.addAttribute("rating",rating);
+		model.addAttribute("rating", rating);
 		//log.info("rating = {}", rating);
 
 		// 방송사? 배급사?
 		//log.info("network?? = {}",tvShowDTO.getNetworks().get(0));
 		List<TvShowNetworkDTO> networkList = tvShowDTO.getNetworks();
 
-		model.addAttribute("networkList" ,networkList);
+		model.addAttribute("networkList", networkList);
 
 		// SNS 불러오기
 		String getTvShowSnsUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -254,7 +217,13 @@ public class TvShowController {
 
 		model.addAttribute("sns", tvShowSnsDTO);
 
-		//log.info("SNS ??? = {}",tvShowSnsDTO.toString());
+		// imdb rating 받아오기
+		String imdbId = imdbRatingUtil.getImdbId(id, category);
+		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
+
+		//log.info("IMDB RATINGS  = {}",imdbRatings.toString());
+
+		model.addAttribute("imdbRatings", imdbRatings);
 
 		// 배우, 스탭 목록
 		String getTvShowCreditUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -289,7 +258,7 @@ public class TvShowController {
 			String year = yearFormat.format(date);
 
 			model.addAttribute("releaseYear", year);
-		} catch (ParseException e){
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
@@ -307,32 +276,34 @@ public class TvShowController {
 
 		List<TvShowRecoDTO> tvShowRecoDTO = tvShowRecoListDTO.getResults();
 
-		log.info("RECO = {}",tvShowRecoDTO.size());
+		//log.info("RECO = {}",tvShowRecoDTO.size());
 
 		model.addAttribute("tvShowReco", tvShowRecoDTO);
 
 		// Tv Show 트레일러 가져오기
 		TvShowVideoListDTO tvShowVideoDTOList = apiUtil.getTvShowVideo(id);
 
-		List<TvShowVideoDTO> tvShowTrailerList = tvShowVideoDTOList.getResults();
-
-		log.info("TV SHOW TRAILER LIST = {}" , tvShowTrailerList);
-
 		List<TvShowVideoDTO> realTrailer = new ArrayList<>();
 
-		for(TvShowVideoDTO trailer : tvShowTrailerList) {
-			if(trailer.getType().equalsIgnoreCase("Trailer")){
-				realTrailer.add(trailer);
-			} else if (trailer.getName().startsWith("International")) {
-				realTrailer.add(trailer);
+		List<TvShowVideoDTO> tvShowTrailerList = tvShowVideoDTOList.getResults();
+
+		log.info("TVSHOWTRAILERLIST is empty? ={}", tvShowTrailerList.isEmpty());
+
+
+		if (!tvShowTrailerList.isEmpty()) {
+			for (TvShowVideoDTO trailer : tvShowTrailerList) {
+				if (trailer.getType().equalsIgnoreCase("Trailer")) {
+					realTrailer.add(trailer);
+					model.addAttribute("trailer", realTrailer);
+				}
 			}
+		} else {
+			log.info("TV SHOW TRAILER IS EMPTY");
+			model.addAttribute("trailer", null);
 		}
-
-		log.info("REAL TRAILER = {}",realTrailer);
-		model.addAttribute("trailer", realTrailer);
-
 		return "tvshow/tvshow-details";
 	}
+
 
 
 
