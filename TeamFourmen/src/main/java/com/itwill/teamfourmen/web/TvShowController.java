@@ -171,7 +171,7 @@ public class TvShowController {
 	@GetMapping(value = {"/{id}" })
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id){
 		log.info("Get Tv Show Details = {}", id);
-		log.info("API KET = {}", API_KEY);
+//		log.info("API KEY = {}", API_KEY);
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -252,8 +252,42 @@ public class TvShowController {
 
 		TvShowSnsDTO tvShowSnsDTO = restTemplate.getForObject(getTvShowSnsUrl, TvShowSnsDTO.class);
 
-		model.addAttribute("sns", tvShowSnsDTO);
+		String imdbID = tvShowSnsDTO.getImdb_id();
 
+		log.info("IMDB = {}" ,imdbID);
+
+		List<TvShowGenreDTO> getGenres = tvShowDTO.getGenres();
+
+		TvShowSimklDetailDTO tvShowSimklDetailDTO = null;
+
+		for(TvShowGenreDTO genre : getGenres){
+			if(genre.getId() == 16){
+				log.info("애니매이션 입니다...!!");
+				tvShowSimklDetailDTO = apiUtil.getImdbRating(imdbID, genre.getId());
+				break;
+			} else {
+				log.info("일반 tv 프로그램 입니다...!");
+				tvShowSimklDetailDTO = apiUtil.getImdbRating(imdbID, genre.getId());
+				break;
+			}
+		}
+
+		try {
+			if(tvShowSimklDetailDTO.getRatings() != null) {
+				Map<String, TvShowImdbRatingDTO> imdbRatingDTOMap = tvShowSimklDetailDTO.getRatings();
+				if (imdbRatingDTOMap != null) {
+					if (imdbRatingDTOMap.get("imdb") != null) {
+						TvShowImdbRatingDTO imdbRatingDTO = imdbRatingDTOMap.get("imdb");
+						model.addAttribute("imdb", imdbRatingDTO);
+					}
+				}
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			model.addAttribute("imdb", null);
+		}
+
+		model.addAttribute("sns", tvShowSnsDTO);
 		//log.info("SNS ??? = {}",tvShowSnsDTO.toString());
 
 		// 배우, 스탭 목록
@@ -278,6 +312,7 @@ public class TvShowController {
 				.collect(Collectors.joining(", "));
 
 		model.addAttribute("genres", genresName);
+
 
 		// 제목 옆 최초 방영 년도 표기
 		String dateString = tvShowDTO.getFirst_air_date();

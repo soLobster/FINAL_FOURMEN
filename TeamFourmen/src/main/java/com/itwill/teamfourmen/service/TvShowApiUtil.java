@@ -1,8 +1,10 @@
 package com.itwill.teamfourmen.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.itwill.teamfourmen.dto.tvshow.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -31,6 +34,9 @@ public class TvShowApiUtil {
 
     @Value("${api.themoviedb.api-token}")
     private String TOKEN;
+
+    @Value("${api.simkl.client-id}")
+    private String SIMKL_CLIENT_ID;
 
     private TvShowDTO tvShowDTO;
 
@@ -424,6 +430,43 @@ public class TvShowApiUtil {
         return tvShowVideoDTOList;
     }
 
+    public TvShowSimklDetailDTO getImdbRating(String imdb_id, int genre_id) {
+        log.info("get Imdb Rating - IMDB - ID = {}" , imdb_id, genre_id);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String baseUrl = "https://api.simkl.com/";
+
+        String targetUrl = "";
+
+        if(genre_id == 16){
+            targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                    .path("/anime/{imdb_id}")
+                    .queryParam("extended", "full")
+                    .queryParam("client_id", SIMKL_CLIENT_ID)
+                    .buildAndExpand(String.valueOf(imdb_id))
+                    .toUriString();
+        } else {
+            targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
+                    .path("/tv/{imdb_id}")
+                    .queryParam("extended", "full")
+                    .queryParam("client_id", SIMKL_CLIENT_ID)
+                    .buildAndExpand(String.valueOf(imdb_id))
+                    .toUriString();
+            log.info("TARGET URL = {}", targetUrl);
+        }
+
+        TvShowSimklDetailDTO result = null;
+
+        try {
+            TvShowSimklDetailDTO showSimklDetailDTO = restTemplate.getForObject(targetUrl, TvShowSimklDetailDTO.class);
+             result = showSimklDetailDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
     public TvShowWatchProviderListDTO getTvShowProvider(int tvshow_id){
         log.info ("get TvShow Watch Provider List - TVSHOW_ID = {}", tvshow_id);
