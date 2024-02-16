@@ -258,11 +258,13 @@ async function checknickname(e){
 	
 	document.getElementById('fileInput').addEventListener('change', function(e) {
   	  var preview = document.querySelector('#previewImage');
+
     var file    = document.querySelector('input[type=file]').files[0];
     var reader  = new FileReader();
 
     reader.onloadend = function () {
         preview.src = reader.result;
+       
     }
 
     if (file) {
@@ -290,5 +292,200 @@ async function checknickname(e){
     
 
 });
+
+document.querySelector('#btndelete').addEventListener('click', function() {
+    let type= document.querySelector('#type').value;
+   
+
+    // 모달을 띄울 조건 확인
+    if (type === "kakao" || type === "naver") {
+ 		
+ 		finallyfindpassword.style.display = 'block';
+    } else{
+		directbye.style.display = 'block';
+	}
+	});
 	
+	let deleteemailbye = document.querySelector('#deleteemailbye');
+
+  deleteemailbye.setAttribute('disabled', 'disabled');
+	
+	let deletedirectbye = document.querySelector('#deletedirectbye');
+	deletedirectbye.setAttribute('disabled', 'disabled');
+	let finallyfindpassword = document.querySelector('#finallyfindpassword');
+	let finallyfindpasswordclose = document.querySelector('#finallyfindpasswordclose');
+	let directbye=document.querySelector('#directbye');
+	let directbyeclose = document.querySelector('#directbyeclose');
+	let emailinsert= document.querySelector('#emailinsert');
+	let ifemailinsert= document.querySelector('#ifemailinsert');
+	let countdownElement = document.querySelector('#emailcountdown');
+	let success =document.querySelector('#emailchecksuccess');
+	let emailcheckbye = false;
+	let checkemail = document.querySelector('#checkemail');
+	let lastcheck =document.querySelector('input#lastcheck');
+	let lastpasswordchecked = false;
+	
+	
+	
+	
+	   var memberEmail = "${member.email}"; // 서버에서 전달된 변수
+    
+    deletedirectbye.addEventListener("click", function() {
+        // 링크 주소를 설정할 때 파라미터를 붙여줌
+        this.href = "/delete?email=" + encodeURIComponent(memberEmail);
+    });
+	
+	lastcheck.addEventListener('change',(e)=>{
+if(e.target.value==='' || e.target.value.length >20){
+			e.target.value=null;
+			return;}				
+});
+	
+	lastcheck.addEventListener('change',checklastcheck);
+		
+	async function checklastcheck(e){
+		const password=e.target.value;
+
+		const uri = `checkpassword/${password}`
+		const response= await axios.get(uri);
+		
+		if(e.target.value.length <=25){
+			console.log(response.data);
+		if(response.data ==='Y'){
+			
+			lastpasswordchecked = true;
+										if(lastpasswordchecked){
+         deletedirectbye.removeAttribute('disabled');
+        } else {
+             deletedirectbye.setAttribute('disabled', 'disabled');}
+		} else{
+			lastpasswordchecked = false;
+			if(lastpasswordchecked){
+         deletedirectbye.removeAttribute('disabled');
+        } else {
+             deletedirectbye.setAttribute('disabled', 'disabled');}
+			
+		}}else{
+			e.target.value=null;
+			return;
+		}
+
+	}
+	
+	
+	checkemail.addEventListener('change',(e)=>{
+if(e.target.value==='' || e.target.value.length >4){
+			e.target.value=null;
+			return;}	
+});
+
+	checkemail.addEventListener('input', function(event) {
+    // 입력된 값에서 숫자 이외의 문자를 제거합니다.
+    const filteredValue = event.target.value.replace(/[^0-9]/g, '');
+    
+    // 제거된 값을 다시 입력 상자에 할당합니다.
+    event.target.value = filteredValue;
+});
+	finallyfindpasswordclose.addEventListener('click', () => {
+		finallyfindpassword.style.display = 'none';
+	});
+	
+	directbyeclose.addEventListener('click', () => {
+		directbye.style.display = 'none';
+	});
+	
+		emailinsert.addEventListener('click', () => {
+		document.getElementById("emailcheckbtn").style.pointerEvents = "auto";
+
+		countdownValue = 180;
+		countdownElement.textContent = "Please enter the verification number within " + countdownValue + " seconds";
+		
+		if (countdownInterval) {
+			clearInterval(countdownInterval);
+			document.getElementById("emailcheckbtn").style.display = 'block';
+			countdownInterval = setInterval(function() {
+				countdownValue--;
+				countdownElement.textContent = "Please enter the verification number within " + countdownValue + " seconds";
+
+				if (countdownValue <= 0) {
+					// 초수가 0 이하로 내려가면 clearInterval로 간격 제거
+					clearInterval(countdownInterval);
+					document.getElementById("emailcheckbtn").style.display = 'none';
+					countdownElement.textContent = "Send me the verification number again";
+				}
+			}, 1000); // 1000 밀리초 = 1초
+		}
+
+
+
+
+		if (!countdownInterval) {
+			countdownInterval = setInterval(function() {
+				countdownValue--;
+				countdownElement.textContent = "Please enter the verification number within " + countdownValue + " seconds";
+
+				if (countdownValue <= 0) {
+					// 초수가 0 이하로 내려가면 clearInterval로 간격 제거
+					clearInterval(countdownInterval);
+					document.getElementById("emailcheckbtn").style.display = 'none';
+					countdownElement.textContent = "Send me the verification number again";
+				}
+			}, 1000); // 1000 밀리초 = 1초
+		}
+
+		getAllComments();
+		
+		
+		
+	});
+	function getAllComments() {
+		let email = document.querySelector('input#userid').value;
+		console.log(email);
+
+
+			ifemailinsert.style.display = 'block';
+
+			const uri = `login/email/${email}`;
+			console.log(uri);
+
+			axios.get(uri)
+				.then((response) => {
+					console.log(response.data);
+
+					const emailcheckbtn = document.querySelector("a#emailcheckbtn");
+
+					emailcheckbtn.addEventListener('click', () => {
+						const checkemail = document.querySelector('input#checkemail').value;
+						console.log(checkemail);
+						console.log(response.data);
+						if (response.data == checkemail) {
+							console.log("성공");
+							emailcheckbtn.style.display = 'none';
+							countdownElement.style.display = 'none';
+							success.style.display = 'block';
+							emailinsert.style.display = 'none';
+							document.querySelector('input#checkemail').setAttribute('readonly', 'readonly');
+							emailcheckbye = true;
+							if(emailcheckbye){
+         deleteemailbye.removeAttribute('disabled');
+        } else {
+             deleteemailbye.setAttribute('disabled', 'disabled');
+        }
+							
+
+						} else {
+							console.log("인증비번실패");
+							document.querySelector('input#checkemail').value ='';
+						}
+
+					});
+
+				})
+				.catch((error) => {
+					console.log(error);
+
+				});
+
+		
+	}
 });	
