@@ -4,12 +4,18 @@
     height: 50px; /* 프로필 사진 높이 */
     border-radius: 50%; /* 동그라미 모양으로 만들기 위한 반지름 설정 */
     overflow: hidden; /* 너무 큰 이미지를 자르기 위한 영역 설정 */
+    display:flex;
+     justify-content: center;
+     align-items: center;
 }
 
 .profile-image {
     width: 100%; /* 프로필 사진 이미지를 부모 요소의 크기에 맞게 조절 */
-    height: auto; /* 이미지의 세로 비율을 유지 */
+    height: 100%; /* 이미지의 세로 비율을 유지 */
     display: block; /* 이미지가 인라인 요소가 아닌 블록 요소로 표시되도록 설정 */
+    object-fit: cover;
+    
+    
 }
 .userphonebox{
 	display: flex;

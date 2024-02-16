@@ -16,6 +16,7 @@ public class MemberCreateDto {
 	    private String nickname;
 	    private String phone;
 	    
+	    
 	    public Member toEntity(PasswordEncoder encoder) {
 	        return Member.builder()
 	                .email(email)
@@ -23,6 +24,8 @@ public class MemberCreateDto {
 	                .name(name)
 	                .nickname(nickname)
 	                .phone(phone)
+	                .type("web")
+	                .usersaveprofile("userimage.png")
 	                .build();
 	         }
 	    

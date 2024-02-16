@@ -829,6 +829,7 @@ function kakaologin(){
    				console.log(nickname);
    				let usersaveprofile = profile.profile_image_url;
 				let phone = "kakaophone";
+				let type = "kakao";
 				
 				
 				 const data = {
@@ -837,7 +838,8 @@ function kakaologin(){
 		  			 password,
 		   			nickname,
 		  			 phone,
-		  			 usersaveprofile
+		  			 usersaveprofile,
+		  			 type
 				 };
           		          
   axios.post('login/naver', data)
