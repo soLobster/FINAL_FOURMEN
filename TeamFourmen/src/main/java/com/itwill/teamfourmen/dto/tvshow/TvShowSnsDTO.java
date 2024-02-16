@@ -7,7 +7,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TvShowSnsDTO {
     private int id;
-    private String imdb_id;
+    private String imdbId;
     // private int tvdb_id; 보류
     private String facebook_id;
     private String instagram_id;

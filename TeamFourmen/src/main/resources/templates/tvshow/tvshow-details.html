@@ -682,11 +682,11 @@
 			<!-- 글 영역 -->
 			<section class = "overView">
 				<div style="display: flex; margin-left: 40px; margin-bottom: 10px; gap: 40px;">
-					<section th:if = "${imdb ne null}" style="display: flex; gap: 20px">
+					<section th:if = "${imdbRatings ne null}" style="display: flex; gap: 20px">
 						<h2><img th:src = "@{'/icons/imdb-icon.svg'}" width="42" height="42"/></h2>
 						<div style="display: flex; flex-direction: column;">
-							<span th:text="${imdb.getRating() + ' / 10'}"></span>
-							<span th:text="${imdb.getVotes()}"></span>
+							<span th:text="${imdbRatings.getAveragerating() + ' / 10'}"></span>
+							<span th:text="${imdbRatings.getNumvotes()}"></span>
 						</div>
 					</section>
 					<section style="display: flex; gap: 20px">
