@@ -162,15 +162,11 @@ public class HomeController {
 		 	 @PostMapping("/mypage/update")
 		     public String updateUser(@ModelAttribute MemberModifyDto dto) throws IllegalStateException, IOException {
 		         // 여기서 비밀번호를 비교하고 처리하면 됩니다.
-		 		String sDirectory = "C:/image";
+		 		String sDirectory = File.listRoots()[0].getAbsolutePath() + "Users/ojng/image";
 		 		memberservice.update(dto, sDirectory);
 		 		
 		 		return "redirect:/mypage";
-				
-	 		
-		 	
-		 		 
-		 	
+
 		     }
 		    
 		 	@GetMapping("/image")
@@ -178,7 +174,8 @@ public class HomeController {
 				log.info("photo={}",photo);
 			    try {
 			        // 이미지 파일의 경로를 지정하여 Resource 객체 생성
-			        File file = new File("C:/image/" + photo);
+//			        File file = new File("C:/image/" + photo);
+					File file = new File( File.listRoots()[0].getAbsolutePath() + "Users/ojng/image" + File.separator + photo);
 			        Resource resource = new FileSystemResource(file);
 
 			        // Resource 객체를 반환하여 이미지 파일을 클라이언트에게 전송
@@ -288,12 +285,12 @@ public class HomeController {
         return "redirect:/login";
     }
     
-    @GetMapping("/delete")
-    public String delete(@RequestParam(name = "email") String email) {
-        log.info("delete(id={})", id);
-        
-        memberservice.deleteById(id);
-        
-        return "redirect:/post/list";
-    }
+//    @GetMapping("/delete")
+//    public String delete(@RequestParam(name = "email") String email) {
+//        log.info("delete(id={})", id);
+//
+//        memberservice.deleteById(id);
+//
+//        return "redirect:/post/list";
+//    }
 }

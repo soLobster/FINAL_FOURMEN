@@ -221,7 +221,7 @@ public class TvShowController {
 		String imdbId = imdbRatingUtil.getImdbId(id, category);
 		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
 
-		//log.info("IMDB RATINGS  = {}",imdbRatings.toString());
+		log.info("IMDB RATINGS  = {}",imdbRatings.toString());
 
 		model.addAttribute("imdbRatings", imdbRatings);
 

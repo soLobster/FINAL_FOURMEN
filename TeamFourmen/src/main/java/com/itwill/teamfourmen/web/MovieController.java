@@ -251,8 +251,11 @@ public class MovieController {
 		String imdbId = imdbRatingUtil.getImdbId(id, category);
 		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
 
-		log.info("IMDB RATINGS = {}", imdbRatings.toString());
-
+		if(imdbRatings != null) {
+			log.info("IMDB RATINGS = {}", imdbRatings);
+		} else {
+			log.info("IMDB RATINGS IS NULL");
+		}
 		// 객체로 넘어감. 원하는 값은 imdbRatings -> getter를 통해서
 		// IMDB 아이콘은 static/icons/imdb-icon.svg 파일...!
 		model.addAttribute("imdbRatings", imdbRatings);

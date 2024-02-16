@@ -3,6 +3,7 @@ package com.itwill.teamfourmen.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.teamfourmen.domain.ImdbRatings;
 import com.itwill.teamfourmen.domain.ImdbRatingsRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +34,17 @@ public class ImdbRatingUtil {
      * @return ImdbRatings 객체를 가져옴.
      */
     public ImdbRatings getImdbRating(String imdb_id) {
-        log.info("GET IMDB_RATING - TMDB_ID = {}", imdb_id);
+        log.info("GET IMDB_RATING - IMDB_ID = {}", imdb_id);
 
-        return imdbRatingsDao.getReferenceById(imdb_id);
+        ImdbRatings imdbRatings = null;
+
+        try{
+            imdbRatings = imdbRatingsDao.getReferenceById(imdb_id);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return imdbRatings;
     }
 
     /**

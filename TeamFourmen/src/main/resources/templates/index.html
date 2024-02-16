@@ -39,11 +39,12 @@
 	<h1 sec:authorize="isAuthenticated()">로그인됨</h1>
 	<h1 sec:authorize="isAnonymous()">로그인 안됨</h1>
 	<div sec:authorize="isAuthenticated()">
-    <span th:text="${nickname}"></span> 님, 환영합니다.
+    <span th:text="${member.nickname}"></span> 님, 환영합니다.
     <div class="profile-picture">
 
-    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
-    <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
+
+<!--    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">-->
+<!--    <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">-->
 	
 
 	</div>
