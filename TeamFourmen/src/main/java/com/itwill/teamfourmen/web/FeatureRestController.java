@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
 import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.ReviewLike;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.service.FeatureService;
 
@@ -20,40 +21,49 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/feature")
 public class FeatureRestController {
-    
+
 	private final NicknameInterceptor nicknameInterceptor;
 	private final FeatureService featureService;
-	
+
 	@PostMapping("/review/post")
 	public void postReview(@RequestBody Review review) {
-		 
-		 log.info("postReview(reviewdto={})", review);
-		 featureService.postReview(review);
-		 		 		 
+
+		log.info("postReview(reviewdto={})", review);
+		featureService.postReview(review);
+
 	}
-	
-	
+
+
 	@Transactional
 	@PostMapping("/like/add")
 	public void addLike(@RequestBody TmdbLike tmdbLike) {
-		
+
 		log.info("addLike(tmdbLike = {})", tmdbLike);
-		
+
 		nicknameInterceptor.getMember().addRole(null);
-		
+
 		featureService.addLike(tmdbLike);
-		
+
 	}
-	
+
 	@Transactional
 	@PostMapping("/like/delete")
 	public void deleteLike(@RequestBody TmdbLike tmdbLike) {
-		
+
 		log.info("deleteLike(tmdbLike={})", tmdbLike);
-		
+
 		featureService.deleteLike(tmdbLike);
-		
+
 	}
-		
-	
+
+	@Transactional
+	@PostMapping("/review/like/add")
+	public void addReviewLike(@RequestBody ReviewLike reviewLike) {
+
+		log.info("addReviewLike(reviewLike={})", reviewLike);
+		featureService.addReviewLike(reviewLike);
+
+	}
+
+
 }

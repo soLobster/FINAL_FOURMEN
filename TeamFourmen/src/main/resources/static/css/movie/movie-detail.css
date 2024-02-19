@@ -169,7 +169,7 @@
 .movie-trailer-item:hover {
     cursor: pointer;
     transform: scale(1.1);
-    transition: all 1s easy-out;
+    transition: all 1s ease-out;
 }
 
 

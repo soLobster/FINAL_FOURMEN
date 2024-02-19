@@ -219,11 +219,13 @@ public class TvShowController {
 
 		// imdb rating 받아오기
 		String imdbId = imdbRatingUtil.getImdbId(id, category);
-		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
 
-		log.info("IMDB RATINGS  = {}",imdbRatings.toString());
-
-		model.addAttribute("imdbRatings", imdbRatings);
+		if(imdbId != null) {
+			ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
+			model.addAttribute("imdbRatings", imdbRatings);
+		} else {
+			model.addAttribute("imdbRatings", null);
+		}
 
 		// 배우, 스탭 목록
 		String getTvShowCreditUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -295,6 +297,8 @@ public class TvShowController {
 				if (trailer.getType().equalsIgnoreCase("Trailer")) {
 					realTrailer.add(trailer);
 					model.addAttribute("trailer", realTrailer);
+					log.info("TRAILER = {}",realTrailer.toString());
+					break;
 				}
 			}
 		} else {
