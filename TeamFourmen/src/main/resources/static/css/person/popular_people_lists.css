@@ -1,6 +1,6 @@
 @charset "UTF-8";
-@import "person/reset.css";
-/* lists.html 에 포함 */
+@import "reset.css";
+/* person-lists.html 에 포함 */
 
 /* 페이지 배경색 설정 */
 body {
@@ -57,7 +57,9 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, .1); /* 그림자 효과 */
     align-items: stretch; /* 모든 그리드 아이템을 컨테이너 높이에 맞춤 */
     min-height: 350px; /* 최소 높이 설정 */
-    overflow: auto; /* 내용이 넘치면 스크로바 표시 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
+    /*overflow: auto; !* 내용이 넘치면 스크로바 표시 *!*/
 }
 
 /* 카드 내 이미지 스타일링 */
@@ -74,6 +76,11 @@ body {
     margin-top: 5px;
     margin-left: 10px;
     margin-bottom: 5px;
+    width: 200px;
+    white-space: nowrap; /* 텍스트를 한 줄에 표시 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
+
 }
 .meta p a {
     text-decoration-line: none;
@@ -89,6 +96,10 @@ body {
     margin-top: 0;
     margin-bottom: 2.5px;
     margin-left: 10px;
+    width: 200px;
+    white-space: nowrap; /* 텍스트를 한 줄에 표시 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
 }
 
 /* 반응형 스타일링 */

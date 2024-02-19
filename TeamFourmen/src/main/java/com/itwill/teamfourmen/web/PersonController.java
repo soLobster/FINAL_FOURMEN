@@ -52,7 +52,7 @@ public class PersonController {
 		model.addAttribute("personPageAndList", pageAndListDto);
 		model.addAttribute("paging", pagingDto);
 
-		return "person/lists";
+		return "person-lists";
 
 	} // end list
 
@@ -173,9 +173,9 @@ public class PersonController {
 //		log.info("combinedCreditsCrewList={}", combinedCreditsCrewList);
 
 		// combinedCreditsCastList의 사이즈 값 선언.
-		Integer combinedCreditsCastListSize = combinedCreditsCastList.size();
+		int combinedCreditsCastListSize = combinedCreditsCastList.size();
 		// combinedCreditsCrewList의 사이즈 값 선언.
-		Integer combinedCreditsCrewListSize = combinedCreditsCrewList.size();
+		int combinedCreditsCrewListSize = combinedCreditsCrewList.size();
 
 		/*
 		 * KnownCreditsNameOrTitle(참여 작품 수)를 가지는 리스트.
@@ -263,7 +263,7 @@ public class PersonController {
 		model.addAttribute("combinedCreditsCastList", combinedCreditsCastList);
 		model.addAttribute("combinedCreditsCrewList", combinedCreditsCrewList);
 
-		return "person/details";
+		return "person-details";
 	} // end details
 
 

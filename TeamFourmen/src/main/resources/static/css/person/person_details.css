@@ -1,6 +1,6 @@
 @charset "UTF-8";
 @import "reset.css";
-/* details.html 에 포함 */
+/* person-details.html 에 포함 */
 
 /* div 가로로 배치하기 */
 .content_wrapper {
@@ -37,4 +37,26 @@
 }
 .media-item .name {
     margin-top: 5px; /* 이미지와 제목 사이의 간격 조정 */
+}
+/* 유명 분야의 포스터 슬라이드 스타일링 */
+.person-card-container {
+    display: flex;
+    align-items: center;
+}
+.person-whole-cards-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+.btn-slide-image {
+    cursor: pointer;
+    /* 버튼 스타일링 추가 */
+}
+.btn-slide-image {
+    cursor: pointer;
+    background-color: #f0f0f0; /* 예시 배경색 */
+    border: none; /* 테두리 없음 */
+    padding: 10px 20px; /* 패딩 조정 */
+    margin: 10px; /* 마진 조정 */
+    border-radius: 5px; /* 모서리 둥글게 */
 }

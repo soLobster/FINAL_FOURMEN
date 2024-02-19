@@ -215,7 +215,7 @@
                     <div class="movie-director-container">
                         <h5>감독</h5>
                         <div class="movie-director-name-container">
-                            <div if:th="${directorList != null}" th:each="director : ${directorList}" th:text="${director.name}" class="movie-director-name"></div>
+                            <div th:if="${directorList != null}" th:each="director : ${directorList}" th:text="${director.name}" class="movie-director-name"></div>
                         </div>
                     </div>
                 </div>

@@ -288,12 +288,12 @@ public class HomeController {
         return "redirect:/login";
     }
     
-    @GetMapping("/delete")
-    public String delete(@RequestParam(name = "email") String email) {
-        log.info("delete(id={})", id);
-        
-        memberservice.deleteById(id);
-        
-        return "redirect:/post/list";
-    }
+//    @GetMapping("/delete")
+//    public String delete(@RequestParam(name = "email") String email) {
+//        log.info("delete(id={})", id);
+//
+//        memberservice.deleteById(id);
+//
+//        return "redirect:/post/list";
+//    }
 }

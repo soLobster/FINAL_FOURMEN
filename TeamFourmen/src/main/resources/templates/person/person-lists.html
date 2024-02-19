@@ -16,7 +16,12 @@
             <div class="inner_block">
                 <div class="inner_content">
                     <div class="content">
-                        <h2><span class="title">인기 인물</span></h2>
+                        <h2>
+                            <span class="title">인기 인물</span>
+                        </h2>
+                        <h2>
+                            <a class="home" th:href="@{/}">홈</a>
+                        </h2>
                         <div class="results flex results_profile_card">
                             <!-- personList에서 각 person 객체에 대해 반복 -->
                             <div th:each="person : ${personList}" class="fifty_square">

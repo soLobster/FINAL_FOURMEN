@@ -1,5 +1,5 @@
 /**
- * person-list.js
+ * person-lists.js
  * /person/list.html 에 포함.
  * 스크롤 이벤트를 사용한 페이징 처리.
  */
