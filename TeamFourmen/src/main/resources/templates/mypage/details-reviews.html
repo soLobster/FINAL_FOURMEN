@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title th:text = "${member.name + ' reviews' }"></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous">
+  <link th:href="@{/css/navbar.css}" rel="stylesheet">
+  <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
+  <style>
+
+    .review-item {
+      width: 800px;
+      min-width: 400px;
+      border-top: 1px solid #eeeeee;
+      border-bottom: 1px solid #eeeeee;
+      padding: 20px 20px 20px 20px;
+      margin-bottom: 30px;
+    }
+
+    .review-item-body {
+      display: flex;
+    }
+
+    .review-item-poster{
+      width: 100px;
+      min-width: 100px;
+      height: auto;
+      text-align: left;
+      margin: 0 20px 0 0px;
+    }
+
+    .review-item-poster > a > img {
+      width: 100px;
+      height: auto;
+      border-radius: .5rem;
+    }
+
+    .review-item-content-article-header {
+      display: flex;
+      margin-bottom: 5px;
+    }
+
+    .review-item-content-article-rating-date {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .review-item-title {
+      text-decoration: none;
+      color: white;
+    }
+
+    .review-item-title:hover {
+      color: #8dabfb;
+    }
+
+    .review-item-content-article-rating-date > i {
+      font-size: 15px;
+      color: #70e000;
+    }
+
+    .review-item-content-article-rating-date > small {
+      font-style: italic;
+      color: #adb5bd;
+    }
+
+    .review-item-content-article-body {
+
+    }
+
+    .review-item-content-article-body-footer {
+      margin-top: 30px;
+      display: flex;
+    }
+
+    .review-item-content-article-body-footer > div {
+      margin-right: 20px;
+    }
+
+    .review-item-article-content-a-tag {
+      text-decoration: none;
+      color: white;
+    }
+
+    .review-item-article-content-a-tag:hover {
+      color: #e6e6e9;
+    }
+
+    .review-item-content-article-body-content {
+      width: 650px;
+      height: auto;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    .review-item-recommend > i {
+      color: #70e000;
+    }
+
+    .review-item-content-article-body-footer > div > i {
+      font-size: 20px;
+    }
+
+    .review-item-content-article-body-footer > div > small {
+      font-weight: bolder;
+    }
+
+  </style>
+  <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+  <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<section th:replace="~{/layout/MyPageBasic.html}"></section>
+
+<div class="mypage-details-body">
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link " th:href="@{''}">Movie</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{''}">Tv Show</a>
+    </li>
+  </ul>
+
+  <div class = "mypage-details-body-reviews">
+
+    <div class = "review-item">
+      <input class = "d-none" th:category = "movie">
+      <!--  카테고리 "movie" or "tv"  -->
+      <div class="review-item-body">
+        <section class="review-item-poster">
+          <a th:href="@{''}">
+            <img class = "review-item-poster-img" th:src = "@{https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg}">
+          </a>
+        </section>
+        <section class = "review-item-content">
+          <article class = "review-item-content-article">
+            <div class = "review-item-content-article-header">
+              <a class="review-item-title" th:href="@{''}">
+                <h3>푸바오</h3>
+              </a>
+              <span class = "mt-2">(2020)</span>
+            </div>
+            <div class = "review-item-content-article-rating-date">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <small class="ms-3">2024년 2월 20일</small>
+            </div>
+            <div class = "review-item-content-article-body">
+              <a class = "review-item-article-content-a-tag" th:href="@{''}">
+                <section class = "review-item-content-article-body-content">
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
+                </section>
+              </a>
+              <section class = "review-item-content-article-body-footer">
+                <div class = "review-item-recommend">
+                  <i class="fa-solid fa-thumbs-up"></i>
+                  <small>Like review 9999 Likes</small>
+                </div>
+                <div class = "review-item-comment">
+                  <i class="fa-solid fa-comment"></i>
+                  <small>9999 comments</small>
+                </div>
+              </section>
+            </div>
+          </article>
+        </section>
+      </div>
+    </div>
+
+    <div class = "review-item" th:each=" review : ${myAllReview}">
+      <input class = "d-none" th:category = "${review.getCategory()}">
+      <!--  카테고리 "movie" or "tv"  -->
+      <div class="review-item-body" th:each=" tvshow : ${reviewTvShowList}">
+        <th:block th:if = "${review.getTmdbId() eq tvshow.getId()}">
+        <section class="review-item-poster">
+          <a th:href="@{/tv/details/{id}(id = ${tvshow.getId()})}">
+            <img class = "review-item-poster-img"  th:src="@{https://image.tmdb.org/t/p/w342/{posterPath} (posterPath=${tvshow.getPoster_path()})}">
+          </a>
+        </section>
+        <section class = "review-item-content">
+          <article class = "review-item-content-article">
+            <div class = "review-item-content-article-header">
+              <a class="review-item-title" th:href="@{/tv/details/{id}(id = ${tvshow.getId()})}">
+                <h3 th:text="${tvshow.getName()}">
+                </h3>
+              </a>
+              <span class = "mt-2" th:text="${tvshow.getFirst_air_date()}">
+              </span>
+            </div>
+            <div class = "review-item-content-article-rating-date">
+              <span th:text="${review.getRating()}"></span>
+              <small class="ms-3" th:text="${review.getCreatedDate()}"></small>
+            </div>
+            <div class = "review-item-content-article-body">
+              <a class = "review-item-article-content-a-tag" th:href="@{''}">
+                <section class = "review-item-content-article-body-content" th:text="${review.getContent()}"></section>
+              </a>
+              <section class = "review-item-content-article-body-footer">
+                <div class = "review-item-recommend">
+                  <i class="fa-solid fa-thumbs-up"></i>
+                  <small>Like review 9999 Likes</small>
+                </div>
+                <div class = "review-item-comment">
+                  <i class="fa-solid fa-comment"></i>
+                  <small>9999 comments</small>
+                </div>
+              </section>
+            </div>
+          </article>
+        </section>
+        </th:block>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/navbar.js}"></script>
+
+</body>
+
+</html>

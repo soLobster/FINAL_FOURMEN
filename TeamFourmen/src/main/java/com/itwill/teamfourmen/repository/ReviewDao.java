@@ -13,5 +13,9 @@ public interface ReviewDao extends JpaRepository<Review, Long> {
 	List<Review> findByCategoryAndTmdbId(String category, int tmdbId);
 	
 	Optional<Review> findByMemberEmailAndCategoryAndTmdbId(String email, String category, int tmdbId);
-	
+
+	// MY PAGE에서 유저가 작성한 모든 리뷰를 가져오기 위함
+	// 일단은 리스트로 가져옴.
+	List<Review> findByMemberEmail(String email);
+
 }

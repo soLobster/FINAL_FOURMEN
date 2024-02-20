@@ -145,6 +145,26 @@
 			/* background: aquamarine; */
 		}
 
+		.btn-add-like {
+			background-color:  transparent;
+			border: none;
+			width: 46px;
+			height: 46px;
+			position: absolute;
+			top: -27%;
+			left: -106%;
+		}
+
+		.btn-tv-review {
+			background-color: transparent;
+			border: none;
+			width: 46px;
+			height: 46px;
+			position: absolute;
+			top: -27%;
+			left: -106%;
+		}
+
 		.tool-tip-custom-bar i {
 			color: #ffffff;
 		}
@@ -238,6 +258,10 @@
 				top: -150%;
 				opacity: 1;
 			}
+		}
+
+		.user-liked-already i {
+			color: #ef233c;
 		}
 
 		#custom-like:checked .fa-heart,
@@ -717,13 +741,17 @@
 						<i class="fa-solid fa-list"></i>
 						<span class = "custom-bar-text">플레이 리스트 저장</span>
 					</div>
-					<div class = "tool-tip-custom-bar" id = "custom-like">
-						<i class="fa-solid fa-heart"></i>
-						<span class = "custom-bar-text">Like</span>
+					<div class = "tool-tip-custom-bar div-like" id = "custom-like" th:classappend="${tmdbLike} ne null ? 'user-like-already'">
+						<button type="button" class = "tool-tip-custom-bar btn-add-like">
+							<i class="fa-solid fa-heart"></i>
+							<span class = "custom-bar-text">Like</span>
+						</button>
 					</div>
-					<div class = "tool-tip-custom-bar" id = "custom-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
-						<i class="fa-solid fa-pen"></i>
-						<span class = "custom-bar-text">리뷰 남기기</span>
+					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} ne null ? 'user-reviewed-already'" id = "custom-review">
+						<button type="button" class = "tool-tip-custom-bar btn-tv-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
+							<i class="fa-solid fa-pen"></i>
+							<span class = "custom-bar-text">리뷰 남기기</span>
+						</button>
 					</div>
 					<div th:if ="${trailer ne null}" class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
 						<i class="fa-solid fa-play"></i>
@@ -821,7 +849,7 @@
 							<img class = "recommendation_img"
 								 th:unless = "${recommendation.getBackdrop_path() ne null and recommendation.getBackdrop_path() ne 'null' and recommendation.getBackdrop_path() ne ''}"
 								 th:src = "@{'/image/default-w600.png'}" width="250" height="141"/>
-							<a th:href = "@{/tv/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" >
+							<a th:href = "@{/tv/details/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" >
 								<section class="card-img-overlay">
 									<p class="card-title text-white fs-5 fw-bolder" th:text="${recommendation.getName()}"></p>
 									<p class="card-text text-white fst-italic" th:text="${recommendation.getFirst_air_date()}"></p>
@@ -906,12 +934,12 @@
 </main>
 
 <!-- 리뷰 모달 -->
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewModal" th:if = "${member ne null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content bg-dark">
 			<div class="modal-header">
 				<h5 class="modal-title text-white" id="reviewModalLabel">Review</h5>
-				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close btn-close-white btn-header-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<form>
 				<div class="modal-body" style="width: 100%; display: flex; flex-direction: row;">
@@ -922,7 +950,7 @@
 						<h4 class = "mb-2" th:text="${tvShowDto.getName() + '(' + releaseYear  + ')'}" style="color: #eeeeee"></h4>
 						<input class = "d-none" th:value="${tvShowDto.getId()}" th:id="${tvShowDto.getName()}" name="tvShow_ID">
 						<div class = "textarea-box">
-							<textarea placeholder="리뷰를 남겨 주세요. (1000자)" style=" outline: none"></textarea>
+							<textarea class = "text-area-review-comment" placeholder="리뷰를 남겨 주세요. (1000자)" style=" outline: none"></textarea>
 							<div class = "count">
 								<span>0</span>/1000
 							</div>
@@ -931,40 +959,40 @@
 							<div class = "star-rating-div">
 								<p class="mt-3 fs-4" style="color: #eeeeee">평점</p>
 								<fieldset class =  "star-rating">
-									<input type = "radio" name="rating" id="star5" value = "5">
+									<input type = "radio" name="rating" id="star5" value = "5" required>
 									<label for= "star5" class = "full" title = "5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star4half" value = "4.5">
+									<input type = "radio" name="rating" id="star4half" value = "4.5" required>
 									<label for= "star4half" class = "half" title = "4.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star4" value = "4">
+									<input type = "radio" name="rating" id="star4" value = "4" required>
 									<label for= "star4" class = "full" title = "4 Stars"></label>
 
-									<input type = "radio" name="rating" id="star3half" value = "3.5">
+									<input type = "radio" name="rating" id="star3half" value = "3.5" required>
 									<label for= "star3half" class = "half" title = "3.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star3" value = "3">
+									<input type = "radio" name="rating" id="star3" value = "3" required>
 									<label for= "star3" class = "full" title = "3 Stars"></label>
 
-									<input type = "radio" name="rating" id="star2half" value = "2.5">
+									<input type = "radio" name="rating" id="star2half" value = "2.5" required>
 									<label for= "star2half" class = "half" title = "2.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star2" value = "2">
+									<input type = "radio" name="rating" id="star2" value = "2" required>
 									<label for= "star2" class = "full" title = "2 Stars"></label>
 
-									<input type = "radio" name="rating" id="star1half" value = "1.5">
+									<input type = "radio" name="rating" id="star1half" value = "1.5" required>
 									<label for= "star1half" class = "half" title = "1.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star1" value = "1">
+									<input type = "radio" name="rating" id="star1" value = "1" required>
 									<label for= "star1" class = "full" title = "1 Stars"></label>
 
-									<input type = "radio" name="rating" id="star0half" value = "0.5">
+									<input type = "radio" name="rating" id="star0half" value = "0.5" required>
 									<label for= "star0half" class = "half" title = "0.5 Stars"></label>
 								</fieldset>
 							</div>
 							<div class = "mt-3 form-check spoiler-div" style="width: 100%; min-width: 160px; margin-left: 25px;">
-								<input class = "form-check-input" type = "checkbox" value = "true" id = "flexCheckDefault">
-								<label class = "text-white form-check-label" for="flexCheckDefault">스포일러가 포함되어 있습니까?</label>
+								<input name="includeSpoiler" class = "form-check-input" type = "checkbox" value = "Y" id = "checkboxSpoiler">
+								<label class = "text-white form-check-label" for="checkboxSpoiler">스포일러가 포함되어 있습니까?</label>
 							</div>
 						</div>
 					</section>
@@ -972,7 +1000,7 @@
 			</form>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
+				<button type="button" class="btn btn-primary btn-send-review" data-bs-dismiss="modal">저장</button>
 			</div>
 		</div>
 	</div>
@@ -1019,7 +1047,7 @@
 			</div>
 			<div th:if="${trailer ne null}" class="p-0 modal-body" style="width: 1280px; color: white">
 				<iframe width="800" height="auto"
-						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()}" style="width: 800px; height: 600px"></iframe>
+						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()} + '?autoplay=1&mute=1' " style="width: 800px; height: 600px"></iframe>
 			</div>
 			<div class="border-0 modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -1101,7 +1129,7 @@
 </script>
 <script th:src="@{/js/navbar.js}"></script>
 <script th:src="@{/js/image/img-dominant-color-tvshow.js}"></script>
-<script th:src="@{/js/features/features.js}"></script>
+<script th:src="@{/js/features/features-tv.js}"></script>
 
 </body>
 </html>

@@ -1,0 +1,62 @@
+<section class="main-section">
+  <div class = "mypage-details-header">
+    <div class = "mypage-details-profile-img">
+      <img th:src = "@{https://s.ltrbxd.com/static/img/avatar220.1dea069d.png}">
+    </div>
+    <div class="mypage-details-overview">
+      <div class= "overview-nickname-and-button">
+        <h1 class="me-2" th:text="${member.nickname}"></h1>
+        <div class = "edit-profile">
+          <a class = "text-white" th:href = "@{'/mypage'}" role="button">
+            <i class="fa-solid fa-ellipsis"></i>
+          </a>
+          <span class="edit-profile-text">Edit Profile</span>
+        </div>
+      </div>
+      <div class="overview-review-network">
+        <h4 class="review-num">
+          <a th:href="@{''}">
+            <span class = "value">0</span>
+            <span class = "definition">리뷰</span>
+          </a>
+        </h4>
+        <h4 class="border-start border-end follower-num">
+          <a th:href="@{''}">
+            <span class = "value">0</span>
+            <span class = "definition">팔로워</span>
+          </a>
+        </h4>
+        <h4 class="following-num">
+          <a th:href="@{''}">
+            <span class = "value">0</span>
+            <span class = "definition">팔로잉</span>
+          </a>
+        </h4>
+      </div>
+    </div>
+  </div>
+  <nav class="navbar navbar-expand-lg mypage-details-navbar">
+    <div class="container-fluid">
+      <ul class="nav justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/mypage/details/{id}(id = ${member.email})}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/mypage/details/{id}/reviews(id = ${member.email})}">Reviews</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Play List</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Movie</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Tv Show</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Person</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</section>

@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 	});
-
+	
 	// 리뷰 보내기 버튼 눌렀을 때 event listener
 	if (btnSendReview) {
 		btnSendReview.addEventListener('click', function() {

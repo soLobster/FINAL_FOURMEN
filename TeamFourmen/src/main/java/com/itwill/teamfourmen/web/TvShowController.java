@@ -136,7 +136,7 @@ public class TvShowController {
 	}
 
 	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
-	@GetMapping(value = {"/{id}" })
+	@GetMapping(value = {"/details/{id}" })
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id) {
 		log.info("Get Tv Show Details = {}", id);
 //		log.info("API KEY = {}", API_KEY);
@@ -311,7 +311,7 @@ public class TvShowController {
 
 
 
-	@GetMapping("/{id}/season/{season_number}")
+	@GetMapping("/details/{id}/season/{season_number}")
 	public String getTvShowSeasonDetails(Model model, @PathVariable(name= "id") int id , @PathVariable(name = "season_number") int season_number){
 
 		String apiUri = "https://api.themoviedb.org/3/tv";

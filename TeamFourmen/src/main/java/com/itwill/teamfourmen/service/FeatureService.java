@@ -94,5 +94,22 @@ public class FeatureService {
 		log.info("저장 후 reviewLike={}", reviewLike);
 	}
 
+	/**
+	 * MyPage에서 내가 작성한 모든 리뷰를 가져오기 위함
+	 * - 작성자 권오중
+	 * @param email
+	 * @return Review 리스트
+	 */
+	public List<Review> getAllMyReview (String email) {
+		log.info("GET ALL MY REVIEW E-MAIL = {}", email);
+
+		List<Review> myAllReivew = reviewDao.findByMemberEmail(email);
+
+		for(Review review : myAllReivew) {
+			log.info("My review = {}", review);
+		}
+
+		return myAllReivew;
+	}
 
 }
