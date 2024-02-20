@@ -30,7 +30,13 @@
                                         <!-- 인물 상세 페이지로의 링크 설정 -->
                                         <a th:href="@{/person/details/{id}(id=${person.id})}" class="result">
                                             <!-- 인물 이미지 표시 -->
-                                            <img th:src="@{'https://image.tmdb.org/t/p/w470_and_h470_face' + ${person.profilePath}}"
+                                            <img class="person_img"
+                                                 th:if="${person.profilePath ne null and person.profilePath ne 'null' and person.profilePath ne ''}"
+                                                 th:src="@{'https://image.tmdb.org/t/p/w470_and_h470_face' + ${person.profilePath}}"
+                                                 alt="Profile Image"/>
+                                            <img class="default_person_img"
+                                                 th:unless="${person.profilePath ne null and person.profilePath ne 'null' and person.profilePath ne ''}"
+                                                 th:src="@{/image/person_default_image01.png}"
                                                  alt="Profile Image"/>
                                         </a>
                                     </div>

@@ -104,6 +104,7 @@ public class PersonController {
 		// Cast 필터링. (중복X, 고유한 값을 가지도록 필터링함)
 		List<CombinedCreditsCastDto> uniqueCastList = castList.stream()
 				.filter(cast -> uniqueCastPosterPath.add(cast.getPosterPath()))
+				.limit(10) // 10개만 가져오도록 함.
 				.collect(Collectors.toList());
 		// 필터링한 Cast 를 voteCount 기준 내림차순 정렬.
 		uniqueCastList.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
@@ -117,6 +118,7 @@ public class PersonController {
 		// Crew 필터링. (중복X, 고유한 값을 가지도록 필터링함)
 		List<CombinedCreditsCrewDto> uniqueCrewList = crewList.stream()
 				.filter(cast -> uniqueCrewPosterPath.add(cast.getPosterPath()))
+				.limit(10) // 10개만 가져오도록 함.
 				.collect(Collectors.toList());
 		// 필터링한 Crew 를 voteCount 기준 내림차순 정렬.
 		uniqueCrewList.sort(Comparator.comparingDouble(CombinedCreditsCrewDto::getVoteCount).reversed());

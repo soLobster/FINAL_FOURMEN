@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://kit.fontawesome.com/7542e28415.js" crossorigin="anonymous"></script>
     <title>인물 상세정보</title>
     <link
@@ -22,16 +23,17 @@
         <h2>
             <a class="home" th:href="@{/}">홈</a>
         </h2>
-        <main>
+        <main style="width: 100vw">
             <section>
                 <div>
                     <p>TODO: 개요, 미디어, 팬덤, 공유 등 메뉴 목록 만들기</p>
                 </div>
-                <div>
+                <div style="margin: 50px 100px">
                     <div>
+                        <!-- A, B, C 전체를 감싸는 div -->
                         <div class="content_wrapper">
+                            <!-- 인물 이미지와 소셜 링크, 인물 정보를 표시하는 div -->
                             <div>
-
                                 <!-- A: 프로필 이미지: 없으면 디폴트 이미지로 대체 -->
                                 <div class="a">
                                     <section>
@@ -43,7 +45,7 @@
                                                      alt="profile_img">
                                                 <img class="profile_img"
                                                      th:unless="${detailsPerson.profilePath ne null and detailsPerson.profilePath ne 'null' and detailsPerson.profilePath ne ''}"
-                                                     th:src="@{/image/person_default_image_01.png}" width="300" height="450"
+                                                     th:src="@{/image/person_default_image03.png}" width="300" height="450"
                                                      alt="profile_img">
                                             </div>
                                         </div>
@@ -90,12 +92,12 @@
                                             </div>
                                         </div>
                                         <h3>
-                                            인물 정보
+                                            <p>인물 정보</p>
                                         </h3>
                                         <section class="person_info">
                                             <p>
                                                 <strong>
-                                                    <bdi>유명 분야</bdi>
+                                                    <p>유명 분야</p>
                                                 </strong>
                                             </p>
                                             <p th:switch="${detailsPerson.getKnownForDepartment()}">
@@ -112,38 +114,37 @@
                                                 <span th:case="'Production'">각본</span>
                                                 <span th:case="'Writing'">창작자</span>
                                             </p>
-
                                             <p>
                                                 <strong>
-                                                    <bdi>참여 작품 수</bdi>
+                                                    <p>참여 작품 수</p>
                                                 </strong>
                                             </p>
                                             <p th:text="${uniqueKnownCreditsNameORTitleList.size()}"></p>
 
                                             <p>
                                                 <strong>
-                                                    <bdi>성별</bdi>
+                                                    <p>성별</p>
                                                 </strong>
                                             </p>
                                             <p th:text="${detailsPerson.getGender() == 1 ? '여성' : (detailsPerson.getGender() == 2 ? '남성' : '-')}" />
 
                                             <p>
                                                 <strong>
-                                                    <bdi>생일</bdi>
+                                                    <p>생일</p>
                                                 </strong>
                                             </p>
                                             <p th:text="${detailsPerson.getBirthday() != null ? detailsPerson.getBirthday() : '-'}"></p>
 
                                             <p th:if="${detailsPerson.getDeathday() != null}">
                                                 <strong>
-                                                    <bdi>사망일</bdi>
+                                                    <p>사망일</p>
                                                 </strong>
                                             </p>
                                             <p th:if="${detailsPerson.getDeathday() != null}" th:text="${detailsPerson.getDeathday()}"></p>
 
                                             <p>
                                                 <strong>
-                                                    <bdi>출생지</bdi>
+                                                    <p>출생지</p>
                                                 </strong>
                                             </p>
                                             <p th:if="${detailsPerson.getPlaceOfBirth() != null}"
@@ -154,20 +155,34 @@
                                 </div>
                             </div>
 
+                            <!-- 인물 이름, 약력, CAST or CREW 포스터, 연기 목록들을 감싸는 div -->
                             <!-- C: 인물의 정보를 자세히 출력하는 메인 부분 -->
                             <div class="c">
                                 <div>
 
                                     <section>
                                         <div>
-                                            <p th:text="${detailsPerson.getName()}"></p>
+                                            <p class="person_name" th:text="${detailsPerson.getName()}"></p>
                                         </div>
                                     </section>
 
                                     <section>
-                                        <h3>유명 분야</h3>
+                                        <h3>
+                                            <p class="c_titles" style="font-weight: 700">약력</p>
+                                        </h3>
+                                        <div style="width: inherit">
+                                            <!-- TODO: 약력 부분은 ko 데이터가 없으면 en 데이터로 받아오기. -->
+                                            <p th:text="${detailsPerson.getBiography()}"></p>
+                                            <p th:if="${detailsPerson.getBiography().isEmpty()}" th:text="${detailsPerson.getName()} + '의 약력 란이 비어있습니다.'"></p>
+                                        </div>
+                                    </section>
+
+                                    <section>
+                                        <h3>
+                                            <p class="c_titles">유명 분야</p>
+                                        </h3>
                                         <div class="scroll-container">
-                                            <button class="prev-btn">&lt;</button>
+<!--                                            <button class="prev-btn">&lt;</button>-->
                                             <div class="horizontal-scroll">
                                                 <ul>
                                                     <!-- 유명 분야가 연기(acting)인 경우 -->
@@ -183,7 +198,7 @@
                                                                      alt="poster_img">
                                                                 <img class="poster_img"
                                                                      th:unless="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and uCastList.posterPath ne ''}"
-                                                                     th:src="@{/image/default-w600.png}" width="130" height="195"
+                                                                     th:src="@{/image/default-w600.png}"
                                                                      alt="poster_img">
                                                             </a>
                                                             <!-- tv 인 경우 "@{/{mediaType}/{id}(mediaType=${uCastList.mediaType}, id=${uCastList.mediaType})}" -->
@@ -195,7 +210,7 @@
                                                                      alt="poster_img">
                                                                 <img class="poster_img"
                                                                      th:unless="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and uCastList.posterPath ne ''}"
-                                                                     th:src="@{/image/default-w600.png}" width="130" height="195"
+                                                                     th:src="@{/image/default-w600.png}"
                                                                      alt="poster_img">
                                                             </a>
                                                         </div>
@@ -213,7 +228,7 @@
                                                                      alt="poster_img">
                                                                 <img class="poster_img"
                                                                      th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                     th:src="@{/image/default-w600.png}" width="130" height="195"
+                                                                     th:src="@{/image/default-w600.png}"
                                                                      alt="poster_img">
                                                             </a>
                                                             <!-- tv 인 경우 "@{/{mediaType}/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.mediaType})}" -->
@@ -225,31 +240,21 @@
                                                                      alt="poster_img">
                                                                 <img class="poster_img"
                                                                      th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                     th:src="@{/image/default-w600.png}" width="130" height="195"
+                                                                     th:src="@{/image/default-w600.png}"
                                                                      alt="poster_img">
                                                             </a>
                                                         </div>
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <button class="next-btn">&gt;</button>
+<!--                                            <button class="next-btn">&gt;</button>-->
                                         </div>
                                     </section>
 
                                     <section>
-                                        <h3>
-                                            약력
-                                        </h3>
-                                        <div>
-                                            <!-- TODO: 약력 부분은 ko 데이터가 없으면 en 데이터로 받아오기. -->
-                                            <p th:text="${detailsPerson.getBiography()}"></p>
-                                            <p th:if="${detailsPerson.getBiography().isEmpty()}" th:text="${detailsPerson.getName()} + '의 약력 란이 비어있습니다.'"></p>
-                                        </div>
-                                    </section>
-                                    <section>
                                         <!-- TODO: 문제의 부분... 어떻게 인물 약력의 상세 정보들을 올바르게 출력할 수 있을까? -->
                                         <div th:if="${detailsPerson.getKnownForDepartment().equals('Acting')}">
-                                            <h3 th:switch="${detailsPerson.getKnownForDepartment()}">
+                                            <h3 class="c_titles" th:switch="${detailsPerson.getKnownForDepartment()}">
                                                 <span th:case="'Acting'">연기</span>
                                                 <span th:case="'Art'">미술</span>
                                                 <span th:case="'Camera'">카메라</span>
@@ -301,7 +306,7 @@
                                                                             <span th:if="${combinedCastList.mediaType.equals('tv')}">
                                                                                 <span th:if="${combinedCastList.episodeCount != null}">
                                                                                     <a th:href="@{/tv/{id}(id=${combinedCastList.id})}"
-                                                                                       th:text="'(' + ${combinedCastList.episodeCount} + ' 화' + ')'"></a>
+                                                                                       th:text="'(' + ${combinedCastList.episodeCount} + '화' + ')'" style="color: white"></a>
                                                                                 </span>
                                                                                 <span th:if="${combinedCastList.character != null}"
                                                                                       th:text="${combinedCastList.character} + ' 역'"></span>
@@ -385,8 +390,7 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous">
     </script>
-<!--    <script th:src="@{js/person/person-image-slide.js}"></script>-->
-<!--    <script th:src="@{/js/person/person-poster-slide.js}"></script>-->
-<!--    <script th:src="@{/js/person/person-slider.js}"></script>-->
+    <!-- 인물이 출연한 작품의 포스터 이미지 버튼 슬라이드를 적용하는 js -->
+    <script th:src="@{/js/person/person-poster-slide.js}"></script>
 </body>
 </html>
