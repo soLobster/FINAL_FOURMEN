@@ -34,23 +34,18 @@
                                                  alt="Profile Image"/>
                                         </a>
                                     </div>
-                                    <div class="meta" style="margin-bottom: 5px">
+                                    <div class="meta">
                                         <!-- 인물 이름 표시 -->
                                         <p class="name">
                                             <a th:text="${person.name}" th:href="@{/person/details/{id}(id=${person.id})}">이름</a>
                                         </p>
-                                        <!-- 출연한 주요 작품 목록 표시, 최대 3개까지 -->
-                                        <div th:each="work, workStat : ${person.knownFor}" th:if="${workStat.index < 3}">
-                                            <p class="known_for" th:text="${work.name != null ? work.name : work.title}">주요 작품 목록</p>
-                                        </div>
+<!--                                        &lt;!&ndash; 출연한 주요 작품 목록 표시, 최대 3개까지 &ndash;&gt;-->
+<!--                                        <div th:each="work, workStat : ${person.knownFor}" th:if="${workStat.index < 3}">-->
+<!--                                            <p class="known_for" th:text="${work.name != null ? work.name : work.title}">주요 작품 목록</p>-->
+<!--                                        </div>-->
                                     </div>
                                 </div>
                             </div>
-
-                            <div>
-
-                            </div>
-
                         </div>
                     </div>
                 </div>

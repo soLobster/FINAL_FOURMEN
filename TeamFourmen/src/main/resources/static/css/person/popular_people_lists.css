@@ -13,7 +13,7 @@ body {
 }
 
 .inner_block {
-    margin: 20px 6rem;
+    margin: 50px 12.5rem;
 }
 
 .inner_block .inner_content .content {
@@ -56,7 +56,7 @@ body {
     flex-direction: column;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .1); /* 그림자 효과 */
     align-items: stretch; /* 모든 그리드 아이템을 컨테이너 높이에 맞춤 */
-    min-height: 350px; /* 최소 높이 설정 */
+    min-height: 200px; /* 최소 높이 설정 */
     overflow: hidden; /* 넘치는 내용 숨기기 */
     text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
     /*overflow: auto; !* 내용이 넘치면 스크로바 표시 *!*/
@@ -88,19 +88,19 @@ body {
 }
 
 /* 카드 내 글(주요 작품 목록_3개까지 표시) 스타일링 */
-.meta .known_for {
-    font-size: 1rem;
-    font-weight: 400;
-    color: cadetblue;
-    display: block;
-    margin-top: 0;
-    margin-bottom: 2.5px;
-    margin-left: 10px;
-    width: 200px;
-    white-space: nowrap; /* 텍스트를 한 줄에 표시 */
-    overflow: hidden; /* 넘치는 내용 숨기기 */
-    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
-}
+/*.meta .known_for {*/
+/*    font-size: 1rem;*/
+/*    font-weight: 400;*/
+/*    color: cadetblue;*/
+/*    display: block;*/
+/*    margin-top: 0;*/
+/*    margin-bottom: 2.5px;*/
+/*    margin-left: 10px;*/
+/*    width: 200px;*/
+/*    white-space: nowrap; !* 텍스트를 한 줄에 표시 *!*/
+/*    overflow: hidden; !* 넘치는 내용 숨기기 *!*/
+/*    text-overflow: ellipsis; !* 넘칠 때 ...로 표시 *!*/
+/*}*/
 
 /* 반응형 스타일링 */
 /* 화면 크기가 1024px 미만일 때 */

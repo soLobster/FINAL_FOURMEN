@@ -52,7 +52,7 @@ public class PersonController {
 		model.addAttribute("personPageAndList", pageAndListDto);
 		model.addAttribute("paging", pagingDto);
 
-		return "person-lists";
+		return "person/person-lists";
 
 	} // end list
 
@@ -157,14 +157,6 @@ public class PersonController {
 		Map<Year, List<CombinedCreditsCrewDto>> sortedByYearDescCrew = new TreeMap<>(Comparator.reverseOrder());
 		sortedByYearDescCrew.putAll(groupedByYearCrew);
 
-//		log.info("==============================================");
-//		log.info("sortedByYearDescCast={}", sortedByYearDescCast.keySet());
-//		log.info("sortedByYearDescCastSize={}", sortedByYearDescCast.size());
-//
-//		log.info("==============================================");
-//		log.info("sortedByYearDescCrew={}", sortedByYearDescCrew.keySet());
-//		log.info("sortedByYearDescCrewSize={}", sortedByYearDescCrew.size());
-
 		log.info("==============================================");
 		log.info("combinedCreditsCastListSize={}", combinedCreditsCastList.size());
 //		log.info("combinedCreditsCastList={}", combinedCreditsCastList);
@@ -212,17 +204,14 @@ public class PersonController {
 		// knownCredits 값이 어떻게 저장되어 있는지 확인
 		log.info("===============================================");
 		log.info("** 중복 제거 전 ** knownCreditsNameOrTitleSize(중복 제거 전 참여 작품 수)={}", knownCreditsNameOrTitle.size());
-//		log.info("** 중복 제거 전 ** knownCreditsNameOrTitle(중복 제거 전 참여 작품 리스트) 출력={}", knownCreditsNameOrTitle);
 		// HastSet을 사용하여 중복을 제거. (name과 title만을 가지는 리스트를 중복 제거 처리)
 		Set<String> uniqueKnownCreditsNameOrTitle = new HashSet<>(knownCreditsNameOrTitle);
 		log.info("===============================================");
 		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleSize(중복 제거 후 참여 작품 수(set))={}", uniqueKnownCreditsNameOrTitle.size());
-//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitle(중복 제거 후 참여 작품 set)={}", uniqueKnownCreditsNameOrTitle);
 		// 증복을 제거한 uniqueKnownCreditsNameOrTitle을 다시 리스트로 변환.
 		List<String> uniqueKnownCreditsNameOrTitleList = new ArrayList<>(uniqueKnownCreditsNameOrTitle);
 		log.info("===============================================");
 		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleListSize(중복 제거 후 참여 작품 수(리스트))={}", uniqueKnownCreditsNameOrTitleList.size());
-//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleList(중복 제거 후 참여 작품 리스트)={}", uniqueKnownCreditsNameOrTitleList);
 		// =============================  구분선  =============================== //
 		// HashSet을 사용하여 중복을 제거. (모든 요소를 가지는 리스트를 중복 제거 처리)
 		Set<CombinedCreditsCastDto> uniqueKnownCreditsAllCast = new HashSet<>(knownCreditsAllCast);
@@ -231,16 +220,10 @@ public class PersonController {
 		List<CombinedCreditsCastDto> uniqueKnownCreditsAllCastList = new ArrayList<>(uniqueKnownCreditsAllCast);
 		log.info("===============================================");
 		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCastListSize(중복이 제거된 모든 Cast 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCastList.size());
-//		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 ** uniqueKnownCreditsAllCastList(중복이 제거된 모든 Cast 요소를 가지는 리스트)={}", uniqueKnownCreditsAllCastList);
 		List<CombinedCreditsCrewDto> uniqueKnownCreditsAllCrewList = new ArrayList<>(uniqueKnownCreditsAllCrew);
 		log.info("===============================================");
 		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCrewListSize(중복이 제거된 모든 Crew 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCrewList.size());
-//		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 ** uniqueKnownCreditsAllCrewList(중복이 제거된 모든 Crew 요소를 가지는 리스트)={}", uniqueKnownCreditsAllCrewList);
 
-		// voteCount 를 기준으로 정렬된 castList 를 모델에 추가. (중복 제거 X)
-		model.addAttribute("sortedCastList", sortedCastList);
-		model.addAttribute("sortedMovieCastList", sortedMovieCastList);
-		model.addAttribute("sortedTvCastList", sortedTvCastList);
 		// 필터링한 CastList 를 모델에 추가. (중복 제거 O)
 		model.addAttribute("uniqueCastList", uniqueCastList);
 		// 필터링한 CrewList 를 모델에 추가. (중복 제거 O)
@@ -251,7 +234,10 @@ public class PersonController {
 		model.addAttribute("sortedByYearCrew", sortedByYearDescCrew);
 		// uniqueKnownCreditsList(중복이 제거된 참여 작품 이름 또는 제목만을 담은 리스트)를 모델에 추가. (중복 제거 O)
 		model.addAttribute("uniqueKnownCreditsNameORTitleList", uniqueKnownCreditsNameOrTitleList);
-
+		// 중복을 제거한 모든 Cast 요소를 가진 리스트를 모델에 추가. (중복 제거 O)
+		model.addAttribute("uniqueAllCastList", uniqueKnownCreditsAllCastList);
+		// 중복을 제거한 모든 Crew 요소를 가진 리스트를 모델에 추가. (중복 제거 O)
+		model.addAttribute("uniqueAllCrewList", uniqueKnownCreditsAllCrewList);
 
 		model.addAttribute("detailsPerson", detailsPersonDto);
 		model.addAttribute("externalIDs", externalIDsDto);
@@ -263,7 +249,7 @@ public class PersonController {
 		model.addAttribute("combinedCreditsCastList", combinedCreditsCastList);
 		model.addAttribute("combinedCreditsCrewList", combinedCreditsCrewList);
 
-		return "person-details";
+		return "person/person-details";
 	} // end details
 
 
