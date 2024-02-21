@@ -6,12 +6,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.itwill.teamfourmen.domain.ImdbRatings;
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.tvshow.*;
+import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.TvShowApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +41,7 @@ public class TvShowController {
 	private final TvShowApiUtil apiUtil;
 
 	private final ImdbRatingUtil imdbRatingUtil;
+	private final FeatureService featureService;
 
 	private String category = "tv";
 
@@ -305,10 +313,43 @@ public class TvShowController {
 			log.info("TV SHOW TRAILER IS EMPTY");
 			model.addAttribute("trailer", null);
 		}
+
+		// TV SHOW 좋아요 가져오기
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "tv", id);
+
+		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
+
+		// Tv Show 별 리뷰 가져오기
+
+		List<Review> tvShowReviewList = featureService.getReviews("tv", id);
+
+		model.addAttribute("tvShowReviewList", tvShowReviewList);
+
 		return "tvshow/tvshow-details";
 	}
 
 
+	@GetMapping("/details/{id}/reviews")
+	public String getTvShowReviews(Model model, @PathVariable (name = "id") int id) {
+		log.info("GET TV SHOW REVIEWS - ID = {}", id);
+
+		// 해당 tv Show 정보를 가져오기 위함
+		TvShowDTO tvShowDTO = apiUtil.getTvShowDetails(id);
+
+		model.addAttribute("tvShowDto", tvShowDTO);
+
+		// 해당 tv Show 리뷰를 가져오기 위함
+		List<Review> tvShowReviewList =featureService.getReviews("tv", id);
+
+		model.addAttribute("tvShowReviewList", tvShowReviewList);
+
+
+		return "review/reviews";
+	}
 
 
 	@GetMapping("/details/{id}/season/{season_number}")

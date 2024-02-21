@@ -1,4 +1,7 @@
-<section class="main-section">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<section class="main-section" th:fragment="sectionFragmentParam (param1)" >
   <div class = "mypage-details-header">
     <div class = "mypage-details-profile-img">
       <img th:src = "@{https://s.ltrbxd.com/static/img/avatar220.1dea069d.png}">
@@ -15,8 +18,9 @@
       </div>
       <div class="overview-review-network">
         <h4 class="review-num">
-          <a th:href="@{''}">
-            <span class = "value">0</span>
+          <a th:href="@{/mypage/details/{id}/reviews (id = ${member.email})}">
+            <span class = "value" th:if = "${param1 ne null}" th:text="${param1}"></span>
+            <span class = "value" th:unless="${param1 ne null}" th:text="0"></span>
             <span class = "definition">리뷰</span>
           </a>
         </h4>
@@ -60,3 +64,5 @@
     </div>
   </nav>
 </section>
+
+</html>

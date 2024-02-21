@@ -544,6 +544,67 @@
 			max-width: 100%;
 		}
 
+		.tvShow_review {
+			padding: 10px 30px 10px 30px; !important;
+		}
+
+		.popular-review-section {
+			/*background-color: #155d27;*/
+			padding: 5px 10px 5px 10px;
+		}
+
+		.review-item {
+			border-top: 1px solid rgba(256, 256, 256, 0.5);
+		}
+
+		.tvShowAllReview {
+			margin-top: 10px;
+			margin-left: 10px;
+			text-decoration: none;
+			color: white;
+		}
+
+		.tvShowAllReview:hover {
+			color: #8dabfb;
+		}
+
+		.review-item-content > div {
+			padding: 0 0 10px 0;
+			margin-left: 20px;
+		}
+
+		.review-item-content-header > .fa-star {
+			font-size: 13px;
+			color: #33ff33;
+		}
+
+		.review-item-content-header > .fa-comment {
+			color: #9999a1;
+		}
+
+		.review-item-content-header > a{
+			text-decoration: none;
+			color: white;
+		}
+
+		.review-item-content-header > a:hover {
+			color: #8dabfb;
+		}
+
+		.review-item-content-footer > i {
+			color: #33ff33;
+		}
+
+		.review-item-content-article > a {
+			text-decoration: none;
+			color: white;
+		}
+
+		.content-article:hover {
+			color: #c4c3ca;
+		}
+
+
 		.tvShow_recommendations{
 			/*background-color: cornflowerblue;*/
 		}
@@ -682,7 +743,7 @@
 <body class = "ko v4">
 <header>
 	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
-	<a th:href="@{'../tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
+	<a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
 	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
 </header>
 
@@ -741,7 +802,7 @@
 						<i class="fa-solid fa-list"></i>
 						<span class = "custom-bar-text">플레이 리스트 저장</span>
 					</div>
-					<div class = "tool-tip-custom-bar div-like" id = "custom-like" th:classappend="${tmdbLike} ne null ? 'user-like-already'">
+					<div class = "tool-tip-custom-bar div-like" id = "custom-like" th:classappend="${tmdbLike} ne null ? 'user-liked-already'">
 						<button type="button" class = "tool-tip-custom-bar btn-add-like">
 							<i class="fa-solid fa-heart"></i>
 							<span class = "custom-bar-text">Like</span>
@@ -829,8 +890,87 @@
 				<hr class = "break_line border-1 opacity-50">
 			</div>
 
-			<div class = "tvShow_forum">
-				<h3>리뷰</h3>
+			<div class = "tvShow_review" style="padding: 10px 30px 10px 30px">
+				<section style="display: flex;">
+					<h3>리뷰</h3>
+					<a class="tvShowAllReview" th:href="@{{id}/reviews(id = ${tvShowDto.getId()})}">
+						<span>전체 리뷰 보러가기</span>
+					</a>
+
+				</section>
+<!--				<th:block th:if="${tvShowReviewList ne null}">-->
+<!--					<section class = "popular-review-section"  th:each=" review : ${tvShowReviewList}">-->
+
+<!--					</section>-->
+<!--				</th:block>-->
+				<section class = "popular-review-section">
+
+					<div class = "review-item" style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+						<input class = "d-none" th:email = "email">
+						<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+							<section class = "review-item-user-profile-img" style=" width: 70px; height: 70px; ">
+								<a th:href="@{''}">
+									<img th:src="@{https://img.khan.co.kr/news/2023/06/21/l_2023062201000750500069571.jpg}"
+									style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
+								</a>
+							</section>
+							<section class = "review-item-content">
+								<div class = "review-item-content-header">
+									<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
+									<a th:href="@{''}">
+										<span class = "mx-2 reviewer-nickname">Cristiano Ronaldo</span>
+									</a>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+
+									<i class="ms-3 me-1 fa-solid fa-comment"></i> 9999
+								</div>
+								<div class = "review-item-content-article">
+									<a th:href="@{''}">
+										<article class = "content-article">
+										너는 나를 존중해야 한다. 나는 발롱도르 5개와 수많은 개인 트로피를 들어올렸으며 2016 유로에서 포르투갈을 이끌고 우승을 차지했고 동시에 A매치 역대 최다 득점자이다. 또한 챔스 역대 최다 득점자이자 5번이나 우승을 차지한 레알마드리드의 상징이다. 또한 36세의 나이에도 프리미어리그에서 18골을 기록하고 챔스에서 5경기 연속 골을 기록하며 내가 세계 최고임을 증명해냈다. 은혜를 모르는 맨유 보드진과 팬들은 내가 맨유의 골칫덩이라며 쫒아냈지만 내가 세계 최고이고 내가 팀보다 위대하다는 사실은 바뀌지 않는다. 내가 사우디에 간 이유는 메시에 대한 자격지심이 아니라 유럽에서 이룰 수 있는 모든 것을 이루었기에 아시아를 정복하기 위해 간 것이지, 단지 돈을 위해서 간 것이 아니다.
+										</article>
+									</a>
+								</div>
+								<div class = "review-item-content-footer">
+									<i class="me-2 fa-solid fa-thumbs-up"></i> 9999 likes
+								</div>
+							</section>
+						</div>
+					</div>
+
+					<div class = "review-item" style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+						<input class = "d-none" th:email = "email">
+						<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+							<section class = "review-item-user-profile-img" style=" width: 70px; height: 70px; ">
+								<a th:href="@{''}">
+									<img th:src="@{https://img.khan.co.kr/news/2023/06/21/l_2023062201000750500069571.jpg}"
+										 style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
+								</a>
+							</section>
+							<section class = "review-item-content">
+								<div class = "review-item-content-header">
+									<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span><span class = "mx-2" style="color: #e6e6e9; font-weight: bolder;">Cristiano Ronaldo</span>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+
+									<i class="ms-3 me-1 fa-solid fa-comment"></i> 9999
+								</div>
+								<div class = "review-item-content-article">
+									너는 나를 존중해야 한다. 나는 발롱도르 5개와 수많은 개인 트로피를 들어올렸으며 2016 유로에서 포르투갈을 이끌고 우승을 차지했고 동시에 A매치 역대 최다 득점자이다. 또한 챔스 역대 최다 득점자이자 5번이나 우승을 차지한 레알마드리드의 상징이다. 또한 36세의 나이에도 프리미어리그에서 18골을 기록하고 챔스에서 5경기 연속 골을 기록하며 내가 세계 최고임을 증명해냈다. 은혜를 모르는 맨유 보드진과 팬들은 내가 맨유의 골칫덩이라며 쫒아냈지만 내가 세계 최고이고 내가 팀보다 위대하다는 사실은 바뀌지 않는다. 내가 사우디에 간 이유는 메시에 대한 자격지심이 아니라 유럽에서 이룰 수 있는 모든 것을 이루었기에 아시아를 정복하기 위해 간 것이지, 단지 돈을 위해서 간 것이 아니다.
+								</div>
+								<div class = "review-item-content-footer">
+									<i class="me-2 fa-solid fa-thumbs-up"></i> 9999 likes
+								</div>
+							</section>
+						</div>
+					</div>
+
+				</section>
 			</div>
 
 			<div class = "mt-0 py-0">

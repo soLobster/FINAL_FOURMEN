@@ -233,7 +233,7 @@ public class MovieController {
 		
 		
 		// 관련 리뷰 가져옴
-//		List<Review> movieReviewList = featureService.getReviews("movie", id);
+		List<Review> movieReviewList = featureService.getReviews("movie", id);
 //		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
 		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
@@ -262,7 +262,7 @@ public class MovieController {
 
 		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
     
-//		model.addAttribute("movieReviewList", movieReviewList);
+		model.addAttribute("movieReviewList", movieReviewList);
 //		model.addAttribute("myReview", myReview);
 		
 		return "/movie/movie-details";

@@ -41,7 +41,7 @@
 
     .review-item-content-article-header {
       display: flex;
-      margin-bottom: 5px;
+      margin-bottom: 0;
     }
 
     .review-item-content-article-rating-date {
@@ -58,9 +58,19 @@
       color: #8dabfb;
     }
 
-    .review-item-content-article-rating-date > i {
+    /*.review-item-content-article-rating-date > > i {*/
+    /*  font-size: 15px;*/
+    /*  color: #70e000;*/
+    /*}*/
+
+    #starRating > i {
+      color: #33ff33;
       font-size: 15px;
-      color: #70e000;
+    }
+
+    #starRating > .halfScore {
+      color: #33ff33;
+      font-size: 15px;
     }
 
     .review-item-content-article-rating-date > small {
@@ -121,7 +131,7 @@
   <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
 </header>
 
-<section th:replace="~{/layout/MyPageBasic.html}"></section>
+<section th:replace="~{/layout/MyPageBasic :: sectionFragmentParam (${myAllReview.size()})}"></section>
 
 <div class="mypage-details-body">
 
@@ -208,16 +218,17 @@
                 <h3 th:text="${tvshow.getName()}">
                 </h3>
               </a>
-              <span class = "mt-2" th:text="${tvshow.getFirst_air_date()}">
+              <span class = "ms-1 mt-2" th:text="${ '(' + tvshow.getFirst_air_date().substring(0, 4) + ')'}">
               </span>
             </div>
             <div class = "review-item-content-article-rating-date">
-              <span th:text="${review.getRating()}"></span>
-              <small class="ms-3" th:text="${review.getCreatedDate()}"></small>
+              <span th:rating="${review.getRating()}" id = "starRating"></span>
+              <small class="ms-2 mt-1" th:text="${review.changeDateType(review.getCreatedDate())}"></small>
             </div>
             <div class = "review-item-content-article-body">
               <a class = "review-item-article-content-a-tag" th:href="@{''}">
-                <section class = "review-item-content-article-body-content" th:text="${review.getContent()}"></section>
+                <section class = "review-item-content-article-body-content" th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}" th:text="${review.getContent()}"></section>
+                <section class = "review-item-content-article-body-content" th:unless="${review.getIsSpoiler().equalsIgnoreCase('n')}" >스포일러가 포함된 리뷰 입니다.</section>
               </a>
               <section class = "review-item-content-article-body-footer">
                 <div class = "review-item-recommend">
@@ -248,6 +259,38 @@
 <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/navbar.js}"></script>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function (){
+    const starRatingElements = document.querySelectorAll('#starRating');
+
+    starRatingElements.forEach(element => {
+      const rating = parseFloat(element.getAttribute('rating')); // 부동 소수점으로 변환
+
+      const integerPart = Math.floor(rating); // 정수 부분
+      const decimalPart = rating - integerPart; // 소수 부분
+
+      // 정수 부분에 해당하는 별 아이콘 생성하여 추가
+      for (let i = 0; i < integerPart; i++) {
+        const starIcon = document.createElement('i');
+        starIcon.classList.add('fa-solid', 'fa-star');
+        element.appendChild(starIcon);
+      }
+
+      // 소수 부분이 .5인 경우 '½' 이모지 추가
+      if (decimalPart === 0.5) {
+        const halfStarRating = document.createElement('i');
+        halfStarRating.classList.add('halfScore');
+        halfStarRating.innerText = '½';
+        element.appendChild(halfStarRating);
+      }
+    });
+  });
+
+
+
+</script>
 
 </body>
 

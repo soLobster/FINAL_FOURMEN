@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const pathName = location.pathname;	// 컨텍스트 루트 제외한 주소 가져옴
     const category = pathName.split('/')[1];
-    const tmdbId = pathName.split('/')[2];
+    const tmdbId = pathName.split('/')[3];
     console.log(`divDidReviewAlready = ${divDidReviewedAlready}`);
 
     // 리뷰버튼 로그인 안했으면 못 누르게하는 이벤트 리스너
