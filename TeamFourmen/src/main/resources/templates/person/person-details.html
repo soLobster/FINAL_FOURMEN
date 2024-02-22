@@ -40,11 +40,11 @@
                                         <div class="content_profile_img">
                                             <div>
                                                 <img class="profile_img"
-                                                     th:if="${detailsPerson.profilePath ne null and detailsPerson.profilePath ne 'null' and detailsPerson.profilePath ne ''}"
-                                                     th:src="@{'https://media.themoviedb.org/t/p/w300_and_h450_bestv2' + ${detailsPerson.profilePath}}"
+                                                     th:if="${detailsPersonEnUS.profilePath ne null and detailsPersonEnUS.profilePath ne 'null' and detailsPersonEnUS.profilePath ne ''}"
+                                                     th:src="@{'https://media.themoviedb.org/t/p/w300_and_h450_bestv2' + ${detailsPersonEnUS.profilePath}}"
                                                      alt="profile_img">
                                                 <img class="profile_img"
-                                                     th:unless="${detailsPerson.profilePath ne null and detailsPerson.profilePath ne 'null' and detailsPerson.profilePath ne ''}"
+                                                     th:unless="${detailsPersonEnUS.profilePath ne null and detailsPersonEnUS.profilePath ne 'null' and detailsPersonEnUS.profilePath ne ''}"
                                                      th:src="@{/image/person_default_image03.png}" width="300" height="450"
                                                      alt="profile_img">
                                             </div>
@@ -55,7 +55,8 @@
                                 <!-- B: 인물 정보 -->
                                 <div class="b">
                                     <section>
-                                        <div th:each="externalIDs : ${externalIDs}" class="social_links">
+                                        <!-- 인물의 외부 소셜 링크 -->
+                                        <div th:each="externalIDs : ${externalIDsEnUS}" class="social_links">
                                             <div>
                                                 <span>
                                                     <a
@@ -87,7 +88,9 @@
                                                        th:href="'https://www.youtube.com/' + ${externalIDs.getYoutubeId()}">
                                                         <i class="fa-brands fa-youtube"></i>
                                                     </a>
+
                                                     <!-- TODO: 인물의 홈페이지는 어떻게 할까? -->
+
                                                 </span>
                                             </div>
                                         </div>
@@ -100,7 +103,7 @@
                                                     <p>유명 분야</p>
                                                 </strong>
                                             </p>
-                                            <p th:switch="${detailsPerson.getKnownForDepartment()}">
+                                            <p th:switch="${detailsPersonKoKR.getKnownForDepartment()}">
                                                 <span th:case="'Acting'">연기</span>
                                                 <span th:case="'Art'">미술</span>
                                                 <span th:case="'Camera'">카메라</span>
@@ -126,30 +129,30 @@
                                                     <p>성별</p>
                                                 </strong>
                                             </p>
-                                            <p th:text="${detailsPerson.getGender() == 1 ? '여성' : (detailsPerson.getGender() == 2 ? '남성' : '-')}" />
+                                            <p th:text="${detailsPersonKoKR.getGender() == 1 ? '여성' : (detailsPersonKoKR.getGender() == 2 ? '남성' : '-')}" />
 
                                             <p>
                                                 <strong>
                                                     <p>생일</p>
                                                 </strong>
                                             </p>
-                                            <p th:text="${detailsPerson.getBirthday() != null ? detailsPerson.getBirthday() : '-'}"></p>
+                                            <p th:text="${detailsPersonKoKR.getBirthday() != null ? detailsPersonKoKR.getBirthday() : '-'}"></p>
 
-                                            <p th:if="${detailsPerson.getDeathday() != null}">
+                                            <p th:if="${detailsPersonKoKR.getDeathday() != null}">
                                                 <strong>
                                                     <p>사망일</p>
                                                 </strong>
                                             </p>
-                                            <p th:if="${detailsPerson.getDeathday() != null}" th:text="${detailsPerson.getDeathday()}"></p>
+                                            <p th:if="${detailsPersonKoKR.getDeathday() != null}" th:text="${detailsPersonKoKR.getDeathday()}"></p>
 
                                             <p>
                                                 <strong>
                                                     <p>출생지</p>
                                                 </strong>
                                             </p>
-                                            <p th:if="${detailsPerson.getPlaceOfBirth() != null}"
-                                               th:text="${detailsPerson.getPlaceOfBirth()}"></p>
-                                            <p th:if="${detailsPerson.getPlaceOfBirth() == null}">-</p>
+                                            <p th:if="${detailsPersonKoKR.getPlaceOfBirth() != null}"
+                                               th:text="${detailsPersonKoKR.getPlaceOfBirth()}"></p>
+                                            <p th:if="${detailsPersonKoKR.getPlaceOfBirth() == null}">-</p>
                                         </section>
                                     </section>
                                 </div>
@@ -162,7 +165,10 @@
 
                                     <section>
                                         <div>
-                                            <p class="person_name" th:text="${detailsPerson.getName()}"></p>
+                                            <p th:if="${detailsPersonKoKR != null and detailsPersonKoKR.name != null}" class="person_name" th:text="${detailsPersonKoKR.name}"></p>
+                                        </div>
+                                        <div>
+                                            <p></p>
                                         </div>
                                     </section>
 
@@ -172,8 +178,10 @@
                                         </h3>
                                         <div style="width: inherit">
                                             <!-- TODO: 약력 부분은 ko 데이터가 없으면 en 데이터로 받아오기. -->
-                                            <p th:text="${detailsPerson.getBiography()}"></p>
-                                            <p th:if="${detailsPerson.getBiography().isEmpty()}" th:text="${detailsPerson.getName()} + '의 약력 란이 비어있습니다.'"></p>
+                                            <p th:text="${detailsPersonEnUS.getBiography()}"></p>
+                                            <p th:if="${detailsPersonEnUS.getBiography().isEmpty()}" th:text="${detailsPersonKoKR.getName()} + '의 약력 란이 비어있습니다.'"></p>
+                                            <p th:text="${detailsPersonKoKR.getBiography()}"></p>
+                                            <p th:if="${detailsPersonEnUS.getBiography().isEmpty()}" th:text="${detailsPersonKoKR.getName()} + '의 약력 란이 비어있습니다.'"></p>
                                         </div>
                                     </section>
 
@@ -182,12 +190,11 @@
                                             <p class="c_titles">유명 분야</p>
                                         </h3>
                                         <div class="scroll-container">
-<!--                                            <button class="prev-btn">&lt;</button>-->
                                             <div class="horizontal-scroll">
                                                 <ul>
                                                     <!-- 유명 분야가 연기(acting)인 경우 -->
-                                                    <li th:if="${detailsPerson.getKnownForDepartment().equals('Acting')}"
-                                                        th:each="uCastList : ${uniqueCastList}">
+                                                    <li th:if="${detailsPersonEnUS.getKnownForDepartment().equals('Acting')}"
+                                                        th:each="uCastList : ${uniqueCastListPosterEnUS}">
                                                         <div>
                                                             <!-- movie 인 경우 "@{/{mediaType}/details/{id}(mediaType=${uCastList.mediaType}, id=${uCastList.mediaType})}" -->
                                                             <a th:if="${uCastList.mediaType eq 'movie'}"
@@ -216,8 +223,8 @@
                                                         </div>
                                                     </li>
                                                     <!-- 유명 분야가 연기(acting)가 아닌 경우 -->
-                                                    <li th:unless="${detailsPerson.getKnownForDepartment().equals('Acting')}"
-                                                        th:each="uCrewList : ${uniqueCrewList}">
+                                                    <li th:unless="${detailsPersonEnUS.getKnownForDepartment().equals('Acting')}"
+                                                        th:each="uCrewList : ${uniqueCrewListPosterEnUS}">
                                                         <div>
                                                             <!-- movie 인 경우 "@{/{mediaType}/details/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.mediaType})}" -->
                                                             <a th:if="${uCrewList.mediaType eq 'movie'}"
@@ -247,14 +254,13 @@
                                                     </li>
                                                 </ul>
                                             </div>
-<!--                                            <button class="next-btn">&gt;</button>-->
                                         </div>
                                     </section>
 
                                     <section>
                                         <!-- TODO: 문제의 부분... 어떻게 인물 약력의 상세 정보들을 올바르게 출력할 수 있을까? -->
-                                        <div th:if="${detailsPerson.getKnownForDepartment().equals('Acting')}">
-                                            <h3 class="c_titles" th:switch="${detailsPerson.getKnownForDepartment()}">
+                                        <div th:if="${detailsPersonKoKR.getKnownForDepartment().equals('Acting')}">
+                                            <h3 class="c_titles" th:switch="${detailsPersonKoKR.getKnownForDepartment()}">
                                                 <span th:case="'Acting'">연기</span>
                                                 <span th:case="'Art'">미술</span>
                                                 <span th:case="'Camera'">카메라</span>
@@ -270,23 +276,11 @@
                                             </h3>
 
                                             <table>
-
                                                 <tbody>
-
-
-
-                                                </tbody>
-
-                                            </table>
-
-                                            <table>
-
-                                                <tbody>
-                                                    <tr th:each="combinedCastList: ${combinedCreditsCastList}" th:object="${combinedCastList}">
+                                                    <tr th:each="combinedCastList: ${combinedCreditsCastListKoKR}" th:object="${combinedCastList}">
                                                         <td>
                                                             <table>
                                                                 <tbody>
-
                                                                     <tr>
                                                                         <td>
                                                                             <span th:if="${combinedCastList.year == null}">-</span>
@@ -315,24 +309,23 @@
                                                                                     th:text="${combinedCastList.character} + ' 역'"></span>
                                                                         </td>
                                                                     </tr>
-
                                                                 </tbody>
                                                             </table>
                                                         </td>
                                                     </tr>
                                                 </tbody>
-
                                             </table>
+
                                         </div>
 
-                                        <div th:if="${combinedCreditsCrewList != null}">
+                                        <div th:if="${combinedCreditsCrewListKoKR != null}">
                                             <h3>
                                                 <span>제작 및 지원</span>
                                             </h3>
                                             <table>
 
                                                 <tbody>
-                                                <tr th:each="combinedCrewList: ${combinedCreditsCrewList}" th:object="${combinedCrewList}">
+                                                <tr th:each="combinedCrewList: ${combinedCreditsCrewListKoKR}" th:object="${combinedCrewList}">
                                                     <td>
                                                         <table>
                                                             <tbody>

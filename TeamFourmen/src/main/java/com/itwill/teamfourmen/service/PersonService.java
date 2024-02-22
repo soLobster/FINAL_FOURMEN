@@ -48,176 +48,255 @@ public class PersonService {
 			endPage = startPage + pagesShowInBar - 1;
 		}
 
-		PersonPagingDto pagingDto = PersonPagingDto.builder()
+        return PersonPagingDto.builder()
 				.startPage(startPage).endPage(endPage)
 				.totalPage(totalPage).pagesShowInBar(pagesShowInBar)
 				.build();
-
-		return pagingDto;
 
 	}
 
     /**
      * JSON 데이터를 PageAndListDto 객체로 변환.
-     * 파라미터는 "popular"와 페이지네이션을 위한 "page".
-     * @param "popular" and "page"(for paging)
-     * @return API 요청으로 받아온 JSON 데이터를 매핑한 pageAndListDto 객체.
+	 * 인물의 리스트를 받아오기 위한 메서드.
+	 * @param page
+	 * 파라미터는 page로 api 요청 주소를 생성하는 데 사용됨.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 pageAndListDtoEnUS(영어) pageAndListDtoKoKR(한국어) 객체.
      */
-    public PageAndListDto getPersonList(int page, String language) {
+    public PageAndListDto getPersonListEnUS(int page) {
 
-    	// API 요청 주소 생성. (인물의 리스트를 받아옴)
-    	String uri = String.format(apiUrl + "/person/" + POPULAR + "?api_key=%s&language=%s&page=%d", apiKey, language, page);
+    	// API 요청 주소 생성. (페이지에 해당하는 인물의 리스트를 받아옴)
+    	String uri = String.format(apiUrl + "/person/" + POPULAR + "?api_key=%s&language=en-US&page=%d", apiKey, page);
 
-    	PageAndListDto pageAndListDto;
-        pageAndListDto = webClient.get()
+    	PageAndListDto pageAndListDtoEnUS;
+        pageAndListDtoEnUS = webClient.get()
                 .uri(uri)
                 .retrieve()
                 .bodyToMono(PageAndListDto.class)
                 .block();
 
-		return pageAndListDto;
+		return pageAndListDtoEnUS;
+
+	}
+	public PageAndListDto getPersonListKoKR(int page) {
+
+		// API 요청 주소 생성. (페이지에 해당하는 인물의 리스트를 받아옴)
+		String uri = String.format(apiUrl + "/person/" + POPULAR + "?api_key=%s&language=ko-KR&page=%d", apiKey, page);
+
+		PageAndListDto pageAndListDtoKoKR;
+		pageAndListDtoKoKR = webClient.get()
+				.uri(uri)
+				.retrieve()
+				.bodyToMono(PageAndListDto.class)
+				.block();
+
+		return pageAndListDtoKoKR;
 
 	}
 
 	/**
 	 * JSON 데이터를 DetailsPersonDto 객체로 변환.
-	 * 파라미터는 언어와 인물의 id 값.
-	 *
-	 * @param "language" and "id"
-	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 detailsPersonDto 객체.
+	 * 인물의 상세 정보를 받아오기 위한 메서드.
+	 * @param id
+	 * 파라미터는 인물의 id 값.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 detailsPersonDtoEnUS(영어) detailsPersonDtoKoKR(한국어) 객체.
 	 */
-	public DetailsPersonDto getPersonDetails(int id, String language) {
+	public DetailsPersonDto getPersonDetailsEnUS(int id) {
 
 		// API 요청 주소 생성. (각 인물의 상세 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "?api_key=%s&language=en-US", apiKey);
 
-		DetailsPersonDto detailsPersonDto;
-		detailsPersonDto = webClient.get()
+		DetailsPersonDto detailsPersonDtoEnUS;
+		detailsPersonDtoEnUS = webClient.get()
 				.uri(uri)
 				.retrieve()
 				.bodyToMono(DetailsPersonDto.class)
 				.block();
 
-		return detailsPersonDto;
+		return detailsPersonDtoEnUS;
+
+	}
+	public DetailsPersonDto getPersonDetailsKoKR(int id) {
+
+		// API 요청 주소 생성. (각 인물의 상세 정보를 받아옴)
+		String uri = String.format(apiUrl + "/person/" + id + "?api_key=%s&language=ko-KR", apiKey);
+
+		DetailsPersonDto detailsPersonDtoKoKR;
+		detailsPersonDtoKoKR = webClient.get()
+				.uri(uri)
+				.retrieve()
+				.bodyToMono(DetailsPersonDto.class)
+				.block();
+
+		return detailsPersonDtoKoKR;
 
 	}
 
 	/**
 	 * JSON 데이터를 받아 ExternalIDsDto 객체로 변환.
+	 * 인물의 외부 링크 정보(sns, 홈페이지 등)를 받아오기 위한 메서드.
+	 * @param id
 	 * 파라미터는 인물의 id 값.
-	 *
-	 * @param "id"
-	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDto 객체.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDtoEnUS(영어), externalIDsDtoKoKR(한국어) 객체.
 	 */
-	public ExternalIDsDto getExternalIDs(int id, String language) {
+	public ExternalIDsDto getExternalIDsEnUS(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s&language=en-US", apiKey);
 
-		ExternalIDsDto externalIDsDto;
-		externalIDsDto = webClient.get()
+		ExternalIDsDto externalIDsDtoEnUS;
+		externalIDsDtoEnUS = webClient.get()
 				.uri(uri)
 				.retrieve()
 				.bodyToMono(ExternalIDsDto.class)
 				.block();
 
-		return externalIDsDto;
+		return externalIDsDtoEnUS;
+
+	}
+	public ExternalIDsDto getExternalIDsKoKR(int id) {
+
+		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
+		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s&language=ko-KR", apiKey);
+
+		ExternalIDsDto externalIDsDtoKoKR;
+		externalIDsDtoKoKR = webClient.get()
+				.uri(uri)
+				.retrieve()
+				.bodyToMono(ExternalIDsDto.class)
+				.block();
+
+		return externalIDsDtoKoKR;
 
 	}
 
+
 	/**
 	 * JSON 데이터를 받아 MovieCreditsDto 객체로 변환.
-	 * 파라미터는 인물의 id와 language 값.
-	 *
-	 * @param id, language
-	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDto 객체.
+	 * 해당 인물이 cast(연기) 또는 crew(제작 등)로 참여한 영화의 정보를 받아오기 위한 메서드.
+	 * @param id
+	 * 파라미터는 인물의 id 값.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 movieCreditsDtoEnUS(영어), movieCreditsDtoKoKR(한국어) 객체.
 	 */
-	public MovieCreditsDto getMovieCredits(int id, String language) {
+	public MovieCreditsDto getMovieCreditsEnUS(int id) {
 
 		// API 요청 주소 생성.
-		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=en-US", apiKey);
 
-		MovieCreditsDto movieCreditsDto;
-		movieCreditsDto = webClient.get()
+		MovieCreditsDto movieCreditsDtoEnUS;
+		movieCreditsDtoEnUS = webClient.get()
 				.uri(uri)
 				.retrieve()
 				.bodyToMono(MovieCreditsDto.class)
 				.block();
 
-		return movieCreditsDto;
+		return movieCreditsDtoEnUS;
 
 	}
-
-	public MovieCreditsCastDto getMovieCreditsCast(int id, String language) {
+	public MovieCreditsDto getMovieCreditsKoKR(int id) {
 
 		// API 요청 주소 생성.
-		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/movie_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
-		MovieCreditsCastDto movieCreditsCastDTO;
-		movieCreditsCastDTO = webClient.get()
+		MovieCreditsDto movieCreditsDtoKoKR;
+		movieCreditsDtoKoKR = webClient.get()
 				.uri(uri)
 				.retrieve()
-				.bodyToMono(MovieCreditsCastDto.class)
+				.bodyToMono(MovieCreditsDto.class)
 				.block();
 
-		return movieCreditsCastDTO;
+		return movieCreditsDtoKoKR;
 
 	}
 
-	public TvCreditsDto getTvCredits(int id, String language) {
+	/**
+	 * JSON 데이터를 받아 TvCreditsDto 객체로 변환.
+	 * 해당 인물이 cast(연기) 또는 crew(제작 등)로 참여한 TV 프로그램의 정보를 받아오기 위한 메서드.
+	 * @param id
+	 * 파라미터는 인물의 id 값.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDtoEnUS(영어), externalIDsDtoKoKR(한국어) 객체.
+	 */
+	public TvCreditsDto getTvCreditsEnUS(int id) {
 
 		// API 요청 주소 생성.
-		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=en-US", apiKey);
 
-		TvCreditsDto tvCreditsDto;
-		tvCreditsDto = webClient.get()
+		TvCreditsDto tvCreditsDtoEnUS;
+		tvCreditsDtoEnUS = webClient.get()
 				.uri(uri)
 				.retrieve()
 				.bodyToMono(TvCreditsDto.class)
 				.block();
 
-		return tvCreditsDto;
+		return tvCreditsDtoEnUS;
 
 	}
-
-	public TvCreditsCastDto getTvCreditsCast(int id, String language) {
+	public TvCreditsDto getTvCreditsKoKR(int id) {
 
 		// API 요청 주소 생성.
-		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/tv_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
-		TvCreditsCastDto tvCreditsCastDTO;
-		tvCreditsCastDTO = webClient.get()
+		TvCreditsDto tvCreditsDtoKoKR;
+		tvCreditsDtoKoKR = webClient.get()
 				.uri(uri)
 				.retrieve()
-				.bodyToMono(TvCreditsCastDto.class)
+				.bodyToMono(TvCreditsDto.class)
 				.block();
 
-		return tvCreditsCastDTO;
+		return tvCreditsDtoKoKR;
 
 	}
 
-	public CombinedCreditsDto getCombinedCredits(int id, String language) {
+	/**
+	 * JSON 데이터를 받아 CombinedCreditsDto 객체로 변환.
+	 * 해당 인물이 cast(연기) 또는 crew(제작 등)로 참여한 모든 출연작(영화, TV 프로그램)의 정보를 받아오기 위한 메서드.
+	 * @param id
+	 * 파라미터는 인물의 id 값.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 combinedCreditsDtoEnUS(영어), combinedCreditsDtoKoKR(한국어) 객체.
+	 */
+	public CombinedCreditsDto getCombinedCreditsEnUS(int id) {
 
 		// API 요청 주소 생성.
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=en-US", apiKey);
 
-		CombinedCreditsDto combinedCreditsDto;
-		combinedCreditsDto = webClient.get()
+		CombinedCreditsDto combinedCreditsDtoEnUS;
+		combinedCreditsDtoEnUS = webClient.get()
 				.uri(uri)
 				.retrieve()
 				.bodyToMono(CombinedCreditsDto.class)
 				.block();
 
-		return combinedCreditsDto;
+		return combinedCreditsDtoEnUS;
+
+	}
+	public CombinedCreditsDto getCombinedCreditsKoKR(int id) {
+
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko-KR", apiKey);
+
+		CombinedCreditsDto combinedCreditsDtoKoKR;
+		combinedCreditsDtoKoKR = webClient.get()
+				.uri(uri)
+				.retrieve()
+				.bodyToMono(CombinedCreditsDto.class)
+				.block();
+
+		return combinedCreditsDtoKoKR;
 
 	}
 
-	public List<CombinedCreditsCastDto> getCombinedCreditsCast(int id, String language) {
+	/**
+	 * JSON 데이터를 받아 List<CombinedCreditsCastDto> 객체로 변환.
+	 * 해당 인물이 cast(연기)로 참여한 모든 출연작(영화, TV 프로그램)의 정보를 리스트 형태로 받아오기 위한 메서드.
+	 * @param id
+	 * 파라미터는 인물의 id 값.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 castListEnUS(영어), castListKoKR(한국어) 객체.
+	 */
+	public List<CombinedCreditsCastDto> getCombinedCreditsCastEnUS(int id) {
 
 		// API 요청 주소 생성.
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=en-US", apiKey);
 
-		CombinedCreditsCastDto combinedCreditsCastDto;
+		CombinedCreditsCastDto combinedCreditsCastDtoEnUS;
 		JsonNode node = webClient.get()
 				.uri(uri)
 				.retrieve()
@@ -230,21 +309,54 @@ public class PersonService {
 
         try {
             CombinedCreditsCastDto[] castArray = mapper.treeToValue(castNode, CombinedCreditsCastDto[].class);
-			List<CombinedCreditsCastDto> castList = Arrays.asList(castArray);
-			return castList;
+			List<CombinedCreditsCastDto> castListEnUS = Arrays.asList(castArray);
+			return castListEnUS;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
 			return null;
         }
 
 	}
-
-	public List<CombinedCreditsCrewDto> getCombinedCreditsCrew(int id, String language) {
+	public List<CombinedCreditsCastDto> getCombinedCreditsCastKoKR(int id) {
 
 		// API 요청 주소 생성.
-		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=%s", apiKey, language);
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko-KR", apiKey);
 
-		CombinedCreditsCrewDto combinedCreditsCrewDto;
+		CombinedCreditsCastDto combinedCreditsCastDtoKoKR;
+		JsonNode node = webClient.get()
+				.uri(uri)
+				.retrieve()
+				.bodyToMono(JsonNode.class)
+				.block();
+
+		JsonNode castNode = node.get("cast");
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			CombinedCreditsCastDto[] castArray = mapper.treeToValue(castNode, CombinedCreditsCastDto[].class);
+			List<CombinedCreditsCastDto> castListKoKR = Arrays.asList(castArray);
+			return castListKoKR;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	/**
+	 * JSON 데이터를 받아 List<CombinedCreditsCastDto> 객체로 변환.
+	 * 해당 인물이 crew(제작 등)로 참여한 모든 출연작(영화, TV 프로그램)의 정보를 리스트 형태로 받아오기 위한 메서드.
+	 * @param id
+	 * 파라미터는 인물의 id 값.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 crewListEnUS(영어), crewListKoKR(한국어) 객체.
+	 */
+	public List<CombinedCreditsCrewDto> getCombinedCreditsCrewEnUS(int id) {
+
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=en-US", apiKey);
+
+		CombinedCreditsCrewDto combinedCreditsCrewDtoEnUS;
 		JsonNode node = webClient.get()
 				.uri(uri)
 				.retrieve()
@@ -257,8 +369,34 @@ public class PersonService {
 
 		try {
 			CombinedCreditsCrewDto[] crewArray = mapper.treeToValue(crewNode, CombinedCreditsCrewDto[].class);
-			List<CombinedCreditsCrewDto> crewList = Arrays.asList(crewArray);
-			return crewList;
+			List<CombinedCreditsCrewDto> crewListEnUS = Arrays.asList(crewArray);
+			return crewListEnUS;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+	public List<CombinedCreditsCrewDto> getCombinedCreditsCrewKoKR(int id) {
+
+		// API 요청 주소 생성.
+		String uri = String.format(apiUrl + "/person/" + id + "/combined_credits" + "?api_key=%s&language=ko-KR", apiKey);
+
+		CombinedCreditsCrewDto combinedCreditsCrewDtoKoKR;
+		JsonNode node = webClient.get()
+				.uri(uri)
+				.retrieve()
+				.bodyToMono(JsonNode.class)
+				.block();
+
+		JsonNode crewNode = node.get("crew");
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			CombinedCreditsCrewDto[] crewArray = mapper.treeToValue(crewNode, CombinedCreditsCrewDto[].class);
+			List<CombinedCreditsCrewDto> crewListKoKR = Arrays.asList(crewArray);
+			return crewListKoKR;
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;
