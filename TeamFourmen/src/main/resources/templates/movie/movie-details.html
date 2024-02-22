@@ -284,9 +284,9 @@
                             <span th:text="${review.rating}">
                             </span>                            
                         </div>
-                        <div class="div-review-content" th:text="${review.content}">
-                            
-                        </div>
+                        <a th:href="@{/reviews/{id}(id = ${review.getReviewId()})}">
+                            <div class="div-review-content" th:text="${review.content}"></div>
+                        </a>
                     </div>
                 </div>
             </section>

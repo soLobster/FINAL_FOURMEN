@@ -351,7 +351,6 @@ public class TvShowController {
 		return "review/reviews";
 	}
 
-
 	@GetMapping("/details/{id}/season/{season_number}")
 	public String getTvShowSeasonDetails(Model model, @PathVariable(name= "id") int id , @PathVariable(name = "season_number") int season_number){
 

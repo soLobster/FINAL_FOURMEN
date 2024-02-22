@@ -204,29 +204,29 @@
     <div class = "review-item" th:each=" review : ${myAllReview}">
       <input class = "d-none" th:category = "${review.getCategory()}">
       <!--  카테고리 "movie" or "tv"  -->
-      <div class="review-item-body" th:each=" tvshow : ${reviewTvShowList}">
-        <th:block th:if = "${review.getTmdbId() eq tvshow.getId()}">
+      <div class="review-item-body" th:each=" works : ${combineInfoList}">
+        <th:block th:if = "${review.getTmdbId() eq works.getId()}">
         <section class="review-item-poster">
-          <a th:href="@{/tv/details/{id}(id = ${tvshow.getId()})}">
-            <img class = "review-item-poster-img"  th:src="@{https://image.tmdb.org/t/p/w342/{posterPath} (posterPath=${tvshow.getPoster_path()})}">
+          <a th:href="@{/tv/details/{id}(id = ${works.getId()})}">
+            <img class = "review-item-poster-img"  th:src="@{https://image.tmdb.org/t/p/w342/{posterPath} (posterPath=${works.getPosterPath()})}">
           </a>
         </section>
         <section class = "review-item-content">
           <article class = "review-item-content-article">
             <div class = "review-item-content-article-header">
-              <a class="review-item-title" th:href="@{/tv/details/{id}(id = ${tvshow.getId()})}">
-                <h3 th:text="${tvshow.getName()}">
+              <a class="review-item-title" th:href="@{/{category}/details/{id}(category = ${review.getCategory()} , id = ${works.getId()})}">
+                <h3 th:text="${works.getName()}">
                 </h3>
               </a>
-              <span class = "ms-1 mt-2" th:text="${ '(' + tvshow.getFirst_air_date().substring(0, 4) + ')'}">
-              </span>
+<!--              <span class = "ms-1 mt-2" th:text="${ '(' + tvshow.getFirst_air_date().substring(0, 4) + ')'}">-->
+<!--              </span>-->
             </div>
             <div class = "review-item-content-article-rating-date">
               <span th:rating="${review.getRating()}" id = "starRating"></span>
               <small class="ms-2 mt-1" th:text="${review.changeDateType(review.getCreatedDate())}"></small>
             </div>
             <div class = "review-item-content-article-body">
-              <a class = "review-item-article-content-a-tag" th:href="@{''}">
+              <a class = "review-item-article-content-a-tag" th:href="@{/reviews/{reviews_id}( reviews_id = ${review.getReviewId()})}">
                 <section class = "review-item-content-article-body-content" th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}" th:text="${review.getContent()}"></section>
                 <section class = "review-item-content-article-body-content" th:unless="${review.getIsSpoiler().equalsIgnoreCase('n')}" >스포일러가 포함된 리뷰 입니다.</section>
               </a>

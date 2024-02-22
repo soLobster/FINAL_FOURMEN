@@ -18,4 +18,6 @@ public interface ReviewDao extends JpaRepository<Review, Long> {
 	// 일단은 리스트로 가져옴.
 	List<Review> findByMemberEmail(String email);
 
+	Review findByReviewId(long reviewId);
+
 }

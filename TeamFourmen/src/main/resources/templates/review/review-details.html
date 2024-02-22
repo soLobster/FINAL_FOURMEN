@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text= "${review.getMember().getName() + ' 님이 '  +  works.getName()} + '에 남긴 리뷰 - 포맨'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <style>
+
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Hahmlet-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Chosunilbo_myungjo';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* 폰트 적용 */
+        body {
+            font-family: 'Pretendard-Regular';
+            background-color: #264653;
+        }
+
+        main {
+            margin: 0 auto;
+        }
+
+        .main-section {
+            width: 1200px;
+            min-width: 1200px;
+            margin: 100px auto;
+            display: flex;
+            /*background-color: darkslategray;*/
+        }
+
+        .left-works-info-section{
+            width: 300px;
+            min-width: 300px;
+            /*background-color: #888888;*/
+            padding: 15px;
+        }
+
+        .works-poster-div {
+            width: 270px;
+            height: auto;
+            border-radius: .5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .works-poster-img {
+            width: 270px;
+            height: auto;
+            object-fit: cover;
+            border-radius: .5rem;
+        }
+
+        .works-poster-div::before {
+            content: ''; /* 가상 요소의 콘텐츠 비우기 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent; /* 투명한 보더 설정 */
+            border-radius: .5rem;
+            transition: ease-in-out;
+        }
+
+        .works-poster-div:hover::before {
+            border-color: #33ff33; /* 호버 시 보더 색상 변경 */
+        }
+
+
+        .center-works-review-and-comments-section {
+            width: 600px;
+            min-width: 600px;
+            /*background-color: #155d27;*/
+            padding: 15px;
+        }
+
+        .right-reviewer-info-section {
+            width: 300px;
+            min-width: 300px;
+            background-color: #fbc500;
+            padding: 15px;
+        }
+
+        .imdb-rating-div{
+            display: flex;
+            justify-content: space-between;
+            width: 270px;
+            padding: 15px 8px 0 8px;
+        }
+
+        .imdb-rating {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .imdb-logo-img {
+            width: 120px;
+            height: auto;
+            border: 3px solid transparent;
+        }
+
+        .imdb-logo-img:hover {
+            border: 3px solid white;
+            border-radius: .5rem;
+            transition: ease-in-out;
+        }
+
+        .imdb-rating {
+            padding: 4px;
+            font-size: 18px;
+            font-style: italic;
+            font-weight: bolder;
+            color: white;
+        }
+
+        .works-review-header {
+            display: flex;
+            gap: 10px;
+        }
+
+        .works-review-header {
+            border-bottom: 2px solid rgba(256, 256, 256, 0.5);
+        }
+
+        .works-review-div {
+            border-bottom: 2px solid rgba(256, 256, 256, 0.5);
+        }
+
+        .works-review-div span{
+            padding: 13px 0 0 5px;
+        }
+
+        .works-review-users-name {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-family: 'Chosunilbo_myungjo';
+            font-weight: bolder;
+        }
+
+        .works-review-users-profile-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid white;
+            object-fit: cover;
+        }
+
+        .works-review-body {
+            padding: 15px;
+        }
+
+        .works-review-body-header {
+            display: flex;
+        }
+
+        .works-review-body-header > .works-title-opening-year {
+            padding-top: 12px;
+            padding-left: 15px;
+            font-style: italic;
+        }
+
+        .works-title {
+            font-family: 'Chosunilbo_myungjo';
+            font-weight: bolder;
+            color: white;
+        }
+
+        .works-review-body-rating {
+            display: flex;
+            gap: 10px;
+        }
+
+        .star-ratings {
+            display: flex;
+            color: #33ff33;
+            font-size: 17px;
+        }
+
+        .works-review-body-content {
+            padding-top: 20px;
+            font-size: 23px;
+            color: white;
+            font-family: 'Chosunilbo_myungjo';
+        }
+
+        .works-review-footer {
+            display: flex;
+            gap: 5px;
+            padding-bottom: 20px;
+        }
+
+        .fa-thumbs-up {
+            font-size: 20px;
+            padding: 12px 0 0 18px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .fa-thumbs-up:hover,
+        .fa-thumbs-up:active {
+            color: red;
+        }
+
+        .works-review-footer span {
+            font-style: italic;
+            font-weight: bolder;
+        }
+
+        .works-review-like-users{
+            padding-top: 40px;
+        }
+
+        .works-review-like-users p {
+            font-size: 20px;
+            border-bottom: 2px solid rgba(256, 256, 256 , 0.5);
+        }
+
+        .users-horizontal{
+            padding-top: 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .works-comments-div {
+            padding-top: 40px;
+        }
+
+        .works-comments-header p {
+            font-size: 20px;
+            border-bottom: 2px solid rgba(256, 256, 256 , 0.5);
+        }
+
+        .works-comments-list {
+            list-style-type: none;
+            padding: 10px 5px 0 10px;
+        }
+
+        .works-comment {
+            padding : 10px 20px 10px 10px;
+            border-top: 1px solid rgba(256, 256, 256, 0.5);
+            border-bottom: 1px solid rgba(256, 256, 256, 0.5);
+        }
+
+        .comment-body {
+            display: flex;
+        }
+
+        .comment-body > .user-info {
+            width: 15%;
+            min-width: 150px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .user-info > img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid white;
+            object-fit: cover;
+            margin-top: 5px;
+        }
+
+        .user-name-created-date {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name-created-date > .comment-username {
+            font-size: 15px;
+            font-weight: bolder;
+        }
+
+        .user-name-created-date > .comment-register-date {
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .comment-body > .comment-content {
+            width: 80%;
+            min-width: 380px;
+        }
+
+        .works-comments-footer {
+            border: 2px solid rgba(256, 256, 256 , 0.7);
+            border-radius: .25rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 80%;
+            min-width: 560px;
+            padding: 15px;
+            margin: 0 0 0 7px;
+        }
+
+        .btn-success {
+            align-self: flex-end;
+        }
+
+    </style>
+    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+</head>
+<body class = "ko v4">
+
+<header>
+    <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<main>
+
+    <section class = "main-section">
+
+        <section class = "left-works-info-section">
+
+            <a th:href="@{/{category}/details/{id}(category = ${works.getCategory()} , id = ${works.getId()})}">
+            <!-- a 태그가 밖에 있어야 한다. -->
+                <div class = "works-poster-div">
+                    <img class = "works-poster-img" th:src = "@{'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${works.getPosterPath()}}"/>
+                </div>
+            </a>
+
+            <div class = "imdb-rating-div">
+                <a th:href="@{'https://www.imdb.com/title/' + ${works.getImdbId()}}">
+                    <img class ="imdb-logo-img" th:src = "@{'/icons/imdb_icon_large.svg'}">
+                </a>
+                <div class = "imdb-rating">
+                    <span th:text="${works.getImdbRatings().getAveragerating() + ' / 10'}"></span>
+                    <span th:text="${works.getImdbRatings().getNumvotes()} + ' votes'"></span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class = "center-works-review-and-comments-section">
+            <div class = "works-review-div">
+                <div class = "works-review-header">
+                    <img class ="works-review-users-profile-img" th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}" />
+                    <span>reviewed By</span>
+                    <h4 class = "works-review-users-name" th:text="${review.getMember().getName()}"></h4>
+                </div>
+                <div class = "works-review-body">
+                    <div class ="works-review-body-header">
+                        <h2 class = "works-title" th:text="${works.getName()}"></h2>
+                        <h4 class = "works-title-opening-year">2024</h4>
+                    </div>
+                    <div class = "works-review-body-rating">
+                        <div class = "star-ratings" th:rating="${review.getRating()}"></div>
+                        <div th:text="${'reviewed on ' + review.changeDateType(review.getCreatedDate())}"></div>
+                    </div>
+                    <article class="works-review-body-content" th:text="${review.getContent()}"></article>
+                </div>
+                <div class ="works-review-footer">
+                    <i class="fa-solid fa-thumbs-up"></i>
+                    <span>99999 likes</span>
+                </div>
+            </div>
+
+            <!--  여기까지 리뷰 표기 -->
+
+            <div class ="works-review-like-users">
+                <p>LIKED THESE REVIEWS</p>
+                <div class = "users-horizontal">
+                    <img class ="works-review-users-profile-img" th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://i.namu.wiki/i/R17xh_K5hWjF-rOjrQkleVrgey6H_VLUT9HldYjKuxygX9pVXNIwyXvGwcRmoKi5-iM5Kd6SuiXINHlPHp_43-O7dLYa_JyRg9eHE5H24kSnyVCZvr2E29jn3mazoWz-cgflhsy65LmzZZn_PpegDA.webp}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://www.ikbc.co.kr/data/kbc/image/2023/08/13/kbc202308130007.800x.0.jpg}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://i.namu.wiki/i/R17xh_K5hWjF-rOjrQkleVrgey6H_VLUT9HldYjKuxygX9pVXNIwyXvGwcRmoKi5-iM5Kd6SuiXINHlPHp_43-O7dLYa_JyRg9eHE5H24kSnyVCZvr2E29jn3mazoWz-cgflhsy65LmzZZn_PpegDA.webp}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://www.ikbc.co.kr/data/kbc/image/2023/08/13/kbc202308130007.800x.0.jpg}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://i.namu.wiki/i/R17xh_K5hWjF-rOjrQkleVrgey6H_VLUT9HldYjKuxygX9pVXNIwyXvGwcRmoKi5-iM5Kd6SuiXINHlPHp_43-O7dLYa_JyRg9eHE5H24kSnyVCZvr2E29jn3mazoWz-cgflhsy65LmzZZn_PpegDA.webp}"/>
+                    <img class ="works-review-users-profile-img" th:src = "@{https://www.ikbc.co.kr/data/kbc/image/2023/08/13/kbc202308130007.800x.0.jpg}"/>
+                </div>
+            </div>
+
+            <div class = "works-comments-div">
+                <div class = "works-comments-header">
+                    <p>Comments</p>
+                </div>
+                <div class ="works-comments-body">
+                    <ul class = "works-comments-list">
+
+                        <li class = "works-comment">
+                            <div class = "comment-body">
+                                <section class = "user-info">
+                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
+                                    <div class = "user-name-created-date">
+                                        <span class = "comment-username">username</span>
+                                        <span class = "comment-register-date">2024.02.22</span>
+                                    </div>
+                                </section>
+                                <section class = "comment-content">
+                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
+                                </section>
+                            </div>
+                        </li>
+
+
+                        <li class = "works-comment">
+                            <div class = "comment-body">
+                                <section class = "user-info">
+                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
+                                    <div class = "user-name-created-date">
+                                        <span class = "comment-username">username</span>
+                                        <span class = "comment-register-date">2024.02.22</span>
+                                    </div>
+                                </section>
+                                <section class = "comment-content">
+                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
+                                </section>
+                            </div>
+                        </li>
+
+
+                        <li class = "works-comment">
+                            <div class = "comment-body">
+                                <section class = "user-info">
+                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
+                                    <div class = "user-name-created-date">
+                                        <span class = "comment-username">username</span>
+                                        <span class = "comment-register-date">2024.02.22</span>
+                                    </div>
+                                </section>
+                                <section class = "comment-content">
+                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
+                                </section>
+                            </div>
+                        </li>
+
+
+                        <li class = "works-comment">
+                            <div class = "comment-body">
+                                <section class = "user-info">
+                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
+                                    <div class = "user-name-created-date">
+                                        <span class = "comment-username">username</span>
+                                        <span class = "comment-register-date">2024.02.22</span>
+                                    </div>
+                                </section>
+                                <section class = "comment-content">
+                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
+                                </section>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <th:block sec:authorize= "isAuthenticated()">
+                    <div class="works-comments-footer">
+                        <section class = "comment-textarea">
+                            <textarea class ="form-control" placeholder="댓글을 입력해주세요" row = "4"></textarea>
+                        </section>
+                        <button class = "mt-2 btn btn-success">submit</button>
+                    </div>
+                </th:block>
+            </div>
+        </section>
+
+        <section class = "right-reviewer-info-section">
+            리뷰어 정보 영역
+        </section>
+
+    </section>
+
+</main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+<script th:src="@{/js/navbar.js}"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+       const starRatingElements = document.querySelector('.star-ratings');
+
+       const rating = parseFloat(starRatingElements.getAttribute('rating'));
+
+       const integerPart = Math.floor(rating);
+       const decimalPart = rating - integerPart;
+
+        // 별표로 변환하는 함수
+        function convertToStars(numStars) {
+            let stars = '';
+            for (let i = 0; i < numStars; i++) {
+                stars += '<i class="fa-solid fa-star"></i>';
+            }
+            return stars;
+        }
+
+        starRatingElements.innerHTML = convertToStars(integerPart);
+
+        // 소수 부분이 .5인 경우 '½' 이모지 추가
+        if (decimalPart === 0.5) {
+            starRatingElements.innerHTML += '<i class="halfScore">½</i>';
+        }
+
+    });
+
+</script>
+</body>
+</html>
