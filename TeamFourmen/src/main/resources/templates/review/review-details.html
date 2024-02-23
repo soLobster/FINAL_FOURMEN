@@ -21,13 +21,6 @@
         }
 
         @font-face {
-            font-family: 'Hahmlet-Regular';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Regular.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
             font-family: 'Chosunilbo_myungjo';
             src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
             font-weight: normal;
@@ -45,9 +38,9 @@
         }
 
         .main-section {
-            width: 1200px;
-            min-width: 1200px;
-            margin: 100px auto;
+            width: 1000px;
+            min-width: 1000px;
+            margin: 50px auto;
             display: flex;
             /*background-color: darkslategray;*/
         }
@@ -91,18 +84,10 @@
             border-color: #33ff33; /* 호버 시 보더 색상 변경 */
         }
 
-
         .center-works-review-and-comments-section {
-            width: 600px;
-            min-width: 600px;
+            width: 700px;
+            min-width: 700px;
             /*background-color: #155d27;*/
-            padding: 15px;
-        }
-
-        .right-reviewer-info-section {
-            width: 300px;
-            min-width: 300px;
-            background-color: #fbc500;
             padding: 15px;
         }
 
@@ -149,6 +134,7 @@
 
         .works-review-div {
             border-bottom: 2px solid rgba(256, 256, 256, 0.5);
+            margin-top: 10px;
         }
 
         .works-review-div span{
@@ -171,7 +157,7 @@
         }
 
         .works-review-body {
-            padding: 15px;
+            padding: 20px;
         }
 
         .works-review-body-header {
@@ -223,7 +209,7 @@
 
         .fa-thumbs-up:hover,
         .fa-thumbs-up:active {
-            color: red;
+            color: #33ff33;
         }
 
         .works-review-footer span {
@@ -309,15 +295,15 @@
         }
 
         .works-comments-footer {
-            border: 2px solid rgba(256, 256, 256 , 0.7);
+            border: 2px solid rgba(256, 256, 256 , 0.5);
             border-radius: .25rem;
             display: flex;
             flex-direction: column;
             position: relative;
             width: 80%;
-            min-width: 560px;
+            min-width: 650px;
             padding: 15px;
-            margin: 0 0 0 7px;
+            margin: 0 0 0 13px;
         }
 
         .btn-success {
@@ -475,16 +461,12 @@
                 <th:block sec:authorize= "isAuthenticated()">
                     <div class="works-comments-footer">
                         <section class = "comment-textarea">
-                            <textarea class ="form-control" placeholder="댓글을 입력해주세요" row = "4"></textarea>
+                            <textarea class ="form-control" placeholder="댓글을 입력해주세요" row = "6"></textarea>
                         </section>
                         <button class = "mt-2 btn btn-success">submit</button>
                     </div>
                 </th:block>
             </div>
-        </section>
-
-        <section class = "right-reviewer-info-section">
-            리뷰어 정보 영역
         </section>
 
     </section>

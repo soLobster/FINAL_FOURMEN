@@ -46,8 +46,6 @@ public class MyPageController {
 
         List<CombineReviewDTO> combineInfoList = new ArrayList<>();
 
-
-
         for(Review myReview : myAllReview) {
             int tmdb_id = myReview.getTmdbId();
 
@@ -83,6 +81,7 @@ public class MyPageController {
         }
 
         log.info("COMBINE LIST = {} ",combineInfoList);
+
         model.addAttribute("combineInfoList" , combineInfoList);
 
         return "mypage/details-review-list";

@@ -21,14 +21,21 @@
 			font-style: normal;
 		}
 
+		@font-face {
+			font-family: 'Chosunilbo_myungjo';
+			src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
+			font-weight: normal;
+			font-style: normal;
+		}
+
 		/* 폰트 적용 */
 		body {
 			font-family: 'Pretendard-Regular';
-			background-color: black;
+			/*background-color: black;*/
 		}
 
 		main {
-			color: white;
+			/*color: white;*/
 		}
 		.flex_header_container{
 			position: relative;
@@ -136,6 +143,7 @@
 			margin-right: 30px;
 			font-weight: bold;
 			/* background-color: gainsboro; */
+			font-family: 'Chosunilbo_myungjo';
 		}
 
 		.tool-tip-custom-bar{
@@ -550,12 +558,44 @@
 
 		.popular-review-section {
 			/*background-color: #155d27;*/
-			padding: 5px 10px 5px 10px;
+			padding: 5px 5px 5px 5px;
 		}
 
 		.review-item {
 			border-top: 1px solid rgba(256, 256, 256, 0.5);
 		}
+
+		.review-item-user-profile-img {
+			width: 55px;
+			height: 55px;
+			position: relative;
+			cursor: pointer;
+
+		}
+
+		.review-item-user-profile-img > img {
+			width: 55px;
+			height: 55px;
+			object-fit: cover;
+			border-radius: 50%;
+		}
+
+		.review-item-user-profile-img::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 55px;
+			height: 55px;
+			border: 1px solid white;
+			border-radius: 50%;
+			transition: ease-in-out;
+		}
+
+		.review-item-user-profile-img:hover::before {
+			border-color: #33ff33;
+		}
+
 
 		.tvShowAllReview {
 			margin-top: 10px;
@@ -573,13 +613,14 @@
 			margin-left: 20px;
 		}
 
-		.review-item-content-header > .fa-star {
-			font-size: 13px;
-			color: #33ff33;
+		.view-star-rating > i {
+			font-size: 13px; !important;
+			color: #33ff33; !important;
 		}
 
-		.review-item-content-header > .fa-comment {
-			color: #9999a1;
+		.reviewer-nickname {
+			font-size: 20px;
+			font-weight: bolder;
 		}
 
 		.review-item-content-header > a{
@@ -733,12 +774,14 @@
 		}
 
 		::-webkit-scrollbar-track {
-			background-color: black; /* 스크롤바 트랙 색상 */
+			background-color: rgb(31, 32, 41); /* 스크롤바 트랙 색상 */
 		}
 
 	</style>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
 	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+	<link th:href="@{/css/theme.css}" rel="stylesheet">
+
 </head>
 <body class = "ko v4">
 <header>
@@ -905,66 +948,40 @@
 <!--				</th:block>-->
 				<section class = "popular-review-section">
 
-					<div class = "review-item" style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
-						<input class = "d-none" th:email = "email">
+					<div class = "review-item" th:each=" review : ${tvShowReviewList}"
+						 style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+						<input class = "d-none" th:email = "${review.getMember().getEmail()}">
 						<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-							<section class = "review-item-user-profile-img" style=" width: 70px; height: 70px; ">
-								<a th:href="@{''}">
-									<img th:src="@{https://img.khan.co.kr/news/2023/06/21/l_2023062201000750500069571.jpg}"
-									style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
-								</a>
-							</section>
+							<a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+								<section class = "review-item-user-profile-img" >
+									<img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}"
+										style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
+								</section>
+							</a>
+
 							<section class = "review-item-content">
 								<div class = "review-item-content-header">
-									<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
-									<a th:href="@{''}">
-										<span class = "mx-2 reviewer-nickname">Cristiano Ronaldo</span>
+									<section>
+										<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
+									</section>
+									<a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+										<span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
 									</a>
-									<i class="fa-solid fa-star"></i>
-									<i class="fa-solid fa-star"></i>
-									<i class="fa-solid fa-star"></i>
-									<i class="fa-solid fa-star"></i>
-
-									<i class="ms-3 me-1 fa-solid fa-comment"></i> 9999
+									<span id = "view-star-rating" th:rating="${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
 								</div>
 								<div class = "review-item-content-article">
-									<a th:href="@{''}">
-										<article class = "content-article">
-										너는 나를 존중해야 한다. 나는 발롱도르 5개와 수많은 개인 트로피를 들어올렸으며 2016 유로에서 포르투갈을 이끌고 우승을 차지했고 동시에 A매치 역대 최다 득점자이다. 또한 챔스 역대 최다 득점자이자 5번이나 우승을 차지한 레알마드리드의 상징이다. 또한 36세의 나이에도 프리미어리그에서 18골을 기록하고 챔스에서 5경기 연속 골을 기록하며 내가 세계 최고임을 증명해냈다. 은혜를 모르는 맨유 보드진과 팬들은 내가 맨유의 골칫덩이라며 쫒아냈지만 내가 세계 최고이고 내가 팀보다 위대하다는 사실은 바뀌지 않는다. 내가 사우디에 간 이유는 메시에 대한 자격지심이 아니라 유럽에서 이룰 수 있는 모든 것을 이루었기에 아시아를 정복하기 위해 간 것이지, 단지 돈을 위해서 간 것이 아니다.
+									<a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
+										<article class = "content-article"
+												 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+												 th:text="${review.getContent()}"></article>
+										<article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
+											스포일러가 포함된 리뷰입니다. <br> 상세페이지에서 확인하세요.
 										</article>
 									</a>
 								</div>
 								<div class = "review-item-content-footer">
 									<i class="me-2 fa-solid fa-thumbs-up"></i> 9999 likes
-								</div>
-							</section>
-						</div>
-					</div>
-
-					<div class = "review-item" style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
-						<input class = "d-none" th:email = "email">
-						<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-							<section class = "review-item-user-profile-img" style=" width: 70px; height: 70px; ">
-								<a th:href="@{''}">
-									<img th:src="@{https://img.khan.co.kr/news/2023/06/21/l_2023062201000750500069571.jpg}"
-										 style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
-								</a>
-							</section>
-							<section class = "review-item-content">
-								<div class = "review-item-content-header">
-									<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span><span class = "mx-2" style="color: #e6e6e9; font-weight: bolder;">Cristiano Ronaldo</span>
-									<i class="fa-solid fa-star"></i>
-									<i class="fa-solid fa-star"></i>
-									<i class="fa-solid fa-star"></i>
-									<i class="fa-solid fa-star"></i>
-
 									<i class="ms-3 me-1 fa-solid fa-comment"></i> 9999
-								</div>
-								<div class = "review-item-content-article">
-									너는 나를 존중해야 한다. 나는 발롱도르 5개와 수많은 개인 트로피를 들어올렸으며 2016 유로에서 포르투갈을 이끌고 우승을 차지했고 동시에 A매치 역대 최다 득점자이다. 또한 챔스 역대 최다 득점자이자 5번이나 우승을 차지한 레알마드리드의 상징이다. 또한 36세의 나이에도 프리미어리그에서 18골을 기록하고 챔스에서 5경기 연속 골을 기록하며 내가 세계 최고임을 증명해냈다. 은혜를 모르는 맨유 보드진과 팬들은 내가 맨유의 골칫덩이라며 쫒아냈지만 내가 세계 최고이고 내가 팀보다 위대하다는 사실은 바뀌지 않는다. 내가 사우디에 간 이유는 메시에 대한 자격지심이 아니라 유럽에서 이룰 수 있는 모든 것을 이루었기에 아시아를 정복하기 위해 간 것이지, 단지 돈을 위해서 간 것이 아니다.
-								</div>
-								<div class = "review-item-content-footer">
-									<i class="me-2 fa-solid fa-thumbs-up"></i> 9999 likes
 								</div>
 							</section>
 						</div>
@@ -1257,6 +1274,31 @@
 		});
 	});
 
+	document.addEventListener('DOMContentLoaded', function () {
+		const starRatingElements = document.querySelectorAll('#view-star-rating');
+
+		starRatingElements.forEach( element => {
+			const rating = parseFloat(element.getAttribute('rating'));
+
+			const integerPart = Math.floor(rating); // 정수
+			const decimalPart = rating - integerPart; // 소수
+
+			for (let i = 0; i < integerPart; i++) {
+				const starIcon = document.createElement('i');
+				starIcon.classList.add('fa-solid', 'fa-star');
+				element.appendChild(starIcon);
+			}
+
+			if (decimalPart === 0.5) {
+				const halfStarRating = document.createElement('i');
+				halfStarRating.classList.add('halfScore');
+				halfStarRating.innerText = '½';
+				element.appendChild(halfStarRating);
+			}
+
+			});
+		});
+
 
 </script>
 
@@ -1270,6 +1312,7 @@
 <script th:src="@{/js/navbar.js}"></script>
 <script th:src="@{/js/image/img-dominant-color-tvshow.js}"></script>
 <script th:src="@{/js/features/features-tv.js}"></script>
+
 
 </body>
 </html>

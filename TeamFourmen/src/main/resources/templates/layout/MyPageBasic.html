@@ -19,7 +19,7 @@
       <div class="overview-review-network">
         <h4 class="review-num">
           <a th:href="@{/mypage/details/{id}/reviews (id = ${member.email})}">
-            <span class = "value" th:if = "${param1 ne null}" th:text="${param1}"></span>
+            <span class = "value" th:if = "${myAllReview ne null}" th:text="${myAllReview.size()}"></span>
             <span class = "value" th:unless="${param1 ne null}" th:text="0"></span>
             <span class = "definition">리뷰</span>
           </a>
