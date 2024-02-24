@@ -138,10 +138,10 @@ public class PersonService {
 	 * 파라미터는 인물의 id 값.
 	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDtoEnUS(영어), externalIDsDtoKoKR(한국어) 객체.
 	 */
-	public ExternalIDsDto getExternalIDsEnUS(int id) {
+	public ExternalIDsDto getExternalIDs(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s&language=en-US", apiKey);
+		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s", apiKey);
 
 		ExternalIDsDto externalIDsDtoEnUS;
 		externalIDsDtoEnUS = webClient.get()
@@ -153,22 +153,6 @@ public class PersonService {
 		return externalIDsDtoEnUS;
 
 	}
-	public ExternalIDsDto getExternalIDsKoKR(int id) {
-
-		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
-		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s&language=ko-KR", apiKey);
-
-		ExternalIDsDto externalIDsDtoKoKR;
-		externalIDsDtoKoKR = webClient.get()
-				.uri(uri)
-				.retrieve()
-				.bodyToMono(ExternalIDsDto.class)
-				.block();
-
-		return externalIDsDtoKoKR;
-
-	}
-
 
 	/**
 	 * JSON 데이터를 받아 MovieCreditsDto 객체로 변환.

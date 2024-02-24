@@ -61,8 +61,7 @@ public class PersonController {
 		DetailsPersonDto detailsPersonDtoEnUS = personService.getPersonDetailsEnUS(id);
 		DetailsPersonDto detailsPersonDtoKoKR = personService.getPersonDetailsKoKR(id);
 
-		ExternalIDsDto externalIDsDtoEnUS = personService.getExternalIDsEnUS(id);
-		ExternalIDsDto externalIDsDtoKoKR = personService.getExternalIDsKoKR(id);
+		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 
 		CombinedCreditsDto combinedCreditsDtoEnUS = personService.getCombinedCreditsEnUS(id);
 		CombinedCreditsDto combinedCreditsDtoKoKR = personService.getCombinedCreditsKoKR(id);
@@ -101,8 +100,7 @@ public class PersonController {
 
 		/*
 		 * 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 중복을 제거한 Cast 리스트 생성.
-		 * Cast 포스터 경로를 전달하기 위함.
-		 *
+		 * Cast 포스터 경로를 전달하기 위함. (다른 요소들도 가지고 있음)
 		 */
 		// 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 포스터 경로(path)가 고유한지 확인.
 		Set<String> uniqueCastPosterPath = new HashSet<>();
@@ -121,7 +119,7 @@ public class PersonController {
 
 		/*
 		 * 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 중복을 제거한 Crew 리스트 생성.
-		 * Crew 포스터 경로를 전달하기 위함.
+		 * Crew 포스터 경로를 전달하기 위함. (다른 요소들도 가지고 있음)
 		 */
 		// 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 포스터 경로(path)가 고유한지 확인.
 		Set<String> uniqueCrewPosterPath = new HashSet<>();
@@ -246,8 +244,7 @@ public class PersonController {
 		model.addAttribute("detailsPersonEnUS", detailsPersonDtoEnUS);
 		model.addAttribute("detailsPersonKoKR", detailsPersonDtoKoKR);
 		// 인물의 외부 링크 정보(sns, 홈페이지 등)를 가진 객체를 모델에 추가.
-		model.addAttribute("externalIDsEnUS", externalIDsDtoEnUS);
-		model.addAttribute("externalIDsKoKR", externalIDsDtoKoKR);
+		model.addAttribute("externalIDs", externalIDsDto);
 		// 해당 인물이 cast(연기) 또는 crew(제작 등)로 참여한 모든 출연작(영화, TV 프로그램)의 정보를 가진 객체를 모델에 추가.
 		model.addAttribute("combinedCreditsEnUS", combinedCreditsDtoEnUS);
 		model.addAttribute("combinedCreditsKoKR", combinedCreditsDtoKoKR);
