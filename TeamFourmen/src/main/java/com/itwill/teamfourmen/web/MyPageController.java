@@ -1,12 +1,12 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.MemberRepository;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
-import com.itwill.teamfourmen.service.FeatureService;
-import com.itwill.teamfourmen.service.MovieApiUtil;
-import com.itwill.teamfourmen.service.TvShowApiUtil;
+import com.itwill.teamfourmen.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,6 +26,7 @@ public class MyPageController {
     private final FeatureService featureService;
     private final TvShowApiUtil tvShowApiUtil;
     private final MovieApiUtil movieApiUtil;
+    private final MyPageService myPageService;
 
     @GetMapping("/")
     public void mypage() {
@@ -33,12 +34,18 @@ public class MyPageController {
 
     @GetMapping("/details/{id}")
     public String getMyPageDetails(Model model, @PathVariable (name = "id") String email){
+        log.info("get MY PAGE DETAILS USER EMAIL = {}", email);
+
+        Member profile = myPageService.getMember(email);
+
+        model.addAttribute("profile", profile);
 
         return "mypage/details-profile";
     }
 
     @GetMapping("/details/{id}/reviews")
     public String getReviews(Model model, @PathVariable( name = "id") String email){
+
 
         List<Review> myAllReview =  featureService.getAllMyReview(email);
 

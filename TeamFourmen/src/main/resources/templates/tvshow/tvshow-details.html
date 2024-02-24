@@ -893,7 +893,7 @@
 							<li class="border-0 card people_card" th:each=" people : ${tvShowCast} " th:object=" ${people} ">
 								<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273"/>
 								<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
-								<a th:href="@{../person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
+								<a th:href="@{/person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
 									<section class = "card-img-overlay">
 										<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
 										<p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>

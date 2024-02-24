@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
-<section class="main-section" th:fragment="sectionFragmentParam (param1)" >
+<section class="main-section" th:fragment="sectionFragment" >
   <div class = "mypage-details-header">
     <div class = "mypage-details-profile-img">
       <img th:src = "@{https://s.ltrbxd.com/static/img/avatar220.1dea069d.png}">
     </div>
     <div class="mypage-details-overview">
       <div class= "overview-nickname-and-button">
-        <h1 class="me-2" th:text="${member.nickname}"></h1>
-        <div class = "edit-profile">
-          <a class = "text-white" th:href = "@{'/mypage'}" role="button">
-            <i class="fa-solid fa-ellipsis"></i>
-          </a>
-          <span class="edit-profile-text">Edit Profile</span>
-        </div>
+        <h1 class="me-2" id = "user-nick-name"></h1>
+        <th:block sec:authorize="isAuthenticated()">
+          <div class = "edit-profile">
+            <a class = "text-white" th:href = "@{'/mypage'}" role="button">
+              <i class="fa-solid fa-ellipsis"></i>
+            </a>
+            <span class="edit-profile-text">Edit Profile</span>
+          </div>
+        </th:block>
       </div>
       <div class="overview-review-network">
         <h4 class="review-num">
-          <a th:href="@{/mypage/details/{id}/reviews (id = ${member.email})}">
-            <span class = "value" th:if = "${myAllReview ne null}" th:text="${myAllReview.size()}"></span>
-            <span class = "value" th:unless="${param1 ne null}" th:text="0"></span>
+          <a>
+            <span class = "value"></span>
             <span class = "definition">리뷰</span>
           </a>
         </h4>
@@ -43,10 +45,10 @@
     <div class="container-fluid">
       <ul class="nav justify-content-center">
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/mypage/details/{id}(id = ${member.email})}">Profile</a>
+          <a class="nav-link">Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/mypage/details/{id}/reviews(id = ${member.email})}">Reviews</a>
+          <a class="nav-link">Reviews</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Play List</a>
