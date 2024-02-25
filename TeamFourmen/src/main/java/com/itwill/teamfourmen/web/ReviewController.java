@@ -1,17 +1,17 @@
 package com.itwill.teamfourmen.web;
 
-import com.itwill.teamfourmen.domain.ImdbRatings;
-import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.repository.ReviewDao;
-import com.itwill.teamfourmen.service.ImdbRatingUtil;
-import com.itwill.teamfourmen.service.MovieApiUtil;
-import com.itwill.teamfourmen.service.TvShowApiUtil;
+import com.itwill.teamfourmen.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +29,8 @@ public class ReviewController {
     private final MovieApiUtil movieApiUtil;
     private final TvShowApiUtil tvShowApiUtil;
     private final ImdbRatingUtil imdbRatingUtil;
+    private final CommentService commentService;
+    private final FeatureService featureService;
 
     // 리뷰 ID를 바탕으로 한가지 리뷰를 보여주는 페이지
     @GetMapping("/{review_id}")
@@ -73,6 +75,10 @@ public class ReviewController {
         }
 
         model.addAttribute("works", combineReviewDTO);
+
+        Page<ReviewComments> reviewComments = commentService.getAllComments(reviewId,0);
+
+        model.addAttribute("reviewComments", reviewComments);
 
         return "review/review-details";
     }

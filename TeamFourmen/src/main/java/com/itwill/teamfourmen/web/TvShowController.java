@@ -5,11 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.itwill.teamfourmen.domain.ImdbRatings;
-import com.itwill.teamfourmen.domain.Member;
-import com.itwill.teamfourmen.domain.Review;
-import com.itwill.teamfourmen.domain.TmdbLike;
+import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.dto.tvshow.*;
+import com.itwill.teamfourmen.service.CommentService;
 import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.TvShowApiUtil;
@@ -42,6 +40,7 @@ public class TvShowController {
 
 	private final ImdbRatingUtil imdbRatingUtil;
 	private final FeatureService featureService;
+	private final CommentService commentService;
 
 	private String category = "tv";
 
@@ -346,7 +345,6 @@ public class TvShowController {
 		List<Review> tvShowReviewList =featureService.getReviews("tv", id);
 
 		model.addAttribute("tvShowReviewList", tvShowReviewList);
-
 
 		return "review/reviews";
 	}

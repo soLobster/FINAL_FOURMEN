@@ -132,6 +132,15 @@
             border-bottom: 2px solid rgba(256, 256, 256, 0.5);
         }
 
+        .works-review-header > a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .works-review-header > a:hover {
+            color: #8dabfb;
+        }
+
         .works-review-div {
             border-bottom: 2px solid rgba(256, 256, 256, 0.5);
             margin-top: 10px;
@@ -156,12 +165,24 @@
             object-fit: cover;
         }
 
+        .works-review-users-profile-img:hover {
+            border: 2px solid #33ff33;
+        }
+
         .works-review-body {
             padding: 20px;
         }
 
         .works-review-body-header {
             display: flex;
+        }
+
+        .works-review-body-header > a {
+            text-decoration: none;
+        }
+
+        .works-review-body-header > a :hover {
+            color: #8dabfb;
         }
 
         .works-review-body-header > .works-title-opening-year {
@@ -200,15 +221,22 @@
             padding-bottom: 20px;
         }
 
-        .fa-thumbs-up {
+        .btn-like-review {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            position: relative;
+        }
+
+        .works-review-footer .fa-thumbs-up {
             font-size: 20px;
             padding: 12px 0 0 18px;
             color: white;
             cursor: pointer;
         }
 
-        .fa-thumbs-up:hover,
-        .fa-thumbs-up:active {
+        .works-review-footer .fa-thumbs-up:hover,
+        .works-review-footer .fa-thumbs-up:active {
             color: #33ff33;
         }
 
@@ -250,8 +278,8 @@
 
         .works-comment {
             padding : 10px 20px 10px 10px;
-            border-top: 1px solid rgba(256, 256, 256, 0.5);
-            border-bottom: 1px solid rgba(256, 256, 256, 0.5);
+            border-top: 1px solid rgba(256, 256, 256, 0.3);
+            border-bottom: 1px solid rgba(256, 256, 256, 0.3);
         }
 
         .comment-body {
@@ -265,7 +293,7 @@
             gap: 10px;
         }
 
-        .user-info > img {
+        .user-info > a > div > img {
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -274,12 +302,25 @@
             margin-top: 5px;
         }
 
+        .user-info > a > div > img:hover {
+            border: 1px solid #33ff33;
+        }
+
         .user-name-created-date {
             display: flex;
             flex-direction: column;
         }
 
-        .user-name-created-date > .comment-username {
+        .user-name-created-date > a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .user-name-created-date > a:hover {
+            color: #8dabfb;
+        }
+
+        .user-name-created-date > a >.comment-username {
             font-size: 15px;
             font-weight: bolder;
         }
@@ -294,8 +335,79 @@
             min-width: 380px;
         }
 
+        .comment-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .comment-footer .like-comment-count-div {
+            font-size: 13px;
+            padding-left: 40px;
+            padding-top: 5px;
+        }
+
+        .comment-like-or-report > button ,
+        .comment-update-or-comment-delete > button {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            position: relative;
+        }
+
+        .comment-like-or-report > button > span,
+        .comment-update-or-comment-delete > button > span{
+            position: absolute;
+            font-weight: bolder;
+            transform: translateX(-50%);
+            background-color: darkslategrey;
+            color: inherit;
+            left: 50%;
+            top: 0%;
+            white-space: nowrap;
+            padding: 5px 10px;
+            border-radius: .25rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .comment-like-or-report > button > span:before,
+        .comment-update-or-comment-delete > button > span:before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 80%;
+            transform: translateX(-50%);
+            border: 13px solid;
+            border-color: darkslategrey #0000 #0000 #0000;
+        }
+
+
+
+
+        .comment-like-or-report > button > i:before,
+        .comment-update-or-comment-delete > button > i:before {
+            font-size: 13px;
+            color: inherit;
+        }
+
+
+
+        .comment-like-or-report > button:hover > i:before,
+        .comment-update-or-comment-delete > button:hover > i:before {
+                color: #33ff33;
+        }
+
+        .comment-like-or-report > button:hover > span,
+        .comment-update-or-comment-delete > button:hover > span {
+            visibility: visible;
+            top: -150%;
+            opacity: 1;
+        }
+
+
         .works-comments-footer {
-            border: 2px solid rgba(256, 256, 256 , 0.5);
+            border: 2px solid rgba(256, 256, 256 , 0.3);
             border-radius: .25rem;
             display: flex;
             flex-direction: column;
@@ -348,13 +460,19 @@
         <section class = "center-works-review-and-comments-section">
             <div class = "works-review-div">
                 <div class = "works-review-header">
-                    <img class ="works-review-users-profile-img" th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}" />
+                    <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                        <img class ="works-review-users-profile-img" th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}" />
+                    </a>
                     <span>Review By</span>
-                    <h4 class = "works-review-users-name" th:text="${review.getMember().getName()}"></h4>
+                    <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                        <h4 class = "works-review-users-name" th:text="${review.getMember().getName()}"></h4>
+                    </a>
                 </div>
                 <div class = "works-review-body">
                     <div class ="works-review-body-header">
-                        <h2 class = "works-title" th:text="${works.getName()}"></h2>
+                        <a th:href="@{/{category}/details/{id}(category = ${works.getCategory()}, id = ${works.getId()})}">
+                            <h2 class = "works-title" th:text="${works.getName()}"></h2>
+                        </a>
                         <h4 class = "works-title-opening-year">2024</h4>
                     </div>
                     <div class = "works-review-body-rating">
@@ -363,9 +481,11 @@
                     </div>
                     <article class="works-review-body-content" th:text="${review.getContent()}"></article>
                 </div>
-                <div class ="works-review-footer">
-                    <i class="fa-solid fa-thumbs-up"></i>
-                    <span>99999 likes</span>
+                <div class ="works-review-footer" id = "like-review">
+                    <button type="button" class = "btn-like-review">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                        <span>99999 likes</span>
+                    </button>
                 </div>
             </div>
 
@@ -388,90 +508,96 @@
 
             <div class = "works-comments-div">
                 <div class = "works-comments-header">
-                    <p>Comments</p>
+                    <p class = "mb-1">Comments</p>
                 </div>
                 <div class ="works-comments-body">
-                    <ul class = "works-comments-list">
+                    <th:block th:if="${!reviewComments.isEmpty()}">
+                        <ul class = "works-comments-list">
 
-                        <li class = "works-comment">
-                            <div class = "comment-body">
-                                <section class = "user-info">
-                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
-                                    <div class = "user-name-created-date">
-                                        <span class = "comment-username">username</span>
-                                        <span class = "comment-register-date">2024.02.22</span>
+                            <li class = "works-comment" th:each=" comment : ${reviewComments}" th:commentId = "${comment.getCommentId()}">
+                                <div class = "comment-body">
+                                    <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
+                                        <a th:href="@{/mypage/details/{id}(id = ${comment.getMember().getEmail()})}">
+                                            <div>
+                                                <img th:src = "@{'/image?photo=' + ${comment.getMember().getUsersaveprofile()}}" />
+                                            </div>
+                                        </a>
+                                        <div class = "user-name-created-date">
+                                            <a th:href="@{/mypage/details/{id}(id = ${comment.getMember().getEmail()})}">
+                                                <span class = "comment-username" th:text="${comment.getMember().getNickname()}"></span>
+                                            </a>
+                                            <span class = "comment-register-date" th:text="${comment.getCreatedDate().toLocalDate()}"></span>
+                                        </div>
+                                    </section>
+                                    <section class = "comment-content">
+                                        <article th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
+                                    </section>
+                                </div>
+                                <div class = "comment-footer">
+                                    <div class = "like-comment-count-div">
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                        <span th:text="${comment.getLikes()}"></span>
                                     </div>
-                                </section>
-                                <section class = "comment-content">
-                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
-                                </section>
-                            </div>
-                        </li>
-
-
-                        <li class = "works-comment">
-                            <div class = "comment-body">
-                                <section class = "user-info">
-                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
-                                    <div class = "user-name-created-date">
-                                        <span class = "comment-username">username</span>
-                                        <span class = "comment-register-date">2024.02.22</span>
+                                    <div th:if="${member.email eq comment.getMember().getEmail()}" class = "comment-update-or-comment-delete" th:commentId = "${comment.getCommentId()}">
+                                        <button type="button" class = "btn-show-update-comment-modal" data-bs-toggle="modal", data-bs-target="#update-comment-modal">
+                                            <i class="fa-solid fa-pen" id = "upadate-comment"></i>
+                                            <span>수정</span>
+                                        </button>
+                                        <button type="button" class = "btn-delete-comment">
+                                            <i class="fa-solid fa-trash" id = "delete-comment"></i>
+                                            <span>삭제</span>
+                                        </button>
                                     </div>
-                                </section>
-                                <section class = "comment-content">
-                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
-                                </section>
-                            </div>
-                        </li>
-
-
-                        <li class = "works-comment">
-                            <div class = "comment-body">
-                                <section class = "user-info">
-                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
-                                    <div class = "user-name-created-date">
-                                        <span class = "comment-username">username</span>
-                                        <span class = "comment-register-date">2024.02.22</span>
+                                    <div th:unless="${member.email eq comment.getMember().getEmail()}" class = "comment-like-or-report" th:commentId = "${comment.getCommentId()}">
+                                        <button type="button" class = "btn-like-comment">
+                                            <i class="fa-solid fa-thumbs-up" id = "like-comment"></i>
+                                            <span>좋아요</span>
+                                        </button>
+                                        <button type="button" class = "btn-report-comment">
+                                            <i class="fa-solid fa-flag" id = "report-comment"></i>
+                                            <span>신고</span>
+                                        </button>
                                     </div>
-                                </section>
-                                <section class = "comment-content">
-                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
-                                </section>
-                            </div>
-                        </li>
+                                </div>
+                            </li>
 
-
-                        <li class = "works-comment">
-                            <div class = "comment-body">
-                                <section class = "user-info">
-                                    <img th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}" />
-                                    <div class = "user-name-created-date">
-                                        <span class = "comment-username">username</span>
-                                        <span class = "comment-register-date">2024.02.22</span>
-                                    </div>
-                                </section>
-                                <section class = "comment-content">
-                                    <article>댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다. 댓글은 호날두처럼 달아야합니다.</article>
-                                </section>
-                            </div>
-                        </li>
-
-                    </ul>
+                        </ul>
+                    </th:block>
                 </div>
                 <th:block sec:authorize= "isAuthenticated()">
                     <div class="works-comments-footer">
                         <section class = "comment-textarea">
-                            <textarea class ="form-control" placeholder="댓글을 입력해주세요" row = "6"></textarea>
+                            <input class="d-none" id="comment-writer-email" th:email = "${member.email}">
+                            <textarea id = "comment-content" class ="form-control" placeholder="댓글을 입력해주세요" rows = "4"></textarea>
                         </section>
-                        <button class = "mt-2 btn btn-success">submit</button>
+                        <button class = "mt-2 btn btn-success" id = "comment-reg-btn">등록</button>
                     </div>
                 </th:block>
             </div>
         </section>
 
     </section>
-
 </main>
+
+<!-- 댓글 수정 모달 -->
+<div class="modal fade" id="update-comment-modal" tabindex="-1" aria-labelledby="update-comment-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark">
+            <div class="border-0 modal-header">
+                <h5 class="modal-title text-white" id="trailerModalLabel">댓글 수정</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="width: 100%; color: white">
+                <textarea class = "form-control" id = "update-modal-text-area" rows = "5"></textarea>
+            </div>
+            <div class="border-0 modal-footer">
+                <button type="button" class="btn btn-success" id = "comment-update-btn" data-bs-dismiss="modal">수정</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -507,5 +633,8 @@
     });
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script th:src="@{/js/features/review-details.js}"></script>
+<script th:src="@{/js/features/review-comment.js}"></script>
 </body>
 </html>
