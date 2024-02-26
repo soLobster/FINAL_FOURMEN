@@ -1,8 +1,9 @@
 package com.itwill.teamfourmen.web;
 
-import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.ReviewComments;
-import com.itwill.teamfourmen.dto.Comment.ReviewCommentDTO;
+import com.itwill.teamfourmen.domain.ReviewCommentsLike;
+import com.itwill.teamfourmen.dto.comment.ReviewCommentDTO;
+import com.itwill.teamfourmen.dto.comment.ReviewCommentLikeDTO;
 import com.itwill.teamfourmen.service.CommentService;
 import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.MyPageService;
@@ -12,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -66,9 +65,17 @@ public class CommentRestController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/reviews")
     public void deleteComment(@RequestParam (name = "commentId") Long commentId){
-        log.info("DELETE REVIEWS COMMENT commentId=" , commentId);
+        log.info("DELETE REVIEWS COMMENT commentId= {}" , commentId);
 
         commentService.deleteComment(commentId);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/reviews/like")
+    public void likeComment(@RequestBody ReviewCommentLikeDTO dto){
+        log.info("LIKE REVIEW COMMENTS comment = {}",  dto);
+
+        commentService.likeComment(dto);
     }
 
 }

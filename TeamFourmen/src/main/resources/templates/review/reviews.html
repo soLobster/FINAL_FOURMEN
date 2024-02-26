@@ -122,18 +122,51 @@
             margin-right: 30px
         }
 
+        .review-item-user-profile-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+        }
+
+        .review-item-user-profile-img > img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover
+        }
+
+        .review-item-user-profile-img > img:hover {
+            border: 2px solid #33ff33;
+        }
+
         .review-item-content > div {
             padding: 0 0 10px 0;
             margin-left: 20px;
         }
 
-        .review-item-content-header > .fa-star {
-            font-size: 13px;
-            color: #33ff33;
+        .review-item-content-header {
+            display: flex;
+            flex-direction: column;
         }
 
-        .review-item-content-header > .fa-comment {
-            color: #9999a1;
+        .review-item-content-nickname-rating > a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .review-item-content-nickname-rating > a:hover {
+            color: #8dabfb;
+        }
+
+        .reviewer-nickname {
+            font-size: 20px;
+            font-family: 'Chosunilbo_myungjo';
+        }
+
+        .review-item-content-header > span > i {
+            font-size: 13px;
+            color: #33ff33;
         }
 
         .review-item-content-header > a{
@@ -182,21 +215,21 @@
                     <div class = "review-item" th:each=" review : ${tvShowReviewList}">
 
                         <div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-                            <section class = "review-item-user-profile-img" style=" width: 70px; height: 70px; ">
-                                <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
-                                    <img th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}"
-                                         style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
-                                </a>
-                            </section>
+                            <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                                <section class = "review-item-user-profile-img">
+                                        <img th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}"
+                                             style="">
+                                </section>
+                            </a>
                             <section class = "review-item-content">
                                 <div class = "review-item-content-header">
                                     <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
+                                    <div class = "review-item-content-nickname-rating">
                                     <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
-                                        <span class = "mx-2 reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
+                                        <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
                                     </a>
                                     <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
-
-                                    <i class="ms-3 me-1 fa-solid fa-comment"></i><span class = "review-comment-size"></span>
+                                    </div>
                                 </div>
                                 <div class = "review-item-content-article">
                                     <a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
@@ -210,6 +243,7 @@
                                 </div>
                                 <div class = "review-item-content-footer">
                                     <i class="me-2 fa-solid fa-thumbs-up"></i> 9999 likes
+                                    <i class="ms-3 me-1 fa-solid fa-comment"></i><span class = "review-comment-size"></span>
                                 </div>
                             </section>
                         </div>

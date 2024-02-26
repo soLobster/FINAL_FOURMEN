@@ -16,6 +16,22 @@ document.addEventListener('DOMContentLoaded',  function () {
     const reviewId = pathName.split('/')[2];
     const commentWriterEmail = document.querySelector('#comment-writer-email').getAttribute('email');
 
+
+    // let likeButtons = document.querySelectorAll('.btn-like-comment');
+    //
+    // likeButtons.forEach(function (button){
+    //    if(button.classList.contains('isClicked')){
+    //        let icon = button.nextElementSibling.querySelector('.fa-thumbs-up');
+    //        icon.style.color = '#33ff33';
+    //    }
+    // });
+
+
+
+    const signedInUser = document.querySelector('.div-profile-image').getAttribute('email');
+
+    console.log('LOGIN USER = ' + signedInUser);
+
     console.log('REVIEW ID = ' + reviewId);
 
     console.log('WRITER = ' + commentWriterEmail);
@@ -192,18 +208,69 @@ document.addEventListener('DOMContentLoaded',  function () {
 
     const btnLikeComment = document.querySelectorAll('.btn-like-comment');
 
-    for(let btn of btnLikeComment) {
+    for(btn of btnLikeComment) {
         btn.addEventListener('click', likeComment);
     }
 
     async function likeComment(e) {
+
+        if(!signedInUser) {
+            alert('로그인한 유저만 좋아요를 누를 수 있습니다...!');
+            return;
+        }
+
         e.preventDefault();
 
         const btn = e.target;
 
-        commentId = btn.closest('.works-comment').getAttribute('commentId');
-        console.log(commentId);
+        console.log(btn.getAttribute('id'));
 
+        const comment_id = btn.getAttribute('commentId');
+
+        console.log(btn);
+
+        const icon = btn.nextElementSibling.querySelector('i');
+
+        if(!btn.classList.contains('isClicked')){
+            btn.classList.add('isClicked');
+            icon.style.color = '#33ff33';
+
+            console.log(comment_id);
+
+            const uri = `/api/comment/reviews/like`
+
+            console.log(signedInUser);
+
+            data = {
+              reviewComments: {
+                  commentId: comment_id
+              },
+              member: {
+                  email: signedInUser
+              }
+            }
+
+            console.log(data);
+
+            axios.patch(uri, data)
+                .then((response) => {
+                    alert('체크 되었습니다.');
+                    location.reload();
+                }).catch((error) => {
+                    console.log('에러 발생' + error);
+            })
+
+            return;
+        } else {
+            btn.classList.remove('isClicked');
+            icon.style.color = 'inherit';
+
+            console.log(comment_id);
+
+
+            alert('체크 해제 되었습니다.');
+            return;
+        }
 
     }
 

@@ -1,7 +1,5 @@
-package com.itwill.teamfourmen.dto.Comment;
+package com.itwill.teamfourmen.dto.comment;
 
-import com.itwill.teamfourmen.domain.Member;
-import com.itwill.teamfourmen.domain.Review;
 import lombok.Data;
 
 @Data

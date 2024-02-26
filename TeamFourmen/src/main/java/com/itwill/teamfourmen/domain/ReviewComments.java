@@ -48,4 +48,12 @@ public class ReviewComments {
     public void updateComment(String content){
         this.content = content;
     }
+
+    public void plusCommentLike (Long likes){
+        this.likes = likes + 1;
+    }
+
+    public void minusCommentLike(Long likes){
+        this.likes = likes - 1;
+    }
 }

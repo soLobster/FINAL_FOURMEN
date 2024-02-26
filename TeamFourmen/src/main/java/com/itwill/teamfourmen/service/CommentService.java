@@ -1,10 +1,9 @@
 package com.itwill.teamfourmen.service;
 
-import com.itwill.teamfourmen.domain.Member;
-import com.itwill.teamfourmen.domain.MemberRepository;
-import com.itwill.teamfourmen.domain.Review;
-import com.itwill.teamfourmen.domain.ReviewComments;
-import com.itwill.teamfourmen.dto.Comment.ReviewCommentDTO;
+import com.itwill.teamfourmen.domain.*;
+import com.itwill.teamfourmen.dto.comment.ReviewCommentDTO;
+import com.itwill.teamfourmen.dto.comment.ReviewCommentLikeDTO;
+import com.itwill.teamfourmen.repository.ReviewCommentLikeRepository;
 import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
 import com.itwill.teamfourmen.repository.ReviewDao;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
+    private final ReviewCommentLikeRepository reviewCommentLikeRepository;
     private final ReviewCommentsRepository reviewCommentsDao;
     private final ReviewDao reviewDao;
     private final MemberRepository memberDao;
@@ -84,6 +84,48 @@ public class CommentService {
 
         reviewCommentsDao.deleteById(commentId);
     }
+
+    @Transactional
+    public void likeComment(ReviewCommentLikeDTO dto){
+        log.info("LIKE COMMENT = {}", dto);
+
+        ReviewComments reviewComments = reviewCommentsDao.findById(dto.getReviewComments().getCommentId()).orElseThrow();
+
+        log.info("comment = {}", reviewComments);
+
+        reviewComments.plusCommentLike(reviewComments.getLikes());
+
+        Member member = memberDao.findByEmail(dto.getMember().getEmail()).orElseThrow();
+
+        log.info("Find - member= {}", member);
+
+        ReviewCommentsLike entity = ReviewCommentsLike.builder()
+                .member(member)
+                .reviewComments(reviewComments)
+                .build();
+
+        reviewCommentLikeRepository.save(entity);
+    }
+
+    @Transactional
+    public void cancleLikeComment(ReviewCommentLikeDTO dto){
+
+    }
+
+    public ReviewCommentsLike didReviewCommentLike(ReviewComments comments, Member member){
+        log.info("DID USER LIKE COMMENTS?? COMMENTS = {}, MEMBER = {}", comments, member);
+
+        ReviewComments reviewComments = reviewCommentsDao.findById(comments.getCommentId()).orElseThrow();
+
+        log.info("target Review Comment = {}",reviewComments);
+
+        ReviewCommentsLike reviewCommentsLike = reviewCommentLikeRepository.findByMemberAndReviewComments_CommentId(member, reviewComments.getCommentId());
+
+        log.info("target Review Comment Like ? = {}",reviewCommentsLike);
+
+        return reviewCommentsLike;
+    }
+
 
     @Transactional
     public void updateComment(ReviewCommentDTO dto) {

@@ -5,6 +5,7 @@ import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
+import com.itwill.teamfourmen.repository.ReviewCommentLikeRepository;
 import com.itwill.teamfourmen.repository.ReviewDao;
 import com.itwill.teamfourmen.service.*;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +35,7 @@ public class ReviewController {
     private final ImdbRatingUtil imdbRatingUtil;
     private final CommentService commentService;
     private final FeatureService featureService;
+    private final ReviewCommentLikeRepository reviewCommentLikeRepository;
 
     // 리뷰 ID를 바탕으로 한가지 리뷰를 보여주는 페이지
     @GetMapping("/{review_id}")
@@ -79,6 +84,15 @@ public class ReviewController {
         Page<ReviewComments> reviewComments = commentService.getAllComments(reviewId,0);
 
         model.addAttribute("reviewComments", reviewComments);
+
+        List<ReviewComments> allComment = commentService.getAllComments(reviewId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Member signedInUser = Member.builder().email(email).build();
+
+        
+
 
         return "review/review-details";
     }

@@ -27,6 +27,7 @@
             font-style: normal;
         }
 
+
         /* 폰트 적용 */
         body {
             font-family: 'Pretendard-Regular';
@@ -321,6 +322,7 @@
         }
 
         .user-name-created-date > a >.comment-username {
+            font-family: 'Chosunilbo_myungjo';
             font-size: 15px;
             font-weight: bolder;
         }
@@ -346,12 +348,28 @@
             padding-top: 5px;
         }
 
+        .btn-like-comment {
+            display: none;
+        }
+
+        .like-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: transparent;
+            color: inherit;
+            cursor: pointer;
+        }
+
+
+
         .comment-like-or-report > button ,
         .comment-update-or-comment-delete > button {
             background-color: transparent;
             color: inherit;
             border: none;
             position: relative;
+            z-index: 1;
+            cursor: none;
         }
 
         .comment-like-or-report > button > span,
@@ -369,6 +387,7 @@
             visibility: hidden;
             opacity: 0;
             transition: opacity 0.5s ease;
+            z-index: 0;
         }
 
         .comment-like-or-report > button > span:before,
@@ -380,22 +399,20 @@
             transform: translateX(-50%);
             border: 13px solid;
             border-color: darkslategrey #0000 #0000 #0000;
+            z-index: 0;
         }
-
-
-
 
         .comment-like-or-report > button > i:before,
         .comment-update-or-comment-delete > button > i:before {
             font-size: 13px;
             color: inherit;
+            z-index: -99;
         }
-
-
 
         .comment-like-or-report > button:hover > i:before,
         .comment-update-or-comment-delete > button:hover > i:before {
                 color: #33ff33;
+                z-index: -99;
         }
 
         .comment-like-or-report > button:hover > span,
@@ -404,7 +421,6 @@
             top: -150%;
             opacity: 1;
         }
-
 
         .works-comments-footer {
             border: 2px solid rgba(256, 256, 256 , 0.3);
@@ -513,54 +529,51 @@
                 <div class ="works-comments-body">
                     <th:block th:if="${!reviewComments.isEmpty()}">
                         <ul class = "works-comments-list">
-
                             <li class = "works-comment" th:each=" comment : ${reviewComments}" th:commentId = "${comment.getCommentId()}">
-                                <div class = "comment-body">
-                                    <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
-                                        <a th:href="@{/mypage/details/{id}(id = ${comment.getMember().getEmail()})}">
-                                            <div>
-                                                <img th:src = "@{'/image?photo=' + ${comment.getMember().getUsersaveprofile()}}" />
-                                            </div>
-                                        </a>
-                                        <div class = "user-name-created-date">
+                                    <div class = "comment-body">
+                                        <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
                                             <a th:href="@{/mypage/details/{id}(id = ${comment.getMember().getEmail()})}">
-                                                <span class = "comment-username" th:text="${comment.getMember().getNickname()}"></span>
+                                                <div>
+                                                    <img th:src = "@{'/image?photo=' + ${comment.getMember().getUsersaveprofile()}}" />
+                                                </div>
                                             </a>
-                                            <span class = "comment-register-date" th:text="${comment.getCreatedDate().toLocalDate()}"></span>
+                                            <div class = "user-name-created-date">
+                                                <a th:href="@{/mypage/details/{id}(id = ${comment.getMember().getEmail()})}">
+                                                    <span class = "comment-username" th:text="${comment.getMember().getNickname()}"></span>
+                                                </a>
+                                                <span class = "comment-register-date" th:text="${comment.getCreatedDate().toLocalDate()}"></span>
+                                            </div>
+                                        </section>
+                                        <section class = "comment-content">
+                                            <article th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
+                                        </section>
+                                    </div>
+                                    <div class = "comment-footer">
+                                        <div class = "like-comment-count-div">
+                                            <input type="checkbox" class = "btn-like-comment" th:id = "commentId_+ ${comment.getCommentId()}" th:commentId = "${comment.getCommentId()}"/>
+                                                <label class ="like-button" th:for = "commentId_+${comment.getCommentId()}">
+                                                    <i class="fa-solid fa-thumbs-up"></i>
+                                                    <span th:text="${comment.getLikes()}"></span>
+                                                </label>
                                         </div>
-                                    </section>
-                                    <section class = "comment-content">
-                                        <article th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
-                                    </section>
-                                </div>
-                                <div class = "comment-footer">
-                                    <div class = "like-comment-count-div">
-                                        <i class="fa-solid fa-thumbs-up"></i>
-                                        <span th:text="${comment.getLikes()}"></span>
+                                        <div th:if="${member.email eq comment.getMember().getEmail()}" class = "comment-update-or-comment-delete" th:commentId = "${comment.getCommentId()}">
+                                            <button type="button" class = "btn-show-update-comment-modal" data-bs-toggle="modal", data-bs-target="#update-comment-modal">
+                                                <i class="fa-solid fa-pen" id = "upadate-comment"></i>
+                                                <span>수정</span>
+                                            </button>
+                                            <button type="button" class = "btn-delete-comment">
+                                                <i class="fa-solid fa-trash" id = "delete-comment"></i>
+                                                <span>삭제</span>
+                                            </button>
+                                        </div>
+                                        <div th:unless="${member.email eq comment.getMember().getEmail()}" class = "comment-like-or-report" th:commentId = "${comment.getCommentId()}">
+                                            <button type="button" class = "btn-report-comment">
+                                                <i class="fa-solid fa-flag" id = "report-comment"></i>
+                                                <span>신고</span>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div th:if="${member.email eq comment.getMember().getEmail()}" class = "comment-update-or-comment-delete" th:commentId = "${comment.getCommentId()}">
-                                        <button type="button" class = "btn-show-update-comment-modal" data-bs-toggle="modal", data-bs-target="#update-comment-modal">
-                                            <i class="fa-solid fa-pen" id = "upadate-comment"></i>
-                                            <span>수정</span>
-                                        </button>
-                                        <button type="button" class = "btn-delete-comment">
-                                            <i class="fa-solid fa-trash" id = "delete-comment"></i>
-                                            <span>삭제</span>
-                                        </button>
-                                    </div>
-                                    <div th:unless="${member.email eq comment.getMember().getEmail()}" class = "comment-like-or-report" th:commentId = "${comment.getCommentId()}">
-                                        <button type="button" class = "btn-like-comment">
-                                            <i class="fa-solid fa-thumbs-up" id = "like-comment"></i>
-                                            <span>좋아요</span>
-                                        </button>
-                                        <button type="button" class = "btn-report-comment">
-                                            <i class="fa-solid fa-flag" id = "report-comment"></i>
-                                            <span>신고</span>
-                                        </button>
-                                    </div>
-                                </div>
                             </li>
-
                         </ul>
                     </th:block>
                 </div>
