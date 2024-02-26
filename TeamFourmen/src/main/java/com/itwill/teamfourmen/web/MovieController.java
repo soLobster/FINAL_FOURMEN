@@ -2,9 +2,8 @@ package com.itwill.teamfourmen.web;
 
 import java.util.List;
 
-
-import com.itwill.teamfourmen.domain.ImdbRatings;
-import com.itwill.teamfourmen.service.ImdbRatingUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,12 +11,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.itwill.teamfourmen.domain.ImdbRatings;
 import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Post;
+import com.itwill.teamfourmen.domain.PostLike;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.movie.MovieCastDto;
@@ -25,15 +29,17 @@ import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
-import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
-import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
-import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
+import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
+import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
+import com.itwill.teamfourmen.dto.post.PostDto;
+import com.itwill.teamfourmen.service.BoardService;
 import com.itwill.teamfourmen.service.FeatureService;
+import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.MovieApiUtil;
 import com.itwill.teamfourmen.service.MovieDetailService;
 
@@ -49,10 +55,13 @@ public class MovieController {
 	private final MovieApiUtil apiUtil;
 	private final MovieDetailService detailService;
 	private final FeatureService featureService;
+	private final BoardService boardService;
 	
 	// IMDB RATING을 가져오기 위함.
 	private String category = "movie";
 	private final ImdbRatingUtil imdbRatingUtil;
+	
+	
 
 	/**
 	 * 인기영화 리스트 컨트롤러
@@ -67,6 +76,8 @@ public class MovieController {
 		log.info("popularMovieList()");
 		
 		getInitialList("popular", model);
+		
+		log.info("보드서비스={}", boardService);
 		
 		return "/movie/movie-list";
 	}
@@ -269,6 +280,69 @@ public class MovieController {
 	}
 	
 	
+	@GetMapping("/board")
+	public String movieBoardList(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		log.info("게시판 리스트 들어옴");
+		
+		Page<Post> postList = boardService.getPostList("movie", page);
+		postList.forEach((post) -> {
+			Long likes = boardService.countLikes(post.getPostId());
+			post.setLikes(likes);
+		});
+		
+		model.addAttribute("category", "movie");
+		model.addAttribute("postList", postList);
+		
+		return "/board/list";
+	}
+	
+	@GetMapping("/board/details")
+	public String movieBoardDetails(@RequestParam(name = "id") Long id, Model model) {
+		log.info("movieBoardDetails(id={})", id);
+		
+		Post postDetails = boardService.getPostDetail(id);
+		log.info("postDetails={}", postDetails);
+		
+		// 조회수 1 추가
+		boardService.addView(id);
+		
+		// 해당 게시물의 좋아요 개수
+		Long numLikes = boardService.countLikes(id);
+		
+		// 로그인한 유저가 해당 게시물을 좋아했는지 보기위해
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		PostLike haveLiked = boardService.haveLiked(signedInUser, id);
+		
+		model.addAttribute("postDetails", postDetails);
+		model.addAttribute("numLikes", numLikes);
+		model.addAttribute("haveLiked", haveLiked);
+		model.addAttribute("boardName", "영화게시판");		
+		
+		
+		return "/board/details";
+	}
+	
+	@GetMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")
+	public String movieBoardCreate(Model model) {
+		log.info("영화 게시글 작성페이지");
+		log.info("boardService={}", boardService);
+		model.addAttribute("category", "movie");
+		
+		return "/board/create";
+	}
+	
+	@PostMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")	
+	public String postMovieBoard(@ModelAttribute PostDto postDto) {
+		log.info("postMovieBoard(postDto={})", postDto);
+		log.info("boardService={}", boardService);
+		boardService.post(postDto);
+		
+		return "redirect:/movie/board";
+	}
 	
 	// 이 아래로는 일반 메서드 모음
 	
@@ -315,5 +389,8 @@ public class MovieController {
 		model.addAttribute("listDto", listDto);
 		model.addAttribute("movieGenreList", movieGenreList);
 	}
+	
+	
+	
 	
 }

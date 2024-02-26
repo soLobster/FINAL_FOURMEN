@@ -9,7 +9,7 @@ import com.itwill.teamfourmen.domain.ReviewLike;
 
 public interface ReviewLikeRepository extends JpaRepository<ReviewLike, Long> {
 	
-	Optional<ReviewLike> findByReviewReviewIdAndMemberEmail(String reviewId, String email);
+	Optional<ReviewLike> findByReviewReviewIdAndMemberEmail(Long reviewId, String email);
 	
 	
 }

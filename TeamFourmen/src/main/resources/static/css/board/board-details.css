@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+.post-whole-container {
+    width: 85%;
+    margin: 1rem auto;
+}
+
+/* 게시글 제목, 작성날짜, 조회수 등 포함한 헤더부분 */
+.post-head-container {
+    margin: 1.5rem 0;
+}
+
+.post-title-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    
+    background-color: #495057;
+    
+    padding: 1rem 0.5rem;
+    
+}
+
+.post-author-other-info-container {
+    border-bottom: 2px solid #495057;
+    padding: 0.5rem;
+}
+
+.post-author-other-info-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-views-likes-container {
+    display: flex;
+    flex-wrap: nowrap;    
+    gap: 1.5rem;
+}
+
+.post-views-likes-container i {
+    font-size: 0.8rem;
+}
+
+        /* 이미지 크기 관련 */
+.image_resized img {
+    width: 100%;
+    height: auto;
+}                
+
+	/* 게시글 본문 컨테이너 */
+.post-content-container {
+    padding: 0.5rem;
+}
+
+
+.post-btn-container {
+    
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0 1rem 0;    
+}
+
+.btn-like-post {
+    padding: 0.8rem;
+    background-color: transparent;
+    border: 4px solid #0197f6;
+    border-radius: 8px;
+    
+    font-size: 1rem;
+    font-weight: 700;
+    color: inherit;
+}
+
+.btn-like-post:hover {
+    background-color: #0197f6;
+    color: black;
+}
+
+.liked-already {
+    background-color: #ef233c;
+    
+    border: none;
+}
+
+.liked-already:hover {
+    background-color: #ef233c;
+    transform: scale(1.1);
+    color: inherit;    
+}
