@@ -14,27 +14,41 @@ document.addEventListener('DOMContentLoaded',  function () {
 
     const pathName = location.pathname;
     const reviewId = pathName.split('/')[2];
+
     const commentWriterEmail = document.querySelector('#comment-writer-email').getAttribute('email');
-
-
-    // let likeButtons = document.querySelectorAll('.btn-like-comment');
-    //
-    // likeButtons.forEach(function (button){
-    //    if(button.classList.contains('isClicked')){
-    //        let icon = button.nextElementSibling.querySelector('.fa-thumbs-up');
-    //        icon.style.color = '#33ff33';
-    //    }
-    // });
-
-
-
-    const signedInUser = document.querySelector('.div-profile-image').getAttribute('email');
-
-    console.log('LOGIN USER = ' + signedInUser);
 
     console.log('REVIEW ID = ' + reviewId);
 
     console.log('WRITER = ' + commentWriterEmail);
+
+
+    const isLikedIcon = document.querySelectorAll('.btn-like-comment');
+
+    console.log(isLikedIcon);
+
+
+    for(icon of isLikedIcon){
+        if(icon.classList.contains('isLiked')) {
+            const iTag =  icon.querySelector('i');
+            const spanText = icon.querySelector('span');
+            iTag.style.color = '#33ff33';
+            spanText.textContent = '좋아요 취소';
+        }
+    }
+
+    async function checkCurrentUser() {
+        try {
+            const response = await axios.get('/api/user/current-user');
+
+            console.log(response.data);
+
+            return response.data;
+
+        } catch (error) {
+            console.log('사용자 상태 확인 오류', error);
+            return false;
+        }
+    }
 
     async function getSingleComment(commentId) {
 
@@ -214,7 +228,9 @@ document.addEventListener('DOMContentLoaded',  function () {
 
     async function likeComment(e) {
 
-        if(!signedInUser) {
+        const isUserLoggedIn = await checkCurrentUser();
+
+        if(isUserLoggedIn === '') {
             alert('로그인한 유저만 좋아요를 누를 수 있습니다...!');
             return;
         }
@@ -222,54 +238,63 @@ document.addEventListener('DOMContentLoaded',  function () {
         e.preventDefault();
 
         const btn = e.target;
-
-        console.log(btn.getAttribute('id'));
-
-        const comment_id = btn.getAttribute('commentId');
-
         console.log(btn);
 
-        const icon = btn.nextElementSibling.querySelector('i');
+        const comment_id = btn.getAttribute('id');
+        console.log(comment_id);
 
-        if(!btn.classList.contains('isClicked')){
-            btn.classList.add('isClicked');
-            icon.style.color = '#33ff33';
+        const icon = btn.querySelector('i');
+
+        const span = btn.querySelector('span');
+
+        const uri = `/api/comment/reviews/like`
+
+        console.log(isUserLoggedIn);
+
+        data = {
+            reviewComments: {
+                commentId: comment_id
+            },
+            member: {
+                email: isUserLoggedIn
+            }
+        }
+
+        console.log(data);
+
+        if(!btn.classList.contains('isLiked')){
 
             console.log(comment_id);
 
-            const uri = `/api/comment/reviews/like`
+            try{
+                const response = await axios.patch(uri, data);
 
-            console.log(signedInUser);
+                console.log(response.data);
 
-            data = {
-              reviewComments: {
-                  commentId: comment_id
-              },
-              member: {
-                  email: signedInUser
-              }
+                alert('추천 되었습니다.');
+
+                location.reload();
+            } catch (error) {
+                console.log('에러 발생', error);
             }
 
-            console.log(data);
-
-            axios.patch(uri, data)
-                .then((response) => {
-                    alert('체크 되었습니다.');
-                    location.reload();
-                }).catch((error) => {
-                    console.log('에러 발생' + error);
-            })
-
-            return;
         } else {
-            btn.classList.remove('isClicked');
-            icon.style.color = 'inherit';
+            btn.classList.remove('isLiked');
 
             console.log(comment_id);
 
+            try{
 
-            alert('체크 해제 되었습니다.');
-            return;
+                const response = await  axios.patch(uri, data);
+
+                console.log(response.data);
+                alert('추천 취소 되었습니다.');
+
+                location.reload();
+
+            } catch (error) {
+                console.log('에러 발생', error);
+            }
         }
 
     }

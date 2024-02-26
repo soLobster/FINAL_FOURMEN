@@ -14,7 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @Entity
 @DynamicInsert
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "review_comments_likes")
 @SequenceGenerator(name = "review_comment_like_seq", sequenceName =  "review_comment_like_seq", allocationSize = 1)
 public class ReviewCommentsLike {

@@ -1,6 +1,7 @@
 package com.itwill.teamfourmen.web;
 
 import com.itwill.teamfourmen.domain.*;
+import com.itwill.teamfourmen.dto.comment.ReviewCommentLikeDTO;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
@@ -85,14 +86,37 @@ public class ReviewController {
 
         model.addAttribute("reviewComments", reviewComments);
 
-        List<ReviewComments> allComment = commentService.getAllComments(reviewId);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Member signedInUser = Member.builder().email(email).build();
 
-        
+        log.info("signedInUser = {}", signedInUser.getEmail());
 
+        if(signedInUser!=null){
+            List<ReviewCommentLikeDTO> likedDTO = new ArrayList<>();
+
+            for(ReviewComments comment : reviewComments){
+
+                ReviewCommentLikeDTO reviewCommentLikeDTO = new ReviewCommentLikeDTO();
+
+                Long commentId = comment.getCommentId();
+
+                log.info("@@@@@@@@ CONTROLLER => comment ID = {}", commentId);
+
+                reviewCommentLikeDTO.setCommentId(commentId);
+
+                boolean isLiked = commentService.didReviewCommentLike(comment, signedInUser);
+
+                reviewCommentLikeDTO.setLiked(isLiked);
+
+                if(isLiked) {
+                    likedDTO.add(reviewCommentLikeDTO);
+                }
+            }
+            log.info("LIKED DTO LIST  ={} ",likedDTO);
+
+            model.addAttribute("isLikedList", likedDTO);
+        }
 
         return "review/review-details";
     }

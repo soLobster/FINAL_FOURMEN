@@ -32,7 +32,6 @@ public class MyPageRestController {
     }
 
 
-
     @GetMapping("/get-num-of-reviews")
     public ResponseEntity<Integer> getNumReviews(@RequestParam(name = "email") String email){
         log.info("GET REVIEWS NUM WHO  = {} ", email);

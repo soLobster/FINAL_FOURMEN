@@ -85,6 +85,12 @@ public class CommentService {
         reviewCommentsDao.deleteById(commentId);
     }
 
+
+    @Transactional
+    public void cancleLikeComment(ReviewCommentLikeDTO dto){
+
+    }
+
     @Transactional
     public void likeComment(ReviewCommentLikeDTO dto){
         log.info("LIKE COMMENT = {}", dto);
@@ -93,26 +99,36 @@ public class CommentService {
 
         log.info("comment = {}", reviewComments);
 
-        reviewComments.plusCommentLike(reviewComments.getLikes());
+        boolean didCommentLike = didReviewCommentLike(dto.getReviewComments(), dto.getMember());
 
         Member member = memberDao.findByEmail(dto.getMember().getEmail()).orElseThrow();
 
-        log.info("Find - member= {}", member);
+        if(!didCommentLike){
+            reviewComments.plusCommentLike(reviewComments.getLikes());
 
-        ReviewCommentsLike entity = ReviewCommentsLike.builder()
-                .member(member)
-                .reviewComments(reviewComments)
-                .build();
+            log.info("Find - member= {}", member);
 
-        reviewCommentLikeRepository.save(entity);
+            ReviewCommentsLike entity = ReviewCommentsLike.builder()
+                    .member(member)
+                    .reviewComments(reviewComments)
+                    .build();
+
+            reviewCommentLikeRepository.save(entity);
+
+        } else {
+            reviewComments.minusCommentLike(reviewComments.getLikes());
+
+            ReviewCommentsLike entity = ReviewCommentsLike.builder()
+                            .member(member)
+                                    .reviewComments(reviewComments)
+                                            .build();
+
+            reviewCommentLikeRepository.delete(entity);
+        }
     }
 
-    @Transactional
-    public void cancleLikeComment(ReviewCommentLikeDTO dto){
 
-    }
-
-    public ReviewCommentsLike didReviewCommentLike(ReviewComments comments, Member member){
+    public boolean didReviewCommentLike(ReviewComments comments, Member member){
         log.info("DID USER LIKE COMMENTS?? COMMENTS = {}, MEMBER = {}", comments, member);
 
         ReviewComments reviewComments = reviewCommentsDao.findById(comments.getCommentId()).orElseThrow();
@@ -123,7 +139,7 @@ public class CommentService {
 
         log.info("target Review Comment Like ? = {}",reviewCommentsLike);
 
-        return reviewCommentsLike;
+        return reviewCommentsLike != null;
     }
 
 

@@ -348,20 +348,6 @@
             padding-top: 5px;
         }
 
-        .btn-like-comment {
-            display: none;
-        }
-
-        .like-button {
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: transparent;
-            color: inherit;
-            cursor: pointer;
-        }
-
-
-
         .comment-like-or-report > button ,
         .comment-update-or-comment-delete > button {
             background-color: transparent;
@@ -420,6 +406,11 @@
             visibility: visible;
             top: -150%;
             opacity: 1;
+        }
+
+        .comment-like-or-report > button > i,
+        .comment-update-or-comment-delete > button > i {
+            pointer-events: none; /* 아이콘에 대한 클릭 이벤트 비활성화 */
         }
 
         .works-comments-footer {
@@ -550,28 +541,30 @@
                                     </div>
                                     <div class = "comment-footer">
                                         <div class = "like-comment-count-div">
-                                            <input type="checkbox" class = "btn-like-comment" th:id = "commentId_+ ${comment.getCommentId()}" th:commentId = "${comment.getCommentId()}"/>
-                                                <label class ="like-button" th:for = "commentId_+${comment.getCommentId()}">
+                                            Likes <span th:text="${comment.getLikes()}"></span>
+                                        </div>
+                                        <th:block sec:authorize="isAuthenticated()">
+                                            <div th:if="${member.email eq comment.getMember().getEmail()}" class = "comment-update-or-comment-delete" th:commentId = "${comment.getCommentId()}">
+                                                <button type="button" class = "btn-show-update-comment-modal" data-bs-toggle="modal", data-bs-target="#update-comment-modal">
+                                                    <i class="fa-solid fa-pen" id = "upadate-comment"></i>
+                                                    <span>수정</span>
+                                                </button>
+                                                <button type="button" class = "btn-delete-comment">
+                                                    <i class="fa-solid fa-trash" id = "delete-comment"></i>
+                                                    <span>삭제</span>
+                                                </button>
+                                            </div>
+                                            <div th:unless="${member.email eq comment.getMember().getEmail()}" class = "comment-like-or-report" th:commentId = "${comment.getCommentId()}">
+                                               <button type="button" class = "btn-like-comment" th:id = "${comment.getCommentId()}" th:classappend="${isLikedList.contains(comment.getCommentId())} ? 'isLiked' : '' ">
                                                     <i class="fa-solid fa-thumbs-up"></i>
-                                                    <span th:text="${comment.getLikes()}"></span>
-                                                </label>
-                                        </div>
-                                        <div th:if="${member.email eq comment.getMember().getEmail()}" class = "comment-update-or-comment-delete" th:commentId = "${comment.getCommentId()}">
-                                            <button type="button" class = "btn-show-update-comment-modal" data-bs-toggle="modal", data-bs-target="#update-comment-modal">
-                                                <i class="fa-solid fa-pen" id = "upadate-comment"></i>
-                                                <span>수정</span>
-                                            </button>
-                                            <button type="button" class = "btn-delete-comment">
-                                                <i class="fa-solid fa-trash" id = "delete-comment"></i>
-                                                <span>삭제</span>
-                                            </button>
-                                        </div>
-                                        <div th:unless="${member.email eq comment.getMember().getEmail()}" class = "comment-like-or-report" th:commentId = "${comment.getCommentId()}">
-                                            <button type="button" class = "btn-report-comment">
-                                                <i class="fa-solid fa-flag" id = "report-comment"></i>
-                                                <span>신고</span>
-                                            </button>
-                                        </div>
+                                                    <span>좋아요</span>
+                                               </button>
+                                                <button type="button" class = "btn-report-comment">
+                                                    <i class="fa-solid fa-flag" id = "report-comment"></i>
+                                                    <span>신고</span>
+                                                </button>
+                                            </div>
+                                        </th:block>
                                     </div>
                             </li>
                         </ul>

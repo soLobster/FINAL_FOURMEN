@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.ReviewComments;
 import com.itwill.teamfourmen.domain.ReviewCommentsLike;
 import com.itwill.teamfourmen.dto.comment.ReviewCommentDTO;
@@ -76,6 +77,22 @@ public class CommentRestController {
         log.info("LIKE REVIEW COMMENTS comment = {}",  dto);
 
         commentService.likeComment(dto);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/reviews/check-like")
+    public ResponseEntity<Boolean> checkIfUserLikedComment(@RequestParam (name = "commentId") Long commentId, @RequestParam(name = "email") String email){
+        log.info("USER LIKED COMMENT? commentId = {}, email = {}", commentId,email);
+
+        ReviewComments comments = new ReviewComments();
+        comments.setCommentId(commentId);
+
+        Member member = new Member();
+        member.setEmail(email);
+
+        boolean didUserLikedComment = commentService.didReviewCommentLike(comments, member);
+
+        return ResponseEntity.ok(didUserLikedComment);
     }
 
 }
