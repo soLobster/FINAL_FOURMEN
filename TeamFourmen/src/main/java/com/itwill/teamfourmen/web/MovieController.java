@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.itwill.teamfourmen.domain.Comment;
+import com.itwill.teamfourmen.domain.CommentLike;
 import com.itwill.teamfourmen.domain.ImdbRatings;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.Post;
 import com.itwill.teamfourmen.domain.PostLike;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.TmdbLike;
+import com.itwill.teamfourmen.dto.board.CommentDto;
 import com.itwill.teamfourmen.dto.movie.MovieCastDto;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
@@ -36,6 +39,7 @@ import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
 import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
+import com.itwill.teamfourmen.dto.person.PageAndListDto;
 import com.itwill.teamfourmen.dto.post.PostDto;
 import com.itwill.teamfourmen.service.BoardService;
 import com.itwill.teamfourmen.service.FeatureService;
@@ -290,8 +294,13 @@ public class MovieController {
 			post.setLikes(likes);
 		});
 		
+		// TODO: total element 타입 Long으로변경하는거 논의
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postList.getTotalElements(), postList.getTotalPages(), 5, 5);		
+		log.info("pagingDto={}", pagingDto);
+		
 		model.addAttribute("category", "movie");
 		model.addAttribute("postList", postList);
+		model.addAttribute("pagingDto", pagingDto);
 		
 		return "/board/list";
 	}
@@ -315,10 +324,16 @@ public class MovieController {
 		Member signedInUser = Member.builder().email(email).build();
 		PostLike haveLiked = boardService.haveLiked(signedInUser, id);
 		
+		// 해당 게시물의 댓글 리스트 가져옴
+		List<CommentDto> commentDtoList = boardService.getCommentList(id);
+		
+		
+		
 		model.addAttribute("postDetails", postDetails);
 		model.addAttribute("numLikes", numLikes);
 		model.addAttribute("haveLiked", haveLiked);
-		model.addAttribute("boardName", "영화게시판");		
+		model.addAttribute("boardName", "영화게시판");
+		model.addAttribute("commentDtoList", commentDtoList);
 		
 		
 		return "/board/details";
@@ -334,6 +349,11 @@ public class MovieController {
 		return "/board/create";
 	}
 	
+	/**
+	 * 게시글 작성하는 컨트롤러 메서드
+	 * @param postDto
+	 * @return
+	 */
 	@PostMapping("/board/create")
 	@PreAuthorize("isAuthenticated()")	
 	public String postMovieBoard(@ModelAttribute PostDto postDto) {

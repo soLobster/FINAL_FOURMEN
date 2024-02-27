@@ -19,7 +19,10 @@
         <div class="post-head-container">
             <div class="post-title-container">
                 <div class="post-title" th:text="${postDetails.title}" th:postId="${postDetails.postId}"></div>
-                <div class="post-modified-time" th:text="${#temporals.format(postDetails.modifiedTime, 'yyyy-MM-dd hh:mm')}"></div>
+                <div class="post-created-time-modified-container">
+                    <div class="post-created-time" th:text="${#temporals.format(postDetails.createdTime, 'yyyy-MM-dd hh:mm')}"></div>
+                    <div class="post-modified" th:if="${postDetails.modifiedTime != null}" th:text="|(수정됨)|"></div>
+                </div>
             </div>
             <div class="post-author-other-info-container">
                 <div class="div-post-author" th:text="${postDetails.member.nickname}"></div>
@@ -44,10 +47,65 @@
             <div th:utext="${postDetails.content}"></div>
         </div>
         <div class="post-btn-container">
-            <button class="btn-like-post" th:classappend="${haveLiked} != null ? 'liked-already'">
-                <span class="span-like-btn">좋아요</span>
-                <i class="fa-solid fa-thumbs-up"></i>
-            </button>
+            <div></div>
+            <div class="like-btn-container">
+                <button class="btn-like-post" th:classappend="${haveLiked} != null ? 'liked-already'">
+                    <span class="span-like-btn">좋아요</span>
+                    <i class="fa-solid fa-thumbs-up"></i>
+                </button>
+            </div>
+            <div class="modify-btn-container">
+                <button th:if="${member != null && postDetails.member.email == member.email}" class="btn-modify-post">수정</button>
+            </div>
+        </div>
+        <!-- 댓글 구분선 -->
+        <div class="div-divider"></div>
+        <!-- 댓글 시작 -->
+        <div class="comment-header-container">
+            <div class="div-num-comments">
+                <span>댓글</span>
+                <span class="span-num-comments" th:text="${#lists.size(commentDtoList)}"></span><span>개</span>
+            </div>
+            <div>
+                <button class="btn-post-comment-refresh">새로고침 <i class="fa-solid fa-rotate"></i></button>
+            </div>
+        </div>
+        <div class="post-textarea-container">
+            <textarea class="textarea-post-comment"></textarea>
+            <button class="btn-add-post-comment">댓글 등록</button>
+        </div>
+        <div class="post-comment-container">
+            
+            <div class="post-comment-each-container" th:each="comment : ${commentDtoList}">            
+                <div class="post-comment-each-header">
+                    <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
+                        <div class="post-comment-each-profile-container">
+                            <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
+                        </div>
+                        <div class="post-comment-each-author" th:text="${comment.member.nickname}"></div>
+                        <div th:if="${comment.member.email == postDetails.member.email}" class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>
+                    </div>                    
+                    <div th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm')}" class="post-comment-each-created-time post-comment-text-vertical-center"></div>
+                </div>
+                <div class="post-comment-body-container">
+                    <div class="post-comment-content" th:text="${comment.content}"></div>
+                    <div class="post-comment-each-like-container">
+                        <div>
+                            <span>likes</span>
+                            <span class="span-num-comment-likes" th:text="${#lists.size(comment.commentLikesList)}"></span>
+                        </div>
+                        <div class="post-comment-each-like-report-icon-container">
+                            <div class="post-comment-like-container" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}" th:classappend="${member != null && #lists.contains(comment.commentLikesList.![member.email], member.email)} ? 'post-comment-already-liked'">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-flag"></i>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+             
         </div>
     </section>
     

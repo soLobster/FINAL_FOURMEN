@@ -53,7 +53,7 @@ public class Post {
 	@CreatedDate
 	private LocalDateTime createdTime;
 	
-	@LastModifiedDate
+	
 	private LocalDateTime modifiedTime;
 	
 	

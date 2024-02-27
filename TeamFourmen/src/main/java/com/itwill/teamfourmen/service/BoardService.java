@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,10 +12,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwill.teamfourmen.domain.Comment;
+import com.itwill.teamfourmen.domain.CommentLike;
 import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.MemberRepository;
 import com.itwill.teamfourmen.domain.Post;
 import com.itwill.teamfourmen.domain.PostLike;
+import com.itwill.teamfourmen.dto.board.CommentDto;
+import com.itwill.teamfourmen.dto.person.PageAndListDto;
 import com.itwill.teamfourmen.dto.post.PostDto;
+import com.itwill.teamfourmen.repository.CommentLikeRepository;
+import com.itwill.teamfourmen.repository.CommentRepository;
 import com.itwill.teamfourmen.repository.PostLikeRepository;
 import com.itwill.teamfourmen.repository.PostRepository;
 
@@ -28,6 +36,11 @@ public class BoardService {
 	
 	private final PostRepository postDao;
 	private final PostLikeRepository postLikeDao;
+	private final CommentRepository commentDao;
+	private final CommentLikeRepository commentLikeDao;
+	private final MemberRepository memberDao;
+	
+	private int postsPerPage = 5;
 	
 	/**
 	 * postDto를 아규먼트로 받아 게시글 작성하는 메서드
@@ -50,7 +63,7 @@ public class BoardService {
 		
 		log.info("getPostList(category={}, page={}", category, page);
 		
-		Pageable pageable = PageRequest.of(page, 5, Sort.by("postId").descending());
+		Pageable pageable = PageRequest.of(page, postsPerPage, Sort.by("postId").descending());
 		
 		Page<Post> postList = postDao.findAll(pageable);
 				
@@ -139,7 +152,65 @@ public class BoardService {
 	}
 	
 	
+	public List<CommentDto> getCommentList(Long postId) {
+		log.info("getCommentList(postId={})", postId);
+		
+		List<Comment> commentList = commentDao.findByPostPostIdOrderByCommentIdAsc(postId);
+		
+		List<CommentDto> commentDtoList = new ArrayList<>();
+		
+		commentList.forEach((comment) -> {			
+			CommentDto commentDto = CommentDto.fromEntity(comment);
+			
+			List<CommentLike> commentLikeList = commentLikeDao.findAllByCommentCommentId(comment.getCommentId());
+			commentDto.setCommentLikesList(commentLikeList);
+			
+			commentDtoList.add(commentDto);			
+		});
+		
+		return commentDtoList;
+	}
+	
+	/**
+	 * comment를 아규먼트로 받아 DB에 댓글을 등록하는 메서드. 등록한 댓글을 리턴함
+	 * @param comment
+	 * @return
+	 */
+	@Transactional
+	public CommentDto addComment(Comment comment) {
+		log.info("addCommnet(comment={})", comment);
+		
+		Comment savedComment = commentDao.save(comment);		
+		log.info("saved comment = {}", savedComment);
+		
+		CommentDto savedCommentDto = CommentDto.fromEntity(savedComment);
+		
+		savedCommentDto.setCommentLikesList(commentLikeDao.findAllByCommentCommentId(savedCommentDto.getCommentId()));
+		
+		Member member = memberDao.findByEmail(savedComment.getMember().getEmail()).orElse(null);
+		savedCommentDto.setMember(member);
+		
+		return savedCommentDto;
+	}
+	
+	@Transactional
+	public CommentLike addCommentLike(CommentLike commentLike) {
+		log.info("addCommentLike(commentLike={})", commentLike);
+		
+		CommentLike savedCommentLike = commentLikeDao.save(commentLike);
+		
+		return savedCommentLike;
+	}
+	
+	@Transactional
+	public void deleteCommentLike(CommentLike commentLike) {
+		log.info("deleteCommentLike(commentLike={})", commentLike);
+		
+		commentLikeDao.deleteByCommentCommentIdAndMemberEmail(commentLike.getComment().getCommentId(), commentLike.getMember().getEmail());
+		
+	}
+	
 	// 보조 메서드
-	// TODO:시작페이지, 끝페이지 계산하는 메서드
+	
 	
 }	// BoardService class끝
