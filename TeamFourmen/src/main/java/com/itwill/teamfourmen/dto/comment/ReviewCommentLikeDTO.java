@@ -4,6 +4,8 @@ import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.ReviewComments;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class ReviewCommentLikeDTO {
 
@@ -12,5 +14,4 @@ public class ReviewCommentLikeDTO {
 
     private Long commentId;
     private boolean isLiked;
-
 }

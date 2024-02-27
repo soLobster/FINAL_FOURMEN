@@ -53,8 +53,19 @@ public class MyPageController {
 
         List<CombineReviewDTO> combineInfoList = new ArrayList<>();
 
+        Map<Long, Integer> reviewComment = new HashMap<>();
+        Map<Long, Long> reviewLiked = new HashMap<>();
+
         for(Review myReview : myAllReview) {
             int tmdb_id = myReview.getTmdbId();
+
+            Long reviewId = myReview.getReviewId();
+
+            int numOfComment = featureService.getNumOfReviewComment(reviewId);
+            Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+            reviewLiked.put(reviewId, numOfLiked);
+            reviewComment.put(reviewId, numOfComment);
 
             String category = myReview.getCategory();
 
@@ -86,6 +97,9 @@ public class MyPageController {
                     log.info("NOPE");
             }
         }
+
+        model.addAttribute("numOfReviewLiked", reviewLiked);
+        model.addAttribute("numOfReviewComment", reviewComment);
 
         log.info("COMBINE LIST = {} ",combineInfoList);
 

@@ -9,6 +9,7 @@ import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.repository.ReviewCommentLikeRepository;
 import com.itwill.teamfourmen.repository.ReviewDao;
 import com.itwill.teamfourmen.service.*;
+import jakarta.persistence.Basic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -92,6 +96,15 @@ public class ReviewController {
 
         log.info("signedInUser = {}", signedInUser.getEmail());
 
+        Long countReviewLiked = featureService.getNumOfReviewLike(reviewId);
+
+        model.addAttribute("countReviewLiked", countReviewLiked);
+
+        boolean didUserLikedReview = featureService.didReviewLike(singleReview, signedInUser);
+
+        model.addAttribute("likedReview", didUserLikedReview);
+
+
         if(signedInUser!=null){
             List<ReviewCommentLikeDTO> likedDTO = new ArrayList<>();
 
@@ -103,19 +116,25 @@ public class ReviewController {
 
                 log.info("@@@@@@@@ CONTROLLER => comment ID = {}", commentId);
 
-                reviewCommentLikeDTO.setCommentId(commentId);
-
                 boolean isLiked = commentService.didReviewCommentLike(comment, signedInUser);
 
+                reviewCommentLikeDTO.setCommentId(commentId);
                 reviewCommentLikeDTO.setLiked(isLiked);
 
                 if(isLiked) {
                     likedDTO.add(reviewCommentLikeDTO);
                 }
             }
-            log.info("LIKED DTO LIST  ={} ",likedDTO);
+            Map<Long, Boolean> isLikedMap = new HashMap<>();
 
-            model.addAttribute("isLikedList", likedDTO);
+            for(ReviewCommentLikeDTO likeDTO : likedDTO){
+                log.info("commentID = {}, isLiked = {}", likeDTO.getCommentId(), likeDTO.isLiked());
+                isLikedMap.put(likeDTO.getCommentId(), likeDTO.isLiked());
+            }
+
+            log.info("IS LIKED MAP = {} ",isLikedMap);
+
+            model.addAttribute("isLIkedMap", isLikedMap);
         }
 
         return "review/review-details";

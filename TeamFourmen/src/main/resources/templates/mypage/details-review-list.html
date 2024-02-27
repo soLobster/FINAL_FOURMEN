@@ -9,15 +9,10 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous">
   <link th:href="@{/css/navbar.css}" rel="stylesheet">
+  <link th:href="@{/css/theme.css}" rel="stylesheet">
   <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
   <style>
 
-    @font-face {
-      font-family: 'Chosunilbo_myungjo';
-      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
 
     .review-item {
       width: 800px;
@@ -49,7 +44,7 @@
     .review-item-content-article-header {
       display: flex;
       margin-bottom: 0;
-      font-family: 'Chosunilbo_myungjo';
+      font-family: 'Pretendard';
     }
 
     .review-item-content-article-rating-date {
@@ -120,16 +115,13 @@
     }
 
     .review-item-recommend > i {
-      color: #70e000;
+      color: inherit;
     }
 
     .review-item-content-article-body-footer > div > i {
-      font-size: 20px;
+      font-size: 17px;
     }
 
-    .review-item-content-article-body-footer > div > small {
-      font-weight: bolder;
-    }
 
   </style>
   <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
@@ -154,68 +146,13 @@
 
   <div class = "mypage-details-body-reviews">
 
-    <div class = "review-item">
-      <input class = "d-none" th:category = "movie">
-      <!--  카테고리 "movie" or "tv"  -->
-      <div class="review-item-body">
-        <section class="review-item-poster">
-          <a th:href="@{''}">
-            <img class = "review-item-poster-img" th:src = "@{https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg}">
-          </a>
-        </section>
-        <section class = "review-item-content">
-          <article class = "review-item-content-article">
-            <div class = "review-item-content-article-header">
-              <a class="review-item-title" th:href="@{''}">
-                <h3>푸바오</h3>
-              </a>
-              <span class = "mt-2">(2020)</span>
-            </div>
-            <div class = "review-item-content-article-rating-date">
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <small class="ms-3">2024년 2월 20일</small>
-            </div>
-            <div class = "review-item-content-article-body">
-              <a class = "review-item-article-content-a-tag" th:href="@{''}">
-                <section class = "review-item-content-article-body-content">
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                  푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요. 푸바오는 귀엽습니다. 진짜로요.
-                </section>
-              </a>
-              <section class = "review-item-content-article-body-footer">
-                <div class = "review-item-recommend">
-                  <i class="fa-solid fa-thumbs-up"></i>
-                  <small>Like review 9999 Likes</small>
-                </div>
-                <div class = "review-item-comment">
-                  <i class="fa-solid fa-comment"></i>
-                  <small>9999 comments</small>
-                </div>
-              </section>
-            </div>
-          </article>
-        </section>
-      </div>
-    </div>
-
     <div class = "review-item" th:each=" review : ${myAllReview}">
       <input class = "d-none" th:category = "${review.getCategory()}">
       <!--  카테고리 "movie" or "tv"  -->
       <div class="review-item-body" th:each=" works : ${combineInfoList}">
         <th:block th:if = "${review.getTmdbId() eq works.getId()}">
         <section class="review-item-poster">
-          <a th:href="@{/tv/details/{id}(id = ${works.getId()})}">
+          <a th:href="@{/{category}/details/{id}(category = ${review.getCategory()}, id = ${works.getId()})}">
             <img class = "review-item-poster-img"  th:src="@{https://image.tmdb.org/t/p/w342/{posterPath} (posterPath=${works.getPosterPath()})}">
           </a>
         </section>
@@ -241,11 +178,11 @@
               <section class = "review-item-content-article-body-footer">
                 <div class = "review-item-recommend">
                   <i class="fa-solid fa-thumbs-up"></i>
-                  <small>Like review 9999 Likes</small>
+                  <span class = "ms-2" th:text="${numOfReviewLiked.get(review.getReviewId())} + ' '"></span> Likes
                 </div>
                 <div class = "review-item-comment">
                   <i class="fa-solid fa-comment"></i>
-                  <small>9999 comments</small>
+                  <span class = "ms-2" th:text="${numOfReviewComment.get(review.getReviewId())} + ' '"></span> Comments
                 </div>
               </section>
             </div>

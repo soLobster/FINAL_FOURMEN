@@ -323,10 +323,30 @@ public class TvShowController {
 		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
 
 		// Tv Show 별 리뷰 가져오기
-
 		List<Review> tvShowReviewList = featureService.getReviews("tv", id);
 
+		int endIndex = Math.min(4, tvShowReviewList.size());
+
+		tvShowReviewList = tvShowReviewList.subList(0, endIndex);
+
 		model.addAttribute("tvShowReviewList", tvShowReviewList);
+
+		Map<Long, Integer> reviewComment = new HashMap<>();
+
+		Map<Long, Long> reviewLiked = new HashMap<>();
+
+		for(Review tvShowReview : tvShowReviewList) {
+			Long reviewId = tvShowReview.getReviewId();
+			int numOfComment = featureService.getNumOfReviewComment(reviewId);
+
+			Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+			reviewComment.put(reviewId, numOfComment);
+			reviewLiked.put(reviewId,numOfLiked);
+		}
+
+		model.addAttribute("numOfReviewLiked", reviewLiked);
+		model.addAttribute("numOfReviewComment", reviewComment);
 
 		return "tvshow/tvshow-details";
 	}
@@ -343,6 +363,21 @@ public class TvShowController {
 
 		// 해당 tv Show 리뷰를 가져오기 위함
 		List<Review> tvShowReviewList =featureService.getReviews("tv", id);
+
+		Map<Long, Integer> reviewComment = new HashMap<>();
+		Map<Long, Long> reviewLiked = new HashMap<>();
+
+		for(Review tvShowReview : tvShowReviewList) {
+			Long reviewId = tvShowReview.getReviewId();
+			int numOfComment = featureService.getNumOfReviewComment(reviewId);
+			Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+			reviewLiked.put(reviewId, numOfLiked);
+			reviewComment.put(reviewId, numOfComment);
+		}
+
+		model.addAttribute("numOfReviewLiked", reviewLiked);
+		model.addAttribute("numOfReviewComment", reviewComment);
 
 		model.addAttribute("tvShowReviewList", tvShowReviewList);
 

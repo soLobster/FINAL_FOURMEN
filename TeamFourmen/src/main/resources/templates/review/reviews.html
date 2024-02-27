@@ -15,22 +15,20 @@
     <style>
 
         @font-face {
-            font-family: 'Pretendard-Regular';
-            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-family: 'Pretendard';
             font-weight: 400;
             font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'Chosunilbo_myungjo';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
+            src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+            src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix') format('embedded-opentype'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff') format('woff'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf') format("truetype");
+            font-display: swap;
         }
 
         /* 폰트 적용 */
         body {
-            font-family: 'Pretendard-Regular';
+            font-family: 'Pretendard';
             background-color: #264653;
         }
 
@@ -98,7 +96,7 @@
         }
 
         .review-list-header-title{
-            font-family: 'Chosunilbo_myungjo';
+            font-family: 'Pretendard';
         }
 
         .review-list-header-title:hover {
@@ -120,6 +118,12 @@
             padding: 0 0 10px 0;
             margin-left: 30px;
             margin-right: 30px
+        }
+
+        .review-item-user-profile-img-a-tag {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
         }
 
         .review-item-user-profile-img {
@@ -161,7 +165,7 @@
 
         .reviewer-nickname {
             font-size: 20px;
-            font-family: 'Chosunilbo_myungjo';
+            font-family: 'Pretendard';
         }
 
         .review-item-content-header > span > i {
@@ -179,7 +183,7 @@
         }
 
         .review-item-content-footer > i {
-            color: #33ff33;
+            color: inherit;
         }
 
         .review-item-content-article > a {
@@ -215,7 +219,7 @@
                     <div class = "review-item" th:each=" review : ${tvShowReviewList}">
 
                         <div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-                            <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
                                 <section class = "review-item-user-profile-img">
                                         <img th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}"
                                              style="">
@@ -242,8 +246,8 @@
                                     </a>
                                 </div>
                                 <div class = "review-item-content-footer">
-                                    <i class="me-2 fa-solid fa-thumbs-up"></i> 9999 likes
-                                    <i class="ms-3 me-1 fa-solid fa-comment"></i><span class = "review-comment-size"></span>
+                                    <i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' '"></span> Likes
+                                    <i class="ms-3 me-2 fa-solid fa-comment"></i><span class = "review-comment-size" th:text="${numOfReviewComment.get(review.getReviewId()) + ' '}"></span>Comments
                                 </div>
                             </section>
                         </div>

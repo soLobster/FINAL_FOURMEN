@@ -268,29 +268,81 @@
             <div class="div-horizontal-line"></div>
             
             <!-- TODO: 한줄평 작성 구현하기 -->
-            <section class="main-section">
-                <h3>최신 리뷰</h3>
-                <div class="each-review-container" th:each="review : ${movieReviewList}" th:if="${!#lists.isEmpty(movieReviewList)}">
-                    <div class="review-user-profile-image-container">
-                        <!-- TODO: 나중에 유저별 프로필사진으로 업로드 -->
-                        <div class="div-review-user-profile-image">
-                            <img class="review-user-profile-image" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg">
+
+            <div class = "movie-review" style="padding: 10px 30px 10px 30px">
+                <section style="display: flex">
+                    <h3>리뷰</h3>
+                    <a class = "movieAllReview" th:href="@{''}">
+                        <span>전체 리뷰 보러가기</span>
+                    </a>
+                </section>
+
+                <section class="popular-review-section">
+
+                    <div class = "review-item" th:each=" review : ${movieReviewList}"
+                     style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+                        <input class = "d-none" th:email="${review.getMember().getEmail()}">
+                        <div class = "review-item-body" style="display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+                            <a class = "review-item-user-profile-img-a-tag" th:href="@{''}">
+                                <section class = "review-item-user-profile-img">
+                                    <img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}"
+                                    style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
+                                </section>
+                            </a>
+                            <section class= "review-item-content">
+                                <div class = "review-item-content-header">
+                                    <section>
+                                        <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px;">Review By</span>
+                                    </section>
+                                    <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                                        <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
+                                    </a>
+                                    <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
+                                </div>
+                                <div class = "review-item-content-article">
+                                    <a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
+                                        <article class = "content-article"
+                                                 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+                                                    th:text="${review.getContent()}"></article>
+                                        <article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
+                                            스포일러가 포함된 리뷰 입니다. <br> 상세페이지에서 확인 하세요.
+                                        </article>
+                                    </a>
+                                </div>
+                                <div class = "review-item-content-footer">
+                                    <i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' ' "></span> Likes
+                                    <i class="ms-3 me-2 fa-solid fa-comment"></i><span th:text="${numOfReviewComment.get(review.getReviewId()) + ' ' }"></span>Comments
+                                </div>
+                            </section>
                         </div>
                     </div>
-                    <div class="div-review-info">
-                        <div class="div-reviewer-rating">
-                            <span>reviewed by </span>
-                            <span class="reviewer-nickname" th:text="${review.member.nickname}"></span>
-                            <span th:text="${review.rating}">
-                            </span>                            
+
+
+
+                    <div class="each-review-container" th:each="review : ${movieReviewList}" th:if="${!#lists.isEmpty(movieReviewList)}">
+                        <div class="review-user-profile-image-container">
+                            <!-- TODO: 나중에 유저별 프로필사진으로 업로드 -->
+                            <div class="div-review-user-profile-image">
+                                <img class="review-user-profile-image" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg">
+                            </div>
                         </div>
-                        <a th:href="@{/reviews/{id}(id = ${review.getReviewId()})}">
-                            <div class="div-review-content" th:text="${review.content}"></div>
-                        </a>
+                        <div class="div-review-info">
+                            <div class="div-reviewer-rating">
+                                <span>reviewed by </span>
+                                <span class="reviewer-nickname" th:text="${review.member.nickname}"></span>
+                                <span th:text="${review.rating}">
+                                </span>
+                            </div>
+                            <a th:href="@{/reviews/{id}(id = ${review.getReviewId()})}">
+                                <div class="div-review-content" th:text="${review.content}"></div>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </section>
-            
+
+                </section>
+
+            </div>
+
             <div class="div-horizontal-line" th:if="${!#lists.isEmpty(recommendedList)}"></div>
             
             <selection th:if="${!#lists.isEmpty(recommendedList)}" class="movie-collection-container main-section movie-card-container">

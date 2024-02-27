@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,13 +57,11 @@ public class FeatureRestController {
 
 	}
 
-	@Transactional
+//	@Transactional
 	@PostMapping("/review/like/add")
-	public void addReviewLike(@RequestBody ReviewLike reviewLike) {
-
-		log.info("addReviewLike(reviewLike={})", reviewLike);
-		featureService.addReviewLike(reviewLike);
-
+	public void addReviewLike(@RequestBody ReviewLikeDTO reviewLikeDto) {
+		log.info("addReviewLike(reviewLike={})", reviewLikeDto);
+		featureService.controllReviewLike(reviewLikeDto);
 	}
 
 

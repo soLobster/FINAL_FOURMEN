@@ -3,12 +3,11 @@ package com.itwill.teamfourmen.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.itwill.teamfourmen.domain.*;
+import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
+import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
 import org.springframework.stereotype.Service;
 
-import com.itwill.teamfourmen.domain.Member;
-import com.itwill.teamfourmen.domain.Review;
-import com.itwill.teamfourmen.domain.ReviewLike;
-import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.repository.ReviewDao;
 import com.itwill.teamfourmen.repository.ReviewLikeRepository;
 import com.itwill.teamfourmen.repository.TmdbLikeDao;
@@ -24,6 +23,7 @@ public class FeatureService {
 	private final ReviewDao reviewDao;
 	private final TmdbLikeDao tmdbLikeDao;
 	private final ReviewLikeRepository reviewLikeDao;
+	private final ReviewCommentsRepository commentDao;
 
 	public void postReview(Review review) {
 
@@ -40,6 +40,26 @@ public class FeatureService {
 		List<Review> tmdbReviewList = reviewDao.findByCategoryAndTmdbId(category, tmdbId);
 
 		return tmdbReviewList;
+	}
+
+	public Integer getNumOfReviewComment(Long reivewId){
+		log.info("GET NUM OF REVIEW COMMENT REVIEW ID  = {} ",reivewId);
+
+		Review review = Review.builder().reviewId(reivewId).build();
+
+		List<ReviewComments> listComment = commentDao.findByReview(review);
+
+		int numOfComment = 0;
+
+		if(listComment != null) {
+			numOfComment = listComment.size();
+		} else {
+			 numOfComment = 0;
+		}
+
+		log.info("COMMENT NUM = {}" , numOfComment);
+
+		return numOfComment;
 	}
 
 	public Review getMyReviewInTmdbWork(String email, String category, int tmdbId) {
@@ -84,14 +104,72 @@ public class FeatureService {
 
 	}
 
+	public Long getNumOfReviewLike(Long reviewId){
+		log.info("GET NUM OF REVIEW LIKE = {}" ,reviewId);
 
-	public void addReviewLike(ReviewLike reviewLike) {
+		Review review = reviewDao.findByReviewId(reviewId);
 
-		log.info("addReviewLike(reviewLike={})", reviewLike);
+		Long countReviewLike = reviewLikeDao.countByReview(review);
 
-		reviewLike = reviewLikeDao.save(reviewLike);
+		if(countReviewLike == 0L){
+		   return 0L;
+		} else {
+			return countReviewLike;
+		}
+	}
 
-		log.info("저장 후 reviewLike={}", reviewLike);
+
+	public void controllReviewLike(ReviewLikeDTO reviewLikeDTO) {
+		log.info("addReviewLike(reviewLike={})", reviewLikeDTO);
+
+		Review review = Review.builder()
+				.reviewId(reviewLikeDTO.getReviewId())
+				.build();
+
+		Member member = Member.builder()
+				.email(reviewLikeDTO.getEmail())
+				.build();
+
+		ReviewLike isLikedReview = reviewLikeDao.findByReviewAndMember(review , member);
+
+		log.info("IS REVIEW LIKED? = {}", isLikedReview);
+
+		boolean didReviewLike = didReviewLike(review, member);
+
+		if(!didReviewLike) {
+			ReviewLike entity = ReviewLike.builder()
+					.review(review)
+					.member(member)
+					.build();
+
+			reviewLikeDao.save(entity);
+		} else {
+
+
+			ReviewLike entity = reviewLikeDao.findByReviewAndMember(review, member);
+
+			if(entity != null) {
+				reviewLikeDao.delete(entity);
+			}
+		}
+	}
+
+	public boolean didReviewLike(Review review, Member member) {
+		log.info("DID REVIEW LIKED ?? REVIEW = {}, MEMBER = {}", review, member);
+
+		Review targetReview = reviewDao.findByReviewId(review.getReviewId());
+
+		log.info("TARGET REVIEW REVIEW ID = {}, REVIEW CONTENT = {}", targetReview.getReviewId(), targetReview.getContent());
+
+		ReviewLike reviewLike = reviewLikeDao.findByReviewAndMember(targetReview, member);
+
+		log.info("target Review LiKE = {}", reviewLike);
+
+		if (reviewLike != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

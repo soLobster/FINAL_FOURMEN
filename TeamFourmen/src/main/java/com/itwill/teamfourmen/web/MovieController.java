@@ -1,6 +1,8 @@
 package com.itwill.teamfourmen.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import com.itwill.teamfourmen.domain.ImdbRatings;
@@ -230,12 +232,31 @@ public class MovieController {
 		String email = authentication.getName();
 		Member signedInUser = Member.builder().email(email).build();
 		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "movie", id);	// 만약 좋아요 이미 눌렀으면 TmdbLike객체 리턴됨
-		
-		
+
+		//		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
+
 		// 관련 리뷰 가져옴
 		List<Review> movieReviewList = featureService.getReviews("movie", id);
-//		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
-		
+		int endIndex = Math.min(4, movieReviewList.size());
+		movieReviewList = movieReviewList.subList(0, endIndex);
+		model.addAttribute("movieReviewList", movieReviewList);
+
+		Map<Long, Integer> reviewComment = new HashMap<>();
+		Map<Long, Long> reviewLiked = new HashMap<>();
+
+		for(Review movieReview : movieReviewList){
+			Long reviewId = movieReview.getReviewId();
+
+			int numOfComment = featureService.getNumOfReviewComment(reviewId);
+			Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+			reviewComment.put(reviewId, numOfComment);
+			reviewLiked.put(reviewId, numOfLiked);
+		}
+
+		model.addAttribute("numOfReviewLiked", reviewLiked);
+		model.addAttribute("numOfReviewComment", reviewComment);
+
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
 		model.addAttribute("directorList", directorList);
@@ -261,8 +282,7 @@ public class MovieController {
 		model.addAttribute("imdbRatings", imdbRatings);
 
 		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
-    
-		model.addAttribute("movieReviewList", movieReviewList);
+
 //		model.addAttribute("myReview", myReview);
 		
 		return "/movie/movie-details";

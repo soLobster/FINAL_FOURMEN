@@ -106,8 +106,6 @@ public class CommentService {
         if(!didCommentLike){
             reviewComments.plusCommentLike(reviewComments.getLikes());
 
-            log.info("Find - member= {}", member);
-
             ReviewCommentsLike entity = ReviewCommentsLike.builder()
                     .member(member)
                     .reviewComments(reviewComments)
@@ -118,29 +116,34 @@ public class CommentService {
         } else {
             reviewComments.minusCommentLike(reviewComments.getLikes());
 
-            ReviewCommentsLike entity = ReviewCommentsLike.builder()
-                            .member(member)
-                                    .reviewComments(reviewComments)
-                                            .build();
+            ReviewCommentsLike entity = reviewCommentLikeRepository.findByMemberAndReviewComments_CommentId(member, reviewComments.getCommentId());
 
-            reviewCommentLikeRepository.delete(entity);
+            if(entity != null){
+                reviewCommentLikeRepository.delete(entity);
+            }
         }
     }
 
 
-    public boolean didReviewCommentLike(ReviewComments comments, Member member){
+    public boolean didReviewCommentLike(ReviewComments comments, Member member) {
         log.info("DID USER LIKE COMMENTS?? COMMENTS = {}, MEMBER = {}", comments, member);
 
         ReviewComments reviewComments = reviewCommentsDao.findById(comments.getCommentId()).orElseThrow();
 
-        log.info("target Review Comment = {}",reviewComments);
+        log.info("target Review Comment = {}", reviewComments);
 
         ReviewCommentsLike reviewCommentsLike = reviewCommentLikeRepository.findByMemberAndReviewComments_CommentId(member, reviewComments.getCommentId());
 
-        log.info("target Review Comment Like ? = {}",reviewCommentsLike);
+        log.info("target Review Comment Like ? = {}", reviewCommentsLike);
 
-        return reviewCommentsLike != null;
+        if (reviewCommentsLike != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
+
 
 
     @Transactional

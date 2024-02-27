@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded',  function () {
     const pathName = location.pathname;
     const reviewId = pathName.split('/')[2];
 
-    const commentWriterEmail = document.querySelector('#comment-writer-email').getAttribute('email');
+    const commentWriterEmail = document.querySelector('.user-info').getAttribute('email');
 
     console.log('REVIEW ID = ' + reviewId);
 
@@ -288,6 +288,7 @@ document.addEventListener('DOMContentLoaded',  function () {
                 const response = await  axios.patch(uri, data);
 
                 console.log(response.data);
+
                 alert('추천 취소 되었습니다.');
 
                 location.reload();
