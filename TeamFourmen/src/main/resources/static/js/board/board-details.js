@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	const commentContainer = document.querySelector('.post-comment-container');
 	
 	// 댓글 답장 관련 속성
-	const btnCommentReplyList = document.querySelectorAll('.btn-post-comment-reply');
-	const commentAddReplyContainerList = document.querySelectorAll('.post-comment-add-reply-container');
+	const btnCommentReplyList = document.querySelectorAll('.btn-post-comment-reply');		
+	const btnAddReplyList = document.querySelectorAll('.btn-post-comment-add-reply');
 	
 	// 게시글 카테고리(영화, 티비, 인물)
 	const category = location.pathname.split('/')[1];
@@ -399,8 +399,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 	
+	
+	// 답글 버튼누르면 textarea나오도록 함
 	btnCommentReplyList.forEach((btnCommentReply) => {
-		
 		
 		const postCommentReplyContainer = btnCommentReply.closest('.post-comment-reply-container');
 		const commentAddReplyContainer = postCommentReplyContainer.nextElementSibling;
@@ -414,8 +415,43 @@ document.addEventListener('DOMContentLoaded', function() {
 				commentAddReplyContainer.classList.add('d-none');
 			}
 			
-		});
+		});		
+	});
+	
+	// 답글 다는 이벤트리스너
+	btnAddReplyList.forEach((btnAddReply) => {
 		
-	})
+		const addReplyContainer = btnAddReply.closest('.post-comment-add-reply-container');
+		const textareaAddReply = addReplyContainer.querySelector('.textarea-post-comment-reply');
+		
+		const replyTo = btnAddReply.getAttribute('commentId');
+		const authorNicknameReplyingTo = btnAddReply.getAttribute('author');
+		
+		btnAddReply.addEventListener('click', function() {
+			const data = {			
+				member: {
+					email: user.getAttribute('email')
+				},
+				post: {
+					postId: postId
+				},
+				content: textareaAddReply.value,
+				replyTo: replyTo,
+				authorNicknameReplyingTo: authorNicknameReplyingTo		
+			}
+			
+			axios.post('/board/comment/add', data)
+				.then(() => {
+					refreshComments();
+				})
+				.catch((error) => {
+					console.log(`Error 발생!!! ${error}`);
+				})			
+		});
+
+		
+		
+	});
+	
 	
 });

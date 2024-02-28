@@ -83,8 +83,10 @@
                 <div class="post-comment-each-container">            
                     <div class="post-comment-each-header">
                         <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
-                            <div class="post-comment-each-profile-container">
-                                <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
+                            <div class="post-comment-each-profile-container">                                                                
+                                <img class="post-comment-each-profile" th:if="${comment.member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${comment.member.usersaveprofile}"  id="profile_s_img" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!comment.member.usersaveprofile.toLowerCase().startsWith('http') && comment.member.usersaveprofile == 'userimage.png'}" th:src="@{/image/userimage.png}" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!comment.member.usersaveprofile.toLowerCase().startsWith('http') && comment.member.usersaveprofile != 'userimage.png'}" th:src="@{'/image?photo=' + ${comment.member.usersaveprofile}}" alt="User Profile">                                
                             </div>
                             <div class="post-comment-each-author" th:text="${comment.member.nickname}"></div>
                             <div th:if="${comment.member.email == postDetails.member.email}" class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>
@@ -125,7 +127,7 @@
                     </div>
                 </div>
                 <!-- 대댓글 부분 -->
-                <div class="post-comment-each-container post-comment-each-reply-container">
+                <div class="post-comment-each-container post-comment-each-reply-container" th:each="replyComment : ${comment.repliesList}">
                     <div class="post-comment-each-header">
                         <div class="post-comment-reply-author-create-date-container post-comment-text-vertical-center">
                             <div class="post-comment-reply-l-icon-container post-comment-text-vertical-center">
@@ -134,19 +136,22 @@
                             <div class="post-comment-each-profile-container">
                                 <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
                             </div>
-                            <div class="post-comment-each-author post-comment-text-vertical-center">대댓글단 홍길동</div>
-                            <div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>
+                            <div class="post-comment-each-author post-comment-text-vertical-center" th:text="${replyComment.member.nickname}"></div>
+                            <div class="post-comment-by-post-author post-comment-text-vertical-center" th:if="${replyComment.member.email == postDetails.member.email}">작성자</div>
                         </div>                    
-                        <div class="post-comment-each-created-time post-comment-text-vertical-center">2012-12-25 23:05</div>
+                        <div class="post-comment-each-created-time post-comment-text-vertical-center" th:text="${#temporals.format(replyComment.createdTime, 'yyyy-MM-dd HH:mm')}"></div>
                     </div>
-                    <div class="post-comment-body-container">
-                        <div class="post-comment-content" th:text="${comment.content}"></div>
+                    <div class="post-comment-body-container post-comment-reply-body-container">
+                        <div class="post-comment-content">
+                            <span class="span-post-comment-replied-author" th:text="${replyComment.authorNicknameReplyingTo}"></span>
+                            <span class="span-post-comment-content" th:text="${replyComment.content}"></span>
+                        </div>
                         <div class="post-comment-each-like-container">
                             <div>
                                 <span>likes</span>
-                                <span class="span-num-comment-likes" th:text="${#lists.size(comment.commentLikesList)}"></span>
+                                <span class="span-num-comment-likes" th:text="${#lists.size(replyComment.commentLikesList)}"></span>
                             </div>
-                            <th:block th:unless="${member != null && comment.member.nickname == member.nickname}">
+                            <th:block th:unless="${member != null && replyComment.member.nickname == member.nickname}">
                                 <div class="post-comment-each-like-report-icon-container">
                                     <div class="post-comment-like-container" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}" th:classappend="${member != null && #lists.contains(comment.commentLikesList.![member.email], member.email)} ? 'post-comment-already-liked'">
                                         <i class="fa-solid fa-thumbs-up"></i>
@@ -156,10 +161,10 @@
                                     </div>
                                 </div> 
                             </th:block>
-                            <th:block th:if="${member != null && comment.member.nickname == member.nickname}">
+                            <th:block th:if="${member != null && replyComment.member.nickname == member.nickname}">
                                 <div></div>
                                 <div>
-                                    <button class="btn-post-comment-delete" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
+                                    <button class="btn-post-comment-delete" th:commentId="${replyComment.commentId}" th:author="${replyComment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
                                 </div>                            
                             </th:block>                
                         </div>
@@ -168,7 +173,7 @@
                         </div>
                         <div class="d-none post-comment-add-reply-container">
                             <textarea class="textarea-post-comment-reply"></textarea>
-                            <button class="btn-post-comment-add-reply" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}">댓글 등록</button>
+                            <button class="btn-post-comment-add-reply" th:commentId="${replyComment.commentId}" th:author="${replyComment.member.nickname}">댓글 등록</button>
                         </div>
                     </div>
                 </div>

@@ -89,7 +89,7 @@ public class BoardService {
 		
 		Pageable pageable = PageRequest.of(page, postsPerPage, Sort.by("postId").descending());
 		
-		Page<Post> postList = postDao.findAll(pageable);
+		Page<Post> postList = postDao.findAllByCategoryOrderByCreatedTimeDesc(category, pageable);
 				
 		log.info("postList={}", postList);			
 		
@@ -179,9 +179,10 @@ public class BoardService {
 	public List<CommentDto> getCommentList(Long postId) {
 		log.info("getCommentList(postId={})", postId);
 		
-		List<Comment> commentList = commentDao.findByPostPostIdOrderByCommentIdAsc(postId);
+		List<Comment> commentList = commentDao.findByPostPostIdAndReplyToOrderByCommentIdAsc(postId, null);
 		
 		List<CommentDto> commentDtoList = new ArrayList<>();
+		List<CommentDto> repliesList = new ArrayList<>();
 		
 		commentList.forEach((comment) -> {			
 			CommentDto commentDto = CommentDto.fromEntity(comment);
@@ -189,8 +190,18 @@ public class BoardService {
 			List<CommentLike> commentLikeList = commentLikeDao.findAllByCommentCommentId(comment.getCommentId());
 			commentDto.setCommentLikesList(commentLikeList);
 			
+			List<Comment> initialRepliesList = commentDao.findAllByReplyTo(comment.getCommentId());
+			List<CommentDto> initialRepliesDtoList = initialRepliesList.stream().map((reply) -> CommentDto.fromEntity(reply)).toList();
+			commentDto.getRepliesList().addAll(initialRepliesDtoList);
+			for (CommentDto initialReplyDto : initialRepliesDtoList) {
+				addAllRepliesToComments(commentDto, initialReplyDto);	
+			}
+			
+			
 			commentDtoList.add(commentDto);			
 		});
+		
+		log.info("commentDtoList={}", commentDtoList);
 		
 		return commentDtoList;
 	}
@@ -243,7 +254,27 @@ public class BoardService {
 		
 	}
 	
+	
 	// 보조 메서드
+	/**
+	 * 가장 상위 댓글 Dto에 모든 답변들과 관련한 모든 List를 가져옴
+	 * @param commentDto 가장 상위 댓글 Dto
+	 * @param replyDto 상위댓글에 대한 직접적인 답글 CommentDto
+	 */
+	public void addAllRepliesToComments(CommentDto commentDto, CommentDto replyDto) {
+		
+		List<Comment> repliesList = commentDao.findAllByReplyTo(replyDto.getCommentId());
+		List<CommentDto> repliesDtoList = repliesList.stream().map((reply) -> CommentDto.fromEntity(reply)).toList();
+		
+		
+		commentDto.getRepliesList().addAll(repliesDtoList);
+		
+		
+		
+		for(CommentDto repliesReplyDto : repliesDtoList) {
+			addAllRepliesToComments(commentDto, repliesReplyDto);
+		}
+	}
 	
 	
 }	// BoardService class끝

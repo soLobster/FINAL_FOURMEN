@@ -357,7 +357,7 @@ public class MovieController {
 		
 		// 해당 게시물의 댓글 리스트 가져옴
 		List<CommentDto> commentDtoList = boardService.getCommentList(id);
-		
+		log.info("commentDtoList={}", commentDtoList);
 		
 		
 		model.addAttribute("postDetails", postDetails);

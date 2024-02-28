@@ -41,7 +41,13 @@ public class CommentDto {
 	
 	private Long likes;
 	
+	private Long replyTo;
+	
+	private String authorNicknameReplyingTo;
+	
 	private List<CommentLike> commentLikesList = new ArrayList<>();
+	
+	private List<CommentDto> repliesList = new ArrayList<>();
 	
 	public static CommentDto fromEntity(Comment comment) {
 		
@@ -52,7 +58,11 @@ public class CommentDto {
 					.content(comment.getContent())
 					.createdTime(comment.getCreatedTime())
 					.likes(comment.getLikes())
-					.build();		
+					.replyTo(comment.getReplyTo())
+					.authorNicknameReplyingTo(comment.getAuthorNicknameReplyingTo())
+					.commentLikesList(new ArrayList<CommentLike>())
+					.repliesList(new ArrayList<CommentDto>())
+					.build();
 	}
 	
 }
