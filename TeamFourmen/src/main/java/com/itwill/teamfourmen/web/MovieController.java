@@ -364,6 +364,32 @@ public class MovieController {
 		return "redirect:/movie/board";
 	}
 	
+	/**
+	 * 게시판 게시글 수정창으로 보내주는 컨트롤러 매서드
+	 * @param post
+	 * @param model
+	 * @return
+	 */
+	@PostMapping("/board/edit")
+	@PreAuthorize("isAuthenticated()")
+	public String editMovieBoard(@ModelAttribute Post post, Model model) {
+		
+		log.info("editMovieBoard(post={})", post);
+		model.addAttribute("post", post);
+		model.addAttribute("category", "movie");
+		return "/board/edit";
+	}
+	
+	
+	@PostMapping("/board/do-edit")
+	public String updateMoviePost(@ModelAttribute Post post) {
+		
+		log.info("updateMoviePost(post={})", post);
+		boardService.updatePost(post);
+		
+		return "redirect:/movie/board/details?id=" + post.getPostId();
+	}
+	
 	// 이 아래로는 일반 메서드 모음
 	
 	/**

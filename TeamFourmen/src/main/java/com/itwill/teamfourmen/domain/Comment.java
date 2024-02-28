@@ -63,4 +63,5 @@ public class Comment {
 	
 	private Long likes;
 	
+	private Long replyTo;
 }

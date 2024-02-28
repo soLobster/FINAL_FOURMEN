@@ -3,6 +3,7 @@ package com.itwill.teamfourmen.web;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,14 @@ public class BoardRestController {
 	
 	private final BoardService boardService;
 	
+	@DeleteMapping("/delete/{postId}")
+	public void deletePost(@PathVariable(name = "postId") Long postId) {
+		log.info("deletePost(postId={})", postId);
+		
+		boardService.deletePost(postId);
+	}
+	
+	
 	/**
 	 * 게시글에 좋아요 추가하는 컨트롤러 메서드
 	 * @param postLike
@@ -49,7 +58,7 @@ public class BoardRestController {
 	 * 게시글 좋아요 취소하는 컨트롤러 메서드
 	 * @param postLike
 	 */
-	@PostMapping("/delete")
+	@PostMapping("/like/delete")
 	public void deletePost(@RequestBody PostLike postLike) {
 		log.info("deletePost(postLike={})", postLike);
 		
@@ -77,6 +86,17 @@ public class BoardRestController {
 		CommentDto savedCommentDto = boardService.addComment(comment);
 		
 		return ResponseEntity.ok(savedCommentDto);
+	}
+	
+	/**
+	 * 댓글 삭제하는 컨트롤러 메서드
+	 * @param commentId
+	 */
+	@DeleteMapping("/comment/delete/{commentId}")
+	public void deleteComment(@PathVariable(name = "commentId") Long commentId) {
+		log.info("deleteComment(commentId={})", commentId);
+		
+		boardService.deleteComment(commentId);		
 	}
 	
 	

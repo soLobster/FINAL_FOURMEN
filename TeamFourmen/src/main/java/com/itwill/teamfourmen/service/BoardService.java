@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,29 @@ public class BoardService {
 		
 		Post post = postDto.toEntity();
 		postDao.save(post);
+		
+	}
+	
+	/**
+	 * postId를 아규먼트로 받아 게시글 삭제하는 메서드
+	 * @param postId
+	 */
+	public void deletePost(Long postId) {
+		log.info("deletePost(postId={})", postId);
+		
+		postDao.deleteById(postId);
+	}
+	
+	@Transactional
+	public void updatePost(Post post) {
+		log.info("updatePost(post={})", post);
+		
+		Optional<Post> postOptional = postDao.findById(post.getPostId());
+		Post postToUpdate = postOptional.orElse(null);
+		
+		postToUpdate.setTitle(post.getTitle());
+		postToUpdate.setContent(post.getContent());
+		postToUpdate.setModifiedTime(LocalDateTime.now());
 		
 	}
 	
@@ -192,6 +216,15 @@ public class BoardService {
 		
 		return savedCommentDto;
 	}
+	
+	@Transactional
+	public void deleteComment(Long commentId) {
+		log.info("deleteComment(commentId={})", commentId);
+		
+		commentDao.deleteById(commentId);
+		
+	}
+	
 	
 	@Transactional
 	public CommentLike addCommentLike(CommentLike commentLike) {

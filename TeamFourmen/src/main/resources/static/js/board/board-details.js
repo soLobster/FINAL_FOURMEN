@@ -9,10 +9,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	const spanNumLikes = document.querySelector('.span-num-likes');
 	let numLikes = parseInt(spanNumLikes.textContent);
 	
+	// 게시글 삭제, 수정 버튼
+	const btnDeletePost = document.querySelector('.btn-delete-post');
+	const btnEditPost = document.querySelector('.btn-edit-post');
+	
 	const user = document.querySelector('.div-profile-image');
 	
 	const postId = document.querySelector('.post-title').getAttribute('postId');
 	const authorNickname = document.querySelector('.div-post-author').textContent;	
+		
 	
 	// 댓글관련 속성
 	const textareaPostComment = document.querySelector('.textarea-post-comment');
@@ -21,15 +26,17 @@ document.addEventListener('DOMContentLoaded', function() {
 	const spanNumComments = document.querySelector('.span-num-comments');
 	
 	const btnCommentRefresh = document.querySelector('.btn-post-comment-refresh');
+	const btnCommentDeleteList = document.querySelectorAll('.btn-post-comment-delete');
 	
 	const commentContainer = document.querySelector('.post-comment-container');
 	
-		// 댓글 좋아요
-	// const commentLikeContainer = document.querySelectorAll('.post-comment-like-container');
+	// 댓글 답장 관련 속성
+	const btnCommentReplyList = document.querySelectorAll('.btn-post-comment-reply');
+	const commentAddReplyContainerList = document.querySelectorAll('.post-comment-add-reply-container');
 	
+	// 게시글 카테고리(영화, 티비, 인물)
+	const category = location.pathname.split('/')[1];
 	
-	console.log(`postId=${postId}`);
-	console.log(`작가 닉네임=${authorNickname}`);
 
 	// 게시글 디테일 페이지 띄웠을 때 좋아요 눌렀으면 좋아요버튼 좋아요 취소로 보여주기
 	if (btnPostLike.classList.contains('liked-already')) {
@@ -37,11 +44,67 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	
+		// 게시글 삭제 버튼
+	if (btnDeletePost) {	
+		btnDeletePost.addEventListener('click', function() {
+			const postId = btnDeletePost.getAttribute('postId');
+			
+			axios.delete(`/board/delete/${postId}`)
+				.then(() => {
+					alert('게시글 삭제 성공');
+					window.history.back();
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`);
+				});
+			
+		});
+	}
+	
+	// 게시글 수정버튼
+	if(btnEditPost) {
+		btnEditPost.addEventListener('click', function() {
+			const divPostContent = document.querySelector('.div-post-content');
+			const divTitle = document.querySelector('.post-title');			
+			
+			const formToEdit = document.createElement('form');
+			formToEdit.method = 'post';
+			formToEdit.action = `/${category}/board/edit`;
+			formToEdit.classList.add('d-none');
+			
+			const inputTitle = document.createElement('input');
+			inputTitle.type="text";
+			inputTitle.name = 'title';
+			inputTitle.setAttribute('value', divTitle.textContent);
+						
+			const inputContent = document.createElement('input');			
+			inputContent.type="text";
+			inputContent.name = 'content';
+			inputContent.setAttribute('value', divPostContent.innerHTML)
+			
+			const inputPostId = document.createElement('input');
+			inputPostId.type="text";
+			inputPostId.name="postId";
+			inputPostId.setAttribute('value', postId);
+			
+			console.log(inputPostId);
+			
+			
+			formToEdit.append(inputTitle, inputContent, inputPostId);
+			
+			
+			document.body.appendChild(formToEdit);
+			formToEdit.submit();
+			
+		});
+	}
+	
+	
 	// 댓글 좋아요 이벤트리스너 등록하는 함수
 	const registerCommentLikeEventListener = function() {
-		const commentLikeContainer = document.querySelectorAll('.post-comment-like-container');
+		const commentLikeContainerList = document.querySelectorAll('.post-comment-like-container');
 		
-		commentLikeContainer.forEach((btnLike) => {
+		commentLikeContainerList.forEach((btnLike) => {
 			
 			const commentIdForBtn = btnLike.getAttribute('commentId');
 			const commentEachLikeContainer = btnLike.closest('.post-comment-each-like-container');
@@ -99,6 +162,71 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	
+	
+	// 댓글 refresh하는 함수
+	const refreshComments = function() {
+		
+		const params = {
+			postId: postId
+		};
+		
+		axios.get('/board/comment/refresh', {params})
+			.then((response) => {
+				commentContainer.innerHTML = '';
+				
+				const commentDtoList = response.data;
+				
+				for (let comment of commentDtoList) {
+					
+					commentContainer.innerHTML += `					
+			            <div class="post-comment-each-container">
+			                <div class="post-comment-each-header">
+			                    <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
+			                        <div class="post-comment-each-profile-container">
+			                            <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
+			                        </div>
+			                        <div class="post-comment-each-author">${comment.member.nickname}</div>
+			                        ${comment.member.nickname === authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
+			                    </div>                    
+			                    <div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(comment.createdTime)}</div>
+			                </div>
+			                <div class="post-comment-body-container">
+			                    <div class="post-comment-content">
+			                        ${comment.content}
+			                    </div>
+			                    <div class="post-comment-each-like-container">
+                                   <div>
+			                            <span>likes</span>
+			                            <span class="span-num-comment-likes">${comment.commentLikesList.length}</span>
+			                        </div>
+			                        <div class="post-comment-each-like-report-icon-container">
+			                            <div class="post-comment-like-container ${comment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}"
+			                                commentId="${comment.commentId}" author="${comment.member.nickname}">
+			                                <i class="fa-solid fa-thumbs-up"></i>
+			                            </div>
+			                            <div>
+			                                <i class="fa-solid fa-flag"></i>
+			                            </div>
+			                        </div>                        
+			                    </div>
+			                </div>
+			            </div>						
+						`;
+					
+				}
+								
+				
+				registerCommentLikeEventListener();
+				
+			})
+			.catch((error) => {
+				console.log(`에러 발생!!! ${error}`);
+			});
+		
+	}
+	
+	
+	
 	// 시간 포매팅하는 함수
 	const formatTime = function(timeToFormat) {
 		
@@ -108,6 +236,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	registerCommentLikeEventListener();
+	
+	
+	
 	
 	
 	// 좋아요 버튼 누를 때 이벤트 리스너
@@ -145,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					console.log(`에러발생!!! ${error}`);	
 				});			
 		} else {	// 좋아요 이미 누른경우
-			axios.post('/board/delete', data)
+			axios.post('/board/like/delete', data)
 				.then((response) => {
 					numLikes--;
 					spanNumLikes.textContent = numLikes;
@@ -241,67 +372,50 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	
 	
-	btnCommentRefresh.addEventListener('click', function() {
+	btnCommentRefresh.addEventListener('click', refreshComments);
+	
+	
+	// 댓글 삭제버튼 
+	btnCommentDeleteList.forEach((btnCommentDelete) => {
 		
-		const params = {
-			postId: postId
-		};
+		const commentIdToDelete = btnCommentDelete.getAttribute('commentId');		
 		
-		axios.get('/board/comment/refresh', {params})
-			.then((response) => {
-				commentContainer.innerHTML = '';
-				
-				const commentDtoList = response.data;
-				
-				for (let comment of commentDtoList) {
-					
-					commentContainer.innerHTML += `					
-			            <div class="post-comment-each-container">
-			                <div class="post-comment-each-header">
-			                    <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
-			                        <div class="post-comment-each-profile-container">
-			                            <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
-			                        </div>
-			                        <div class="post-comment-each-author">${comment.member.nickname}</div>
-			                        ${comment.member.nickname === authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
-			                    </div>                    
-			                    <div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(comment.createdTime)}</div>
-			                </div>
-			                <div class="post-comment-body-container">
-			                    <div class="post-comment-content">
-			                        ${comment.content}
-			                    </div>
-			                    <div class="post-comment-each-like-container">
-                                   <div>
-			                            <span>likes</span>
-			                            <span class="span-num-comment-likes">${comment.commentLikesList.length}</span>
-			                        </div>
-			                        <div class="post-comment-each-like-report-icon-container">
-			                            <div class="post-comment-like-container ${comment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}"
-			                                commentId="${comment.commentId}" author="${comment.member.nickname}">
-			                                <i class="fa-solid fa-thumbs-up"></i>
-			                            </div>
-			                            <div>
-			                                <i class="fa-solid fa-flag"></i>
-			                            </div>
-			                        </div>                        
-			                    </div>
-			                </div>
-			            </div>						
-						`;
-					
-				}
-								
-				
-				registerCommentLikeEventListener();
-				
-			})
-			.catch((error) => {
-				console.log(`에러 발생!!! ${error}`);
-			});
+		btnCommentDelete.addEventListener('click', function() {
+			
+			const data = {
+				comment: {
+					commentId: commentIdToDelete
+				}				
+			}						
+			
+			axios.delete(`/board/comment/delete/${commentIdToDelete}`, data)
+				.then(() => {
+					refreshComments();
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`);
+				})			
+		})
 		
 	});
 	
-	
+	btnCommentReplyList.forEach((btnCommentReply) => {
+		
+		
+		const postCommentReplyContainer = btnCommentReply.closest('.post-comment-reply-container');
+		const commentAddReplyContainer = postCommentReplyContainer.nextElementSibling;
+		
+		btnCommentReply.addEventListener('click', function() {
+			console.log(btnCommentReply);
+			console.log(commentAddReplyContainer);
+			if(commentAddReplyContainer.classList.contains('d-none')) {
+				commentAddReplyContainer.classList.remove('d-none');
+			} else {
+				commentAddReplyContainer.classList.add('d-none');
+			}
+			
+		});
+		
+	})
 	
 });
