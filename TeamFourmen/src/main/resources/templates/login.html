@@ -261,6 +261,11 @@
     					 <a class="btnemail newpasswordchange" id="newpasswordchange">Change</a>
     					</div>
 						</div>	
+						<div id="kakaonaver" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="kakaonaverclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">If you signed up for Kakao or Naver, please use it below</p></div>
+						</div>	
 						
 					<div id="failfinallyfindpassword" class="forgetwarningmodal">
                       <div class="xbutton"><span id="failfinallyfindpasswordclose" class="modal-close">&times;</span></div>
@@ -336,7 +341,8 @@
 					<div id="failfinallyfindemail" class="forgetwarningmodal">
                       <div class="xbutton"><span id="failfinallyfindemailclose" class="modal-close">&times;</span></div>
     				
-    					<div class="warnbox"><p class="warninginfo">Invalid Client</p></div>
+    					<div class="warnbox"><p class="warninginfo">Invalid Client<br>
+    					If you signed up for Kakao or Naver, please use it below</p></div>
 						</div>	
 						
 					<div id="forgethavetoinput" class="forgetwarningmodal">
@@ -529,11 +535,11 @@
    .then(response => {
    	console.log('success');
        // 요청이 성공적으로 완료된 경우 페이지 변경
-      window.location.href = 'http://localhost:8081/';
+   //   window.location.href = 'http://localhost:8081/';
    })
    .catch(error => {
    	console.error('Error:', error);
- window.location.href = 'http://localhost:8081/';
+ //window.location.href = 'http://localhost:8081/';
    });
 	}
 

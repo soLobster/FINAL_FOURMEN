@@ -898,7 +898,7 @@ function kakaologin(){
     			console.log('Access Token after logout:', accessTokenAfterLogout);
     			
     		
-    			 window.location.href = 'http://localhost:8081/';
+    			// window.location.href = 'http://localhost:8081/';
 
 			});
 
@@ -1067,6 +1067,13 @@ let failfinallyfindpasswordclose = document.querySelector('#failfinallyfindpassw
 		window.location.href="http://localhost:8081/login"
 		
 	});	
+let kakaonaver= document.querySelector('div#kakaonaver');
+let kakaonaverclose = document.querySelector('#kakaonaverclose');
+	kakaonaverclose.addEventListener('click', () => {
+		kakaonaver.style.display = 'none';
+	
+		
+	});	
 let findpasswordbutton = document.querySelector('button#findpasswordbutton');	
 
 findpasswordbutton.addEventListener('click',()=>{	
@@ -1092,11 +1099,17 @@ findpasswordbutton.addEventListener('click',()=>{
 
 							console.log(response.data);
 							
-							if(response.data !== ''){
+							if(response.data === 'kakao' || response.data === 'naver'){
+								kakaonaver.style.display = 'block'; 
+								
+								
+							} else if (response.data !== ''){
 								 
 				
 								 finallyfindpassword.style.display = 'block';
-							} else {
+							}
+							
+							else {
 								failfinallyfindpassword.style.display = 'block';
 
 							}
@@ -1215,7 +1228,7 @@ const inputemail = document.querySelector('input#logemail');
 	
 	
 	function checkName(e){
-		if(e.target.value==='' || e.target.value.length >=20){
+		if(e.target.value.length<=2 || e.target.value.length >=20){
 			nameChecked = false;
 			e.target.value=null;
 			return;
@@ -1237,7 +1250,7 @@ async function checkNickname(e){
 		const response= await axios.get(uri);
 		
 		const checkNicknameResult = document.querySelector('div#checkNicknameResult');
-		if(e.target.value.length <=20){
+		if(e.target.value.length <=20 && e.target.value.length >=2){
 		if(response.data ==='Y'){
 			nicknameChecked = true;
 			checkNicknameResult.innerHTML = 'Available Nickname';
@@ -1250,6 +1263,9 @@ async function checkNickname(e){
 			checkNicknameResult.classList.add('failid');
 		}} else{
 			nicknameChecked = false;
+			checkNicknameResult.innerHTML = 'short in length';
+			checkNicknameResult.classList.remove('successid');
+			checkNicknameResult.classList.add('failid');
 			e.target.value=null;
 			return;
 			
@@ -1267,7 +1283,7 @@ async function checkPhone(e){
 		const response= await axios.get(uri);
 		
 		const checkphoneResult = document.querySelector('div#checkphoneResult');
-		if(e.target.value.length <=20){
+		if(e.target.value.length <=20 && e.target.value.length >=2){
 		if(response.data ==='Y'){
 			phoneChecked = true;
 			checkphoneResult.innerHTML = 'Available Phone';

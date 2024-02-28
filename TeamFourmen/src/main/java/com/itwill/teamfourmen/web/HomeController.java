@@ -2,11 +2,15 @@ package com.itwill.teamfourmen.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.itwill.teamfourmen.domain.EmailProvider;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
@@ -27,9 +33,24 @@ import com.itwill.teamfourmen.domain.PhonemessageProvider;
 import com.itwill.teamfourmen.dto.MemberCreateDto;
 import com.itwill.teamfourmen.dto.MemberCreateNaverDto;
 import com.itwill.teamfourmen.dto.MemberModifyDto;
+import com.itwill.teamfourmen.dto.MemberSearchDto;
 import com.itwill.teamfourmen.dto.loginDto;
+import com.itwill.teamfourmen.dto.movie.MovieCombinedDto;
+import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
+import com.itwill.teamfourmen.dto.movie.MovieListDto;
+import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
+import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
+import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
+import com.itwill.teamfourmen.dto.tvshow.CombinedDto;
+import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
+import com.itwill.teamfourmen.dto.tvshow.TvShowListDTO;
+import com.itwill.teamfourmen.dto.tvshow.TvShowVideoDTO;
+import com.itwill.teamfourmen.dto.tvshow.TvShowVideoListDTO;
 import com.itwill.teamfourmen.service.HomeService;
+import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.MemberService;
+import com.itwill.teamfourmen.service.MovieApiUtil;
+import com.itwill.teamfourmen.service.TvShowApiUtil;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,6 +67,8 @@ import org.springframework.ui.Model;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
+	@Value("${api.themoviedb.api-key}")
+	private String API_KEY;
 	private final HomeService homeservice;
 	private final EmailProvider emailprovider;
 	private final PhonemessageProvider phoneprovider;
@@ -55,10 +78,99 @@ public class HomeController {
 	private final PasswordEncoder passwordEncoder;
 	private final NicknameInterceptor interceptor;
 	
-	@GetMapping("/")
-	public String home() {
-		log.info("HOME()");
+	private final MovieApiUtil movieapiUtil;
+	private final TvShowApiUtil apiUtil;
 
+	private final ImdbRatingUtil imdbRatingUtil;
+
+	private String category = "tv";
+	
+	@GetMapping("/")
+	public String home(Model model) throws JsonMappingException, JsonProcessingException {
+		log.info("HOME()");
+		TvShowListDTO listDTO = apiUtil.getTrendTvShowList("week", 1);
+		//log.info("listDto = {}", listDTO);
+
+//		model.addAttribute("listDTO", listDTO);
+
+		log.info("TOTALPAGES = {}", listDTO.getTotal_pages());
+
+		List<TvShowDTO> tvShowDto = listDTO.getResults();
+	
+		
+		List<CombinedDto> combineList = new ArrayList<>();
+		
+		// 각 TV 쇼에 대해 동영상을 가져오고, 모든 동영상을 하나의 리스트에 추가
+		for (TvShowDTO tvShow : tvShowDto) {
+			CombinedDto combined = new CombinedDto();
+			combined.setTvShowDto(tvShow);
+		    TvShowVideoListDTO tvShowVideoDTOList = apiUtil.getTvShowVideo(tvShow.getId());
+		    List<TvShowVideoDTO> tvShowTrailerList = tvShowVideoDTOList.getResults();
+		   
+		    if (!tvShowTrailerList.isEmpty()) {
+		        TvShowVideoDTO firstVideo = tvShowTrailerList.get(0);
+		        combined.setKey(firstVideo.getKey());
+		    }    	
+		    combineList.add(combined);    
+		}
+		    
+		
+		
+			log.info("combined={}",combineList);
+			log.info("combinedsisize={}",combineList.size());
+		
+		model.addAttribute("combineList",combineList);
+
+		
+		MovieQueryParamDto paramDto = new MovieQueryParamDto();
+		paramDto.setListCategory("popular");
+		
+		MovieListDto movielistDto = movieapiUtil.getMovieList(paramDto);
+		//log.info("listDto={}", listDto);		
+		
+		 List<MovieListItemDto> movielist =movielistDto.getResults();
+		
+		log.info("movielist={}",movielist);
+		
+		List<MovieCombinedDto> moviecombineList = new ArrayList<>();
+		
+		// 각 TV 쇼에 대해 동영상을 가져오고, 모든 동영상을 하나의 리스트에 추가
+		for (MovieListItemDto movie : movielist) {
+			MovieCombinedDto moviecombined = new MovieCombinedDto();
+			moviecombined.setMovielistitemdto(movie);		    
+			List<MovieVideoDto> MovieVideoDTOList = movieapiUtil.getMovieVideoList(movie.getId());
+	
+		    if (!MovieVideoDTOList.isEmpty()) {
+		    	String firstVideo = MovieVideoDTOList.get(0).getKey();
+		    	log.info(" key={}", firstVideo);
+		    	moviecombined.setKey(firstVideo);
+		        
+		    }    	
+		    moviecombineList.add(moviecombined);    
+		}
+		
+		log.info(" moviecombineList={}", moviecombineList);
+		log.info(" moviecombineListsszie={}", moviecombineList.size());
+		model.addAttribute("moviecombineList", moviecombineList);
+
+		MovieQueryParamDto paramDtoo = new MovieQueryParamDto();
+		paramDtoo.setListCategory("top_rated");
+		
+		MovieListDto movielistDtoo = movieapiUtil.getMovieList(paramDtoo);
+		//log.info("listDto={}", listDto);		
+		
+		 List<MovieListItemDto> topmovielist =movielistDtoo.getResults();
+		
+		log.info("topmovielist={}",topmovielist);
+		model.addAttribute("topmovielist", topmovielist);
+		
+		TvShowListDTO toplistDTO = apiUtil.getTvShowList("top_rated", 1);
+
+
+		List<TvShowDTO> toptvShowDto = toplistDTO.getResults();
+		
+		model.addAttribute("toptvShowDto",toptvShowDto);
+		
 		return "index";
 	}
 	
@@ -68,6 +180,14 @@ public class HomeController {
 
 		
 	}
+
+	@GetMapping("/admin")
+	public void admin(@RequestParam(name = "p", defaultValue = "0") int p, Model model) {
+		Page<Member> data = memberservice.getmemberlist(p);
+	    model.addAttribute("data",data);
+		
+	}
+	
 	
 	
 
@@ -172,6 +292,16 @@ public class HomeController {
 		 		 
 		 	
 		     }
+		 	 
+		 	 
+		 	 @PostMapping("/detail/update")
+		     public String updateadmin(@ModelAttribute MemberModifyDto dto) throws IllegalStateException, IOException {
+		         // 여기서 비밀번호를 비교하고 처리하면 됩니다.
+		 		String sDirectory = "C:/image";
+		 		memberservice.update(dto, sDirectory);
+		 		
+		 		return "redirect:/admin";
+		 	 }
 		    
 		 	@GetMapping("/image")
 			public ResponseEntity<Resource> getImage(@RequestParam(name= "photo") String photo) {
@@ -242,7 +372,7 @@ public class HomeController {
 		    } else {
 		        // 값이 있는 경우 첫 번째 결과의 reserveseat 반환
 		        log.debug("result={}", result);
-		        return ResponseEntity.ok(result.getEmail());
+		        return ResponseEntity.ok(result.getType());
 		    }
 	    }
 	
@@ -290,10 +420,41 @@ public class HomeController {
     
     @GetMapping("/delete")
     public String delete(@RequestParam(name = "email") String email) {
-        log.info("delete(id={})", id);
+       
         
-        memberservice.deleteById(id);
+        memberservice.deleteByEmail(email);
         
-        return "redirect:/post/list";
+        return "redirect:/";
     }
+    
+    
+    @GetMapping("/admin/detail")
+    public void detail(@RequestParam(name = "email") String email, Model model) {
+       
+        
+        Member member = memberservice.getmemberdetail(email);
+        model.addAttribute("members",member);        
+        
+    }
+    
+    @GetMapping("/admindelete")
+    public String admindelete(@RequestParam(name = "email") String email) {
+       
+        
+        memberservice.deleteByEmail(email);
+        
+        return "redirect:/admin";
+    }
+    
+	  @GetMapping("/admin/search")
+	    public void search(@ModelAttribute MemberSearchDto dto, Model model) {
+	        log.info("search(dto={})", dto);
+	        
+	        // Service 메서드 호출 -> 검색 결과 -> Model -> View
+	        Page<Member> data = memberservice.search(dto);
+	        model.addAttribute("data", data);
+	        log.info("data={}",data);
+	        
+	      
+	    };
 }

@@ -45,6 +45,7 @@ public class TvShowDTO {
     private String type;
     private double vote_average;
     private int vote_count;
+  
 
 }
 

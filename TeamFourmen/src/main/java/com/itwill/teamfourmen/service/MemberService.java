@@ -6,6 +6,11 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +26,7 @@ import com.itwill.teamfourmen.domain.MemberSecurityDto;
 import com.itwill.teamfourmen.dto.MemberCreateDto;
 import com.itwill.teamfourmen.dto.MemberCreateNaverDto;
 import com.itwill.teamfourmen.dto.MemberModifyDto;
+import com.itwill.teamfourmen.dto.MemberSearchDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +55,21 @@ public class MemberService implements UserDetailsService {
         }
         
     }
-
+    
+    public Page<Member> getmemberlist(int page){
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("email").descending());
+        Page<Member> data = memberDao.findAll(pageable);
+        
+        return data;
+    };
+    
+    public Member getmemberdetail(String email) {
+    	Optional<Member> opt = memberDao.findByEmail(email);
+    	Member member = opt.get();
+    	
+    	return member;
+    };
+    
     public void createMember(MemberCreateDto dto) {
         log.info("crateMember(dto={})", dto);
         
@@ -147,6 +167,15 @@ public class MemberService implements UserDetailsService {
     
      	
    }
+    
+    @Transactional
+    public void deleteByEmail(String email) {
+    	
+    	  memberDao.findByEmail(email).ifPresent(member -> {
+              member.clearRoles(); // 멤버의 모든 역할을 제거합니다.
+              memberDao.deleteByEmail(email);
+          });
+        }
 
     @Transactional
     //-> 검색한 엔터티의 변화가 생기면 트랜잭션이 종료될 때 update 쿼리가 자동으로 실행.
@@ -187,6 +216,33 @@ public class MemberService implements UserDetailsService {
        
     }
     
+    public Page<Member> search(MemberSearchDto dto) {
+        log.info("search(dto={})", dto);
+
+        Pageable pageable = PageRequest.of(dto.getP(), 10, Sort.by("email").descending());
+        
+        Page<Member> result = null;
+        switch (dto.getCategory()) {
+        case "e":
+            result = memberDao.findByEmailContainingIgnoreCase(dto.getKeyword(), pageable);
+            break;
+        case "n":
+            result = memberDao.findByNameContainingIgnoreCase(dto.getKeyword(), pageable);
+            break;
+        case "ni":
+            result = memberDao.findByNicknameContainingIgnoreCase(dto.getKeyword(), pageable);
+            break;
+        case "p":
+            result = memberDao.findByPhoneContainingIgnoreCase(dto.getKeyword(), pageable);
+            break;
+        case "t":
+            result = memberDao.findByTypeContainingIgnoreCase(dto.getKeyword(), pageable);
+            break;
+  
+        }
+        
+        return result;
+    }
 	
     	
 
