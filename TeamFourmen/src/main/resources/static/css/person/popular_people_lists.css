@@ -1,6 +1,6 @@
 @charset "UTF-8";
-@import "person/reset.css";
-/* lists.html 에 포함 */
+@import "reset.css";
+/* person-lists.html 에 포함 */
 
 /* 페이지 배경색 설정 */
 body {
@@ -13,7 +13,7 @@ body {
 }
 
 .inner_block {
-    margin: 20px 6rem;
+    margin: 50px 12.5rem;
 }
 
 .inner_block .inner_content .content {
@@ -56,15 +56,23 @@ body {
     flex-direction: column;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .1); /* 그림자 효과 */
     align-items: stretch; /* 모든 그리드 아이템을 컨테이너 높이에 맞춤 */
-    min-height: 350px; /* 최소 높이 설정 */
-    overflow: auto; /* 내용이 넘치면 스크로바 표시 */
+    min-height: 200px; /* 최소 높이 설정 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
+    /*overflow: auto; !* 내용이 넘치면 스크로바 표시 *!*/
 }
 
-/* 카드 내 이미지 스타일링 */
+/* 카드 내 인물 이미지 스타일링 */
 .item_profile_card img {
     width: 100%; /* 이미지 너비를 컨테이너에 맞춤 */
     height: auto; /* 높이를 자동으로 설정하여 비율 유지 */
     object-fit: cover; /* 이미지가 컨테이너를 꽉 채우도록 설정 */
+}
+/* 카드 내 디폴트 이미지 스타일링 */
+.default_person_img {
+    width: 470px; /* 너비를 210px로 고정 */
+    height: 470px; /* 높이를 210px로 고정 */
+    object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
 }
 
 /* 카드 내 글(인물 이름) 스타일링 */
@@ -74,21 +82,15 @@ body {
     margin-top: 5px;
     margin-left: 10px;
     margin-bottom: 5px;
+    width: 200px;
+    white-space: nowrap; /* 텍스트를 한 줄에 표시 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
+
 }
 .meta p a {
     text-decoration-line: none;
     color: black;
-}
-
-/* 카드 내 글(주요 작품 목록_3개까지 표시) 스타일링 */
-.meta .known_for {
-    font-size: 1rem;
-    font-weight: 400;
-    color: cadetblue;
-    display: block;
-    margin-top: 0;
-    margin-bottom: 2.5px;
-    margin-left: 10px;
 }
 
 /* 반응형 스타일링 */

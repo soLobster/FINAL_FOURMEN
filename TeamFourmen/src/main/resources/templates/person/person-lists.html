@@ -16,36 +16,38 @@
             <div class="inner_block">
                 <div class="inner_content">
                     <div class="content">
-                        <h2><span class="title">인기 인물</span></h2>
+                        <h2>
+                            <span class="title">인기 인물</span>
+                        </h2>
+                        <h2>
+                            <a class="home" th:href="@{/}">홈</a>
+                        </h2>
                         <div class="results flex results_profile_card">
-                            <!-- personList에서 각 person 객체에 대해 반복 -->
-                            <div th:each="person : ${personList}" class="fifty_square">
+                            <!-- personList에서 각 personKoKR 객체에 대해 반복 -->
+                            <div th:each="personKoKR : ${personListKoKR}" class="fifty_square">
                                 <div class="item_profile_card">
                                     <div class="image_content">
                                         <!-- 인물 상세 페이지로의 링크 설정 -->
-                                        <a th:href="@{/person/details/{id}(id=${person.id})}" class="result">
+                                        <a th:href="@{/person/details/{id}(id=${personKoKR.id})}" class="result">
                                             <!-- 인물 이미지 표시 -->
-                                            <img th:src="@{'https://image.tmdb.org/t/p/w470_and_h470_face' + ${person.profilePath}}"
+                                            <img class="person_img"
+                                                 th:if="${personKoKR.profilePath ne null and personKoKR.profilePath ne 'null' and personKoKR.profilePath ne ''}"
+                                                 th:src="@{'https://image.tmdb.org/t/p/w470_and_h470_face' + ${personKoKR.profilePath}}"
+                                                 alt="Profile Image"/>
+                                            <img class="default_person_img"
+                                                 th:unless="${personKoKR.profilePath ne null and personKoKR.profilePath ne 'null' and personKoKR.profilePath ne ''}"
+                                                 th:src="@{/image/person_default_image01.png}"
                                                  alt="Profile Image"/>
                                         </a>
                                     </div>
-                                    <div class="meta" style="margin-bottom: 5px">
+                                    <div class="meta">
                                         <!-- 인물 이름 표시 -->
                                         <p class="name">
-                                            <a th:text="${person.name}" th:href="@{/person/details/{id}(id=${person.id})}">이름</a>
+                                            <a th:text="${personKoKR.name}" th:href="@{/person/details/{id}(id=${personKoKR.id})}">이름</a>
                                         </p>
-                                        <!-- 출연한 주요 작품 목록 표시, 최대 3개까지 -->
-                                        <div th:each="work, workStat : ${person.knownFor}" th:if="${workStat.index < 3}">
-                                            <p class="known_for" th:text="${work.name != null ? work.name : work.title}">주요 작품 목록</p>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div>
-
-                            </div>
-
                         </div>
                     </div>
                 </div>

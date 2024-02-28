@@ -1,0 +1,81 @@
+@charset "UTF-8";
+
+.board-main-container {
+    width: 85%;
+    margin: 0 auto;
+}
+
+.board-title {
+    text-align: center;
+}
+
+/* 글작성 버튼 */
+.div-board-create-button {
+    display: flex;
+    justify-content: end;
+}
+
+.btn-board-create {
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #43aa8b;
+}
+
+/* 리스트 테이블 관련 */
+.table-board-list {
+    width: 100%;
+    margin: 2rem 0;
+}
+
+.thead-board-list-title {
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.thead-board-list-title::after {
+    content: "";
+    display: block;
+    margin-bottom: 1rem;
+    
+}
+
+.th-board-title {
+    width: 50%;
+    text-align: left;
+}
+
+.th-board-author {
+    width: 10%;
+}
+
+.th-board-created-time {
+    width: 20%;
+}
+
+.th-board-views {
+    width: 10%;
+}
+
+.th-board-likes {
+    width: 10%;
+}
+
+.boarder-content-text-center {
+    text-align: center;   
+}
+
+    /* 게시물 각 행관련 */
+.table-row-each-post {
+    border-top: 1px solid gray;
+    height: 3rem;
+}
+
+
+
+	/* 제목링크관련 */
+.td-board-title a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: none;
+}

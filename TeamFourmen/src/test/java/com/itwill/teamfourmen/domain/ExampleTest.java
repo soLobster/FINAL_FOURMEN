@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.domain;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class ExampleTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void mapTest() {
 		
 		Map<String, ChatRoomDto> chatRooms = new ConcurrentHashMap<>();
@@ -57,6 +58,15 @@ public class ExampleTest {
 		users.remove("111");
 		
 		log.info("users 삭제후 = {}", users);
+		
+	}
+	
+	@Test
+	public void fileTest() {
+		String rootDirectory = File.listRoots()[0].getAbsolutePath();
+		log.info("rootDirectory={}", rootDirectory);
+		
+		
 		
 	}
 	
