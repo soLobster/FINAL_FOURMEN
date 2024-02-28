@@ -248,7 +248,7 @@ body{
     width: 85%;
     height: 0;
     /*opacity: 0;*/
-    overflow-x: hidden;
+    overflow: hidden;
         
     /*transition: height 0.6s ease-in-out;*/
     transition: none;
