@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -99,4 +100,9 @@ public class Member {
 	        
 	        return this;
 	    }
+
+
+		public LocalDate getLocalDate(LocalDateTime created_time) {
+			return created_time.toLocalDate();
+		}
 }

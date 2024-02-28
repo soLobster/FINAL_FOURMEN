@@ -8,25 +8,33 @@
 		  rel="stylesheet"
 		  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
 		  crossorigin="anonymous">
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
+	<link th:href="@{/css/theme.css}" rel="stylesheet">
 
 
 	<style>
 
 		@font-face {
-			font-family: 'Pretendard-Regular';
-			src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+			font-family: 'Pretendard';
 			font-weight: 400;
 			font-style: normal;
+			src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+			src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix') format('embedded-opentype'),
+			url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2'),
+			url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff') format('woff'),
+			url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf') format("truetype");
+			font-display: swap;
 		}
+
 
 		/* 폰트 적용 */
 		body {
-			font-family: 'Pretendard-Regular';
-			background-color: black;
+			font-family: 'Pretendard';
+			/*background-color: black;*/
 		}
 
 		main {
-			color: white;
+			/*color: white;*/
 		}
 		.flex_header_container{
 			position: relative;
@@ -134,6 +142,7 @@
 			margin-right: 30px;
 			font-weight: bold;
 			/* background-color: gainsboro; */
+			font-family: 'Pretendard';
 		}
 
 		.tool-tip-custom-bar{
@@ -141,6 +150,30 @@
 			margin-right: 30px;
 			margin-top: 10px;
 			/* background: aquamarine; */
+		}
+
+		.btn-add-like {
+			background-color:  transparent;
+			border: none;
+			width: 46px;
+			height: 46px;
+			position: absolute;
+			top: -27%;
+			left: -106%;
+		}
+
+		.btn-tv-review {
+			background-color: transparent;
+			border: none;
+			width: 46px;
+			height: 46px;
+			position: absolute;
+			top: -27%;
+			left: -106%;
+		}
+
+		.tool-tip-custom-bar i {
+			color: #ffffff;
 		}
 
 		p.genres {
@@ -234,6 +267,10 @@
 			}
 		}
 
+		.user-liked-already i {
+			color: #ef233c;
+		}
+
 		#custom-like:checked .fa-heart,
 		#custom-like:hover .fa-heart {
 			color: red;
@@ -275,10 +312,9 @@
 			color: white;
 		}
 
-		div.profile-wrapper a{
-			text-decoration: none;
-			color: white;
-		}
+		/*div.profile-wrapper a{*/
+		/*	text-decoration: none;*/
+		/*}*/
 
 		div.genres_rating {
 			margin-left: 40px;
@@ -515,6 +551,107 @@
 			max-width: 100%;
 		}
 
+		.tvShow_review {
+			padding: 10px 30px 10px 30px; !important;
+		}
+
+		.popular-review-section {
+			/*background-color: #155d27;*/
+			padding: 5px 5px 5px 5px;
+		}
+
+		.review-item {
+			border-top: 1px solid rgba(256, 256, 256, 0.5);
+		}
+
+		.review-item-user-profile-img-a-tag {
+			width: 55px;
+			height: 55px;
+			border-radius: 50%;
+		}
+
+		.review-item-user-profile-img {
+			width: 55px;
+			height: 55px;
+			position: relative;
+			cursor: pointer;
+
+		}
+
+		.review-item-user-profile-img > img {
+			width: 55px;
+			height: 55px;
+			object-fit: cover;
+			border-radius: 50%;
+		}
+
+		.review-item-user-profile-img::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 55px;
+			height: 55px;
+			border: 1px solid white;
+			border-radius: 50%;
+			transition: ease-in-out;
+		}
+
+		.review-item-user-profile-img:hover::before {
+			border-color: #33ff33;
+		}
+
+
+		.tvShowAllReview {
+			margin-top: 10px;
+			margin-left: 10px;
+			text-decoration: none;
+			color: white;
+		}
+
+		.tvShowAllReview:hover {
+			color: #8dabfb;
+		}
+
+		.review-item-content > div {
+			padding: 0 0 10px 0;
+			margin-left: 20px;
+		}
+
+		.view-star-rating > i {
+			font-size: 13px; !important;
+			color: #33ff33; !important;
+		}
+
+		.reviewer-nickname {
+			font-size: 20px;
+			font-weight: bolder;
+			font-family: 'Pretendard';
+		}
+
+		.review-item-content-header > a{
+			text-decoration: none;
+			color: white;
+		}
+
+		.review-item-content-header > a:hover {
+			color: #8dabfb;
+		}
+
+		.review-item-content-footer > i {
+			color: inherit;
+		}
+
+		.review-item-content-article > a {
+			text-decoration: none;
+			color: white;
+		}
+
+		.content-article:hover {
+			color: #c4c3ca;
+		}
+
+
 		.tvShow_recommendations{
 			/*background-color: cornflowerblue;*/
 		}
@@ -643,37 +780,40 @@
 		}
 
 		::-webkit-scrollbar-track {
-			background-color: black; /* 스크롤바 트랙 색상 */
+			background-color: rgb(31, 32, 41); /* 스크롤바 트랙 색상 */
 		}
 
 	</style>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
 	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+	<link th:href="@{/css/theme.css}" rel="stylesheet">
+
 </head>
 <body class = "ko v4">
 <header>
-	<h1>TV SHOW Details</h1>
-	<a th:href="@{'../tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
+	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+	<a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
 	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
 </header>
 
 <main>
 	<div class = "flex_header_container">
 		<!-- 윗부분 배경화면 -->
-		<img class = "backdropImg"
-			 th:if="${tvShowDto.getBackdrop_path() ne null and tvShowDto.getBackdrop_path() ne 'null' and tvShowDto.getBackdrop_path() ne ''}"
-			 th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.backdrop_path} "/>
-		<img class = "backdropImg"
-			 th:unless="${tvShowDto.getBackdrop_path() ne null and tvShowDto.getBackdrop_path() ne 'null' and tvShowDto.getBackdrop_path() ne ''}"
-			 th:src = "@{'/image/default-black-background.jpg'}"/>
-
+		<div id = "tvshow-background-color-div" style="height: 600px">
+<!--			<img class = "backdropImg"-->
+<!--				 th:if="${tvShowDto.getBackdrop_path() ne null and tvShowDto.getBackdrop_path() ne 'null' and tvShowDto.getBackdrop_path() ne ''}"-->
+<!--				 th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.backdrop_path} "/>-->
+<!--			<img class = "backdropImg"-->
+<!--				 th:unless="${tvShowDto.getBackdrop_path() ne null and tvShowDto.getBackdrop_path() ne 'null' and tvShowDto.getBackdrop_path() ne ''}"-->
+<!--				 th:src = "@{'/image/default-black-background.jpg'}"/>-->
 		<div class = "tvShow_Details">
 			<!-- 포스터 영역 -->
 			<section class = "me-3 poster">
 				<div class = "poster_ott">
-					<img id = "poster_img"  class = "detail_poster rounded"
+					<img id = "poster_img"  class = "rounded detail_poster"
 						 th:if = "${tvShowDto.getPoster_path() ne null and tvShowDto.getPoster_path() ne 'null' and tvShowDto.getPoster_path() ne ''}"
-						 th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.poster_path}" alt = "Tv Show Poster"/>
+						 th:src="@{~/api/image/proxy(url='https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${tvShowDto.getPoster_path()})}" alt = "TV SHOW POSTER">
+<!--						 th:src = " 'https:/image.tmdb.org/t/p/original' + ${tvShowDto.poster_path}" alt = "Tv Show Poster"/>-->
 					<img id = "poster_img_none"  class = "detail_poster rounded"
 						 th:unless= "${tvShowDto.getPoster_path() ne null and tvShowDto.getPoster_path() ne 'null' and tvShowDto.getPoster_path() ne ''}"
 						 th:src = "@{'/image/default.png'}" alt = "Tv Show Poster"/>
@@ -682,13 +822,15 @@
 			<!-- 글 영역 -->
 			<section class = "overView">
 				<div style="display: flex; margin-left: 40px; margin-bottom: 10px; gap: 40px;">
-					<section th:if = "${imdbRatings ne null}" style="display: flex; gap: 20px">
-						<h2><img th:src = "@{'/icons/imdb-icon.svg'}" width="42" height="42"/></h2>
-						<div style="display: flex; flex-direction: column;">
-							<span th:text="${imdbRatings.getAveragerating() + ' / 10'}"></span>
-							<span th:text="${imdbRatings.getNumvotes()}"></span>
-						</div>
-					</section>
+					<th:block th:if="${imdbRatings ne null}">
+						<section style="display: flex; gap: 20px">
+							<h2><img th:src = "@{'/icons/imdb-icon.svg'}" width="42" height="42"/></h2>
+							<div style="display: flex; flex-direction: column;">
+								<span th:text="${imdbRatings.getAveragerating() + ' / 10'}"></span>
+								<span th:text="${imdbRatings.getNumvotes()}"></span>
+							</div>
+						</section>
+					</th:block>
 					<section style="display: flex; gap: 20px">
 						<h2 style="padding-top: 4px"><i class="fa-solid fa-users fa-lg"></i></h2>
 						<div style="display: flex; flex-direction: column">
@@ -697,10 +839,10 @@
 						</div>
 					</section>
 				</div>
-				<div>
+				<div class = "tvshow-title">
 					<h1 class="mt-0 mb-2" th:text= "${tvShowDto.getName() + '(' + releaseYear + ')'}"></h1>
 					<div class = "genres_rating">
-						<p class = "rating mt-0 ms-0 me-2 border border-1" th:text = "${rating.getRating()} + '+' "></p>
+						<p class = "rating mt-0 ms-0 me-2" th:text = "${rating.getRating()} + '+' " style="border: 1px solid"></p>
 						<p class = "genres mt-0 ms-0" th:text="${genres}"></p>
 					</div>
 				</div>
@@ -709,13 +851,17 @@
 						<i class="fa-solid fa-list"></i>
 						<span class = "custom-bar-text">플레이 리스트 저장</span>
 					</div>
-					<div class = "tool-tip-custom-bar" id = "custom-like">
-						<i class="fa-solid fa-heart"></i>
-						<span class = "custom-bar-text">Like</span>
+					<div class = "tool-tip-custom-bar div-like" id = "custom-like" th:classappend="${tmdbLike} ne null ? 'user-liked-already'">
+						<button type="button" class = "tool-tip-custom-bar btn-add-like">
+							<i class="fa-solid fa-heart"></i>
+							<span class = "custom-bar-text">Like</span>
+						</button>
 					</div>
-					<div class = "tool-tip-custom-bar" id = "custom-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
-						<i class="fa-solid fa-pen"></i>
-						<span class = "custom-bar-text">리뷰 남기기</span>
+					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} ne null ? 'user-reviewed-already'" id = "custom-review">
+						<button type="button" class = "tool-tip-custom-bar btn-tv-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
+							<i class="fa-solid fa-pen"></i>
+							<span class = "custom-bar-text">리뷰 남기기</span>
+						</button>
 					</div>
 					<div th:if ="${trailer ne null}" class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
 						<i class="fa-solid fa-play"></i>
@@ -723,7 +869,7 @@
 					</div>
 				</div>
 
-				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:if = "${tvShowDto.getTagline() ne ''}" th:text="${tvShowDto.getTagline()}" style="color: rgba(244 ,244, 244, 0.8)"></p>
+				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:if = "${tvShowDto.getTagline() ne ''}" th:text="${tvShowDto.getTagline()}"></p>
 				<div>
 					<div class = "over-view">
 						<p class = "fs-4 fw-bold mb-0">개요</p>
@@ -732,7 +878,7 @@
 					<ul>
 						<li class = "me-2 createdBy" th:each = " createdBy : ${tvShowDto.getCreated_by()} " th:object=" ${createdBy} ">
 							<div class = "profile-wrapper">
-								<a th:href="@{''}"><p th:text="*{name}" class = "profile fw-bold fs-5 ms-0"></p></a>
+								<p th:text="*{name}" class = "profile fs-5 ms-0"></p>
 								<span class = "profile-creator ms-0">창작자</span>
 							</div>
 						</li>
@@ -741,6 +887,7 @@
 			</section>
 		</div>
 	</div>
+<!--	</div>-->
 	<section class= "mid_layout">
 
 		<div class = "mid_container">
@@ -752,7 +899,7 @@
 							<li class="border-0 card people_card" th:each=" people : ${tvShowCast} " th:object=" ${people} ">
 								<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273"/>
 								<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
-								<a th:href="@{../person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
+								<a th:href="@{/person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
 									<section class = "card-img-overlay">
 										<p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
 										<p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
@@ -760,7 +907,7 @@
 								</a>
 							</li>
 						</ol>
-					</div>
+				</div>
 				<button th:if=" ${tvShowCast.size() > 5}" class="btn-slide-image btn-next"><i class="fa-solid fa-chevron-right"></i></button>
 			</div>
 
@@ -792,16 +939,60 @@
 				<hr class = "break_line border-1 opacity-50">
 			</div>
 
-			<div class = "tvShow_forum">
-				<h3>한줄평 나중에</h3>
-			</div>
+			<div class = "tvShow_review" style="padding: 10px 30px 10px 30px">
+				<th:block th:if="${tvShowReviewList.size() ne 0}">
+					<section style="display: flex;">
+						<h3>리뷰</h3>
+						<a class="tvShowAllReview" th:href="@{/reviews/{category}/{id}(category = 'tv', id = ${tvShowDto.getId()})}">
+							<span>전체 리뷰 보러가기</span>
+						</a>
 
-			<div class = "mt-0 py-0">
-				<hr class = "break_line border-1 opacity-50">
-			</div>
+					</section>
 
-			<div class = "tvShow_media">
-				<h3>미디어 -> 각 영화, 드라마, 인물 게시판 페이지로 변경</h3>
+					<section class = "popular-review-section">
+
+						<div class = "review-item" th:each=" review : ${tvShowReviewList}"
+							 style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+							<input class = "d-none" th:email = "${review.getMember().getEmail()}">
+							<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+								<a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+									<section class = "review-item-user-profile-img" >
+										<img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}"
+											style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
+									</section>
+								</a>
+								<section class = "review-item-content">
+									<div class = "review-item-content-header">
+										<section>
+											<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
+										</section>
+										<a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+											<span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
+										</a>
+										<span id = "view-star-rating" th:rating="${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
+									</div>
+									<div class = "review-item-content-article">
+										<a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
+											<article class = "content-article"
+													 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+													 th:text="${review.getContent()}"></article>
+											<article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
+												스포일러가 포함된 리뷰입니다. <br> 상세페이지에서 확인하세요.
+											</article>
+										</a>
+									</div>
+									<div class = "review-item-content-footer">
+										<i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' ' "></span> Likes
+										<i class="ms-3 me-2 fa-solid fa-comment"></i><span th:text="${numOfReviewComment.get(review.getReviewId()) + ' ' }"></span>Comments
+									</div>
+								</section>
+							</div>
+						</div>
+					</section>
+				</th:block>
+				<th:block th:unless="${tvShowReviewList.size() ne 0}">
+					<h3>남겨진 리뷰가 없습니다</h3>
+				</th:block>
 			</div>
 
 			<div class = "mt-0 py-0">
@@ -820,7 +1011,7 @@
 							<img class = "recommendation_img"
 								 th:unless = "${recommendation.getBackdrop_path() ne null and recommendation.getBackdrop_path() ne 'null' and recommendation.getBackdrop_path() ne ''}"
 								 th:src = "@{'/image/default-w600.png'}" width="250" height="141"/>
-							<a th:href = "@{/tv/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" >
+							<a th:href = "@{/tv/details/{id}(id = ${recommendation.getId()})}" class = "text-decoration-none" >
 								<section class="card-img-overlay">
 									<p class="card-title text-white fs-5 fw-bolder" th:text="${recommendation.getName()}"></p>
 									<p class="card-text text-white fst-italic" th:text="${recommendation.getFirst_air_date()}"></p>
@@ -901,15 +1092,16 @@
 			</div>
 		</div>
 	</section>
+	</div>
 </main>
 
 <!-- 리뷰 모달 -->
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewModal" th:if = "${member ne null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content bg-dark">
 			<div class="modal-header">
 				<h5 class="modal-title text-white" id="reviewModalLabel">Review</h5>
-				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close btn-close-white btn-header-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<form>
 				<div class="modal-body" style="width: 100%; display: flex; flex-direction: row;">
@@ -920,7 +1112,7 @@
 						<h4 class = "mb-2" th:text="${tvShowDto.getName() + '(' + releaseYear  + ')'}" style="color: #eeeeee"></h4>
 						<input class = "d-none" th:value="${tvShowDto.getId()}" th:id="${tvShowDto.getName()}" name="tvShow_ID">
 						<div class = "textarea-box">
-							<textarea placeholder="리뷰를 남겨 주세요. (1000자)" style=" outline: none"></textarea>
+							<textarea class = "text-area-review-comment" placeholder="리뷰를 남겨 주세요. (1000자)" style=" outline: none"></textarea>
 							<div class = "count">
 								<span>0</span>/1000
 							</div>
@@ -929,40 +1121,40 @@
 							<div class = "star-rating-div">
 								<p class="mt-3 fs-4" style="color: #eeeeee">평점</p>
 								<fieldset class =  "star-rating">
-									<input type = "radio" name="rating" id="star5" value = "5">
+									<input type = "radio" name="rating" id="star5" value = "5" required>
 									<label for= "star5" class = "full" title = "5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star4half" value = "4.5">
+									<input type = "radio" name="rating" id="star4half" value = "4.5" required>
 									<label for= "star4half" class = "half" title = "4.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star4" value = "4">
+									<input type = "radio" name="rating" id="star4" value = "4" required>
 									<label for= "star4" class = "full" title = "4 Stars"></label>
 
-									<input type = "radio" name="rating" id="star3half" value = "3.5">
+									<input type = "radio" name="rating" id="star3half" value = "3.5" required>
 									<label for= "star3half" class = "half" title = "3.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star3" value = "3">
+									<input type = "radio" name="rating" id="star3" value = "3" required>
 									<label for= "star3" class = "full" title = "3 Stars"></label>
 
-									<input type = "radio" name="rating" id="star2half" value = "2.5">
+									<input type = "radio" name="rating" id="star2half" value = "2.5" required>
 									<label for= "star2half" class = "half" title = "2.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star2" value = "2">
+									<input type = "radio" name="rating" id="star2" value = "2" required>
 									<label for= "star2" class = "full" title = "2 Stars"></label>
 
-									<input type = "radio" name="rating" id="star1half" value = "1.5">
+									<input type = "radio" name="rating" id="star1half" value = "1.5" required>
 									<label for= "star1half" class = "half" title = "1.5 Stars"></label>
 
-									<input type = "radio" name="rating" id="star1" value = "1">
+									<input type = "radio" name="rating" id="star1" value = "1" required>
 									<label for= "star1" class = "full" title = "1 Stars"></label>
 
-									<input type = "radio" name="rating" id="star0half" value = "0.5">
+									<input type = "radio" name="rating" id="star0half" value = "0.5" required>
 									<label for= "star0half" class = "half" title = "0.5 Stars"></label>
 								</fieldset>
 							</div>
 							<div class = "mt-3 form-check spoiler-div" style="width: 100%; min-width: 160px; margin-left: 25px;">
-								<input class = "form-check-input" type = "checkbox" value = "true" id = "flexCheckDefault">
-								<label class = "text-white form-check-label" for="flexCheckDefault">스포일러가 포함되어 있습니까?</label>
+								<input name="includeSpoiler" class = "form-check-input" type = "checkbox" value = "Y" id = "checkboxSpoiler">
+								<label class = "text-white form-check-label" for="checkboxSpoiler">스포일러가 포함되어 있습니까?</label>
 							</div>
 						</div>
 					</section>
@@ -970,7 +1162,7 @@
 			</form>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
+				<button type="button" class="btn btn-primary btn-send-review" data-bs-dismiss="modal">저장</button>
 			</div>
 		</div>
 	</div>
@@ -1017,7 +1209,7 @@
 			</div>
 			<div th:if="${trailer ne null}" class="p-0 modal-body" style="width: 1280px; color: white">
 				<iframe width="800" height="auto"
-						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()}" style="width: 800px; height: 600px" ></iframe>
+						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()} + '?autoplay=1&mute=1' " style="width: 800px; height: 600px"></iframe>
 			</div>
 			<div class="border-0 modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -1087,11 +1279,44 @@
 		});
 	});
 
+	document.addEventListener('DOMContentLoaded', function () {
+		const starRatingElements = document.querySelectorAll('#view-star-rating');
+
+		starRatingElements.forEach( element => {
+			const rating = parseFloat(element.getAttribute('rating'));
+
+			const integerPart = Math.floor(rating); // 정수
+			const decimalPart = rating - integerPart; // 소수
+
+			for (let i = 0; i < integerPart; i++) {
+				const starIcon = document.createElement('i');
+				starIcon.classList.add('fa-solid', 'fa-star');
+				element.appendChild(starIcon);
+			}
+
+			if (decimalPart === 0.5) {
+				const halfStarRating = document.createElement('i');
+				halfStarRating.classList.add('halfScore');
+				halfStarRating.innerText = '½';
+				element.appendChild(halfStarRating);
+			}
+
+			});
+		});
+
 
 </script>
 
 <!--// JS로 Axios post 전송을 위한 tvshowid-->
 <!--// const tvShowId-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script th:inline="javascript">
+	const backdropPath = [[${tvShowDto.getBackdrop_path()}]]
+</script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/image/img-dominant-color-tvshow.js}"></script>
+<script th:src="@{/js/features/features-tv.js}"></script>
 
 
 </body>

@@ -9,16 +9,23 @@
         rel="stylesheet" 
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
         crossorigin="anonymous">
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
+	<link th:href="@{/css/theme.css}" rel="stylesheet">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
 	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
 
 	<style>
 
 		@font-face {
-			font-family: 'Pretendard-Regular';
-			src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+			font-family: 'Pretendard';
 			font-weight: 400;
 			font-style: normal;
+			src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+			src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix') format('embedded-opentype'),
+			url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2'),
+			url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff') format('woff'),
+			url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf') format("truetype");
+			font-display: swap;
 		}
 
 		html{
@@ -26,8 +33,7 @@
 		}
 
 		body {
-			font-family: 'Pretendard-Regular';
-			background-color: black ;
+			font-family: 'Pretendard';
 		}
 
 		main {
@@ -262,10 +268,11 @@
 		}
 
 	</style>
+	<link th:href="@{/css/theme.css}" rel="stylesheet">
 </head>
 
 <body>
-	<h1>TV SHOW LIST</h1>
+<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
 
 	<main>
 		<h3>TV SHOW LIST</h3>
@@ -572,7 +579,7 @@
 			<div class = "Tv_Show_Section">
 				<div class = "flex-container">
 					<div class = "rounded border-0 card text-bg-dark flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
-						<a th:href = "@{/tv/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none poster-a-tag">
+						<a th:href = "@{/tv/details/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none poster-a-tag">
 							<img class = "rounded-top show_poster" th:if="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
 								 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="200" height="273" />
 							<img class = "rounded-top show_poster" th:unless="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
@@ -616,6 +623,7 @@
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="/js/tvshow/tv-show-list.js"></script>
+	<script th:src="@{/js/navbar.js}"></script>
 
 </body>
 </html>

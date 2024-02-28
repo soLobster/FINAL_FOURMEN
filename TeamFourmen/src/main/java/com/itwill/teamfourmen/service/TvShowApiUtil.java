@@ -35,8 +35,6 @@ public class TvShowApiUtil {
     @Value("${api.themoviedb.api-token}")
     private String TOKEN;
 
-
-
     private TvShowDTO tvShowDTO;
 
     private final String BASE_URL = "https://api.themoviedb.org/3";

@@ -22,19 +22,20 @@ import lombok.NoArgsConstructor;
 @Table(name = "review_likes")
 @SequenceGenerator(name = "review_likes_seq", sequenceName = "review_likes_seq", allocationSize = 1)
 public class ReviewLike {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_likes_seq")
-	private Long reviewLikeId;
-	
-	@Basic(optional = false)
-	@ManyToOne
-	@JoinColumn(name = "review_id")
-	private Review review;
-	
-	@Basic(optional = false)
-	@ManyToOne
-	@JoinColumn(name = "email")
-	private Member member;
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_likes_seq")
+    private Long reviewLikeId;
+
+    @Basic(optional = false)
+    @ManyToOne
+    @JoinColumn(name = "review_id")
+    private Review review;
+
+    @Basic(optional = false)
+    @ManyToOne
+    @JoinColumn(name = "email")
+    private Member member;
+
 }
+

@@ -5,13 +5,19 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.itwill.teamfourmen.domain.ImdbRatings;
+import com.itwill.teamfourmen.domain.*;
+import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.*;
+import com.itwill.teamfourmen.service.CommentService;
+import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.TvShowApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +40,8 @@ public class TvShowController {
 	private final TvShowApiUtil apiUtil;
 
 	private final ImdbRatingUtil imdbRatingUtil;
+	private final FeatureService featureService;
+	private final CommentService commentService;
 
 	private String category = "tv";
 
@@ -136,7 +144,7 @@ public class TvShowController {
 	}
 
 	// 리스트에서 tvshow를 클릭했을때 상세페이지로 넘어가는 부분
-	@GetMapping(value = {"/{id}" })
+	@GetMapping(value = {"/details/{id}" })
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id) {
 		log.info("Get Tv Show Details = {}", id);
 //		log.info("API KEY = {}", API_KEY);
@@ -219,11 +227,13 @@ public class TvShowController {
 
 		// imdb rating 받아오기
 		String imdbId = imdbRatingUtil.getImdbId(id, category);
-		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
 
-		//log.info("IMDB RATINGS  = {}",imdbRatings.toString());
-
-		model.addAttribute("imdbRatings", imdbRatings);
+		if(imdbId != null) {
+			ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
+			model.addAttribute("imdbRatings", imdbRatings);
+		} else {
+			model.addAttribute("imdbRatings", null);
+		}
 
 		// 배우, 스탭 목록
 		String getTvShowCreditUrl = UriComponentsBuilder.fromUriString(apiUri)
@@ -295,19 +305,55 @@ public class TvShowController {
 				if (trailer.getType().equalsIgnoreCase("Trailer")) {
 					realTrailer.add(trailer);
 					model.addAttribute("trailer", realTrailer);
+					log.info("TRAILER = {}",realTrailer.toString());
+					break;
 				}
 			}
 		} else {
 			log.info("TV SHOW TRAILER IS EMPTY");
 			model.addAttribute("trailer", null);
 		}
+
+		// TV SHOW 좋아요 가져오기
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "tv", id);
+
+		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
+
+		// Tv Show 별 리뷰 가져오기
+		List<Review> tvShowReviewList = featureService.getReviews("tv", id);
+
+		int endIndex = Math.min(4, tvShowReviewList.size());
+
+		tvShowReviewList = tvShowReviewList.subList(0, endIndex);
+
+		model.addAttribute("tvShowReviewList", tvShowReviewList);
+
+		Map<Long, Integer> reviewComment = new HashMap<>();
+
+		Map<Long, Long> reviewLiked = new HashMap<>();
+
+		for(Review tvShowReview : tvShowReviewList) {
+			Long reviewId = tvShowReview.getReviewId();
+			int numOfComment = featureService.getNumOfReviewComment(reviewId);
+
+			Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+			reviewComment.put(reviewId, numOfComment);
+			reviewLiked.put(reviewId,numOfLiked);
+		}
+
+		model.addAttribute("numOfReviewLiked", reviewLiked);
+		model.addAttribute("numOfReviewComment", reviewComment);
+
 		return "tvshow/tvshow-details";
 	}
 
 
-
-
-	@GetMapping("/{id}/season/{season_number}")
+	@GetMapping("/details/{id}/season/{season_number}")
 	public String getTvShowSeasonDetails(Model model, @PathVariable(name= "id") int id , @PathVariable(name = "season_number") int season_number){
 
 		String apiUri = "https://api.themoviedb.org/3/tv";

@@ -11,7 +11,81 @@
     <link th:href="@{/css/review/review-star.css}" rel="stylesheet">
 	<link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-detail.css}" rel="stylesheet">
-    
+
+    <style>
+        .movie-review {
+            margin-top: 20px;
+        }
+
+        .movie-review  a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .movie-review a:hover {
+            color: #8dabfb;
+        }
+
+        .movieAllReview {
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        .review-item {
+            border-top: 1px solid  #6c757d;
+        }
+
+        .review-item-user-profile-img-a-tag {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        .review-item-user-profile-img {
+            width: 55px;
+            height: 55px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .review-item-user-profile-img > img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 1px solid rgba(256, 256, 256, 0.5);
+            object-fit: cover
+        }
+
+        .review-item-user-profile-img > img:hover {
+            border: 1px solid #33ff33;
+        }
+
+        .review-item-content > div {
+            padding: 0 0 10px 0;
+            margin-left: 20px;
+        }
+
+        .reviewer-nickname {
+            font-size: 20px;
+            font-weight: bolder;
+        }
+
+        .review-item-content-footer > i {
+            color: inherit;
+        }
+
+        .review-item-content-article > a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .content-article:hover {
+            color: #c4c3ca;
+        }
+
+    </style>
+
+
 </head>
 <body>
 	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
@@ -59,7 +133,7 @@
                         </div>
                         <!-- 리뷰 -->
                         <div class="movie-like-item div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'">
-                            <button type="button" class="btn-movie-review" data-bs-toggle="modal" data-bs-target="#movie-review">                            
+                            <button type="button" class="btn-movie-review" data-bs-toggle="modal" data-bs-target="#movie-review">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
                         </div>
@@ -268,38 +342,64 @@
             <div class="div-horizontal-line"></div>
             
             <!-- TODO: 한줄평 작성 구현하기 -->
-            <section class="main-section">
-                <h3>최신 리뷰</h3>
-                <div class="each-review-container" th:each="review : ${movieReviewList}" th:if="${!#lists.isEmpty(movieReviewList)}">
-                    <div class="review-user-profile-image-container">
-                        <!-- TODO: 나중에 유저별 프로필사진으로 업로드 -->
-                        <div class="div-review-user-profile-image">
-                            <img class="review-user-profile-image" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg">
+
+            <div class = "movie-review">
+                <th:block th:if="${movieReviewList.size() ne 0}">
+                <section style="display: flex">
+                    <h3>리뷰</h3>
+                    <a class = "movieAllReview" th:href="@{/reviews/{category}/{id}(category = 'movie', id = ${movieDetailsDto.getId()})}">
+                        <span>전체 리뷰 보러가기</span>
+                    </a>
+                </section>
+
+                <section class="popular-review-section">
+
+                    <div class = "review-item" th:each=" review : ${movieReviewList}"
+                     style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+                        <input class = "d-none" th:email="${review.getMember().getEmail()}">
+                        <div class = "review-item-body" style="display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                <section class = "review-item-user-profile-img">
+                                    <img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}">
+                                </section>
+                            </a>
+                            <section class= "review-item-content">
+                                <div class = "review-item-content-header">
+                                    <section>
+                                        <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px;">Review By</span>
+                                    </section>
+                                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                        <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
+                                    </a>
+                                    <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
+                                </div>
+                                <div class = "review-item-content-article">
+                                    <a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
+                                        <article class = "content-article"
+                                                 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+                                                    th:text="${review.getContent()}"></article>
+                                        <article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
+                                            스포일러가 포함된 리뷰 입니다. <br> 상세페이지에서 확인 하세요.
+                                        </article>
+                                    </a>
+                                </div>
+                                <div class = "review-item-content-footer">
+                                    <i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' ' "></span> Likes
+                                    <i class="ms-3 me-2 fa-solid fa-comment"></i><span th:text="${numOfReviewComment.get(review.getReviewId()) + ' ' }"></span>Comments
+                                </div>
+                            </section>
                         </div>
                     </div>
-                    <div class="div-review-info">
-                        <div class="div-reviewer-rating">
-                            <span>reviewed by </span>
-                            <span class="reviewer-nickname" th:text="${review.member.nickname}"></span>
-                            <span class="review-user-rating" th:each="i : ${#numbers.sequence(1, review.rating)}"><i class="fa-solid fa-star"></i></span><span class="review-user-rating" th:if="${review.rating % 1 != 0}"><i class="fa-solid fa-star-half"></i></span>
-                            </span>                            
-                        </div>
-                        <div th:if="${review.isSpoiler == 'N'}" class="div-review-content" th:text="${review.content}"></div>
-                        <div th:unless="${review.isSpoiler == 'N'}" class="div-review-content">
-                            <span>스포일러를 포함한 리뷰입니다.</span>
-                        </div>
-                        <div class="div-review-add-like">
-                            <button class="btn-review-add-like" th:author="${review.member.email}" th:reviewId="${review.reviewId}">
-                                <i class="fa-solid fa-thumbs-up"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="div-see-more-review">
-                    <a th:href="@{/review/list/movie/{tmdbId} (tmdbId=${movieDetailsDto.id})}">리뷰 더보기 >>></a>
-                </div>
-            </section>
-            
+
+                </section>
+                </th:block>
+                <th:block th:unless="${movieReviewList.size() ne 0}">
+                    <h3 class="my-3">남겨진 리뷰가 없습니다</h3>
+                </th:block>
+
+            </div>
+
+
             <div class="div-horizontal-line" th:if="${!#lists.isEmpty(recommendedList)}"></div>
             
             <selection th:if="${!#lists.isEmpty(recommendedList)}" class="movie-collection-container main-section movie-card-container">
@@ -405,6 +505,33 @@
     <script th:src="@{/js/movie/movie-image-slide.js}"></script>
     <script th:src="@{/js/movie/movie-detail.js}"></script>
     <script th:src="@{/js/features/features.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const starRatingElements = document.querySelectorAll('#view-star-rating');
+
+        starRatingElements.forEach( element => {
+            const rating = parseFloat(element.getAttribute('rating'));
+
+            const integerPart = Math.floor(rating); // 정수
+            const decimalPart = rating - integerPart; // 소수
+
+            for (let i = 0; i < integerPart; i++) {
+                const starIcon = document.createElement('i');
+                starIcon.classList.add('fa-solid', 'fa-star');
+                element.appendChild(starIcon);
+            }
+
+            if (decimalPart === 0.5) {
+                const halfStarRating = document.createElement('i');
+                halfStarRating.classList.add('halfScore');
+                halfStarRating.innerText = '½';
+                element.appendChild(halfStarRating);
+            }
+
+        });
+    });
+
+</script>
 	
 	
 </body>

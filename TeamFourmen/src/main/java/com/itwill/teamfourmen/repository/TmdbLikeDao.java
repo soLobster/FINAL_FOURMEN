@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -13,4 +14,5 @@ public interface TmdbLikeDao extends JpaRepository<TmdbLike, Long> {
 	
 	Optional<TmdbLike> findByMemberEmailAndCategoryAndTmdbId(String email, String category, int tmdbId);
 	void deleteByMemberEmailAndCategoryAndTmdbId(String email, String category, int tmdbId);
+	List<TmdbLike> findByMemberEmailAndCategory(String email, String category);
 }

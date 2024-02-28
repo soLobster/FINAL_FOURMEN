@@ -3,6 +3,7 @@ package com.itwill.teamfourmen.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.teamfourmen.domain.ImdbRatings;
 import com.itwill.teamfourmen.domain.ImdbRatingsRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +34,24 @@ public class ImdbRatingUtil {
      * @return ImdbRatings 객체를 가져옴.
      */
     public ImdbRatings getImdbRating(String imdb_id) {
-        log.info("GET IMDB_RATING - TMDB_ID = {}", imdb_id);
+        log.info("GET IMDB_RATING - IMDB_ID = {}", imdb_id);
 
-        return imdbRatingsDao.getReferenceById(imdb_id);
+        if (imdb_id != null) {
+            try {
+                ImdbRatings imdbRatings = imdbRatingsDao.findById(imdb_id)
+                        .orElseThrow(() -> new EntityNotFoundException());
+                log.info("if ratings ? = {}", imdbRatings);
+                return imdbRatings;
+            } catch (EntityNotFoundException e) {
+                log.warn(e.getMessage());
+                // 기본값으로 설정된 객체를 반환
+                return ImdbRatings.builder().imdbId(imdb_id).averagerating(0.0).numvotes(0).build();
+            }
+        }
+        else {
+            log.info("IMDB ID IS NULL");
+            return null;
+        }
     }
 
     /**
@@ -87,6 +103,8 @@ public class ImdbRatingUtil {
 
         if(resultMap != null && resultMap.containsKey("imdb_id")) {
             imdbId = (String) resultMap.get("imdb_id");
+        } else {
+            imdbId = null;
         }
 
         return imdbId;

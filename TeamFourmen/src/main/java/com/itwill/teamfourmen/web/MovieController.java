@@ -1,7 +1,13 @@
 package com.itwill.teamfourmen.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+
+import com.itwill.teamfourmen.domain.ImdbRatings;
+import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
+import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -245,14 +251,36 @@ public class MovieController {
 		String email = authentication.getName();
 		Member signedInUser = Member.builder().email(email).build();
 		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "movie", id);	// 만약 좋아요 이미 눌렀으면 TmdbLike객체 리턴됨
-		
-		
+
+		//		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
+
 		// 관련 리뷰 가져옴
+		List<Review> movieReviewList = featureService.getReviews("movie", id);
+		int endIndex = Math.min(4, movieReviewList.size());
+		movieReviewList = movieReviewList.subList(0, endIndex);
+		model.addAttribute("movieReviewList", movieReviewList);
+
+		Map<Long, Integer> reviewComment = new HashMap<>();
+		Map<Long, Long> reviewLiked = new HashMap<>();
+
+		for(Review movieReview : movieReviewList){
+			Long reviewId = movieReview.getReviewId();
+
+			int numOfComment = featureService.getNumOfReviewComment(reviewId);
+			Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+			reviewComment.put(reviewId, numOfComment);
+			reviewLiked.put(reviewId, numOfLiked);
+		}
+
+		model.addAttribute("numOfReviewLiked", reviewLiked);
+		model.addAttribute("numOfReviewComment", reviewComment);
+
+
 //		List<Review> movieReviewList = featureService.getReviews("movie", id);
 //		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
 		
 		// 내가 좋아요 누른 리뷰들 가져옴
-		
 		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
@@ -269,20 +297,23 @@ public class MovieController {
 		String imdbId = imdbRatingUtil.getImdbId(id, category);
 		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
 
-		log.info("IMDB RATINGS = {}", imdbRatings.toString());
-
+		if(imdbRatings != null) {
+			log.info("IMDB RATINGS = {}", imdbRatings);
+		} else {
+			log.info("IMDB RATINGS IS NULL");
+		}
 		// 객체로 넘어감. 원하는 값은 imdbRatings -> getter를 통해서
 		// IMDB 아이콘은 static/icons/imdb-icon.svg 파일...!
 		model.addAttribute("imdbRatings", imdbRatings);
 
 		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
+
     
 //		model.addAttribute("movieReviewList", movieReviewList);
 //		model.addAttribute("myReview", myReview);
 		
 		return "/movie/movie-details";
 	}
-	
 	
 	@GetMapping("/board")
 	public String movieBoardList(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {

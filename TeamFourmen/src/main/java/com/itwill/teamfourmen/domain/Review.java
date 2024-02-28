@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -57,5 +58,8 @@ public class Review {
 	
 	@CreatedDate
 	private LocalDateTime createdDate;
-	
+
+	public LocalDate changeDateType(LocalDateTime time){
+		return createdDate.toLocalDate();
+	}
 }
