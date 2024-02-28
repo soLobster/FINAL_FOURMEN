@@ -9,8 +9,10 @@
           rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
           crossorigin="anonymous">
-    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+
     <style>
 
         @font-face {
@@ -283,11 +285,12 @@
 
         .comment-body {
             display: flex;
+            gap: 20px;
         }
 
         .comment-body > .user-info {
-            width: 15%;
-            min-width: 150px;
+            width: 20%;
+            min-width: 160px;
             display: flex;
             gap: 10px;
         }
@@ -330,9 +333,15 @@
             font-style: italic;
         }
 
-        .comment-body > .comment-content {
+        .comment-content {
             width: 80%;
+            margin-top: 2px;
             min-width: 380px;
+        }
+
+        .comment-content-article{
+            width: 460px;
+            max-width: 460px;
         }
 
         .comment-footer {
@@ -428,7 +437,6 @@
         }
 
     </style>
-    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
     <link th:href="@{/css/theme.css}" rel="stylesheet">
 </head>
 <body class = "ko v4">
@@ -466,7 +474,7 @@
             <div class = "works-review-div">
                 <div class = "works-review-header">
                     <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
-                        <img class ="works-review-users-profile-img" th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}" />
+                        <img class ="works-review-users-profile-img" th:src="${review.getMember().getUsersaveprofile()}" />
                     </a>
                     <span>Review By</span>
                     <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
@@ -524,7 +532,8 @@
                                         <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
                                             <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
                                                 <div>
-                                                    <img th:src = "@{'/image?photo=' + ${comment.getMember().getUsersaveprofile()}}" />
+                                                    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
+                                                    <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src = "@{/image/userimage.png}" />
                                                 </div>
                                             </a>
                                             <div class = "user-name-created-date">
@@ -535,7 +544,7 @@
                                             </div>
                                         </section>
                                         <section class = "comment-content">
-                                            <article th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
+                                            <article class ="comment-content-article" th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
                                         </section>
                                     </div>
                                     <div class = "comment-footer">

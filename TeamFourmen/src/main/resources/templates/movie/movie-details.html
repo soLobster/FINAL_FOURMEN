@@ -360,7 +360,7 @@
                         <div class = "review-item-body" style="display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
                             <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
                                 <section class = "review-item-user-profile-img">
-                                    <img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}">
+                                    <img th:src="@{${review.getMember().getUsersaveprofile()}}">
                                 </section>
                             </a>
                             <section class= "review-item-content">

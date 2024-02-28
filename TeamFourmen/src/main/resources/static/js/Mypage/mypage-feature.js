@@ -13,13 +13,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const pathName = location.pathname;
     const userEmail = pathName.split('/')[3];
 
-    const loggedInUser = document.querySelector('.profile-picture').getAttribute('email');
+    const loggedInUser = document.querySelector('.div-profile-image').getAttribute('email');
 
     console.log('로그인 유저 = '+loggedInUser);
 
     const browsersTitle = document.querySelector('title');
     const editProfile = document.querySelector('.edit-profile');
     const followButton = document.querySelector('.follow-button');
+
+    let userProfileImg = document.querySelector('.mypage-details-profile-img img');
+
+    console.log(userProfileImg);
 
     const likedListTitle = document.querySelector('.category-like-list');
 
@@ -47,6 +51,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const userNickname = nickname;
             const nicknameElement = document.querySelector('#user-nick-name');
             nicknameElement.textContent = userNickname;
+
+            console.log('불러온 이미지 = '+usersaveprofile);
+
+            if(usersaveprofile != ''){
+                 userProfileImg.setAttribute('src', usersaveprofile);
+            }
 
             browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
 

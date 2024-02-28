@@ -116,7 +116,7 @@ public class HomeController {
 		    
 		
 		
-			log.info("combined={}",combineList);
+//			log.info("combined={}",combineList);
 			log.info("combinedsisize={}",combineList.size());
 		
 		model.addAttribute("combineList",combineList);
@@ -130,7 +130,7 @@ public class HomeController {
 		
 		 List<MovieListItemDto> movielist =movielistDto.getResults();
 		
-		log.info("movielist={}",movielist);
+//		log.info("movielist={}",movielist);
 		
 		List<MovieCombinedDto> moviecombineList = new ArrayList<>();
 		
@@ -139,17 +139,17 @@ public class HomeController {
 			MovieCombinedDto moviecombined = new MovieCombinedDto();
 			moviecombined.setMovielistitemdto(movie);		    
 			List<MovieVideoDto> MovieVideoDTOList = movieapiUtil.getMovieVideoList(movie.getId());
-	
+
 		    if (!MovieVideoDTOList.isEmpty()) {
 		    	String firstVideo = MovieVideoDTOList.get(0).getKey();
-		    	log.info(" key={}", firstVideo);
+//		    	log.info(" key={}", firstVideo);
 		    	moviecombined.setKey(firstVideo);
 		        
 		    }    	
 		    moviecombineList.add(moviecombined);    
 		}
 		
-		log.info(" moviecombineList={}", moviecombineList);
+//		log.info(" moviecombineList={}", moviecombineList);
 		log.info(" moviecombineListsszie={}", moviecombineList.size());
 		model.addAttribute("moviecombineList", moviecombineList);
 
@@ -161,7 +161,7 @@ public class HomeController {
 		
 		 List<MovieListItemDto> topmovielist =movielistDtoo.getResults();
 		
-		log.info("topmovielist={}",topmovielist);
+//		log.info("topmovielist={}",topmovielist);
 		model.addAttribute("topmovielist", topmovielist);
 		
 		TvShowListDTO toplistDTO = apiUtil.getTvShowList("top_rated", 1);
