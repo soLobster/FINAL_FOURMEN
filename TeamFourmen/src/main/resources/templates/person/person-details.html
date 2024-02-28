@@ -370,10 +370,10 @@
                                                                th:href="@{/tv/{id}(id=${combinedCastList.id})}"
                                                                th:text="'(' + ${combinedCastList.episodeCount} + '화' + ')'">
                                                             </a>
-                                                            <span th:if="${combinedCastList.character != null and combinedCastList.character != 'null' and combinedCastList.character != ''}"
+                                                            <span th:if="${combinedCastList.character != null and combinedCastList.character != 'null' and !combinedCastList.character.isEmpty()}"
                                                                   th:text="${combinedCastList.character} + ' 역'">
                                                             </span>
-                                                            <span th:unless="${combinedCastList.character != null and combinedCastList.character != 'null' and combinedCastList.character != ''}" th:text="${'-'}"></span>
+                                                            <span th:if="${combinedCastList.character == null and combinedCastList.character == 'null' and combinedCastList.character.isEmpty()}" th:text="${'-'}"></span>
                                                         </div>
                                                     </td>
                                                 </tr>
