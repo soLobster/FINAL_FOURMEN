@@ -57,13 +57,10 @@
                             <span>Sign out</span>
                         </a>
                     </div>
-                     <div class="profile-picture" id="profile-picture">
-
-    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
-    <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
-	
-
-	</div>
+                     <div class="profile-picture" id="profile-picture" th:email = "${member.email}">
+                        <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
+                        <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
+	                </div>
                 </th:block>
             </div>
         </div>
