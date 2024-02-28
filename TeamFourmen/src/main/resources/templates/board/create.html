@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
+     
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/board/board-create.css}" rel="stylesheet">
+    
+    <script th:src="@{/js/ckeditor/build/ckeditor.js}"></script>
+</head>
+<body>
+	
+	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+	<h2>게시글 작성</h2>
+    <section class="board-create-form-container">
+        <form method="post" class="form-board-create">
+            <label class="board-create-label">제목</label>
+            <input class="form-control" name="title" placeholder="제목을 작성해주세요.">
+            <label class="board-create-label">내용</label>
+            <textarea id="editor" name="content"></textarea>
+            <div class="div-btn-board-form">
+                <button type="button" class="btn-board-craete-cancel">취소</button>
+                <button type="button" class="btn-board-create">글 작성</button>                
+            </div>
+            <input class="d-none" name="email" th:value="${member.email}">
+            <input class="d-none" name="category" th:value="${category}">
+        </form>
+    </section>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <script th:src="@{/js/navbar.js}"></script>
+    <script th:src="@{/js/board/board-create.js}"></script>
+	
+</body>
+</html>

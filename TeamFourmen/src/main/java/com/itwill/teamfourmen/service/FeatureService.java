@@ -8,6 +8,11 @@ import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
 import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
 import org.springframework.stereotype.Service;
 
+
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.ReviewLike;
+import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.repository.ReviewDao;
 import com.itwill.teamfourmen.repository.ReviewLikeRepository;
 import com.itwill.teamfourmen.repository.TmdbLikeDao;
@@ -31,6 +36,15 @@ public class FeatureService {
 
 		review = reviewDao.save(review);
 
+	}
+  
+  	public void addReviewLike(ReviewLike reviewLike) {
+		
+		log.info("addReviewLike(reviewLike={})", reviewLike);
+		
+		reviewLike = reviewLikeDao.save(reviewLike);
+		
+		log.info("저장 후 reviewLike={}", reviewLike);
 	}
 
 	public List<Review> getReviews(String category, int tmdbId) {

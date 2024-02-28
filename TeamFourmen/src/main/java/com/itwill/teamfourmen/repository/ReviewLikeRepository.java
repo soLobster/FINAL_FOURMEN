@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.itwill.teamfourmen.domain.ReviewLike;
 
 import java.util.List;
+import java.util.Optional;
+
 
 public interface ReviewLikeRepository extends JpaRepository<ReviewLike, Long> {
+  
+  	Optional<ReviewLike> findByReviewReviewIdAndMemberEmail(Long reviewId, String email);
 
     ReviewLike findByReviewAndMember(Review review, Member member);
 

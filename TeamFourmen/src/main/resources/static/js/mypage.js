@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let userphone = document.querySelector("#userphone");
 	let userphonecheck = document.querySelector("#userphonecheck");
 	
+	
 	// 버튼 요소 선택
 let btnupdate = document.querySelector('#btnupdate');
 btnupdate.setAttribute('disabled', 'disabled');
@@ -220,7 +221,7 @@ async function checknickname(e){
 		const response= await axios.get(uri);
 		
 		const checkNicknameResult = document.querySelector('div#checkNicknameResult');
-		if(e.target.value.length <=20){
+		if(e.target.value.length <=20 && e.target.value.length>=2){
 		if(response.data ==='Y'){
 			nicknameChecked = true;
 			checkNicknameResult.innerHTML = 'Available Nickname';
@@ -234,6 +235,9 @@ async function checknickname(e){
 			btnupdate.setAttribute('disabled', 'disabled');
 		}} else{
 			btnupdate.setAttribute('disabled', 'disabled');
+			checkNicknameResult.innerHTML = 'short in length';
+			checkNicknameResult.classList.remove('successid');
+			checkNicknameResult.classList.add('failid');
 			nicknameChecked = false;
 			e.target.value=null;
 			return;
@@ -308,10 +312,14 @@ document.querySelector('#btndelete').addEventListener('click', function() {
 	
 	let deleteemailbye = document.querySelector('#deleteemailbye');
 
-  deleteemailbye.setAttribute('disabled', 'disabled');
+	 let parameterValue = document.querySelector('input#userid').value;
+	 let newURL = "/delete?email=" + parameterValue;
+
+    // href 속성에 새로운 주소 설정
+   
 	
 	let deletedirectbye = document.querySelector('#deletedirectbye');
-	deletedirectbye.setAttribute('disabled', 'disabled');
+
 	let finallyfindpassword = document.querySelector('#finallyfindpassword');
 	let finallyfindpasswordclose = document.querySelector('#finallyfindpasswordclose');
 	let directbye=document.querySelector('#directbye');
@@ -330,10 +338,7 @@ document.querySelector('#btndelete').addEventListener('click', function() {
 	
 	   var memberEmail = "${member.email}"; // 서버에서 전달된 변수
     
-    deletedirectbye.addEventListener("click", function() {
-        // 링크 주소를 설정할 때 파라미터를 붙여줌
-        this.href = "/delete?email=" + encodeURIComponent(memberEmail);
-    });
+
 	
 	lastcheck.addEventListener('change',(e)=>{
 if(e.target.value==='' || e.target.value.length >20){
@@ -354,19 +359,16 @@ if(e.target.value==='' || e.target.value.length >20){
 		if(response.data ==='Y'){
 			
 			lastpasswordchecked = true;
-										if(lastpasswordchecked){
-         deletedirectbye.removeAttribute('disabled');
-        } else {
-             deletedirectbye.setAttribute('disabled', 'disabled');}
+			 document.getElementById("deletedirectbye").setAttribute('href', newURL);
+			
 		} else{
 			lastpasswordchecked = false;
-			if(lastpasswordchecked){
-         deletedirectbye.removeAttribute('disabled');
-        } else {
-             deletedirectbye.setAttribute('disabled', 'disabled');}
+	deletedirectbye.setAttribute('href', '/mypage');
+						}
 			
-		}}else{
+		}else{
 			e.target.value=null;
+			
 			return;
 		}
 
@@ -466,16 +468,13 @@ if(e.target.value==='' || e.target.value.length >4){
 							emailinsert.style.display = 'none';
 							document.querySelector('input#checkemail').setAttribute('readonly', 'readonly');
 							emailcheckbye = true;
-							if(emailcheckbye){
-         deleteemailbye.removeAttribute('disabled');
-        } else {
-             deleteemailbye.setAttribute('disabled', 'disabled');
-        }
 							
+							 document.getElementById("deleteemailbye").setAttribute('href', newURL);
 
 						} else {
 							console.log("인증비번실패");
 							document.querySelector('input#checkemail').value ='';
+							deleteemailbye.setAttribute('href', '/mypage');
 						}
 
 					});
@@ -488,4 +487,5 @@ if(e.target.value==='' || e.target.value.length >4){
 
 		
 	}
+	
 });	

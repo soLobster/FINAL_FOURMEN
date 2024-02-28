@@ -70,4 +70,13 @@ public class ExampleTest {
 
 	}
 	
+	@Test
+	public void fileTest() {
+		String rootDirectory = File.listRoots()[0].getAbsolutePath();
+		log.info("rootDirectory={}", rootDirectory);
+		
+		
+		
+	}
+	
 }

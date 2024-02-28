@@ -38,3 +38,4 @@ public class ReviewLike {
     private Member member;
 
 }
+
