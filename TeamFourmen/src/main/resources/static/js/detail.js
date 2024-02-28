@@ -1,6 +1,9 @@
 /**
  * 
  */
+/**
+ * 
+ */
 document.addEventListener('DOMContentLoaded', function() {
 	let nickname = document.querySelector("#nickname");
 	let phone = document.querySelector("#phone");
@@ -12,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let phonenumbercorrect = document.querySelector('#phonenumbercorrect');
 	let phoneChecked = true;
 	let nicknameChecked = true;
-	let checkphoneChecked= true;
+
 	
 	let userphone = document.querySelector("#userphone");
 	let userphonecheck = document.querySelector("#userphonecheck");
@@ -86,7 +89,7 @@ btnupdate.setAttribute('disabled', 'disabled');
 
 
 
-			const uri = `login/phone/${phone}`;
+			const uri = `/login/phone/${phone}`;
 			console.log(uri);
 
 			axios.get(uri)
@@ -110,7 +113,7 @@ btnupdate.setAttribute('disabled', 'disabled');
 							document.querySelector('input#phone').setAttribute('readonly', 'readonly');
 							document.querySelector('input#phonecheck').setAttribute('readonly', 'readonly');
 							
-									if(nicknameChecked && phoneChecked && checkphoneChecked){
+									if(nicknameChecked && phoneChecked){
         	btnupdate.removeAttribute('disabled');
         } else {
              btnupdate.setAttribute('disabled', 'disabled');
@@ -123,7 +126,7 @@ btnupdate.setAttribute('disabled', 'disabled');
 							phonenumberwrong.style.display = 'block';
 							document.querySelector('input#phonecheck').value='';
 							checkphoneChecked= false;
-									if(nicknameChecked && phoneChecked && checkphoneChecked){
+									if(nicknameChecked && phoneChecked){
         	btnupdate.removeAttribute('disabled');
         } else {
              btnupdate.setAttribute('disabled', 'disabled');
@@ -143,7 +146,7 @@ btnupdate.setAttribute('disabled', 'disabled');
 	}
 	
 	window.addEventListener('keyup', function() {
-		if(nicknameChecked && phoneChecked && checkphoneChecked){
+		if(nicknameChecked && phoneChecked){
         	btnupdate.removeAttribute('disabled');
         } else {
              btnupdate.setAttribute('disabled', 'disabled');
@@ -157,7 +160,7 @@ btnupdate.setAttribute('disabled', 'disabled');
 		 const phonecondition =event.target.value.replace(/[^0-9]/g, '');
 		 
 		  event.target.value = phonecondition;
-		   checkphoneChecked= false;
+		  
 	});
 	
 	phonecheck.addEventListener('change',(e)=>{
@@ -180,33 +183,36 @@ if(e.target.value==='' || e.target.value.length >4){
 
 		const phone=e.target.value;
 		
-		const uri = `login/checkphone/${phone}`;
+		const uri = `/login/checkphone/${phone}`;
 		const response= await axios.get(uri);
 		
 		
 		const checkphoneResult = document.querySelector('div#checkphoneResult');
-		if(e.target.value.length <=20){
+		if(e.target.value.length <=20 && e.target.value.length >=2){
 		if(response.data ==='Y'){
 			phoneChecked = true;
 			checkphoneResult.innerHTML =  'Available Phone';
 			checkphoneResult.classList.remove('failid');
 			checkphoneResult.classList.add('successid');
-			userphone.style.display = 'block';
+		
 		} else{
 			phoneChecked =  false;
 			checkphoneResult.innerHTML = 'Duplicate Phone';
 			checkphoneResult.classList.remove('successid');
 			checkphoneResult.classList.add('failid');
-			userphone.style.display = 'none';
+
 			btnupdate.setAttribute('disabled', 'disabled');
 		}} else{
 			btnupdate.setAttribute('disabled', 'disabled');
+			checkphoneResult.innerHTML = 'short in length';
+			checkphoneResult.classList.remove('successid');
+			checkphoneResult.classList.add('failid');
 			phoneChecked =  false;
 			e.target.value=null;
 			return;
 			
 		}	
-				if(nicknameChecked && phoneChecked && checkphoneChecked){
+				if(nicknameChecked && phoneChecked){
         	btnupdate.removeAttribute('disabled');
         } else {
              btnupdate.setAttribute('disabled', 'disabled');
@@ -217,11 +223,11 @@ if(e.target.value==='' || e.target.value.length >4){
 
 async function checknickname(e){
 		const nickname=e.target.value;
-		const uri = `login/checknickname/${nickname}`;
+		const uri = `/login/checknickname/${nickname}`;
 		const response= await axios.get(uri);
 		
 		const checkNicknameResult = document.querySelector('div#checkNicknameResult');
-		if(e.target.value.length <=20 && e.target.value.length>=2){
+		if(e.target.value.length <=20 && e.target.value.length >=2){
 		if(response.data ==='Y'){
 			nicknameChecked = true;
 			checkNicknameResult.innerHTML = 'Available Nickname';
@@ -238,12 +244,13 @@ async function checknickname(e){
 			checkNicknameResult.innerHTML = 'short in length';
 			checkNicknameResult.classList.remove('successid');
 			checkNicknameResult.classList.add('failid');
+			btnupdate.setAttribute('disabled', 'disabled');
 			nicknameChecked = false;
 			e.target.value=null;
 			return;
 			
 		}	
-		if(nicknameChecked && phoneChecked && checkphoneChecked){
+		if(nicknameChecked && phoneChecked){
         	btnupdate.removeAttribute('disabled');
         } else {
              btnupdate.setAttribute('disabled', 'disabled');
@@ -274,7 +281,7 @@ async function checknickname(e){
     if (file) {
         reader.readAsDataURL(file);
         
-                    									if(nicknameChecked && phoneChecked && checkphoneChecked){
+                    									if(nicknameChecked && phoneChecked){
         	btnupdate.removeAttribute('disabled');
         } else {
              btnupdate.setAttribute('disabled', 'disabled');
@@ -283,7 +290,7 @@ async function checknickname(e){
         preview.src = "/image/userimage.png"; // 파일이 선택되지 않은 경우 이미지를 지웁니다.
       
       
-           if(nicknameChecked && phoneChecked && checkphoneChecked){
+           if(nicknameChecked && phoneChecked){
         	btnupdate.removeAttribute('disabled');
         } else {
              btnupdate.setAttribute('disabled', 'disabled');
@@ -297,18 +304,7 @@ async function checknickname(e){
 
 });
 
-document.querySelector('#btndelete').addEventListener('click', function() {
-    let type= document.querySelector('#type').value;
-   
 
-    // 모달을 띄울 조건 확인
-    if (type === "kakao" || type === "naver") {
- 		
- 		finallyfindpassword.style.display = 'block';
-    } else{
-		directbye.style.display = 'block';
-	}
-	});
 	
 	let deleteemailbye = document.querySelector('#deleteemailbye');
 
@@ -487,5 +483,11 @@ if(e.target.value==='' || e.target.value.length >4){
 
 		
 	}
+	
+	document.querySelector('#btndelete').addEventListener('click', function() {
+	 let parameterValues = document.querySelector('input#userid').value;
+	 let newURLd = "/admindelete?email=" + parameterValues;
+	 window.location.href = newURLd; // 새로운 URL로 이동
+	});
 	
 });	

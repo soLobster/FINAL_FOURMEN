@@ -11,6 +11,7 @@ window.addEventListener('DOMContentLoaded', function() {
 	const navbarBackground = document.querySelector('.navbar-background');	// 모달 배경이 되어줄 div		
 	
 	const navbarDetailedTitleDiv =  document.querySelectorAll('.navbar-detailed-menu-title');	//화면 작아지면 아코디언을 위한 엘리먼트(타이틀 div)
+	const detailedmypageMenu = document.querySelector('.navbar-detailed-mypage-menu');
 	
 	
 	if (window.innerWidth > 1024) {
@@ -28,12 +29,14 @@ window.addEventListener('DOMContentLoaded', function() {
         
             if (doesContain) {    // 만약 open class 있을 때               
                 detailedMenu.classList.remove('navbar-detailed-menu-open'); 
-                navbarBackground.classList.remove('body-detailed-menu-open');                
+                navbarBackground.classList.remove('body-detailed-menu-open');
+                detailedmypageMenu.style.display='block';                
                 body.classList.remove('body-element-navbar');
                                
             } else {    // open class없을 때               
                 detailedMenu.classList.add('navbar-detailed-menu-open');
                 navbarBackground.classList.add('body-detailed-menu-open');
+                detailedmypageMenu.style.display='none';
                 body.classList.add('body-element-navbar');
          
             }
@@ -202,8 +205,40 @@ window.addEventListener('DOMContentLoaded', function() {
 			
 		});		
 		
+		
+		
+		
+		
 	});	
 
 	
+let profilepicture = document.querySelector('#profile-picture');
+const navbarmypagebackground = document.querySelector('.navbar-mypage-background');
+
+let closemypage = document.querySelector('#close-mypage');
+
+
+profilepicture.addEventListener('click', () => {
+    // 요소들에 클래스 추가
+    navbarmypagebackground.classList.add('body-detailed-menu-open-mypage');
+    detailedmypageMenu.classList.add('navbar-detailed-menu-mypage-open');
+
+    // 오른쪽으로 메뉴가 나타나도록 right 값을 변경
+    detailedmypageMenu.style.right = '0';
+    
+    // 투명도를 1로 변경하여 배경이 나타나도록 함
+    setTimeout(() => {
+        navbarmypagebackground.style.opacity = '1';
+    }, 10); // 약간의 지연 추가
+});
+	
+closemypage.addEventListener('click',()=>{
+	  navbarmypagebackground.style.opacity = '0';
+    setTimeout(() => {
+        navbarmypagebackground.classList.remove('body-detailed-menu-open-mypage');
+        detailedmypageMenu.classList.remove('navbar-detailed-menu-mypage-open');
+        detailedmypageMenu.style.right = '-280px'; // 다시 메뉴를 숨김
+    },80); // 이동 애니메이션이 끝난 후에 클래스를 제거하고 위치를 변경하도록 함 (0.5초)
+});	
 	
 });

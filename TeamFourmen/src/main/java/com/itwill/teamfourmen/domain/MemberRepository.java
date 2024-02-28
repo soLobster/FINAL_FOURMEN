@@ -2,6 +2,8 @@ package com.itwill.teamfourmen.domain;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
@@ -31,7 +33,13 @@ public interface MemberRepository extends JpaRepository<Member, String>{
     
     Member findByPhone(String phone);
     
-
+    void deleteByEmail(String email);
+    
+    Page<Member> findByEmailContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Member> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Member> findByNicknameContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Member> findByPhoneContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Member> findByTypeContainingIgnoreCase(String keyword, Pageable pageable);    
 }
 	
 
