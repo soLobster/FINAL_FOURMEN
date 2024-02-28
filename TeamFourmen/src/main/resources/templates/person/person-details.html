@@ -23,17 +23,15 @@
         <h2>
             <a class="home" th:href="@{/}">홈</a>
         </h2>
-        <main style="width: 100vw">
+        <main>
             <section>
                 <div>
                     <p>TODO: 개요, 미디어, 팬덤, 공유 등 메뉴 목록 만들기</p>
                 </div>
-                <div style="margin: 50px 100px">
-                    <div>
                         <!-- A, B, C 전체를 감싸는 div -->
                         <div class="content_wrapper">
                             <!-- 인물 이미지와 소셜 링크, 인물 정보를 표시하는 div -->
-                            <div>
+                            <div class="aAndBWrapper">
                                 <!-- A: 프로필 이미지: 없으면 디폴트 이미지로 대체 -->
                                 <div class="a">
                                     <section>
@@ -56,8 +54,7 @@
                                 <div class="b">
                                     <section>
                                         <!-- 인물의 외부 소셜 링크 -->
-                                        <div th:each="externalIDs : ${externalIDs}" class="social_links">
-                                            <div>
+                                        <div class="social_links" th:each="externalIDs : ${externalIDs}">
                                                 <span>
                                                     <a
                                                        th:if="${externalIDs.facebookId != null}"
@@ -88,72 +85,68 @@
                                                        th:href="'https://www.youtube.com/' + ${externalIDs.getYoutubeId()}">
                                                         <i class="fa-brands fa-youtube"></i>
                                                     </a>
-
-                                                    <!-- TODO: 인물의 홈페이지는 어떻게 할까? -->
-
                                                 </span>
-                                            </div>
                                         </div>
+
                                         <h3>
-                                            <p>인물 정보</p>
+                                            <p th:class="person_info_mainTitle">인물 정보</p>
                                         </h3>
-                                        <section class="person_info">
-                                            <p>
-                                                <strong>
-                                                    <p>유명 분야</p>
-                                                </strong>
-                                            </p>
-                                            <p th:switch="${detailsPersonKoKR.getKnownForDepartment()}">
-                                                <span th:case="'Acting'">연기</span>
-                                                <span th:case="'Art'">미술</span>
-                                                <span th:case="'Camera'">카메라</span>
-                                                <span th:case="'Costume & Make-Up'">의상 & 분장</span>
-                                                <span th:case="'Crew'">제작진</span>
-                                                <span th:case="'Directing'">연출</span>
-                                                <span th:case="'Editing'">편집</span>
-                                                <span th:case="'Lighting'">조명</span>
-                                                <span th:case="'Sound'">음향</span>
-                                                <span th:case="'Visual Effects'">시각 효과</span>
-                                                <span th:case="'Production'">각본</span>
-                                                <span th:case="'Writing'">창작자</span>
-                                            </p>
-                                            <p>
-                                                <strong>
-                                                    <p>참여 작품 수</p>
-                                                </strong>
-                                            </p>
-                                            <p th:text="${uniqueKnownCreditsNameORTitleList.size()}"></p>
 
-                                            <p>
-                                                <strong>
-                                                    <p>성별</p>
-                                                </strong>
-                                            </p>
-                                            <p th:text="${detailsPersonKoKR.getGender() == 1 ? '여성' : (detailsPersonKoKR.getGender() == 2 ? '남성' : '-')}" />
+                                        <section th:class="person_info_details">
+                                            <p th:class="person_info_details_titles">유명 분야</p>
+<!--                                            <p th:class="person_info_details_contents"-->
+<!--                                               th:switch="${detailsPersonKoKR.getKnownForDepartment()}">-->
+<!--                                                <span th:case="'Acting'">연기</span>-->
+<!--                                                <span th:case="'Art'">미술</span>-->
+<!--                                                <span th:case="'Camera'">카메라</span>-->
+<!--                                                <span th:case="'Costume & Make-Up'">의상 & 분장</span>-->
+<!--                                                <span th:case="'Crew'">제작진</span>-->
+<!--                                                <span th:case="'Directing'">연출</span>-->
+<!--                                                <span th:case="'Editing'">편집</span>-->
+<!--                                                <span th:case="'Lighting'">조명</span>-->
+<!--                                                <span th:case="'Sound'">음향</span>-->
+<!--                                                <span th:case="'Visual Effects'">시각 효과</span>-->
+<!--                                                <span th:case="'Production'">각본</span>-->
+<!--                                                <span th:case="'Writing'">창작자</span>-->
+<!--                                            </p>-->
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Acting'" class="person_info_details_contents">연기</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Art'" class="person_info_details_contents">미술</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Camera'" class="person_info_details_contents">카메라</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Costume & Make-Up'" class="person_info_details_contents">의상 & 분장</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Crew'" class="person_info_details_contents">제작진</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Directing'" class="person_info_details_contents">연출</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Editing'" class="person_info_details_contents">편집</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Lighting'" class="person_info_details_contents">조명</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Sound'" class="person_info_details_contents">음향</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Visual Effects'" class="person_info_details_contents">시각 효과</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Production'" class="person_info_details_contents">각본</p>
+                                            <p th:if="${detailsPersonKoKR.getKnownForDepartment()} == 'Writing'" class="person_info_details_contents">창작자</p>
 
-                                            <p>
-                                                <strong>
-                                                    <p>생일</p>
-                                                </strong>
-                                            </p>
-                                            <p th:text="${detailsPersonKoKR.getBirthday() != null ? detailsPersonKoKR.getBirthday() : '-'}"></p>
+                                            <p th:class="person_info_details_titles">참여 작품 수</p>
+                                            <p th:class="person_info_details_contents"
+                                               th:text="${uniqueKnownCreditsNameORTitleList.size()}"></p>
 
-                                            <p th:if="${detailsPersonKoKR.getDeathday() != null}">
-                                                <strong>
-                                                    <p>사망일</p>
-                                                </strong>
-                                            </p>
-                                            <p th:if="${detailsPersonKoKR.getDeathday() != null}" th:text="${detailsPersonKoKR.getDeathday()}"></p>
+                                            <p th:class="person_info_details_titles">성별</p>
+                                            <p th:class="person_info_details_contents"
+                                               th:text="${detailsPersonKoKR.getGender() == 1 ? '여성' : (detailsPersonKoKR.getGender() == 2 ? '남성' : '-')}" />
 
-                                            <p>
-                                                <strong>
-                                                    <p>출생지</p>
-                                                </strong>
-                                            </p>
-                                            <p th:if="${detailsPersonKoKR.getPlaceOfBirth() != null}"
+                                            <p th:class="person_info_details_titles">생일</p>
+                                            <p th:class="person_info_details_contents"
+                                               th:text="${detailsPersonKoKR.getBirthday() != null ? detailsPersonKoKR.getBirthday() : '-'}"></p>
+
+                                            <p th:class="person_info_details_titles"
+                                               th:if="${detailsPersonKoKR.deathday != null and detailsPersonKoKR.deathday != 'null' and !detailsPersonKoKR.deathday.isEmpty()}">사망일</p>
+                                            <p th:class="person_info_details_contents"
+                                               th:if="${detailsPersonKoKR.getDeathday() != null}" th:text="${detailsPersonKoKR.getDeathday()}"></p>
+
+                                            <p th:class="person_info_details_titles">출생지</p>
+                                            <p th:class="person_info_details_contents"
+                                               th:if="${detailsPersonKoKR.getPlaceOfBirth() != null}"
                                                th:text="${detailsPersonKoKR.getPlaceOfBirth()}"></p>
-                                            <p th:if="${detailsPersonKoKR.getPlaceOfBirth() == null}">-</p>
+                                            <p th:class="person_info_details_contents"
+                                               th:if="${detailsPersonKoKR.getPlaceOfBirth() == null}">-</p>
                                         </section>
+
                                     </section>
                                 </div>
                             </div>
@@ -161,40 +154,41 @@
                             <!-- 인물 이름, 약력, CAST or CREW 포스터, 연기 목록들을 감싸는 div -->
                             <!-- C: 인물의 정보를 자세히 출력하는 메인 부분 -->
                             <div class="c">
-                                <div>
-
                                     <section>
                                         <div>
-                                            <p th:if="${detailsPersonKoKR != null and detailsPersonKoKR.name != null}" class="person_name" th:text="${detailsPersonKoKR.name}"></p>
-                                        </div>
-                                        <div>
-                                            <p></p>
+                                            <p th:class="c_person_name"
+                                               th:if="${detailsPersonKoKR.name != null and detailsPersonKoKR.name != 'null' and !detailsPersonKoKR.name.isEmpty()}" class="person_name"
+                                               th:text="${detailsPersonKoKR.name}">
+                                            </p>
+                                            <p th:unless="${detailsPersonKoKR.name != null and detailsPersonKoKR.name != 'null' and !detailsPersonKoKR.name.isEmpty()}" class="person_name"
+                                               th:text="${detailsPersonEnUS.name}">
+                                            </p>
                                         </div>
                                     </section>
 
                                     <section>
                                         <h3>
-                                            <p class="c_titles" style="font-weight: 700">약력</p>
+                                            <p class="c_history">약력</p>
                                         </h3>
-                                        <div style="width: inherit">
+                                        <div>
                                             <!-- 약력 부분은 ko 데이터가 없으면 en 데이터로 받아오기. -->
-                                            <p th:if="${detailsPersonKoKR.getBiography().isEmpty()}" th:text="${detailsPersonEnUS.getBiography()}"></p>
-                                            <p th:if="${!detailsPersonKoKR.getBiography().isEmpty()}" th:text="${detailsPersonKoKR.getBiography()}"></p>
+                                            <p th:class="c_person_biography" th:if="${detailsPersonKoKR.getBiography().isEmpty()}" th:text="${detailsPersonEnUS.getBiography()}"></p>
+                                            <p th:class="c_person_biography" th:if="${!detailsPersonKoKR.getBiography().isEmpty()}" th:text="${detailsPersonKoKR.getBiography()}"></p>
                                             <!-- 두 약력 모두 비어 있고 이름이 비어 있지 않을 때 메시지 표시 -->
-                                            <p th:if="${detailsPersonEnUS.getBiography().isEmpty()} and ${detailsPersonKoKR.getBiography().isEmpty()} and !${detailsPersonKoKR.getName().isEmpty()}" th:text="${detailsPersonKoKR.getName()} + '의 약력 란이 비어있습니다.'"></p>
+                                            <p th:class="c_person_biography" th:if="${detailsPersonEnUS.getBiography().isEmpty()} and ${detailsPersonKoKR.getBiography().isEmpty()} and !${detailsPersonKoKR.getName().isEmpty()}" th:text="${detailsPersonKoKR.getName()} + '의 약력 란이 비어있습니다.'"></p>
                                         </div>
                                     </section>
 
                                     <section>
                                         <h3>
-                                            <p class="c_titles">유명 분야</p>
+                                            <p class="c_famous_field">유명 분야</p>
                                         </h3>
                                         <div class="scroll-container">
                                             <div class="horizontal-scroll">
                                                 <ul>
                                                     <!-- 유명 분야가 연기(acting)인 경우 -->
                                                     <li th:if="${detailsPersonKoKR.getKnownForDepartment().equals('Acting')}"
-                                                        th:each="uCastList : ${uniqueCastListPosterEnUS}">
+                                                        th:each="uCastList : ${uniqueCastListPosterKoKR}">
                                                         <div>
                                                             <!-- movie 인 경우 "@{/{mediaType}/details/{id}(mediaType=${uCastList.mediaType}, id=${uCastList.mediaType})}" -->
                                                             <a th:if="${uCastList.mediaType eq 'movie'}"
@@ -202,17 +196,26 @@
                                                                 <div class="movie-poster-container">
                                                                     <!-- 포스터 이미지가 있는 경우 -->
                                                                     <img class="poster_img"
-                                                                         th:if="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and uCastList.posterPath ne ''}"
+                                                                         th:if="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and !uCastList.posterPath.isEmpty()}"
                                                                          th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uCastList.posterPath}"
                                                                          alt="poster_img">
-                                                                    <!-- 포스터 이미지가 없는 경우 기본 이미지 표시 -->
+                                                                    <!-- 포스터 이미지가 없는 경우 디폴트 이미지 출력 -->
                                                                     <img class="poster_img"
-                                                                         th:unless="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and uCastList.posterPath ne ''}"
+                                                                         th:unless="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and !uCastList.posterPath.isEmpty()}"
                                                                          th:src="@{/image/default-w600.png}"
                                                                          alt="poster_img">
+                                                                    <!-- 포스터 이미지 위에 마우스 오버(hover) 시 영화 제목(title)과 미디어 타입 출력 -->
                                                                     <div class="div-movie-card-overlay">
-                                                                        <p class="movie-title poster-info" th:text="${uCastList.title}"></p>
-                                                                        <p class="movie-mediaType poster-info" th:text="${uCastList.mediaType}"></p>
+                                                                        <p class="movie-title poster-info"
+                                                                           th:if="${uCastList.title != null and uCastList.title != 'null' and !uCastList.title.isEmpty()}"
+                                                                           th:text="${uCastList.title}">
+                                                                        </p>
+                                                                        <p class="movie-title poster-info"
+                                                                           th:unless="${uCastList.title != null and uCastList.title != 'null' and !uCastList.title.isEmpty()}"
+                                                                           th:text="${'-'}">
+                                                                        </p>
+                                                                        <p class="movie-mediaType poster-info" th:text="${uCastList.mediaType}">
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                             </a>
@@ -225,13 +228,21 @@
                                                                          th:if="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and uCastList.posterPath ne ''}"
                                                                          th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uCastList.posterPath}"
                                                                          alt="poster_img">
-                                                                    <!-- 포스터 이미지가 없는 경우 -->
+                                                                    <!-- 포스터 이미지가 없는 경우 디폴트 이미지 출력 -->
                                                                     <img class="poster_img"
                                                                          th:unless="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and uCastList.posterPath ne ''}"
                                                                          th:src="@{/image/default-w600.png}"
                                                                          alt="poster_img">
+                                                                    <!-- 포스터 이미지 위에 마우스 오버(hover) 시 tv 이름(name)과 미디어 타입 출력 -->
                                                                     <div class="div-tv-card-overlay">
-                                                                        <p class="tv-name poster-info" th:text="${uCastList.name}"></p>
+                                                                        <p class="tv-name poster-info"
+                                                                           th:if="${uCastList.name != null and uCastList.name != 'null' and !uCastList.name.isEmpty()}"
+                                                                           th:text="${uCastList.name}">
+                                                                        </p>
+                                                                        <p class="tv-name poster-info"
+                                                                           th:unless="${uCastList.name != null and uCastList.name != 'null' and !uCastList.name.isEmpty()}"
+                                                                           th:text="${'-'}">
+                                                                        </p>
                                                                         <p class="tv-mediaType poster-info" th:text="${uCastList.mediaType}"></p>
                                                                     </div>
                                                                 </div>
@@ -244,27 +255,55 @@
                                                         <div>
                                                             <!-- movie 인 경우 "@{/{mediaType}/details/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.mediaType})}" -->
                                                             <a th:if="${uCrewList.mediaType eq 'movie'}"
-                                                               th:href="@{/{mediaType}/details/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.mediaType})}">
-                                                                <img class="poster_img"
-                                                                     th:if="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                     th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uCrewList.posterPath}"
-                                                                     alt="poster_img">
-                                                                <img class="poster_img"
-                                                                     th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                     th:src="@{/image/default-w600.png}"
-                                                                     alt="poster_img">
+                                                               th:href="@{/{mediaType}/details/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.id})}">
+                                                                <div th:class="movie-poster-container">
+                                                                    <img class="poster_img"
+                                                                         th:if="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
+                                                                         th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uCrewList.posterPath}"
+                                                                         alt="poster_img">
+                                                                    <img class="poster_img"
+                                                                         th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
+                                                                         th:src="@{/image/default-w600.png}"
+                                                                         alt="poster_img">
+                                                                    <!-- 포스터 이미지 위에 마우스 오버(hover) 시 영화 제목(title)과 미디어 타입 출력 -->
+                                                                    <div class="div-movie-card-overlay">
+                                                                        <p class="movie-title poster-info"
+                                                                           th:if="${uCrewList.title != null and uCrewList.title != 'null' and !uCrewList.title.isEmpty()}"
+                                                                           th:text="${uCrewList.title}">
+                                                                        </p>
+                                                                        <p class="movie-title poster-info"
+                                                                           th:unless="${uCrewList.title != null and uCrewList.title != 'null' and !uCrewList.title.isEmpty()}"
+                                                                           th:text="${'-'}">
+                                                                        </p>
+                                                                        <p class="movie-mediaType poster-info" th:text="${uCrewList.mediaType}"></p>
+                                                                    </div>
+                                                                </div>
                                                             </a>
                                                             <!-- tv 인 경우 "@{/{mediaType}/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.mediaType})}" -->
                                                             <a th:if="${uCrewList.mediaType eq 'tv'}"
-                                                               th:href="@{/{mediaType}/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.mediaType})}">
-                                                                <img class="poster_img"
-                                                                     th:if="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                     th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uCrewList.posterPath}"
-                                                                     alt="poster_img">
-                                                                <img class="poster_img"
-                                                                     th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                     th:src="@{/image/default-w600.png}"
-                                                                     alt="poster_img">
+                                                               th:href="@{/{mediaType}/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.id})}">
+                                                                <div th:class="tv-poster-container">
+                                                                    <img class="poster_img"
+                                                                         th:if="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
+                                                                         th:src="'https://media.themoviedb.org/t/p/w130_and_h195_bestv2' + ${uCrewList.posterPath}"
+                                                                         alt="poster_img">
+                                                                    <img class="poster_img"
+                                                                         th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
+                                                                         th:src="@{/image/default-w600.png}"
+                                                                         alt="poster_img">
+                                                                    <!-- 포스터 이미지 위에 마우스 오버(hover) 시 tv 이름(name)과 미디어 타입 출력 -->
+                                                                    <div class="div-tv-card-overlay">
+                                                                        <p class="tv-name poster-info"
+                                                                           th:if="${uCrewList.name ne null and uCrewList.name ne 'null' and !uCrewList.name.isEmpty()}"
+                                                                           th:text="${uCrewList.name}">
+                                                                        </p>
+                                                                        <p class="tv-mediaType poster-info"
+                                                                           th:unless="${uCrewList.name ne null and uCrewList.name ne 'null' and !uCrewList.name.isEmpty()}"
+                                                                           th:text="${'-'}">
+                                                                        </p>
+                                                                        <p th:class="tv-mediaType poster-info" th:text="${uCrewList.mediaType}"></p>
+                                                                    </div>
+                                                                </div>
                                                             </a>
                                                         </div>
                                                     </li>
@@ -274,8 +313,9 @@
                                     </section>
 
                                     <section>
-                                        <!-- TODO: 문제의 부분... 어떻게 인물 약력의 상세 정보들을 올바르게 출력할 수 있을까? -->
-                                        <div th:if="${detailsPersonKoKR.getKnownForDepartment().equals('Acting')}">
+                                        <!-- TODO: 문제의 부분... 어떻게 인물 약력의 상세 정보들을 올바르게 출력할 수 있을까? FOR 문을 사용해야 하나?-->
+                                        <div class="history_famous_field_div"
+                                             th:if="${detailsPersonKoKR.getKnownForDepartment().equals('Acting')}">
                                             <h3 class="c_titles" th:switch="${detailsPersonKoKR.getKnownForDepartment()}">
                                                 <span th:case="'Acting'">연기</span>
                                                 <span th:case="'Art'">미술</span>
@@ -290,106 +330,121 @@
                                                 <span th:case="'Production'">각본</span>
                                                 <span th:case="'Writing'">창작자</span>
                                             </h3>
+                                            <table class="history_table">
+                                                <tbody class="history_tbody">
+                                                <!-- 작품이 하나씩 들어가는 tr -->
+                                                <tr class="history_tr"
+                                                    th:each="combinedCastList: ${combinedCreditsCastListKoKR}" th:object="${combinedCastList}">
+                                                    <!-- 작품의 연도 -->
+                                                    <td class="history_td_year">
+                                                        <span th:text="${combinedCastList.year != null and combinedCastList.year != 'null' and combinedCastList.year != '' ? combinedCastList.year : '-'}">연도</span>
+                                                    </td>
+                                                    <!-- 작품의 제목 -->
+                                                    <td class="history_td_titleOrName">
+                                                        <!-- movie -->
+                                                        <div th:if="${combinedCastList.title != null and combinedCastList.mediaType.equals('movie')}">
+                                                            <a th:href="@{/{mediaType}/details/{id}(mediaType=${combinedCastList.mediaType}, id=${combinedCastList.id})}">
+                                                                <span class="title" th:text="${combinedCastList.title}"></span>
+                                                            </a>
+                                                        </div>
+                                                        <!-- tv -->
+                                                        <div th:if="${combinedCastList.name != null and combinedCastList.mediaType eq 'tv'}">
+                                                            <a th:href="@{/{mediaType}/{id}(mediaType=${combinedCastList.mediaType}, id=${combinedCastList.id})}">
+                                                                <span class="name" th:text="${combinedCastList.name}"></span>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                    <!-- 작품에서의 역할 -->
+                                                    <td class="history_td_character">
+                                                        <!-- movie -->
+                                                        <div th:if="${combinedCastList.mediaType.equals('movie') && combinedCastList.character != null && combinedCastList.character != 'null' && !combinedCastList.character.isEmpty()}">
+                                                            <span th:text="${combinedCastList.character} + ' 역'"></span>
+                                                        </div>
+                                                        <div th:if="${combinedCastList.mediaType.equals('movie') && (combinedCastList.character == null || combinedCastList.character == 'null' || combinedCastList.character.isEmpty())}">
+                                                            <span th:text="${'-'}"></span>
+                                                        </div>
+                                                        <!-- tv -->
+                                                        <div th:if="${combinedCastList.mediaType.equals('tv') && combinedCastList.character != null && combinedCastList.character != 'null' && !combinedCastList.character.isEmpty() }">
+                                                            <a th:if="${combinedCastList.episodeCount != null and combinedCastList.episodeCount != 'null' and combinedCastList.episodeCount != ''
+                                                                        and combinedCastList.episodeCount > 0}"
+                                                               th:href="@{/tv/{id}(id=${combinedCastList.id})}"
+                                                               th:text="'(' + ${combinedCastList.episodeCount} + '화' + ')'">
+                                                            </a>
+                                                            <span th:if="${combinedCastList.character != null and combinedCastList.character != 'null' and combinedCastList.character != ''}"
+                                                                  th:text="${combinedCastList.character} + ' 역'">
+                                                            </span>
+                                                            <span th:unless="${combinedCastList.character != null and combinedCastList.character != 'null' and combinedCastList.character != ''}" th:text="${'-'}"></span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
 
-                                            <table>
-                                                <tbody>
-                                                    <tr th:each="combinedCastList: ${combinedCreditsCastListEnUS}" th:object="${combinedCastList}">
-                                                        <td>
-                                                            <table>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <span th:if="${combinedCastList.year == null}">-</span>
-                                                                            <span th:unless="${combinedCastList.year == null}" th:text="${combinedCastList.year}">연도</span>
-                                                                        </td>
-                                                                        <td>
-                                                                            <a th:href="@{/movie/details(id=${combinedCastList.id})}" th:if="${combinedCastList.title != null}">
-                                                                                <span class="title" th:text="${combinedCastList.title}"></span>
-                                                                            </a>
-                                                                            <a th:href="@{/tv/{id}(id=${combinedCastList.id})}" th:if="${combinedCastList.name != null}">
-                                                                                <span class="name" th:text="${combinedCastList.name}"></span>
-                                                                            </a>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td colspan="2">
-                                                                            <span th:if="${combinedCastList.mediaType.equals('tv')}">
-                                                                                <span th:if="${combinedCastList.episodeCount != null}">
-                                                                                    <a th:href="@{/tv/{id}(id=${combinedCastList.id})}"
-                                                                                       th:text="'(' + ${combinedCastList.episodeCount} + '화' + ')'" style="color: white"></a>
-                                                                                </span>
-                                                                                <span th:if="${combinedCastList.character != null}"
-                                                                                      th:text="${combinedCastList.character} + ' 역'"></span>
-                                                                            </span>
-                                                                            <span th:if="${combinedCastList.mediaType.equals('movie') && !combinedCastList.character.isEmpty()}"
-                                                                                    th:text="${combinedCastList.character} + ' 역'"></span>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
+                                        <div>
+                                            <h3>
+                                                <span class="c_makesAndSupports">제작 및 지원</span>
+                                            </h3>
+                                            <table class="history_table">
+                                                <tbody class="history_tbody">
+                                                    <!-- 작품이 하나씩 들어가는 tr -->
+                                                    <tr class="history_tr"
+                                                        th:each="combinedCrewList : ${combinedCreditsCrewListKoKR}" th:object="${combinedCrewList}">
+                                                        <!-- 작품의 연도 -->
+                                                        <td class="history_td_year">
+                                                            <span th:text="${combinedCrewList.year != null and combinedCrewList.year != 'null' and combinedCrewList.year != '' ? combinedCrewList.year : '-'}">연도</span>
+                                                        </td>
+                                                        <!-- 작품의 제목 -->
+                                                        <td class="history_td_titleOrName">
+                                                            <!-- movie -->
+                                                            <div th:if="${combinedCrewList.mediaType.equals('movie') and combinedCrewList.title != null and combinedCrewList.title != 'null' and !combinedCrewList.title.isEmpty()}">
+                                                                <a th:href="@{/movie/details/{id}(id=${combinedCrewList.id})}">
+                                                                    <span class="title" th:text="${combinedCrewList.title}"></span>
+                                                                </a>
+                                                            </div>
+<!--                                                            <div th:unless="${combinedCrewList.mediaType.equals('movie') and combinedCrewList.title != null and combinedCrewList.title != 'null' and !combinedCrewList.title.isEmpty()}">-->
+<!--                                                                <span class="title" th:text="${'-'}"></span>-->
+<!--                                                            </div>-->
+                                                            <!-- tv -->
+                                                            <div th:if="${combinedCrewList.mediaType.equals('tv') and combinedCrewList.name ne null and combinedCrewList.name ne 'null' and !combinedCrewList.name.isEmpty()}">
+                                                                <a th:href="@{/{mediaType}/{id}(mediaType=${combinedCrewList.mediaType}, id=${combinedCrewList.id})}">
+                                                                    <span class="name" th:text="${combinedCrewList.name}"></span>
+                                                                </a>
+                                                            </div>
+<!--                                                            <div th:unless="${combinedCrewList.mediaType.equals('tv') and combinedCrewList.name ne null and combinedCrewList.name ne 'null' and !combinedCrewList.name.isEmpty()}">-->
+<!--                                                                <span class="name" th:text="${'-'}"></span>-->
+<!--                                                            </div>-->
+                                                        </td>
+                                                        <!-- 작품에서의 역할 -->
+                                                        <td class="history_td_character">
+                                                            <!-- movie -->
+                                                            <div th:if="${combinedCrewList.mediaType.equals('movie') && combinedCrewList.job != null && combinedCrewList.job != 'null' && !combinedCrewList.job.isEmpty()}">
+                                                                <span th:text="${combinedCrewList.job}"></span>
+                                                            </div>
+                                                            <div th:unless="${combinedCrewList.mediaType.equals('movie') && combinedCrewList.job != null && combinedCrewList.job != 'null' && !combinedCrewList.job.isEmpty()}">
+                                                                <span th:text="${'-'}"></span>
+                                                            </div>
+                                                            <!-- tv -->
+                                                            <div th:if="${combinedCrewList.mediaType.equals('tv') && combinedCrewList.job != null && combinedCrewList.job != 'null' && !combinedCrewList.job.isEmpty() }">
+                                                                <a th:if="${combinedCrewList.episodeCount != null and combinedCrewList.episodeCount != 'null' and combinedCrewList.episodeCount != ''
+                                                                        and combinedCrewList.episodeCount > 0}"
+                                                                   th:href="@{/tv/{id}(id=${combinedCrewList.id})}"
+                                                                   th:text="'(' + ${combinedCrewList.episodeCount} + '화' + ')'">
+                                                                </a>
+                                                                <span th:if="${combinedCrewList.job != null and combinedCrewList.job != 'null' and combinedCrewList.job != ''}"
+                                                                      th:text="${combinedCrewList.job}">
+                                                            </span>
+                                                                <span th:unless="${combinedCrewList.job != null and combinedCrewList.job != 'null' and combinedCrewList.job != ''}" th:text="${'-'}"></span>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-
                                         </div>
-
-                                        <div th:if="${combinedCreditsCrewListKoKR != null}">
-                                            <h3>
-                                                <span>제작 및 지원</span>
-                                            </h3>
-                                            <table>
-
-                                                <tbody>
-                                                <tr th:each="combinedCrewList: ${combinedCreditsCrewListKoKR}" th:object="${combinedCrewList}">
-                                                    <td>
-                                                        <table>
-                                                            <tbody>
-
-                                                            <tr>
-                                                                <td>
-                                                                    <span th:if="${combinedCrewList.year == null}">-</span>
-                                                                    <span th:unless="${combinedCrewList.year == null}" th:text="${combinedCrewList.year}">연도</span>
-                                                                </td>
-                                                                <td>
-                                                                    <a th:href="@{/movie/details(id=${combinedCrewList.id})}" th:if="${combinedCrewList.title != null}">
-                                                                        <span class="title" th:text="${combinedCrewList.title}"></span>
-                                                                    </a>
-                                                                    <a th:href="@{/tv/{id}(id=${combinedCrewList.id})}" th:if="${combinedCrewList.name != null}">
-                                                                        <span class="name" th:text="${combinedCrewList.name}"></span>
-                                                                    </a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td colspan="2">
-                                                                            <span th:if="${combinedCrewList.mediaType.equals('tv')}">
-                                                                                <span th:if="${combinedCrewList.episodeCount != null}">
-                                                                                    <a th:href="@{/tv/{id}(id=${combinedCrewList.id})}"
-                                                                                       th:text="'(' + ${combinedCrewList.episodeCount} + ' 화' + ')'"></a>
-                                                                                </span>
-                                                                                <span th:if="${combinedCrewList.job != null}"
-                                                                                      th:text="${combinedCrewList.job}"></span>
-                                                                            </span>
-                                                                    <span th:if="${combinedCrewList.mediaType.equals('movie') && !combinedCrewList.job.isEmpty()}"
-                                                                          th:text="${combinedCrewList.job}"></span>
-                                                                </td>
-                                                            </tr>
-
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-
-                                            </table>
-                                        </div>
-
                                     </section>
-                                </div>
+
                             </div>
+
                         </div>
-                    </div>
-                </div>
             </section>
         </main>
     </div>
