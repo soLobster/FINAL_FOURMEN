@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.ReviewLike;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.repository.ReviewDao;
+import com.itwill.teamfourmen.repository.ReviewLikeRepository;
 import com.itwill.teamfourmen.repository.TmdbLikeDao;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class FeatureService {
 	
 	private final ReviewDao reviewDao;
 	private final TmdbLikeDao tmdbLikeDao;
+	private final ReviewLikeRepository reviewLikeDao;
 	
 	public void postReview(Review review) {
 		
@@ -80,5 +83,16 @@ public class FeatureService {
 		tmdbLikeDao.deleteByMemberEmailAndCategoryAndTmdbId(tmdbLike.getMember().getEmail(), tmdbLike.getCategory(), tmdbLike.getTmdbId());
 		
 	}
+	
+	
+	public void addReviewLike(ReviewLike reviewLike) {
+		
+		log.info("addReviewLike(reviewLike={})", reviewLike);
+		
+		reviewLike = reviewLikeDao.save(reviewLike);
+		
+		log.info("저장 후 reviewLike={}", reviewLike);
+	}
+	
 	
 }
