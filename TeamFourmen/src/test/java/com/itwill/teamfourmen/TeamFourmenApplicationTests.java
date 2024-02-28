@@ -3,6 +3,7 @@ package com.itwill.teamfourmen;
 import com.itwill.teamfourmen.dto.person.CombinedCreditsCastDto;
 import com.itwill.teamfourmen.dto.person.CombinedCreditsDto;
 import com.itwill.teamfourmen.service.PersonService;
+import com.itwill.teamfourmen.web.PersonController;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ class TeamFourmenApplicationTests {
 
 	@Autowired
 	PersonService personService;
+	PersonController personController;
 
 	@Test
 	void contextLoads() {

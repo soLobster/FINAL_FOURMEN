@@ -28,242 +28,234 @@ public class PersonController {
 	@GetMapping("/list")
 	public String list(
 			@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-			@RequestParam(name = "language", required = false, defaultValue = "ko") String language,
 			Model model) {
 
-		// 서비스 메서드 호출 (항상 "popular"를 파라미터로 전달)
-		PageAndListDto pageAndListDto = personService.getPersonList(page, language);
+		// 서비스 메서드 호출
+		// 영어 데이터가 필요한 경우:
+		PageAndListDto pageAndListDtoEnUS = personService.getPersonListEnUS(page);
+		// 한글 데이터가 필요한 경우:
+		PageAndListDto pageAndListDtoKoKR = personService.getPersonListKoKR(page);
 
 		// 페이징 처리 관련 서비스 메서드 호출
 		PersonPagingDto pagingDto = personService.paging(page);
 
-//		// 결과가 비어있는지 확인
-//		if (pageAndListDto.getResults() == null || pageAndListDto.getResults().isEmpty()) {
-//			// 결과가 비어있다면 영어("en")로 다시 요청
-//			pageAndListDto = personService.getPersonList(page, "en");
-//		}
-
-		// pageInfo 정체 밝히기:
-		log.info("==============================================");
-		log.info("pageInfo 정체 밝히기:{}", pageAndListDto.getPage());
-
-		model.addAttribute("pageInfo", pageAndListDto.getPage());
-		model.addAttribute("personList", pageAndListDto.getResults());
-		model.addAttribute("personPageAndList", pageAndListDto);
+		model.addAttribute("pageInfoEnUS", pageAndListDtoEnUS.getPage());
+		model.addAttribute("pageInfoKoKR", pageAndListDtoKoKR.getPage());
+		model.addAttribute("personListEnUS", pageAndListDtoEnUS.getResults());
+		model.addAttribute("personListKoKR", pageAndListDtoKoKR.getResults());
 		model.addAttribute("paging", pagingDto);
 
-		return "person/lists";
+		return "person/person-lists";
 
 	} // end list
 
 	@GetMapping("/details/{id}")
 	public String details(
 			@PathVariable("id") int id,
-			@RequestParam(name = "language", required = false, defaultValue = "en") String language,
 			Model model
 	) {
 
 		log.info("details(id={})", id);
-		log.info("details(language={})", language);
 
 		// 서비스 메서드 호출 (인물의 id 값을 파라미터로 전달)
-		DetailsPersonDto detailsPersonDto = personService.getPersonDetails(id, language);
-		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id, language);
-		MovieCreditsDto movieCreditsDto = personService.getMovieCredits(id, language);
-		MovieCreditsCastDto movieCreditsCastDTO = personService.getMovieCreditsCast(id, language);
-		TvCreditsDto tvCreditsDto = personService.getTvCredits(id, language);
-		TvCreditsCastDto tvCreditsCastDTO = personService.getTvCreditsCast(id, language);
-		CombinedCreditsDto combinedCreditsDto = personService.getCombinedCredits(id, "ko");
-		List<CombinedCreditsCastDto> combinedCreditsCastList = personService.getCombinedCreditsCast(id, "ko");
-		List<CombinedCreditsCrewDto> combinedCreditsCrewList = personService.getCombinedCreditsCrew(id, "ko");
+		DetailsPersonDto detailsPersonDtoEnUS = personService.getPersonDetailsEnUS(id);
+		DetailsPersonDto detailsPersonDtoKoKR = personService.getPersonDetailsKoKR(id);
 
-		// CombinedCast를 처리하는 코드.
-		List<CombinedCreditsCastDto> castList = combinedCreditsDto.getCast();
-		List<CombinedCreditsCastDto> sortedCastList = new ArrayList<>(castList);
-		sortedCastList.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 
-		// MovieCast를 처리하는 코드.
-		List<MovieCreditsCastDto> movieCastList = movieCreditsDto.getCast();
-		List<MovieCreditsCastDto> sortedMovieCastList = new ArrayList<>(movieCastList);
-		sortedMovieCastList.sort(Comparator.comparingDouble(MovieCreditsCastDto::getVoteCount).reversed());
+		CombinedCreditsDto combinedCreditsDtoEnUS = personService.getCombinedCreditsEnUS(id);
+		CombinedCreditsDto combinedCreditsDtoKoKR = personService.getCombinedCreditsKoKR(id);
 
-		// TvCast를 처리하는 코드.
-		List<TvCreditsCastDto> tvCastList = tvCreditsDto.getCast();
-		List<TvCreditsCastDto> sortedTvCastList = new ArrayList<>(tvCastList);
-		sortedTvCastList.sort(Comparator.comparingDouble(TvCreditsCastDto::getVoteCount).reversed());
+		List<CombinedCreditsCastDto> combinedCreditsCastListEnUS = personService.getCombinedCreditsCastEnUS(id);
+		List<CombinedCreditsCastDto> combinedCreditsCastListKoKR = personService.getCombinedCreditsCastKoKR(id);
 
-		// CombinedCrew를 처리하는 코드.
-		List<CombinedCreditsCrewDto> crewList = combinedCreditsDto.getCrew();
+		List<CombinedCreditsCrewDto> combinedCreditsCrewListEnUS = personService.getCombinedCreditsCrewEnUS(id);
+		List<CombinedCreditsCrewDto> combinedCreditsCrewListKoKR = personService.getCombinedCreditsCrewKoKR(id);
+
+		/*
+		  1. combinedCreditsDtoEnUS(KoKR)에서 cast 만 가져와서 리스트 생성.
+		  2. castListEnUs(KoKR)를 정렬하기 위한 새로운 리스트 sortedCastListEnUS(KoKR) 생성.
+		  3. sortedCastListEnUS(KoKR)를 투표 수를 기준으로 내림차순 정렬.
+		 */
+		List<CombinedCreditsCastDto> castListEnUS = combinedCreditsDtoEnUS.getCast();
+		List<CombinedCreditsCastDto> sortedCastListEnUS = new ArrayList<>(castListEnUS);
+		sortedCastListEnUS.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+
+		List<CombinedCreditsCastDto> castListKoKR = combinedCreditsDtoKoKR.getCast();
+		List<CombinedCreditsCastDto> sortedCastListKoKR = new ArrayList<>(castListKoKR);
+		sortedCastListKoKR.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+
+		/*
+		  1. combinedCreditsDtoEnUS(KoKR)에서 crew 만 가져와서 리스트 생성.
+		  2. crewListEnUs(KoKR)를 정렬하기 위한 새로운 리스트 sortedCrewListEnUS(KoKR) 생성.
+		  3. sortedCrewListEnUS(KoKR)를 투표 수를 기준으로 내림차순 정렬.
+		 */
+		List<CombinedCreditsCrewDto> crewListEnUS = combinedCreditsDtoEnUS.getCrew();
+		List<CombinedCreditsCrewDto> sortedCrewListEnUS = new ArrayList<>(crewListEnUS);
+		sortedCrewListEnUS.sort(Comparator.comparingDouble(CombinedCreditsCrewDto::getVoteCount).reversed());
+
+		List<CombinedCreditsCrewDto> crewListKoKR = combinedCreditsDtoKoKR.getCrew();
+		List<CombinedCreditsCrewDto> sortedCrewListKoKR = new ArrayList<>(crewListEnUS);
+		sortedCrewListKoKR.sort(Comparator.comparingDouble(CombinedCreditsCrewDto::getVoteCount).reversed());
 
 		/*
 		 * 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 중복을 제거한 Cast 리스트 생성.
-		 * Cast 포스터 경로를 전달하기 위함.
+		 * Cast 포스터 경로를 전달하기 위함. (다른 요소들도 가지고 있음)
 		 */
 		// 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 포스터 경로(path)가 고유한지 확인.
 		Set<String> uniqueCastPosterPath = new HashSet<>();
 		// Cast 필터링. (중복X, 고유한 값을 가지도록 필터링함)
-		List<CombinedCreditsCastDto> uniqueCastList = castList.stream()
+		List<CombinedCreditsCastDto> uniqueCastListPosterEnUS = castListEnUS .stream()
 				.filter(cast -> uniqueCastPosterPath.add(cast.getPosterPath()))
+				.limit(10) // 10개만 가져오도록 함.
+				.collect(Collectors.toList());
+		List<CombinedCreditsCastDto> uniqueCastListPosterKoKR = castListKoKR .stream()
+				.filter(cast -> uniqueCastPosterPath.add(cast.getPosterPath()))
+				.limit(10) // 10개만 가져오도록 함.
 				.collect(Collectors.toList());
 		// 필터링한 Cast 를 voteCount 기준 내림차순 정렬.
-		uniqueCastList.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+		uniqueCastListPosterEnUS.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+		uniqueCastListPosterKoKR.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
 
 		/*
 		 * 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 중복을 제거한 Crew 리스트 생성.
-		 * Crew 포스터 경로를 전달하기 위함.
+		 * Crew 포스터 경로를 전달하기 위함. (다른 요소들도 가지고 있음)
 		 */
 		// 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 포스터 경로(path)가 고유한지 확인.
 		Set<String> uniqueCrewPosterPath = new HashSet<>();
 		// Crew 필터링. (중복X, 고유한 값을 가지도록 필터링함)
-		List<CombinedCreditsCrewDto> uniqueCrewList = crewList.stream()
+		List<CombinedCreditsCrewDto> uniqueCrewListPosterEnUS = crewListEnUS.stream()
 				.filter(cast -> uniqueCrewPosterPath.add(cast.getPosterPath()))
+				.limit(10) // 10개만 가져오도록 함.
+				.collect(Collectors.toList());
+		List<CombinedCreditsCrewDto> uniqueCrewListPosterKoKR = crewListKoKR.stream()
+				.filter(cast -> uniqueCrewPosterPath.add(cast.getPosterPath()))
+				.limit(10) // 10개만 가져오도록 함.
 				.collect(Collectors.toList());
 		// 필터링한 Crew 를 voteCount 기준 내림차순 정렬.
-		uniqueCrewList.sort(Comparator.comparingDouble(CombinedCreditsCrewDto::getVoteCount).reversed());
+		uniqueCrewListPosterEnUS.sort(Comparator.comparingDouble(CombinedCreditsCrewDto::getVoteCount).reversed());
+		uniqueCrewListPosterKoKR.sort(Comparator.comparingDouble(CombinedCreditsCrewDto::getVoteCount).reversed());
 
 		/*
-		 * 인물의 약력 부분에서 참여 작품을 작품 출시 날짜의 내림차순으로 정렬하여 보여주기 위한 코드 작성.
-		 * Cast만 해당함.
+		 * 인물의 약력 부분에서 참여 작품을 작품 출시 날짜의 내림차순으로 정렬하여 보여주기 위한 코드.
+		 * Cast 만 해당함.
 		 */
-		// 방법 1. combinedCreditsCastList를 내림차순으로 정렬:
+		// 방법 1. combinedCreditsCastList 를 내림차순으로 정렬:
 		// Comparator.nullFirst()를 사용하여 null 값이 있는 요소를 정렬된 목록의 가장 앞에 배치.
 		// Comparator.nullLast() -> null 값이 있는 요소를 정렬된 목록의 가장 뒤에 배치.
-		combinedCreditsCastList.sort(Comparator.comparing(CombinedCreditsCastDto::getYear, Comparator.nullsFirst(Comparator.reverseOrder())));
+		combinedCreditsCastListEnUS.sort(Comparator.comparing(CombinedCreditsCastDto::getYear, Comparator.nullsFirst(Comparator.reverseOrder())));
+		combinedCreditsCastListKoKR.sort(Comparator.comparing(CombinedCreditsCastDto::getYear, Comparator.nullsFirst(Comparator.reverseOrder())));
 		// 방법 2. Map 사용:
 		// 연도별로 그룹화하고, 각 그룹을 내림차순으로 정렬
-		Map<Year, List<CombinedCreditsCastDto>> groupedByYearCast = combinedCreditsCastList.stream()
+		Map<Year, List<CombinedCreditsCastDto>> groupedByYearCastEnUS = combinedCreditsCastListEnUS.stream()
 				.filter(cast -> cast.getYear() != null) // 연도 정보가 있는 항목만 처리
 				.collect(Collectors.groupingBy(CombinedCreditsCastDto::getYear, // 연도별로 그룹화
 						Collectors.toList()));
 		// 그룹화된 맵을 연도 내림차순으로 정렬
-		Map<Year, List<CombinedCreditsCastDto>> sortedByYearDescCast = new TreeMap<>(Comparator.reverseOrder());
-		sortedByYearDescCast.putAll(groupedByYearCast);
+		Map<Year, List<CombinedCreditsCastDto>> sortedByYearDescCastEnUS = new TreeMap<>(Comparator.reverseOrder());
+		sortedByYearDescCastEnUS.putAll(groupedByYearCastEnUS);
 
 		/*
 		 * 인물의 약력 부분에서 참여 작품을 작품 출시 날짜의 내림차순으로 정렬하여 보여주기 위한 코드 작성.
-		 * Crew만 해당함.
+		 * Crew 만 해당함.
 		 */
-		// 방법 1. combinedCreditsCrewList를 내림차순으로 정렬:
+		// 방법 1. combinedCreditsCrewList 를 내림차순으로 정렬:
 		// Comparator.nullFirst()를 사용하여 null 값이 있는 요소를 정렬된 목록의 가장 앞에 배치.
 		// Comparator.nullLast() -> null 값이 있는 요소를 정렬된 목록의 가장 뒤에 배치.
-		combinedCreditsCrewList.sort(Comparator.comparing(CombinedCreditsCrewDto::getYear, Comparator.nullsFirst(Comparator.reverseOrder())));
+		combinedCreditsCrewListEnUS.sort(Comparator.comparing(CombinedCreditsCrewDto::getYear, Comparator.nullsFirst(Comparator.reverseOrder())));
+		combinedCreditsCrewListKoKR.sort(Comparator.comparing(CombinedCreditsCrewDto::getYear, Comparator.nullsFirst(Comparator.reverseOrder())));
 		// 방법 2. Map 사용:
 		// 연도별로 그룹화하고, 각 그룹을 내림차순으로 정렬
-		Map<Year, List<CombinedCreditsCrewDto>> groupedByYearCrew = combinedCreditsCrewList.stream()
+		Map<Year, List<CombinedCreditsCrewDto>> groupedByYearCrewEnUS = combinedCreditsCrewListEnUS.stream()
 				.filter(crew -> crew.getYear() != null) // 연도 정보가 있는 항목만 처리
 				.collect(Collectors.groupingBy(CombinedCreditsCrewDto::getYear, // 연도별로 그룹화
 						Collectors.toList()));
 		// 그룹화된 맵을 연도 내림차순으로 정렬
-		Map<Year, List<CombinedCreditsCrewDto>> sortedByYearDescCrew = new TreeMap<>(Comparator.reverseOrder());
-		sortedByYearDescCrew.putAll(groupedByYearCrew);
-
-//		log.info("==============================================");
-//		log.info("sortedByYearDescCast={}", sortedByYearDescCast.keySet());
-//		log.info("sortedByYearDescCastSize={}", sortedByYearDescCast.size());
-//
-//		log.info("==============================================");
-//		log.info("sortedByYearDescCrew={}", sortedByYearDescCrew.keySet());
-//		log.info("sortedByYearDescCrewSize={}", sortedByYearDescCrew.size());
-
-		log.info("==============================================");
-		log.info("combinedCreditsCastListSize={}", combinedCreditsCastList.size());
-//		log.info("combinedCreditsCastList={}", combinedCreditsCastList);
-		log.info("==============================================");
-		log.info("combinedCreditsCrewListSize={}", combinedCreditsCrewList.size());
-//		log.info("combinedCreditsCrewList={}", combinedCreditsCrewList);
-
-		// combinedCreditsCastList의 사이즈 값 선언.
-		Integer combinedCreditsCastListSize = combinedCreditsCastList.size();
-		// combinedCreditsCrewList의 사이즈 값 선언.
-		Integer combinedCreditsCrewListSize = combinedCreditsCrewList.size();
+		Map<Year, List<CombinedCreditsCrewDto>> sortedByYearDescCrewEnUS = new TreeMap<>(Comparator.reverseOrder());
+		sortedByYearDescCrewEnUS.putAll(groupedByYearCrewEnUS);
 
 		/*
 		 * KnownCreditsNameOrTitle(참여 작품 수)를 가지는 리스트.
-		 * tv면 name, movie면 title을 가짐.
+		 * tv 면 name, movie 면 title 을 가짐.
 		 * 다른 요소는 갖지 않음.
-		 * HashSet을 사용하여 중복을 제거하여 사용.
+		 * HashSet을 사용하여 중복을 제거하여 사용해야 함.
 		 * 중복을 제거한 참여 작품 수를 모델에 전달하기 위함.
 		 */
 		List<String> knownCreditsNameOrTitle = new ArrayList<>();
-		for (int i=0; i<combinedCreditsCastListSize; i++) {
-			if (combinedCreditsCastList.get(i).getMediaType() != null && combinedCreditsCastList.get(i).getMediaType().equals("tv")) {
-				knownCreditsNameOrTitle.add(combinedCreditsCastList.get(i).getName());
-			} else if (combinedCreditsCastList.get(i).getMediaType() != null && combinedCreditsCastList.get(i).getMediaType().equals("movie")) {
-				knownCreditsNameOrTitle.add(combinedCreditsCastList.get(i).getTitle());
-			} else if (combinedCreditsCastList.get(i) == null) {
+		for (int i=0; i<combinedCreditsCastListEnUS.size(); i++) {
+			if (combinedCreditsCastListEnUS.get(i).getMediaType() != null && combinedCreditsCastListEnUS.get(i).getMediaType().equals("tv")) {
+				knownCreditsNameOrTitle.add(combinedCreditsCastListEnUS.get(i).getName());
+			} else if (combinedCreditsCastListEnUS.get(i).getMediaType() != null && combinedCreditsCastListEnUS.get(i).getMediaType().equals("movie")) {
+				knownCreditsNameOrTitle.add(combinedCreditsCastListEnUS.get(i).getTitle());
+			} else if (combinedCreditsCastListEnUS.get(i) == null) {
 				log.info("{}번째 미디어 타입이 null입니다...", i);
 			}
 		}
-		for (int i=0; i<combinedCreditsCrewListSize; i++) {
-			if (combinedCreditsCrewList.get(i).getMediaType() != null && combinedCreditsCrewList.get(i).getMediaType().equals("tv")) {
-				knownCreditsNameOrTitle.add(combinedCreditsCrewList.get(i).getName());
-			} else if (combinedCreditsCrewList.get(i).getMediaType() != null && combinedCreditsCrewList.get(i).getMediaType().equals("movie")) {
-				knownCreditsNameOrTitle.add(combinedCreditsCrewList.get(i).getTitle());
-			} else if (combinedCreditsCrewList.get(i) == null) {
+		for (int i=0; i<combinedCreditsCrewListEnUS.size(); i++) {
+			if (combinedCreditsCrewListEnUS.get(i).getMediaType() != null && combinedCreditsCrewListEnUS.get(i).getMediaType().equals("tv")) {
+				knownCreditsNameOrTitle.add(combinedCreditsCrewListEnUS.get(i).getName());
+			} else if (combinedCreditsCrewListEnUS.get(i).getMediaType() != null && combinedCreditsCrewListEnUS.get(i).getMediaType().equals("movie")) {
+				knownCreditsNameOrTitle.add(combinedCreditsCrewListEnUS.get(i).getTitle());
+			} else if (combinedCreditsCrewListEnUS.get(i) == null) {
 				log.info("{}번째 미디어 타입이 null입니다...", i);
 			}
 		}
 		// name, title 만을 가지는 것이 아닌 모든 요소를 가지는 knownCreditsAllCast 리스트 생성.
-		List<CombinedCreditsCastDto> knownCreditsAllCast = new ArrayList<>(combinedCreditsCastList);
+		List<CombinedCreditsCastDto> knownCreditsAllCast = new ArrayList<>(combinedCreditsCastListEnUS);
 		// name, title 만을 가지는 것이 아닌 모든 요소를 가지는 knownCreditsAllCrew 리스트 생성.
-		List<CombinedCreditsCrewDto> knownCreditsAllCrew = new ArrayList<>(combinedCreditsCrewList);
-
+		List<CombinedCreditsCrewDto> knownCreditsAllCrew = new ArrayList<>(combinedCreditsCrewListEnUS);
 		// *** 이 아래에서 중복을 제거 ***
 		// knownCredits 값이 어떻게 저장되어 있는지 확인
 		log.info("===============================================");
 		log.info("** 중복 제거 전 ** knownCreditsNameOrTitleSize(중복 제거 전 참여 작품 수)={}", knownCreditsNameOrTitle.size());
-//		log.info("** 중복 제거 전 ** knownCreditsNameOrTitle(중복 제거 전 참여 작품 리스트) 출력={}", knownCreditsNameOrTitle);
-		// HastSet을 사용하여 중복을 제거. (name과 title만을 가지는 리스트를 중복 제거 처리)
+		// HastSet을 사용하여 중복을 제거. (name 과 title 만을 가지는 knownCreditsNameOrTitle 리스트를 중복 제거 처리)
 		Set<String> uniqueKnownCreditsNameOrTitle = new HashSet<>(knownCreditsNameOrTitle);
 		log.info("===============================================");
 		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleSize(중복 제거 후 참여 작품 수(set))={}", uniqueKnownCreditsNameOrTitle.size());
-//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitle(중복 제거 후 참여 작품 set)={}", uniqueKnownCreditsNameOrTitle);
-		// 증복을 제거한 uniqueKnownCreditsNameOrTitle을 다시 리스트로 변환.
+		// 증복을 제거한 uniqueKnownCreditsNameOrTitle 을 다시 리스트로 변환.
 		List<String> uniqueKnownCreditsNameOrTitleList = new ArrayList<>(uniqueKnownCreditsNameOrTitle);
 		log.info("===============================================");
 		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleListSize(중복 제거 후 참여 작품 수(리스트))={}", uniqueKnownCreditsNameOrTitleList.size());
-//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleList(중복 제거 후 참여 작품 리스트)={}", uniqueKnownCreditsNameOrTitleList);
-		// =============================  구분선  =============================== //
+		// ===============================  구분선  =============================== //
 		// HashSet을 사용하여 중복을 제거. (모든 요소를 가지는 리스트를 중복 제거 처리)
 		Set<CombinedCreditsCastDto> uniqueKnownCreditsAllCast = new HashSet<>(knownCreditsAllCast);
 		Set<CombinedCreditsCrewDto> uniqueKnownCreditsAllCrew = new HashSet<>(knownCreditsAllCrew);
-		// 중복을 제거한 모든 요소를 가지는 set을 다시 리스트로 변환.
+		// 중복을 제거한 모든 요소를 가지는 set 을 다시 리스트로 변환.
 		List<CombinedCreditsCastDto> uniqueKnownCreditsAllCastList = new ArrayList<>(uniqueKnownCreditsAllCast);
 		log.info("===============================================");
 		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCastListSize(중복이 제거된 모든 Cast 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCastList.size());
-//		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 ** uniqueKnownCreditsAllCastList(중복이 제거된 모든 Cast 요소를 가지는 리스트)={}", uniqueKnownCreditsAllCastList);
 		List<CombinedCreditsCrewDto> uniqueKnownCreditsAllCrewList = new ArrayList<>(uniqueKnownCreditsAllCrew);
 		log.info("===============================================");
 		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCrewListSize(중복이 제거된 모든 Crew 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCrewList.size());
-//		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 ** uniqueKnownCreditsAllCrewList(중복이 제거된 모든 Crew 요소를 가지는 리스트)={}", uniqueKnownCreditsAllCrewList);
 
-		// voteCount 를 기준으로 정렬된 castList 를 모델에 추가. (중복 제거 X)
-		model.addAttribute("sortedCastList", sortedCastList);
-		model.addAttribute("sortedMovieCastList", sortedMovieCastList);
-		model.addAttribute("sortedTvCastList", sortedTvCastList);
 		// 필터링한 CastList 를 모델에 추가. (중복 제거 O)
-		model.addAttribute("uniqueCastList", uniqueCastList);
+		model.addAttribute("uniqueCastListPosterEnUS", uniqueCastListPosterEnUS);
+		model.addAttribute("uniqueCastListPosterKoKR", uniqueCastListPosterKoKR);
 		// 필터링한 CrewList 를 모델에 추가. (중복 제거 O)
-		model.addAttribute("uniqueCrewList", uniqueCrewList);
-		// 연도별 내림차순으로 정렬한 Cast 맵을 모델에 추가. (중복 제거 X)
-		model.addAttribute("sortedByYearDesc", sortedByYearDescCast);
-		// 연도별 내림차순으로 정렬한 Crew 맵을 모델에 추가. (중복 제거 X)
-		model.addAttribute("sortedByYearCrew", sortedByYearDescCrew);
+		model.addAttribute("uniqueCrewListPosterEnUS", uniqueCrewListPosterEnUS);
+		model.addAttribute("uniqueCrewListPosterKoKR", uniqueCrewListPosterKoKR);
 		// uniqueKnownCreditsList(중복이 제거된 참여 작품 이름 또는 제목만을 담은 리스트)를 모델에 추가. (중복 제거 O)
 		model.addAttribute("uniqueKnownCreditsNameORTitleList", uniqueKnownCreditsNameOrTitleList);
-
-
-		model.addAttribute("detailsPerson", detailsPersonDto);
+		// 중복을 제거한 모든 Cast 요소를 가진 리스트를 모델에 추가. (중복 제거 O)
+		model.addAttribute("uniqueAllCastList", uniqueKnownCreditsAllCastList);
+		// 중복을 제거한 모든 Crew 요소를 가진 리스트를 모델에 추가. (중복 제거 O)
+		model.addAttribute("uniqueAllCrewList", uniqueKnownCreditsAllCrewList);
+		// 인물의 상세 정보를 가진 객체를 모델에 추가.
+		model.addAttribute("detailsPersonEnUS", detailsPersonDtoEnUS);
+		model.addAttribute("detailsPersonKoKR", detailsPersonDtoKoKR);
+		// 인물의 외부 링크 정보(sns, 홈페이지 등)를 가진 객체를 모델에 추가.
 		model.addAttribute("externalIDs", externalIDsDto);
-		model.addAttribute("movieCredits", movieCreditsDto);
-		model.addAttribute("movieCreditsCast", movieCreditsCastDTO);
-		model.addAttribute("tvCredits", tvCreditsDto);
-		model.addAttribute("tvCreditsCast", tvCreditsCastDTO);
-		model.addAttribute("combinedCredits", combinedCreditsDto);
-		model.addAttribute("combinedCreditsCastList", combinedCreditsCastList);
-		model.addAttribute("combinedCreditsCrewList", combinedCreditsCrewList);
+		// 해당 인물이 cast(연기) 또는 crew(제작 등)로 참여한 모든 출연작(영화, TV 프로그램)의 정보를 가진 객체를 모델에 추가.
+		model.addAttribute("combinedCreditsEnUS", combinedCreditsDtoEnUS);
+		model.addAttribute("combinedCreditsKoKR", combinedCreditsDtoKoKR);
+		// 해당 인물이 cast(연기)로 참여한 모든 출연작(영화, TV 프로그램)의 정보를 가진 리스트를 모델에 추가.
+		model.addAttribute("combinedCreditsCastListEnUS", combinedCreditsCastListEnUS);
+		model.addAttribute("combinedCreditsCastListKoKR", combinedCreditsCastListKoKR);
+		// 해당 인물이 crew(제작 등)로 참여한 모든 출연작(영화, TV 프로그램)의 정보를 가진 리스트를 모델에 추가.
+		model.addAttribute("combinedCreditsCrewListEnUS", combinedCreditsCrewListEnUS);
+		model.addAttribute("combinedCreditsCrewListKoKR", combinedCreditsCrewListKoKR);
 
-		return "person/details";
+		return "person/person-details";
 	} // end details
 
 
