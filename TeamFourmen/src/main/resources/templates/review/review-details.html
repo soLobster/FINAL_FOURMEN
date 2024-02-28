@@ -465,11 +465,11 @@
         <section class = "center-works-review-and-comments-section">
             <div class = "works-review-div">
                 <div class = "works-review-header">
-                    <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                    <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
                         <img class ="works-review-users-profile-img" th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}" />
                     </a>
                     <span>Review By</span>
-                    <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
                         <h4 class = "works-review-users-name" th:text="${review.getMember().getName()}"></h4>
                     </a>
                 </div>
@@ -522,13 +522,13 @@
                             <li class = "works-comment" th:each=" comment : ${reviewComments}" th:commentId = "${comment.getCommentId()}">
                                     <div class = "comment-body">
                                         <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
-                                            <a th:href="@{/mypage/details/{id}(id = ${comment.getMember().getEmail()})}">
+                                            <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
                                                 <div>
                                                     <img th:src = "@{'/image?photo=' + ${comment.getMember().getUsersaveprofile()}}" />
                                                 </div>
                                             </a>
                                             <div class = "user-name-created-date">
-                                                <a th:href="@{/mypage/details/{id}(id = ${comment.getMember().getEmail()})}">
+                                                <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
                                                     <span class = "comment-username" th:text="${comment.getMember().getNickname()}"></span>
                                                 </a>
                                                 <span class = "comment-register-date" th:text="${comment.getCreatedDate().toLocalDate()}"></span>
@@ -569,7 +569,7 @@
                         </ul>
                     </th:block>
                 </div>
-                <th:block sec:authorize= "isAuthenticated()" th:if="${member.email ne review.getMember().getEmail()}">
+<!--                <th:block sec:authorize= "isAuthenticated()" th:if="${member.email ne review.getMember().getEmail()}">-->
                     <div class="works-comments-footer">
                         <section class = "comment-textarea">
                             <input class="d-none" id="comment-writer-email" th:email = "${member.email}">
@@ -577,7 +577,7 @@
                         </section>
                         <button class = "mt-2 btn btn-success" id = "comment-reg-btn">등록</button>
                     </div>
-                </th:block>
+<!--                </th:block>-->
             </div>
         </section>
 

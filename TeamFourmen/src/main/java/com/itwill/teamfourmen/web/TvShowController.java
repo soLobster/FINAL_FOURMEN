@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.itwill.teamfourmen.domain.*;
+import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.*;
 import com.itwill.teamfourmen.service.CommentService;
 import com.itwill.teamfourmen.service.FeatureService;
@@ -351,38 +352,6 @@ public class TvShowController {
 		return "tvshow/tvshow-details";
 	}
 
-
-	@GetMapping("/details/{id}/reviews")
-	public String getTvShowReviews(Model model, @PathVariable (name = "id") int id) {
-		log.info("GET TV SHOW REVIEWS - ID = {}", id);
-
-		// 해당 tv Show 정보를 가져오기 위함
-		TvShowDTO tvShowDTO = apiUtil.getTvShowDetails(id);
-
-		model.addAttribute("tvShowDto", tvShowDTO);
-
-		// 해당 tv Show 리뷰를 가져오기 위함
-		List<Review> tvShowReviewList =featureService.getReviews("tv", id);
-
-		Map<Long, Integer> reviewComment = new HashMap<>();
-		Map<Long, Long> reviewLiked = new HashMap<>();
-
-		for(Review tvShowReview : tvShowReviewList) {
-			Long reviewId = tvShowReview.getReviewId();
-			int numOfComment = featureService.getNumOfReviewComment(reviewId);
-			Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
-
-			reviewLiked.put(reviewId, numOfLiked);
-			reviewComment.put(reviewId, numOfComment);
-		}
-
-		model.addAttribute("numOfReviewLiked", reviewLiked);
-		model.addAttribute("numOfReviewComment", reviewComment);
-
-		model.addAttribute("tvShowReviewList", tvShowReviewList);
-
-		return "review/reviews";
-	}
 
 	@GetMapping("/details/{id}/season/{season_number}")
 	public String getTvShowSeasonDetails(Model model, @PathVariable(name= "id") int id , @PathVariable(name = "season_number") int season_number){

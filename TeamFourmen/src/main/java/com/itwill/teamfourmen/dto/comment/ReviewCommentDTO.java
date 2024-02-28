@@ -6,7 +6,7 @@ import lombok.Data;
 public class ReviewCommentDTO {
 
     private String commentContent;
-    private String commentWriterEmail;
+    private String loggedInUser;
     private Long reviewId;
     private Long commentId;
 

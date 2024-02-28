@@ -3,12 +3,16 @@ package com.itwill.teamfourmen.web;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
 import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
+import com.itwill.teamfourmen.dto.mypage.MypageDTO;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +36,7 @@ public class MyPageController {
     public void mypage() {
     }
 
-    @GetMapping("/details/{id}")
+    @GetMapping("/details/{id}/profile")
     public String getMyPageDetails(Model model, @PathVariable (name = "id") String email){
         log.info("get MY PAGE DETAILS USER EMAIL = {}", email);
 
@@ -106,6 +110,54 @@ public class MyPageController {
         model.addAttribute("combineInfoList" , combineInfoList);
 
         return "mypage/details-review-list";
+    }
+
+    @GetMapping("/details/{id}/{category}")
+    public String getLikedList(Model model, @PathVariable(name = "id") String email, @PathVariable(name = "category") String category){
+        log.info("GET LIKED LIST - EMAIL = {}, CATEGORY = {}", email, category);
+
+        Member member = Member.builder().email(email).build();
+
+        List<TmdbLike> likedList = featureService.getLikedList(member, category);
+        List<MypageDTO> myPageLikedList = new ArrayList<>();
+
+        for (TmdbLike works : likedList) {
+            MypageDTO mypageDTO = new MypageDTO(); // 각 반복에서 새로운 객체 생성
+
+            switch (category) {
+                case "movie":
+                    MovieDetailsDto movieDto = movieApiUtil.getMovieDetails(works.getTmdbId());
+                    mypageDTO.setId(movieDto.getId());
+                    mypageDTO.setName(movieDto.getTitle());
+                    mypageDTO.setCategory(category);
+                    mypageDTO.setImagePath(movieDto.getPosterPath());
+
+                    myPageLikedList.add(mypageDTO);
+
+                    continue;
+
+                case "tv":
+                    TvShowDTO tvShowDTO = tvShowApiUtil.getTvShowDetails(works.getTmdbId());
+                    mypageDTO.setId(tvShowDTO.getId());
+                    mypageDTO.setName(tvShowDTO.getName());
+                    mypageDTO.setCategory(category);
+                    mypageDTO.setImagePath(tvShowDTO.getPoster_path());
+
+                    myPageLikedList.add(mypageDTO);
+
+                    continue;
+
+                default:
+                    log.info("없어요!!!");
+                    break;
+            }
+
+        }
+
+        log.info("LIKED LIST = {}", myPageLikedList);
+        model.addAttribute("likedList", myPageLikedList);
+
+        return "mypage/details-liked-list";
     }
 
 }

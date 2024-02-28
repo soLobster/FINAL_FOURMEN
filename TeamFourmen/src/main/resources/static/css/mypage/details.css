@@ -16,7 +16,7 @@ MyPage Details의 기본 토대가 된다.
 
 body {
     font-family: 'Pretendard';
-    background-color: black ;
+    background-color: rgb(31, 32, 41) ;
 }
 
 .main-section {
@@ -171,10 +171,3 @@ div.edit-profile:hover {
     color: #888888;
 }
 
-.mypage-details-body-reviews {
-    background-color: #264653;
-    width: 1000px;
-    margin: 0 auto;
-
-    padding: 20px 100px 20px 100px;
-}

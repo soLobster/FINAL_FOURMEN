@@ -907,7 +907,7 @@
 								</a>
 							</li>
 						</ol>
-					</div>
+				</div>
 				<button th:if=" ${tvShowCast.size() > 5}" class="btn-slide-image btn-next"><i class="fa-solid fa-chevron-right"></i></button>
 			</div>
 
@@ -940,55 +940,59 @@
 			</div>
 
 			<div class = "tvShow_review" style="padding: 10px 30px 10px 30px">
-				<section style="display: flex;">
-					<h3>리뷰</h3>
-					<a class="tvShowAllReview" th:href="@{{id}/reviews(id = ${tvShowDto.getId()})}">
-						<span>전체 리뷰 보러가기</span>
-					</a>
+				<th:block th:if="${tvShowReviewList.size() ne 0}">
+					<section style="display: flex;">
+						<h3>리뷰</h3>
+						<a class="tvShowAllReview" th:href="@{/reviews/{category}/{id}(category = 'tv', id = ${tvShowDto.getId()})}">
+							<span>전체 리뷰 보러가기</span>
+						</a>
 
-				</section>
+					</section>
 
-				<section class = "popular-review-section">
+					<section class = "popular-review-section">
 
-					<div class = "review-item" th:each=" review : ${tvShowReviewList}"
-						 style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
-						<input class = "d-none" th:email = "${review.getMember().getEmail()}">
-						<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-							<a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
-								<section class = "review-item-user-profile-img" >
-									<img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}"
-										style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
-								</section>
-							</a>
-							<section class = "review-item-content">
-								<div class = "review-item-content-header">
-									<section>
-										<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
+						<div class = "review-item" th:each=" review : ${tvShowReviewList}"
+							 style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+							<input class = "d-none" th:email = "${review.getMember().getEmail()}">
+							<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+								<a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+									<section class = "review-item-user-profile-img" >
+										<img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}"
+											style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
 									</section>
-									<a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
-										<span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
-									</a>
-									<span id = "view-star-rating" th:rating="${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
-								</div>
-								<div class = "review-item-content-article">
-									<a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
-										<article class = "content-article"
-												 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
-												 th:text="${review.getContent()}"></article>
-										<article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
-											스포일러가 포함된 리뷰입니다. <br> 상세페이지에서 확인하세요.
-										</article>
-									</a>
-								</div>
-								<div class = "review-item-content-footer">
-									<i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' ' "></span> Likes
-									<i class="ms-3 me-2 fa-solid fa-comment"></i><span th:text="${numOfReviewComment.get(review.getReviewId()) + ' ' }"></span>Comments
-								</div>
-							</section>
+								</a>
+								<section class = "review-item-content">
+									<div class = "review-item-content-header">
+										<section>
+											<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
+										</section>
+										<a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+											<span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
+										</a>
+										<span id = "view-star-rating" th:rating="${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
+									</div>
+									<div class = "review-item-content-article">
+										<a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
+											<article class = "content-article"
+													 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+													 th:text="${review.getContent()}"></article>
+											<article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
+												스포일러가 포함된 리뷰입니다. <br> 상세페이지에서 확인하세요.
+											</article>
+										</a>
+									</div>
+									<div class = "review-item-content-footer">
+										<i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' ' "></span> Likes
+										<i class="ms-3 me-2 fa-solid fa-comment"></i><span th:text="${numOfReviewComment.get(review.getReviewId()) + ' ' }"></span>Comments
+									</div>
+								</section>
+							</div>
 						</div>
-					</div>
-
-				</section>
+					</section>
+				</th:block>
+				<th:block th:unless="${tvShowReviewList.size() ne 0}">
+					<h3>남겨진 리뷰가 없습니다</h3>
+				</th:block>
 			</div>
 
 			<div class = "mt-0 py-0">

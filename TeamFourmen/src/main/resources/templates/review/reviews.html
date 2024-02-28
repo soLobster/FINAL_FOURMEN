@@ -57,7 +57,7 @@
             /*background-color: #8dabfb;*/
         }
 
-        .tvshow-poster {
+        .works-poster {
             width: 270px;
             height: auto;
             border-radius: .5rem;
@@ -66,7 +66,7 @@
             cursor: pointer;
         }
 
-        .tvshow-poster-img {
+        .works-poster-img {
             width: 270px;
             border-radius: .5rem;
             height: auto;
@@ -74,7 +74,7 @@
         }
 
 
-        .tvshow-poster:before {
+        .works-poster:before {
             content: '';
             position: absolute;
             top: 0;
@@ -86,7 +86,7 @@
             transition: ease-in-out;
         }
 
-        .tvshow-poster:hover::before {
+        .works-poster:hover::before {
             border: 3px solid #33ff33;
         }
 
@@ -201,25 +201,25 @@
 <body class = "ko v4">
     <header>
         <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
-        <a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
+<!--        <a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>-->
         <input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
     </header>
     <main>
         <section class = "main-section">
             <section class = "review-list">
                 <div class ="p-2 review-list-header" style="display: flex; border-bottom: 1px solid rgba(256, 256, 256, 0.5);">
-                    <a class = "review-list-header-title-a-tag" th:href="@{../{id}(id = ${tvShowDto.getId()})}">
-                        <h1 class = "review-list-header-title" th:text="${tvShowDto.getName()}"></h1>
+                    <a class = "review-list-header-title-a-tag" th:href="@{/{category}/details/{id}(category = ${worksDto.getCategory()} ,id = ${worksDto.getId()})}">
+                        <h1 class = "review-list-header-title" th:text="${worksDto.getName()}"></h1>
                     </a>
                     <h4 class ="mt-3 ms-2">의 리뷰</h4>
                 </div>
 
                 <div class = "review-list-item">
 
-                    <div class = "review-item" th:each=" review : ${tvShowReviewList}">
+                    <div class = "review-item" th:each=" review : ${worksReviewList}">
 
                         <div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
                                 <section class = "review-item-user-profile-img">
                                         <img th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}"
                                              style="">
@@ -229,7 +229,7 @@
                                 <div class = "review-item-content-header">
                                     <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
                                     <div class = "review-item-content-nickname-rating">
-                                    <a th:href="@{/mypage/details/{id}(id = ${review.getMember().getEmail()})}">
+                                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
                                         <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
                                     </a>
                                     <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
@@ -261,9 +261,9 @@
 
             <section class = "side-bar">
 
-                <a th:href="@{/tv/details/{id}(id = ${tvShowDto.getId()})}">
-                    <div class = "tvshow-poster" style="width: 270px;">
-                            <img class ="tvshow-poster-img" th:src = " @{'https:/image.tmdb.org/t/p/original' + ${tvShowDto.getPoster_path()}} "/>
+                <a th:href="@{/{category}/details/{id}(category = ${worksDto.getCategory()}, id = ${worksDto.getId()})}">
+                    <div class = "works-poster" style="width: 270px;">
+                            <img class ="works-poster-img" th:src = " @{'https:/image.tmdb.org/t/p/original' + ${worksDto.getPosterPath()}} "/>
                     </div>
                 </a>
 

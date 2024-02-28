@@ -42,6 +42,58 @@ public class ReviewController {
     private final FeatureService featureService;
     private final ReviewCommentLikeRepository reviewCommentLikeRepository;
 
+    // 특정 영화 / TV 의 전체 리뷰를 불러옴
+    @GetMapping("/{category}/{id}")
+    public String getAllReviews(Model model,@PathVariable(name = "category") String category ,@PathVariable(name = "id") int tmdbId){
+        log.info("GET {} REVIEWS = {}", category, tmdbId);
+
+        CombineReviewDTO combineReviewDTO = new CombineReviewDTO();
+
+        switch (category) {
+            case "movie" :
+                MovieDetailsDto moviesInfo = movieApiUtil.getMovieDetails(tmdbId);
+                combineReviewDTO.setId(moviesInfo.getId());
+                combineReviewDTO.setCategory(category);
+                combineReviewDTO.setName(moviesInfo.getTitle());
+                combineReviewDTO.setPosterPath(moviesInfo.getPosterPath());
+                break;
+            case "tv" :
+                TvShowDTO tvInfo = tvShowApiUtil.getTvShowDetails(tmdbId);
+                combineReviewDTO.setId(tvInfo.getId());
+                combineReviewDTO.setCategory(category);
+                combineReviewDTO.setName(tvInfo.getName());
+                combineReviewDTO.setPosterPath(tvInfo.getPoster_path());
+                break;
+            default:
+                log.info("WRONG CATEGORY");
+                break;
+        }
+
+        model.addAttribute("worksDto", combineReviewDTO);
+
+        List<Review> worksReviewList = featureService.getReviews(category, tmdbId);
+
+        Map<Long, Integer> reviewComment = new HashMap<>();
+        Map<Long, Long> reviewLiked = new HashMap<>();
+
+        for (Review review : worksReviewList){
+            Long reviewId = review.getReviewId();
+
+            int numOfComment = featureService.getNumOfReviewComment(reviewId);
+            Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+            reviewLiked.put(reviewId, numOfLiked);
+            reviewComment.put(reviewId, numOfComment);
+        }
+
+        model.addAttribute("numOfReviewLiked", reviewLiked);
+        model.addAttribute("numOfReviewComment", reviewComment);
+
+        model.addAttribute("worksReviewList", worksReviewList);
+
+        return "review/reviews";
+    }
+
     // 리뷰 ID를 바탕으로 한가지 리뷰를 보여주는 페이지
     @GetMapping("/{review_id}")
     public String getReviewDetails(Model model, @PathVariable(name = "review_id") long reviewId) {

@@ -190,4 +190,12 @@ public class FeatureService {
 		return myAllReivew;
 	}
 
+	public List<TmdbLike> getLikedList (Member member, String category){
+		log.info("GET LIKED LIST OF CATEGORY = {}, MEMBER EMAIL = {}", category, member.getEmail());
+
+		List<TmdbLike> likedList = tmdbLikeDao.findByMemberEmailAndCategory(member.getEmail(), category);
+
+		return likedList;
+	}
+
 }

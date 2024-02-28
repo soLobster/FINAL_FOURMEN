@@ -67,7 +67,7 @@ public class CommentService {
 
         Review review = reviewDao.findByReviewId(dto.getReviewId());
 
-        Member member = memberDao.findByEmail(dto.getCommentWriterEmail()).orElseThrow();
+        Member member = memberDao.findByEmail(dto.getLoggedInUser()).orElseThrow();
 
         ReviewComments entity = ReviewComments.builder()
                 .member(member)

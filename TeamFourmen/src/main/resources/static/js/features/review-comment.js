@@ -15,11 +15,25 @@ document.addEventListener('DOMContentLoaded',  function () {
     const pathName = location.pathname;
     const reviewId = pathName.split('/')[2];
 
-    const commentWriterEmail = document.querySelector('.user-info').getAttribute('email');
+    const loggedInUser = document.querySelector('.div-profile-image').getAttribute('email');
+
+    // const commentWriterEmail = document.querySelector('.user-info').getAttribute('email');
+    let userEmail;
+
+    checkCurrentUser()
+        .then(data => {
+            userEmail = data.email;
+            console.log(userEmail);
+        })
+        .catch(error => {
+            console.log('오류 발생:', error);
+        });
+
+    console.log('유저 이메일 출력 확인 :' + loggedInUser);
 
     console.log('REVIEW ID = ' + reviewId);
 
-    console.log('WRITER = ' + commentWriterEmail);
+    // console.log('WRITER = ' + commentWriterEmail);
 
 
     const isLikedIcon = document.querySelectorAll('.btn-like-comment');
@@ -164,7 +178,7 @@ document.addEventListener('DOMContentLoaded',  function () {
             return;
         }
 
-        const data = {reviewId, commentWriterEmail, commentContent};
+        const data = {reviewId, loggedInUser, commentContent};
 
         console.log(data);
 
@@ -228,9 +242,7 @@ document.addEventListener('DOMContentLoaded',  function () {
 
     async function likeComment(e) {
 
-        const isUserLoggedIn = await checkCurrentUser();
-
-        if(isUserLoggedIn === '') {
+        if(loggedInUser == null) {
             alert('로그인한 유저만 좋아요를 누를 수 있습니다...!');
             return;
         }
@@ -249,14 +261,14 @@ document.addEventListener('DOMContentLoaded',  function () {
 
         const uri = `/api/comment/reviews/like`
 
-        console.log(isUserLoggedIn);
+        console.log(loggedInUser);
 
         data = {
             reviewComments: {
                 commentId: comment_id
             },
             member: {
-                email: isUserLoggedIn
+                email: loggedInUser
             }
         }
 

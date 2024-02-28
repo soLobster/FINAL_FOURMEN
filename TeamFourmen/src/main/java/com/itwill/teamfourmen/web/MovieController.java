@@ -6,6 +6,7 @@ import java.util.Map;
 
 
 import com.itwill.teamfourmen.domain.ImdbRatings;
+import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -287,9 +288,7 @@ public class MovieController {
 		
 		return "/movie/movie-details";
 	}
-	
-	
-	
+
 	// 이 아래로는 일반 메서드 모음
 	
 	/**
