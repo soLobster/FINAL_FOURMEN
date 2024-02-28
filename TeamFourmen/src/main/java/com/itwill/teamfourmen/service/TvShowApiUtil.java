@@ -88,16 +88,16 @@ public class TvShowApiUtil {
         List<Integer> genreList = paramDTO.getWith_genres();
         if(genreList != null) {
             genreVariable =genreList.stream().map((x) -> x.toString()).collect(Collectors.joining("|"));
-            log.info("GENRES = {}", genreVariable);
+//            log.info("GENRES = {}", genreVariable);
         }
 
         String genres = genreVariable;
-        log.info("genres = {}", genres);
+//        log.info("genres = {}", genres);
 
         List<Integer> providerList = paramDTO.getWith_watch_provider();
         if(providerList != null) {
             providerVariable = providerList.stream().map((x) -> x.toString()).collect(Collectors.joining("|"));
-            log.info("PROVIDER = {}", providerVariable);
+//            log.info("PROVIDER = {}", providerVariable);
         }
 
         String providers = providerVariable;
@@ -413,7 +413,7 @@ public class TvShowApiUtil {
             e.printStackTrace();
         }
 
-        log.info("TVSHOW TRAILER VIDEO LIST = {}", tvShowVideoDTOList);
+//        log.info("TVSHOW TRAILER VIDEO LIST = {}", tvShowVideoDTOList);
 
         return tvShowVideoDTOList;
     }

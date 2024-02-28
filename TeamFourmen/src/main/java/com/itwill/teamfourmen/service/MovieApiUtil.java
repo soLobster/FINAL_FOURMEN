@@ -260,7 +260,7 @@ public class MovieApiUtil {
 		}
 		
 		
-		log.info("movie video list = {}", movieVideoList);
+//		log.info("movie video list = {}", movieVideoList);
 		
 		return movieVideoList;
 	}	
