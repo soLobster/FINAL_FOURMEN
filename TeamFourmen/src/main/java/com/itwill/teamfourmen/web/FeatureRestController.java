@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
 import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.ReviewLike;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.service.FeatureService;
 
@@ -52,6 +53,15 @@ public class FeatureRestController {
 		log.info("deleteLike(tmdbLike={})", tmdbLike);
 		
 		featureService.deleteLike(tmdbLike);
+		
+	}
+	
+	@Transactional
+	@PostMapping("/review/like/add")
+	public void addReviewLike(@RequestBody ReviewLike reviewLike) {
+		
+		log.info("addReviewLike(reviewLike={})", reviewLike);
+		featureService.addReviewLike(reviewLike);
 		
 	}
 		

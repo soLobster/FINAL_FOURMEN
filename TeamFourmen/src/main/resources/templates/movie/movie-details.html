@@ -281,13 +281,22 @@
                         <div class="div-reviewer-rating">
                             <span>reviewed by </span>
                             <span class="reviewer-nickname" th:text="${review.member.nickname}"></span>
-                            <span th:text="${review.rating}">
+                            <span class="review-user-rating" th:each="i : ${#numbers.sequence(1, review.rating)}"><i class="fa-solid fa-star"></i></span><span class="review-user-rating" th:if="${review.rating % 1 != 0}"><i class="fa-solid fa-star-half"></i></span>
                             </span>                            
                         </div>
-                        <div class="div-review-content" th:text="${review.content}">
-                            
+                        <div th:if="${review.isSpoiler == 'N'}" class="div-review-content" th:text="${review.content}"></div>
+                        <div th:unless="${review.isSpoiler == 'N'}" class="div-review-content">
+                            <span>스포일러를 포함한 리뷰입니다.</span>
+                        </div>
+                        <div class="div-review-add-like">
+                            <button class="btn-review-add-like" th:author="${review.member.email}" th:reviewId="${review.reviewId}">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                            </button>
                         </div>
                     </div>
+                </div>
+                <div class="div-see-more-review">
+                    <a th:href="@{/review/list/movie/{tmdbId} (tmdbId=${movieDetailsDto.id})}">리뷰 더보기 >>></a>
                 </div>
             </section>
             
