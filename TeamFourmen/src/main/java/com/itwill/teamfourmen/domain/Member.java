@@ -3,20 +3,17 @@ package com.itwill.teamfourmen.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -105,4 +102,14 @@ public class Member {
 		public LocalDate getLocalDate(LocalDateTime created_time) {
 			return created_time.toLocalDate();
 		}
+
+		@ToString.Exclude
+		@OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
+		@JsonIgnore
+		private List<Follow> followings;
+
+		@ToString.Exclude
+		@OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
+		@JsonIgnore
+		private List<Follow> followers;
 }

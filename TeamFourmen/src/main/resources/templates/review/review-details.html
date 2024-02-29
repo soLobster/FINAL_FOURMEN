@@ -220,6 +220,7 @@
             display: flex;
             gap: 5px;
             padding-bottom: 20px;
+            justify-content: space-between;
         }
 
         .btn-like-review {
@@ -228,6 +229,14 @@
             border: none;
             position: relative;
             margin-left: 17px;
+        }
+
+        .btn-delete-review {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            position: relative;
+            margin-right: 10px;
         }
 
         .works-review-footer .fa-thumbs-up {
@@ -244,6 +253,10 @@
         .works-review-footer span {
             font-style: italic;
             font-weight: bolder;
+        }
+
+        .works-review-footer .btn-delete-review:hover .fa-trash {
+            color: #33ff33;
         }
 
         .works-review-like-users{
@@ -499,6 +512,10 @@
                            th:email = "${review.getMember().getEmail()}" th:classappend="${likedReview} ? 'isLikedReview' : '' ">
                         <i class="fa-solid fa-thumbs-up"></i>
                         <span class ="me-2" th:text="${countReviewLiked} + ' '"></span>Likes
+                    </button>
+                    <button type="button" id = "delete-review" class ="btn-delete-review" th:reviewId = "${review.getReviewId()}"
+                    th:email="${review.getMember().getEmail()}">
+                        <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
             </div>

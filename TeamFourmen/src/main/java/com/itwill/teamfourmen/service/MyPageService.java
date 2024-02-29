@@ -17,11 +17,13 @@ public class MyPageService {
 
     public Member getMember(String email){
 
-        Optional<Member> findMember = memberDao.findByEmail(email);
+        Member member = Member.builder().email(email).build();
 
-        Member member = findMember.orElseThrow();
+        Optional<Member> findMember = memberDao.findByEmail(member.getEmail());
 
-        return member;
+        Member targetmember = findMember.orElseThrow();
+
+        return targetmember;
     }
 
 }

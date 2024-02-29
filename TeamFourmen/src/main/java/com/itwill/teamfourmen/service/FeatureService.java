@@ -195,7 +195,9 @@ public class FeatureService {
 	public List<Review> getAllMyReview (String email) {
 		log.info("GET ALL MY REVIEW E-MAIL = {}", email);
 
-		List<Review> myAllReivew = reviewDao.findByMemberEmail(email);
+		Member member = Member.builder().email(email).build();
+
+		List<Review> myAllReivew = reviewDao.findByMemberEmail(member.getEmail());
 
 		for(Review review : myAllReivew) {
 			log.info("My review = {}", review);
@@ -210,6 +212,18 @@ public class FeatureService {
 		List<TmdbLike> likedList = tmdbLikeDao.findByMemberEmailAndCategory(member.getEmail(), category);
 
 		return likedList;
+	}
+
+	public void deleteReview (Long reviewId , String email){
+		log.info("DELETE REVIEW SERVICE REVIEW_ID = {} , EMAIl = {}", reviewId, email);
+
+		Review review = reviewDao.findByReviewId(reviewId);
+
+		Member member = Member.builder().email(email).build();
+
+		if(review.getMember().getEmail().equalsIgnoreCase(member.getEmail())){
+			reviewDao.delete(review);
+		}
 	}
 
 }

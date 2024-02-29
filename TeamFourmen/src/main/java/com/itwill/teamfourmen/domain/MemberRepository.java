@@ -39,7 +39,7 @@ public interface MemberRepository extends JpaRepository<Member, String>{
     Page<Member> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
     Page<Member> findByNicknameContainingIgnoreCase(String keyword, Pageable pageable);
     Page<Member> findByPhoneContainingIgnoreCase(String keyword, Pageable pageable);
-    Page<Member> findByTypeContainingIgnoreCase(String keyword, Pageable pageable);    
+    Page<Member> findByTypeContainingIgnoreCase(String keyword, Pageable pageable);
 }
 	
 

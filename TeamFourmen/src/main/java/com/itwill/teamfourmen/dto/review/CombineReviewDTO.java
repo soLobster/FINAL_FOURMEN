@@ -12,4 +12,6 @@ public class CombineReviewDTO {
     private String category;
     private ImdbRatings imdbRatings;
     private String imdbId;
+
+    private String year;
 }

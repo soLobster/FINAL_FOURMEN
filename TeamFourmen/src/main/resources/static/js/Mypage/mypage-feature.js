@@ -1,6 +1,6 @@
 /*
 
-개인 대시보드에서 리뷰의 숫자를 표기해야함.
+개인 대시보드에서 리뷰의 숫자 / 팔로워 / 팔로잉 수 를 표기해야함.
 
 /api/mypage
 
@@ -8,7 +8,7 @@
 
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
 
     const pathName = location.pathname;
     const userEmail = pathName.split('/')[3];
@@ -23,20 +23,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let userProfileImg = document.querySelector('.mypage-details-profile-img img');
 
-    console.log(userProfileImg);
-
     const likedListTitle = document.querySelector('.category-like-list');
-
-
 
     console.log('마이페이지 유저 = ' + userEmail);
 
     // 유저의 정보를 가져옴
-    axios.get('/api/mypage/user-info', {
-        params: {
-            email: userEmail
-        }
-    })
+   await axios.get(`/api/mypage/user-info?email=${userEmail}`)
         .then((response) => {
             const {
                 email,
@@ -76,14 +68,26 @@ document.addEventListener('DOMContentLoaded', function () {
             // const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
             // likedPersonLink.href = `/mypage/details/${userEmail}/person`
 
-        })
+        });
+
+    // 팔로우 체크
+    await axios.get(`/api/follow/${userEmail}`)
+        .then((reponse) => {
+            console.log('현재 페이지 유저 팔로우 체크 TRUE OR FALSE = ' + reponse.data);
+            const isAlreadyFollow = reponse.data;
+
+            if(isAlreadyFollow === true){
+                followButton.querySelector('button').classList.replace('follow', 'following');
+                followButton.querySelector('button').classList.replace('btn-primary', 'btn-danger');
+                followButton.querySelector('button').innerHTML = '팔로우 취소';
+            }
+
+        }).catch((error) =>{
+            console.log('에러 발생 = ' + error)
+        });
 
     // 리뷰 카운트를 구해서 유저 정보 우측에 추가함
-    axios.get('/api/mypage/get-num-of-reviews', {
-        params: {
-            email: userEmail
-        }
-    })
+    await axios.get(`/api/mypage/get-num-of-reviews?email=${userEmail}`)
         .then((response) => {
             const reviewCount = response.data;
             console.log('불러온 리뷰의 수 = ' + reviewCount);
@@ -97,7 +101,79 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('리뷰의 수를 불러오는데 실패 하였습니다', error);
         });
 
+    // 팔로워 / 팔로잉 수 가져오기
+    await axios.get(`/api/follow/${userEmail}/follower`)
+        .then((response) => {
+            const targetUserSocialCount = response.data;
+
+            const followersCount = targetUserSocialCount.followers;
+            const followingsCount = targetUserSocialCount.followings;
+
+            console.log(`불러온 팔로워 수 =  ${followersCount}`);
+            console.log(`불러온 팔로잉 수 =  ${followingsCount}`);
+
+            const followersElement = document.querySelector('.followers .value');
+            followersElement.textContent = followersCount;
+
+            const followingsElement = document.querySelector('.followings .value');
+            followingsElement.textContent = followingsCount;
+        })
+        .catch((error) => {
+           console.log('팔로워 수를 불러오는데 실패 하였습니다.', error);
+        });
+
     // 유저 팔로워 팔로우 추가 해야함
+    followButton.addEventListener('click', followUser);
+
+    async function followUser() {
+        console.log('팔로우 할 유저의 이메일 = ' + userEmail);
+
+        const friendEmail = userEmail;
+
+        const userNickName = document.querySelector('.overview-nickname-and-button #user-nick-name').innerText;
+
+        console.log('유저의 닉네임 = ' + userNickName);
+
+        const uri = `/api/follow/${friendEmail}`;
+
+        const followStatus = followButton.querySelector('button').classList;
+
+        if(followStatus.contains('follow')){
+
+            try {
+                const response = await axios.post(uri);
+
+                console.log(response.data);
+
+                alert(userNickName + ' 님을 팔로우 했습니다.');
+
+                location.reload();
+
+                return;
+
+            } catch (error) {
+                console.log('에러 발생 = ' + error);
+            }
+
+        } else {
+
+            try {
+
+                const response = await axios.delete(uri);
+
+                console.log(response.data);
+
+                alert(userNickName + ' 님을 언팔로우 했습니다.');
+
+                location.reload();
+
+                return;
+
+            } catch (error) {
+                console.log('에러 발생 = ' + error);
+            }
+        }
+    }  // 팔로우 추가/삭제
 
     // 로그인 유저와 마이페이지의 유저가 다르면 프로필 편집 불가
     if(userEmail !== loggedInUser) {
@@ -113,6 +189,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log(category);
 
-    likedListTitle.textContent = category + ' Liked List';
+    if(location.pathname.split('/')[4] != 'profile'){
+        likedListTitle.textContent = category + ' Liked List';
+    }
+
+
 
 });

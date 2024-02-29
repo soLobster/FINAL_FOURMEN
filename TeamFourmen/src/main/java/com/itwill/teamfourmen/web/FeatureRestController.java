@@ -1,11 +1,7 @@
 package com.itwill.teamfourmen.web;
 
 import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
 import com.itwill.teamfourmen.domain.Review;
@@ -62,6 +58,12 @@ public class FeatureRestController {
 	public void addReviewLike(@RequestBody ReviewLikeDTO reviewLikeDto) {
 		log.info("addReviewLike(reviewLike={})", reviewLikeDto);
 		featureService.controllReviewLike(reviewLikeDto);
+	}
+
+	@DeleteMapping("/review")
+	public void deleteReview(@RequestParam (name = "reviewId") Long reviewId, @RequestParam (name = "email") String email){
+		log.info("DELETE REVIEW REVIEW_Id = {} , REVIEWER_EMAIL = {}", reviewId, email);
+		featureService.deleteReview(reviewId,email);
 	}
 
 
