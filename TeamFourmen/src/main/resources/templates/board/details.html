@@ -20,7 +20,10 @@
             <div class="post-title-container">
                 <div class="post-title" th:text="${postDetails.title}" th:postId="${postDetails.postId}"></div>
                 <div class="post-created-time-modified-container">
-                    <div class="post-created-time" th:text="${#temporals.format(postDetails.createdTime, 'yyyy-MM-dd hh:mm')}"></div>
+                    <!-- 게시시간이 하루 이내이면 시간, 분 차이로 알려줌 -->                                        
+                    <div th:if="${postDetails.timeDifferenceInMinute != null && postDetails.timeDifferenceInMinute lt 60}" class="post-created-time" th:text="|${postDetails.timeDifferenceInMinute}분 전|"></div>
+                    <div th:if="${postDetails.timeDifferenceInMinute != null && postDetails.timeDifferenceInMinute ge 60}" class="post-created-time" th:text="|${postDetails.timeDifferenceInMinute / 60}시간 전|"></div>
+                    <div th:if="${postDetails.timeDifferenceInMinute == null}" class="post-created-time" th:text="${#temporals.format(postDetails.createdTime, 'yyyy-MM-dd hh:mm')}"></div>
                     <div class="post-modified" th:if="${postDetails.modifiedTime != null}" th:text="|(수정됨)|"></div>
                 </div>
             </div>
@@ -37,7 +40,7 @@
                     </div>
                     <div>
                         <span>comment</span>
-                        <span>0</span>
+                        <span class="span-num-comments" th:text="${numOfComments}"></span>
                     </div>
                 </div>
             </div>
@@ -67,7 +70,7 @@
         <div class="comment-header-container">
             <div class="div-num-comments">
                 <span>댓글</span>
-                <span class="span-num-comments" th:text="${#lists.size(commentDtoList)}"></span><span>개</span>
+                <span class="span-num-comments" th:text="${numOfComments}"></span><span>개</span>
             </div>
             <div>
                 <button class="btn-post-comment-refresh">새로고침 <i class="fa-solid fa-rotate"></i></button>
@@ -78,9 +81,9 @@
             <button class="btn-add-post-comment">댓글 등록</button>
         </div>
         <div class="post-comment-container">
-            
+            <!-- 각 댓글에 대한 부분 -->
             <div th:each="comment : ${commentDtoList}">
-                <div class="post-comment-each-container">            
+                <div class="post-comment-each-container" th:commentId="${comment.commentId}">            
                     <div class="post-comment-each-header">
                         <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
                             <div class="post-comment-each-profile-container">                                                                
@@ -90,8 +93,11 @@
                             </div>
                             <div class="post-comment-each-author" th:text="${comment.member.nickname}"></div>
                             <div th:if="${comment.member.email == postDetails.member.email}" class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>
-                        </div>                    
-                        <div th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd HH:mm')}" class="post-comment-each-created-time post-comment-text-vertical-center"></div>
+                        </div>
+                        <!-- 댓글 게시 시간이 24시간 이내일 경우 분 또는 시간 전으로 알려줌 -->
+                        <div th:if="${comment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute lt 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${comment.timeDifferenceInMinute}분 전|"></div>
+                        <div th:if="${comment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute ge 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${comment.timeDifferenceInMinute / 60}시간 전|"></div>
+                        <div th:if="${comment.timeDifferenceInMinute == null}" th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd')}" class="post-comment-each-created-time post-comment-text-vertical-center"></div>
                     </div>
                     <div class="post-comment-body-container">
                         <div class="post-comment-content" th:text="${comment.content}"></div>
@@ -127,23 +133,28 @@
                     </div>
                 </div>
                 <!-- 대댓글 부분 -->
-                <div class="post-comment-each-container post-comment-each-reply-container" th:each="replyComment : ${comment.repliesList}">
+                <div class="post-comment-each-container post-comment-each-reply-container" th:each="replyComment : ${comment.repliesList}" th:commentId="${replyComment.commentId}">
                     <div class="post-comment-each-header">
                         <div class="post-comment-reply-author-create-date-container post-comment-text-vertical-center">
                             <div class="post-comment-reply-l-icon-container post-comment-text-vertical-center">
                                 <i class="fa-solid fa-l"></i>
                             </div>
                             <div class="post-comment-each-profile-container">
-                                <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
+                                <img class="post-comment-each-profile" th:if="${replyComment.member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${replyComment.member.usersaveprofile}"  id="profile_s_img" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!replyComment.member.usersaveprofile.toLowerCase().startsWith('http') && replyComment.member.usersaveprofile == 'userimage.png'}" th:src="@{/image/userimage.png}" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!replyComment.member.usersaveprofile.toLowerCase().startsWith('http') && replyComment.member.usersaveprofile != 'userimage.png'}" th:src="@{'/image?photo=' + ${replyComment.member.usersaveprofile}}" alt="User Profile">
                             </div>
                             <div class="post-comment-each-author post-comment-text-vertical-center" th:text="${replyComment.member.nickname}"></div>
                             <div class="post-comment-by-post-author post-comment-text-vertical-center" th:if="${replyComment.member.email == postDetails.member.email}">작성자</div>
-                        </div>                    
-                        <div class="post-comment-each-created-time post-comment-text-vertical-center" th:text="${#temporals.format(replyComment.createdTime, 'yyyy-MM-dd HH:mm')}"></div>
+                        </div>
+                        <!-- 대댓글 작성시간이 24시간 이내일 경우 분 또는 시간으로 나타냄 -->
+                        <div th:if="${replyComment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute lt 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${replyComment.timeDifferenceInMinute}분 전|"></div>
+                        <div th:if="${replyComment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute ge 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${replyComment.timeDifferenceInMinute / 60}시간 전|"></div>
+                        <div th:if="${replyComment.timeDifferenceInMinute == null}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="${#temporals.format(replyComment.createdTime, 'yyyy-MM-dd')}"></div>
                     </div>
                     <div class="post-comment-body-container post-comment-reply-body-container">
                         <div class="post-comment-content">
-                            <span class="span-post-comment-replied-author" th:text="${replyComment.authorNicknameReplyingTo}"></span>
+                            <span class="span-post-comment-replied-author" th:replyTo="${replyComment.replyTo}" th:text="${replyComment.authorNicknameReplyingTo}"></span>
                             <span class="span-post-comment-content" th:text="${replyComment.content}"></span>
                         </div>
                         <div class="post-comment-each-like-container">
@@ -153,7 +164,7 @@
                             </div>
                             <th:block th:unless="${member != null && replyComment.member.nickname == member.nickname}">
                                 <div class="post-comment-each-like-report-icon-container">
-                                    <div class="post-comment-like-container" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}" th:classappend="${member != null && #lists.contains(comment.commentLikesList.![member.email], member.email)} ? 'post-comment-already-liked'">
+                                    <div class="post-comment-like-container" th:commentId="${replyComment.commentId}" th:author="${replyComment.member.nickname}" th:classappend="${member != null && #lists.contains(replyComment.commentLikesList.![member.email], member.email)} ? 'post-comment-already-liked'">
                                         <i class="fa-solid fa-thumbs-up"></i>
                                     </div>
                                     <div>

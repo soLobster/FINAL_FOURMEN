@@ -15,7 +15,10 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,6 +36,7 @@ import lombok.ToString;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@SequenceGenerator(name = "member_member_id_seq", sequenceName = "member_member_id_seq", allocationSize = 1)
 @Entity @Table(name = "member")
 public class Member {
 
@@ -42,6 +46,10 @@ public class Member {
 	    
 	    @Basic(optional = false)
 	    private String password;
+	    
+	    @Basic(optional = false)
+	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_member_id_seq")
+	    private Long memberId;
 	    
 	    @Basic(optional = false)
 	    private String name;

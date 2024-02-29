@@ -31,11 +31,24 @@ public class BoardRestController {
 	
 	private final BoardService boardService;
 	
+	
+	/**
+	 * 게시글 삭제하는 컨트롤러 메서드
+	 * @param postId
+	 */
 	@DeleteMapping("/delete/{postId}")
 	public void deletePost(@PathVariable(name = "postId") Long postId) {
 		log.info("deletePost(postId={})", postId);
 		
 		boardService.deletePost(postId);
+	}
+	
+	@GetMapping("/{postId}/num-of-comments")
+	public ResponseEntity<Integer> getNumOfComments(@PathVariable(name = "postId")Long postId) {
+		List<CommentDto> commentDtoList = boardService.getCommentList(postId);
+		int numOfComments = boardService.getNumOfComments(commentDtoList);
+		
+		return ResponseEntity.ok(numOfComments);
 	}
 	
 	

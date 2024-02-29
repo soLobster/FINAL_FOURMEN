@@ -236,6 +236,7 @@ body{
     width: 100%;
     object-fit: cover;
     min-width: 100%;
+    min-height: 100%;
 }
 
 

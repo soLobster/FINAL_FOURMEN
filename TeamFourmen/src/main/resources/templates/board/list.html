@@ -31,12 +31,15 @@
                 <th class="th-board-likes">좋아요</th>
             </thead>
             <tbody>
-                <tr class="table-row-each-post" th:each= "post : ${postList}">
-                    <td class="td-board-title"><a th:href="@{/{category}/board/details (category=${category}, id=${post.postId})}" th:text="${post.title}"></a></td>
-                    <td class="td-board-author boarder-content-text-center" th:text="${post.member.nickname}"></td>
-                    <td th:text="${#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm')}" class="td-board-created-time boarder-content-text-center">                    
-                    <td class="td-board-views boarder-content-text-center" th:text="${post.views}"></td>
-                    <td class="td-board-likes boarder-content-text-center" th:text="${post.likes}"></td>
+                <tr class="table-row-each-post" th:each= "postDto : ${postDtoList}">
+                    <td class="td-board-title"><a th:href="@{/{category}/board/details (category=${category}, id=${postDto.postId})}" th:text="${postDto.title}"></a></td>
+                    <td class="td-board-author boarder-content-text-center" th:text="${postDto.member.nickname}"></td>
+                    <!-- 시간관련 하루이내 작성된 글이면 시간 또는 분 경과시간으로 보여주기 -->
+                    <td th:if="${postDto.timeDifferenceInMinute != null && postDto.timeDifferenceInMinute lt 60}" th:text="|${postDto.timeDifferenceInMinute}분 전|" class="td-board-created-time boarder-content-text-center">
+                    <td th:if="${postDto.timeDifferenceInMinute != null && postDto.timeDifferenceInMinute >= 60}" th:text="|${postDto.timeDifferenceInMinute / 60}시간 전|" class="td-board-created-time boarder-content-text-center">
+                    <td th:if="${postDto.timeDifferenceInMinute == null}" th:text="${#temporals.format(postDto.createdTime, 'yyyy-MM-dd HH:mm')}" class="td-board-created-time boarder-content-text-center">                    
+                    <td class="td-board-views boarder-content-text-center" th:text="${postDto.views}"></td>
+                    <td class="td-board-likes boarder-content-text-center" th:text="${postDto.likes}"></td>
                 </tr>
             </tbody>
         </table>

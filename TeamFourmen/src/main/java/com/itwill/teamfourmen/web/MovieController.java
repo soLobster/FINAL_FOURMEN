@@ -33,6 +33,7 @@ import com.itwill.teamfourmen.domain.PostLike;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.board.CommentDto;
+import com.itwill.teamfourmen.dto.board.PostDto;
 import com.itwill.teamfourmen.dto.movie.MovieCastDto;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
@@ -46,7 +47,7 @@ import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
 import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
 import com.itwill.teamfourmen.dto.person.PageAndListDto;
-import com.itwill.teamfourmen.dto.post.PostDto;
+import com.itwill.teamfourmen.dto.post.PostCreateDto;
 import com.itwill.teamfourmen.service.BoardService;
 import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
@@ -319,18 +320,18 @@ public class MovieController {
 	public String movieBoardList(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		log.info("게시판 리스트 들어옴");
 		
-		Page<Post> postList = boardService.getPostList("movie", page);
-		postList.forEach((post) -> {
+		Page<PostDto> postDtoList = boardService.getPostList("movie", page);
+		postDtoList.forEach((post) -> {
 			Long likes = boardService.countLikes(post.getPostId());
 			post.setLikes(likes);
 		});
 		
 		// TODO: total element 타입 Long으로변경하는거 논의
-		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postList.getTotalElements(), postList.getTotalPages(), 5, 5);		
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 5);		
 		log.info("pagingDto={}", pagingDto);
 		
 		model.addAttribute("category", "movie");
-		model.addAttribute("postList", postList);
+		model.addAttribute("postDtoList", postDtoList);
 		model.addAttribute("pagingDto", pagingDto);
 		
 		return "/board/list";
@@ -340,7 +341,7 @@ public class MovieController {
 	public String movieBoardDetails(@RequestParam(name = "id") Long id, Model model) {
 		log.info("movieBoardDetails(id={})", id);
 		
-		Post postDetails = boardService.getPostDetail(id);
+		PostDto postDetails = boardService.getPostDetail(id);
 		log.info("postDetails={}", postDetails);
 		
 		// 조회수 1 추가
@@ -359,12 +360,14 @@ public class MovieController {
 		List<CommentDto> commentDtoList = boardService.getCommentList(id);
 		log.info("commentDtoList={}", commentDtoList);
 		
+		int numOfComments = boardService.getNumOfComments(commentDtoList);
 		
 		model.addAttribute("postDetails", postDetails);
 		model.addAttribute("numLikes", numLikes);
 		model.addAttribute("haveLiked", haveLiked);
 		model.addAttribute("boardName", "영화게시판");
 		model.addAttribute("commentDtoList", commentDtoList);
+		model.addAttribute("numOfComments", numOfComments);
 		
 		
 		return "/board/details";
@@ -374,7 +377,7 @@ public class MovieController {
 	@PreAuthorize("isAuthenticated()")
 	public String movieBoardCreate(Model model) {
 		log.info("영화 게시글 작성페이지");
-		log.info("boardService={}", boardService);
+		
 		model.addAttribute("category", "movie");
 		
 		return "/board/create";
@@ -387,12 +390,12 @@ public class MovieController {
 	 */
 	@PostMapping("/board/create")
 	@PreAuthorize("isAuthenticated()")	
-	public String postMovieBoard(@ModelAttribute PostDto postDto) {
+	public String postMovieBoard(@ModelAttribute PostCreateDto postDto) {
 		log.info("postMovieBoard(postDto={})", postDto);
-		log.info("boardService={}", boardService);
-		boardService.post(postDto);
 		
-		return "redirect:/movie/board";
+		Post savedPost = boardService.post(postDto);
+		
+		return "redirect:/movie/board/details?id=" + savedPost.getPostId();
 	}
 	
 	/**

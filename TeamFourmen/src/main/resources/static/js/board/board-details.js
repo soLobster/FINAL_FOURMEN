@@ -13,26 +13,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	const btnDeletePost = document.querySelector('.btn-delete-post');
 	const btnEditPost = document.querySelector('.btn-edit-post');
 	
+	// 로그인한 유저
 	const user = document.querySelector('.div-profile-image');
 	
 	const postId = document.querySelector('.post-title').getAttribute('postId');
 	const authorNickname = document.querySelector('.div-post-author').textContent;	
-		
 	
+		
 	// 댓글관련 속성
 	const textareaPostComment = document.querySelector('.textarea-post-comment');
 	const btnAddPostComment = document.querySelector('.btn-add-post-comment');
 	
-	const spanNumComments = document.querySelector('.span-num-comments');
+	const spanNumCommentsList = document.querySelectorAll('.span-num-comments');
 	
 	const btnCommentRefresh = document.querySelector('.btn-post-comment-refresh');
-	const btnCommentDeleteList = document.querySelectorAll('.btn-post-comment-delete');
 	
 	const commentContainer = document.querySelector('.post-comment-container');
 	
-	// 댓글 답장 관련 속성
-	const btnCommentReplyList = document.querySelectorAll('.btn-post-comment-reply');		
-	const btnAddReplyList = document.querySelectorAll('.btn-post-comment-add-reply');
 	
 	// 게시글 카테고리(영화, 티비, 인물)
 	const category = location.pathname.split('/')[1];
@@ -52,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			axios.delete(`/board/delete/${postId}`)
 				.then(() => {
 					alert('게시글 삭제 성공');
-					window.history.back();
+					location.href=`/${category}/board`;
 				})
 				.catch((error) => {
 					console.log(`에러 발생!!! ${error}`);
@@ -100,9 +97,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	
+	
 	// 댓글 좋아요 이벤트리스너 등록하는 함수
 	const registerCommentLikeEventListener = function() {
 		const commentLikeContainerList = document.querySelectorAll('.post-comment-like-container');
+		
 		
 		commentLikeContainerList.forEach((btnLike) => {
 			
@@ -160,7 +159,124 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 		});
 	}
+
+	// 댓글 삭제버튼 이벤트리스너 함수
+	const registerCommentDeleteEventListener = function() {
+		const btnCommentDeleteList = document.querySelectorAll('.btn-post-comment-delete');
+		
+		btnCommentDeleteList.forEach((btnCommentDelete) => {
+			
+			const commentIdToDelete = btnCommentDelete.getAttribute('commentId');		
+			
+			btnCommentDelete.addEventListener('click', function() {
+				
+				const data = {
+					comment: {
+						commentId: commentIdToDelete
+					}				
+				}						
+				
+				axios.delete(`/board/comment/delete/${commentIdToDelete}`, data)
+					.then(() => {
+						alert('댓글 삭제 성공!');
+						refreshComments();
+					})
+					.catch((error) => {
+						console.log(`에러 발생!!! ${error}`);
+					})			
+			})
+			
+		});		
+	}
 	
+	
+	// 답글 버튼누르면 textarea나오도록 하는 이벤트리스너 등록 함수
+	const registerBtnCommentReplyEventListener = function() {
+		const btnCommentReplyList = document.querySelectorAll('.btn-post-comment-reply');
+		
+		btnCommentReplyList.forEach((btnCommentReply) => {
+			
+			const postCommentReplyContainer = btnCommentReply.closest('.post-comment-reply-container');
+			const commentAddReplyContainer = postCommentReplyContainer.nextElementSibling;
+			
+			btnCommentReply.addEventListener('click', function() {
+				console.log(btnCommentReply);
+				console.log(commentAddReplyContainer);
+				if(commentAddReplyContainer.classList.contains('d-none')) {
+					commentAddReplyContainer.classList.remove('d-none');
+				} else {
+					commentAddReplyContainer.classList.add('d-none');
+				}
+				
+			});		
+		});		
+	}
+	
+	
+	// 답글 다는 이벤트리스너등록 함수
+	const registerBtnAddReplyEventListener = function() {
+		
+		const btnAddReplyList = document.querySelectorAll('.btn-post-comment-add-reply');
+		
+		btnAddReplyList.forEach((btnAddReply) => {
+			
+			const addReplyContainer = btnAddReply.closest('.post-comment-add-reply-container');
+			const textareaAddReply = addReplyContainer.querySelector('.textarea-post-comment-reply');
+			
+			const replyTo = btnAddReply.getAttribute('commentId');
+			const authorNicknameReplyingTo = btnAddReply.getAttribute('author');
+			
+			btnAddReply.addEventListener('click', function() {
+				const data = {			
+					member: {
+						email: user.getAttribute('email')
+					},
+					post: {
+						postId: postId
+					},
+					content: textareaAddReply.value,
+					replyTo: replyTo,
+					authorNicknameReplyingTo: authorNicknameReplyingTo		
+				}
+				
+				axios.post('/board/comment/add', data)
+					.then(() => {
+						refreshComments();
+					})
+					.catch((error) => {
+						console.log(`Error 발생!!! ${error}`);
+					})			
+			});
+			
+		});	
+	}
+	
+	
+	// 대댓글 답변받는 사람 누르면 해당 답변받는 댓글로 이동시켜주는 이벤트리스너 등록 함수
+	const registerMoveToRepliedCommentEventListener = function() {
+		
+		const spanRepliedAuthorList = document.querySelectorAll('.span-post-comment-replied-author');
+		
+		spanRepliedAuthorList.forEach((spanRepliedAuthor) => {
+			
+			const replyTo = spanRepliedAuthor.getAttribute('replyTo');
+			const repliedCommentContainer = document.querySelector(`.post-comment-each-container[commentId="${replyTo}"]`);
+			
+			spanRepliedAuthor.addEventListener('click', function() {
+				
+				repliedCommentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				
+				// 반짝반짝 효과줌
+				repliedCommentContainer.classList.add('post-comment-replied');
+				setTimeout(() => {
+					repliedCommentContainer.classList.remove('post-comment-replied');
+				}, 1000);
+				
+			});
+			
+		});
+		
+	}
 	
 	
 	// 댓글 refresh하는 함수
@@ -172,56 +288,243 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		axios.get('/board/comment/refresh', {params})
 			.then((response) => {
+				let htmlContent = '';
 				commentContainer.innerHTML = '';
 				
 				const commentDtoList = response.data;
-				
 				for (let comment of commentDtoList) {
 					
-					commentContainer.innerHTML += `					
-			            <div class="post-comment-each-container">
-			                <div class="post-comment-each-header">
-			                    <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
-			                        <div class="post-comment-each-profile-container">
-			                            <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
-			                        </div>
-			                        <div class="post-comment-each-author">${comment.member.nickname}</div>
-			                        ${comment.member.nickname === authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
-			                    </div>                    
-			                    <div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(comment.createdTime)}</div>
-			                </div>
-			                <div class="post-comment-body-container">
-			                    <div class="post-comment-content">
-			                        ${comment.content}
-			                    </div>
-			                    <div class="post-comment-each-like-container">
-                                   <div>
-			                            <span>likes</span>
-			                            <span class="span-num-comment-likes">${comment.commentLikesList.length}</span>
-			                        </div>
-			                        <div class="post-comment-each-like-report-icon-container">
-			                            <div class="post-comment-like-container ${comment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}"
-			                                commentId="${comment.commentId}" author="${comment.member.nickname}">
-			                                <i class="fa-solid fa-thumbs-up"></i>
-			                            </div>
-			                            <div>
-			                                <i class="fa-solid fa-flag"></i>
-			                            </div>
-			                        </div>                        
-			                    </div>
-			                </div>
-			            </div>						
-						`;
 					
-				}
-								
+					htmlContent += `
+			            <!-- 각 댓글에 대한 부분 -->
+			            <div>
+			                <div class="post-comment-each-container" commentId="${comment.commentId}">           
+			                    <div class="post-comment-each-header">
+			                        <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
+                    `;
+                    
+                    if (comment.member.usersaveprofile.toLowerCase().startsWith('http')) {
+						htmlContent += `
+			                            <div class="post-comment-each-profile-container">                                                                
+			                                <img class="post-comment-each-profile" src="${comment.member.usersaveprofile}"  id="profile_s_img" alt="User Profile">
+										</div>							
+						`;
+					} else if (!comment.member.usersaveprofile.toLowerCase().startsWith('http') && comment.member.usersaveprofile == 'userimage.png') {
+						htmlContent += `
+			                            <div class="post-comment-each-profile-container">                                                                
+			                                <img class="post-comment-each-profile" src="/image/userimage.png" alt="User Profile">
+										</div>
+						`;
+					} else {
+						htmlContent += `
+			                            <div class="post-comment-each-profile-container">                                                                
+			                                <img class="post-comment-each-profile" src="/image?photo=${comment.member.usersaveprofile}" alt="User Profile">                                
+										</div>
+						`;						
+					}
+					
+					
+					
+					htmlContent += `
+			                            <div class="post-comment-each-author">${comment.member.nickname}</div>
+			                            ${comment.member.nickname === authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
+			                        </div>    <!-- post-comment-author-create-date-container 끝 -->`;
+			                        
+					if(comment.timeDifferenceInMinute) {	// 만약 24시간 내에 작성된 댓글일 경우
+						if (comment.timeDifferenceInMinute < 60) {	// 1시간 이내 작성된 댓글인 경우
+							htmlContent += `
+								<div class="post-comment-each-created-time post-comment-text-vertical-center">${comment.timeDifferenceInMinute}분 전</div>
+							`;
+						} else {	// 1시간 초과된 댓글인 경우
+							htmlContent += `
+								<div class="post-comment-each-created-time post-comment-text-vertical-center">${Math.floor(comment.timeDifferenceInMinute / 60)}시간 전</div>
+							`;
+						}
+					} else {	// 작성 후 24시간 경화한 댓글인 경우
+						htmlContent += `
+							<div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(comment.createdTime)}</div>
+						`;
+					}			                        
+			                        
+					htmlContent += `			                        
+			                    </div>  <!-- post-comment-each-header 끝 -->
+			                    <div class="post-comment-body-container">
+			                        <div class="post-comment-content">${comment.content}</div>
+			                        <div class="post-comment-each-like-container">
+			                            <div>
+			                                <span>likes</span>
+			                                <span class="span-num-comment-likes">${comment.commentLikesList.length}</span>
+			                            </div>
+                    `;
+                    
+                    if (user && comment.member.nickname == user.getAttribute('nickname')) {
+						htmlContent += `
+		                                <div></div>
+		                                <div>
+		                                    <button class="btn-post-comment-delete" commentId="${comment.commentId}" author="${comment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
+		                                </div>
+                        `;
+					} else {
+						htmlContent += `
+		                                <div class="post-comment-each-like-report-icon-container">
+		                                    <div class="post-comment-like-container
+		                                    	 ${user &&comment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}" 
+												 commentId="${comment.commentId}" author="${comment.member.nickname}">
+		                                        <i class="fa-solid fa-thumbs-up"></i>
+		                                    </div>
+		                                    <div>
+		                                        <i class="fa-solid fa-flag"></i>
+		                                    </div>
+		                                </div>
+                        `;						
+					}
+					
+					htmlContent += `
+			                        </div> <!-- post-comment-each-like-container 끝 -->
+			                        <div class="post-comment-reply-container">
+			                            <button class="btn-post-comment-reply">답글</button>                    
+			                        </div>
+			                        <div class="d-none post-comment-add-reply-container">
+			                            <textarea class="textarea-post-comment-reply"></textarea>
+			                            <button class="btn-post-comment-add-reply" commentId="${comment.commentId}" author="${comment.member.nickname}">댓글 등록</button>
+			                        </div>
+			                    </div>  <!-- comment body 끝 -->
+			                </div> <!-- post-comment-each-container 끝 -->
+					`;
+					
+					if (!comment.repliesList) {	// 해당댓글에 대댓글이 없는 경우
+						htmlContent += `
+							</div>
+						`;						
+					} else {	// 원댓글에 대댓글이 있는 경우
+						for (let replyComment of comment.repliesList) {	// 대댓글들을 loop시킴		
+							
+							htmlContent += `						
+				                <!-- 대댓글 부분 -->
+				                <div class="post-comment-each-container post-comment-each-reply-container" commentId="${replyComment.commentId}">
+				                    <div class="post-comment-each-header">
+				                        <div class="post-comment-reply-author-create-date-container post-comment-text-vertical-center">
+				                            <div class="post-comment-reply-l-icon-container post-comment-text-vertical-center">
+				                                <i class="fa-solid fa-l"></i>
+				                            </div>
+                            `;
+                            
+                            if (replyComment.member.usersaveprofile.toLowerCase().startsWith('http')) {
+								htmlContent += `
+				                            <div class="post-comment-each-profile-container">
+				                                <img class="post-comment-each-profile" src="${replyComment.member.usersaveprofile}"  id="profile_s_img" alt="User Profile">				                                
+				                            </div>								
+								`;
+							} else if (!replyComment.member.usersaveprofile.toLowerCase().startsWith('http') && replyComment.member.usersaveprofile == 'userimage.png') {
+								htmlContent += `
+				                            <div class="post-comment-each-profile-container">
+				                                <img class="post-comment-each-profile" src="/image/userimage.png" alt="User Profile">				                                
+				                            </div>
+								`;								
+							} else {
+								htmlContent += `
+				                            <div class="post-comment-each-profile-container">
+				                                <img class="post-comment-each-profile" src="/image?photo=${replyComment.member.usersaveprofile}" alt="User Profile">				                                
+				                            </div>
+								`;										
+							}
+							
+							htmlContent += `
+				                            <div class="post-comment-each-author post-comment-text-vertical-center">${replyComment.member.nickname}</div>
+				                            ${replyComment.member.nickname == authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
+				                        </div>   <!-- post-comment-reply-author-create-date-container 끝 -->`;
+				            if (replyComment.timeDifferenceInMinute) {
+								if (replyComment.timeDifferenceInMinute < 60) {
+									htmlContent += `
+										<div class="post-comment-each-created-time post-comment-text-vertical-center">${replyComment.timeDifferenceInMinute}분 전</div>
+									`;
+								} else {
+									htmlContent += `
+										<div class="post-comment-each-created-time post-comment-text-vertical-center">${Math.floor(replyComment.timeDifferenceInMinute / 60)}시간 전</div>
+									`;
+								}
+							} else {
+								htmlContent += `
+									<div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(replyComment.createdTime)}</div>
+								`;
+							}
+				                        
+				                        
+				            htmlContent += `           
+				                    </div> <!-- post-comment-each-header 끝 -->
+				                    <div class="post-comment-body-container post-comment-reply-body-container">
+				                        <div class="post-comment-content">
+				                            <span class="span-post-comment-replied-author" replyTo="${replyComment.replyTo}">${replyComment.authorNicknameReplyingTo}</span>
+				                            <span class="span-post-comment-content">${replyComment.content}</span>
+				                        </div>
+				                        <div class="post-comment-each-like-container">
+				                            <div>
+				                                <span>likes</span>
+				                            	<span class="span-num-comment-likes">${replyComment.commentLikesList.length}</span>
+				                            </div>
+							`;
+							
+							if (user && replyComment.member.nickname == user.getAttribute('nickname')) {	// 로그인유저가 대댓글 작성했을 경우
+								htmlContent += `
+			                                <div></div>
+			                                <div>
+			                                    <button class="btn-post-comment-delete" commentId="${replyComment.commentId}" author="${replyComment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
+			                                </div>   																
+								`;
+							} else {	// 그 외의 경우
+								htmlContent += `
+			                                <div class="post-comment-each-like-report-icon-container">
+			                                    <div class="post-comment-like-container
+			                                    	 ${user &&replyComment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}"
+			                                    	commentId="${replyComment.commentId}" author="${replyComment.member.nickname}">
+			                                        <i class="fa-solid fa-thumbs-up"></i>
+			                                    </div>
+			                                    <div>
+			                                        <i class="fa-solid fa-flag"></i>
+			                                    </div>
+			                                </div>  
+								`;
+							}
+							
+							htmlContent += `
+				                        </div> <!-- post-comment-each-like-container 끝 -->
+				                        <div class="post-comment-reply-container">
+				                            <button class="btn-post-comment-reply">답글</button>                    
+				                        </div>
+				                        <div class="d-none post-comment-add-reply-container">
+				                            <textarea class="textarea-post-comment-reply"></textarea>
+				                            <button class="btn-post-comment-add-reply" commentId="${replyComment.commentId}" author="${replyComment.member.nickname}">댓글 등록</button>
+				                        </div>
+				                    </div>
+				                </div> <!-- each 대댓글 컨테이너 끝 -->
+				            </div> <!-- 가장 큰 div 끝 -->							
+							`;
+						}	// 대댓글 for문 끝					
+					}	// 대댓글 있는 경우인 else끝	
+					
+				}	// for문 끝
+				
+				commentContainer.innerHTML = htmlContent;
 				
 				registerCommentLikeEventListener();
+				registerCommentDeleteEventListener();
+				registerBtnCommentReplyEventListener();
+				registerBtnAddReplyEventListener();
+				registerMoveToRepliedCommentEventListener();
+				
+				axios.get(`/board/${postId}/num-of-comments`)
+					.then((response) => {
+						spanNumCommentsList.forEach((spanNumComments) => spanNumComments.textContent = response.data);
+					})
+					.catch((error) => {
+						console.log(`에러발생!!! ${error}`);
+					})
 				
 			})
 			.catch((error) => {
 				console.log(`에러 발생!!! ${error}`);
 			});
+			
 		
 	}
 	
@@ -232,10 +535,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		  const date = new Date(timeToFormat);
 		  
-		  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;	
+		  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;	
 	}
 	
-	registerCommentLikeEventListener();
+	
 	
 	
 	
@@ -323,46 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				alert('댓글 등록 성공');
 				textareaPostComment.value = '';
 				
-				commentContainer.innerHTML += `
-					
-		            <div class="post-comment-each-container">
-		                <div class="post-comment-each-header">
-		                    <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
-		                        <div class="post-comment-each-profile-container">
-		                            <img class="post-comment-each-profile" src="https://photocloud.sbs.co.kr/origin/edit/S01_P468097941/657ba203942b8f2120ce7144-p.jpg" alt="profile-img">
-		                        </div>
-		                        <div class="post-comment-each-author">${user.getAttribute('nickname')}</div>
-		                        ${user.getAttribute('nickname') === authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
-		                    </div>                    
-		                    <div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(response.data.createdTime)}</div>
-		                </div>
-		                <div class="post-comment-body-container">
-		                    <div class="post-comment-content">
-		                        ${response.data.content}
-		                    </div>
-		                    <div class="post-comment-each-like-container">
-                                <div>
-		                            <span>likes</span>
-		                            <span class="span-num-comment-likes">${response.data.commentLikesList.length}</span>
-		                        </div>
-		                        <div class="post-comment-each-like-report-icon-container">
-		                            <div class="post-comment-like-container" commentId="${response.data.commentId}" author="${response.data.member.nickname}">
-		                                <i class="fa-solid fa-thumbs-up"></i>
-		                            </div>
-		                            <div>
-		                                <i class="fa-solid fa-flag"></i>
-		                            </div>
-		                        </div>                        
-		                    </div>
-		                </div>
-		            </div>
-					
-					`;
-				
-				const numCommments = parseInt(spanNumComments.textContent);
-				spanNumComments.textContent = `${numCommments + 1}`;
-				
-				registerCommentLikeEventListener();
+				refreshComments();
 				
 			})
 			.catch((error) => {
@@ -374,84 +638,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	btnCommentRefresh.addEventListener('click', refreshComments);
 	
-	
-	// 댓글 삭제버튼 
-	btnCommentDeleteList.forEach((btnCommentDelete) => {
-		
-		const commentIdToDelete = btnCommentDelete.getAttribute('commentId');		
-		
-		btnCommentDelete.addEventListener('click', function() {
-			
-			const data = {
-				comment: {
-					commentId: commentIdToDelete
-				}				
-			}						
-			
-			axios.delete(`/board/comment/delete/${commentIdToDelete}`, data)
-				.then(() => {
-					refreshComments();
-				})
-				.catch((error) => {
-					console.log(`에러 발생!!! ${error}`);
-				})			
-		})
-		
-	});
-	
-	
-	// 답글 버튼누르면 textarea나오도록 함
-	btnCommentReplyList.forEach((btnCommentReply) => {
-		
-		const postCommentReplyContainer = btnCommentReply.closest('.post-comment-reply-container');
-		const commentAddReplyContainer = postCommentReplyContainer.nextElementSibling;
-		
-		btnCommentReply.addEventListener('click', function() {
-			console.log(btnCommentReply);
-			console.log(commentAddReplyContainer);
-			if(commentAddReplyContainer.classList.contains('d-none')) {
-				commentAddReplyContainer.classList.remove('d-none');
-			} else {
-				commentAddReplyContainer.classList.add('d-none');
-			}
-			
-		});		
-	});
-	
-	// 답글 다는 이벤트리스너
-	btnAddReplyList.forEach((btnAddReply) => {
-		
-		const addReplyContainer = btnAddReply.closest('.post-comment-add-reply-container');
-		const textareaAddReply = addReplyContainer.querySelector('.textarea-post-comment-reply');
-		
-		const replyTo = btnAddReply.getAttribute('commentId');
-		const authorNicknameReplyingTo = btnAddReply.getAttribute('author');
-		
-		btnAddReply.addEventListener('click', function() {
-			const data = {			
-				member: {
-					email: user.getAttribute('email')
-				},
-				post: {
-					postId: postId
-				},
-				content: textareaAddReply.value,
-				replyTo: replyTo,
-				authorNicknameReplyingTo: authorNicknameReplyingTo		
-			}
-			
-			axios.post('/board/comment/add', data)
-				.then(() => {
-					refreshComments();
-				})
-				.catch((error) => {
-					console.log(`Error 발생!!! ${error}`);
-				})			
-		});
 
-		
-		
-	});
+	
+	
+	// 댓글 좋아요, 삭제 등 이벤트리스너 등록하는 함수 실행
+	registerCommentLikeEventListener();
+	registerCommentDeleteEventListener();
+	registerBtnCommentReplyEventListener();
+	registerBtnAddReplyEventListener();
+	registerMoveToRepliedCommentEventListener();
 	
 	
 });

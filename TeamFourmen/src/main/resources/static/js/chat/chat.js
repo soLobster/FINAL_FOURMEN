@@ -4,14 +4,15 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	
-	const signedInUser = document.querySelector('.div-profile-image');		// 닉네임을 포함하고 있는 유저 로그인했을 때 프로필사진 컨테이너
+	const signedInUser = document.querySelector('.open-chat-header');		// 닉네임을 포함하고 있는 유저 로그인했을 때 프로필사진 컨테이너
 	
 	const chatBody = document.querySelector('.open-chat-body');
 	const btnSend = document.querySelector('.btn-chat-send');
 	const numOfPeople = document.querySelector('.chat-num-people');
 	
 	// TODO: 나중에 로그인하면 세션정보 이용해서 닉네임 가져오도록 하기
-    const nickname = '유저' +  Math.random();	
+    const nickname = signedInUser.getAttribute('nickname');	
+	const email = signedInUser.getAttribute('email');
 	
 	const pathName = location.pathname;
 	const pathNameList = pathName.split('/');
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		stompClient.subscribe(`/topic/${category}/${roomId}`, onMessageReceived);
 		
-		stompClient.send('/app/chat.addUser', {}, JSON.stringify({type: 'JOIN', sender: nickname, category: 'movie', roomId: roomId}));
+		stompClient.send('/app/chat.addUser', {}, JSON.stringify({type: 'JOIN', member: {email: email, nickname: nickname}, category: 'movie', roomId: roomId}));
 	}
 	
 	function onError() {
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		console.log(message.type);
 		if (message.type === 'JOIN') {
 			
-			message.content = `${message.sender} has joined the chatroom`;
+			message.content = `${message.member.nickname} has joined the chatroom`;
 			
 			const eventContainer = document.createElement('div');
 			eventContainer.classList.add('each-chat-event-container');
@@ -60,9 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			chatBody.appendChild(eventContainer);
 			
 			console.log('조인 들어옴');
+			
 		} else if (message.type === 'LEAVE') {
 			
-			message.content = `${message.sender} has left the chatroom`;
+			message.content = `${message.member.nickname} has left the chatroom`;
 			
 			const eventContainer = document.createElement('div');
 			eventContainer.classList.add('each-chat-event-container');
@@ -82,6 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		} else if (message.type === 'SEND') {
 			
 			if (message.sender === nickname) {	// 내가 보낸 메세지인 경우			
+				console.log(message);
+				
 				chatBody.innerHTML += `
 		            <div class="each-chat-container chat-by-me-container">
 		                <div class="div-profile-photo">
@@ -95,14 +99,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				`;
 
 			} else {	//남이 보낸 메세지인 경우
-				
+				console.log(message);
 				chatBody.innerHTML += `
 		            <div class="each-chat-container">
 		                <div class="div-profile-photo">
 		                    <img class="profile-img" src="https://dcimg4.dcinside.co.kr/viewimage.php?id=2ba8d227ea&no=24b0d769e1d32ca73fea8ffa11d0283138cbf06620a6c100700a55dbb30dbf98d153c8ce3c0b6e5de2517006b302f1acf9bfe5f1503771dcf0c92d5c996a8d6696f0cfc9a6b32cf3895cafd02e26ec2a9deff8a2bd5867c70b2579d846456795938a39fbdd">
 		                </div>
 		                <div class="msg-nickname-by-others-container">
-		                    <div class="chat-nickname">${message.sender}</div>
+		                    <div class="chat-nickname">${message.member.nickname}</div>
 		                    <div class="chat-msg-by-others">${message.content}</div>
 		                </div>
 		            </div>
@@ -132,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const messageInput = document.querySelector('.input-chat-form');
 							
 		
-		stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify({type: 'SEND', sender: nickname
+		stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify({type: 'SEND', member: {email: email, nickname: nickname}
 								, content: messageInput.value, category: category, roomId: roomId}));
 		
 		messageInput.value = '';

@@ -1,13 +1,27 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Post;
+import com.itwill.teamfourmen.domain.PostLike;
+import com.itwill.teamfourmen.dto.board.CommentDto;
+import com.itwill.teamfourmen.dto.board.PostDto;
 import com.itwill.teamfourmen.dto.person.*;
+import com.itwill.teamfourmen.dto.post.PostCreateDto;
+
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwill.teamfourmen.service.BoardService;
 import com.itwill.teamfourmen.service.PersonService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +38,8 @@ import java.util.stream.Collectors;
 public class PersonController {
 
 	private final PersonService personService;
-
+	private final BoardService boardService;
+	
 	@GetMapping("/list")
 	public String list(
 			@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
@@ -258,6 +273,115 @@ public class PersonController {
 		return "person/person-details";
 	} // end details
 
-
+	
+	
+	// 게시판 관련 컨트롤러 메서드
+	@GetMapping("/board")
+	public String personBoardList(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		log.info("게시판 리스트 들어옴");
+		
+		Page<PostDto> postDtoList = boardService.getPostList("person", page);
+		postDtoList.forEach((post) -> {
+			Long likes = boardService.countLikes(post.getPostId());
+			post.setLikes(likes);
+		});
+		
+		// TODO: total element 타입 Long으로변경하는거 논의
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 5);		
+		log.info("pagingDto={}", pagingDto);
+		
+		model.addAttribute("category", "person");
+		model.addAttribute("postDtoList", postDtoList);
+		model.addAttribute("pagingDto", pagingDto);
+		
+		return "/board/list";
+	}
+	
+	@GetMapping("/board/details")
+	public String personBoardDetails(@RequestParam(name = "id") Long id, Model model) {
+		log.info("personBoardDetails(id={})", id);
+		
+		PostDto postDetails = boardService.getPostDetail(id);
+		log.info("postDetails={}", postDetails);
+		
+		// 조회수 1 추가
+		boardService.addView(id);
+		
+		// 해당 게시물의 좋아요 개수
+		Long numLikes = boardService.countLikes(id);
+		
+		// 로그인한 유저가 해당 게시물을 좋아했는지 보기위해
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		PostLike haveLiked = boardService.haveLiked(signedInUser, id);
+		
+		// 해당 게시물의 댓글 리스트 가져옴
+		List<CommentDto> commentDtoList = boardService.getCommentList(id);
+		log.info("commentDtoList={}", commentDtoList);
+		
+		int numOfComments = boardService.getNumOfComments(commentDtoList);
+		
+		model.addAttribute("postDetails", postDetails);
+		model.addAttribute("numLikes", numLikes);
+		model.addAttribute("haveLiked", haveLiked);
+		model.addAttribute("boardName", "인물 게시판");
+		model.addAttribute("commentDtoList", commentDtoList);
+		model.addAttribute("numOfComments", numOfComments);
+		
+		
+		return "/board/details";
+	}
+	
+	@GetMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")
+	public String personBoardCreate(Model model) {
+		log.info("인물 게시글 작성페이지");
+		
+		model.addAttribute("category", "person");
+		
+		return "/board/create";
+	}
+	
+	/**
+	 * 게시글 작성하는 컨트롤러 메서드
+	 * @param postDto
+	 * @return
+	 */
+	@PostMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")	
+	public String postPersonBoard(@ModelAttribute PostCreateDto postDto) {
+		log.info("postPersonBoard(postDto={})", postDto);
+		
+		Post savedPost = boardService.post(postDto);
+		
+		return "redirect:/person/board/details?id=" + savedPost.getPostId();
+	}
+	
+	/**
+	 * 게시판 게시글 수정창으로 보내주는 컨트롤러 매서드
+	 * @param post
+	 * @param model
+	 * @return
+	 */
+	@PostMapping("/board/edit")
+	@PreAuthorize("isAuthenticated()")
+	public String editPersonBoard(@ModelAttribute Post post, Model model) {
+		
+		log.info("editPersonBoard(post={})", post);
+		model.addAttribute("post", post);
+		model.addAttribute("category", "person");
+		return "/board/edit";
+	}
+	
+	
+	@PostMapping("/board/do-edit")
+	public String updatePersonPost(@ModelAttribute Post post) {
+		
+		log.info("updateMoviePost(post={})", post);
+		boardService.updatePost(post);
+		
+		return "redirect:/person/board/details?id=" + post.getPostId();
+	}
 
 }
