@@ -41,9 +41,35 @@
         .main-section {
             width: 1000px;
             min-width: 1000px;
-            margin: 50px auto;
+            margin: 0px auto;
             display: flex;
             /*background-color: darkslategray;*/
+        }
+
+        .works-review-page-header{
+            margin: 0 auto;
+            width: 1000px;
+            min-width: 1000px;
+            padding-left: 15px;
+        }
+
+        .works-review-page-header a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .works-review-page-header a:hover {
+            color: #8dabfb;
+        }
+
+        .works-review-page-header-item {
+            display: flex;
+            font-size: 20px;
+            gap: 10px;
+        }
+
+        .works-review-page-header-item i {
+            padding-top: 5px;
         }
 
         .left-works-info-section{
@@ -459,6 +485,15 @@
 </header>
 
 <main>
+
+    <div class = "works-review-page-header">
+        <a th:href="@{/reviews/{category}/{id}(category = ${works.getCategory()}, id = ${works.getId()})}">
+            <div class = "works-review-page-header-item">
+                <i class="fa-solid fa-list"></i>
+                <span th:text="${works.getName()} + ' 전체 리뷰 보러가기'"></span>
+            </div>
+        </a>
+    </div>
 
     <section class = "main-section">
 

@@ -10,6 +10,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
         crossorigin="anonymous">
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
+	<link th:href="@{/css/user.css}" rel="stylesheet">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
 	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
 	<link th:href="@{/css/navbar.css}" rel="stylesheet">
@@ -50,6 +51,11 @@
 				"sidebar body" 1fr
 				/ 1fr 4fr;
 			gap: 8px;
+		}
+
+		h2{
+			color: #fbc500;
+			font-weight: bolder;
 		}
 
 		.search_section {
@@ -268,15 +274,15 @@
 		}
 
 	</style>
-	<link th:href="@{/css/theme.css}" rel="stylesheet">
 </head>
 
 <body>
 <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
 
 	<main>
-		<h3>TV SHOW LIST</h3>
-
+		<div style="margin-left: 60px">
+			<h2>TV SHOW LIST</h2>
+		</div>
 <!--		<a th:href="@{/}">HOME</a>-->
 
 		<section class="layout">

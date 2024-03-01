@@ -48,8 +48,8 @@
                 </th:block>
                 <th:block sec:authorize="isAuthenticated()">
                     <div class="nav-div-width-adjustment">
-                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">
-                            <span th:nickname = "${member.nickname}">MY DB</span>
+                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}" class="navbar-link">
+                            <span th:nickname = "${member.nickname}">My Dash Board</span>
                         </a>
                     </div>
                     <div class="nav-div-width-adjustment">
@@ -110,10 +110,10 @@
                 <div class="navbar-detailed-menu-items">
 
                     <div class="navbar-detailed-menu-list">
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/day}">TV SHOW Trending Day LIST</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/week}">TV SHOW Trending Week LIST</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV SHOW Top_rated LIST</a></div>                  
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/board}">TV Free Board</a></div>                   
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV SHOW LIST</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/day}">오늘의 인기 TOP 200</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/week}">이번주 인기 TOP 200</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/board}">TV SHOW 게시판</a></div>
                     </div>
 
                 </div>

@@ -160,8 +160,8 @@
 			width: 46px;
 			height: 46px;
 			position: absolute;
-			top: -27%;
-			left: -106%;
+			top: -32%;
+			left: -107%;
 		}
 
 		.btn-tv-review {
@@ -170,8 +170,8 @@
 			width: 46px;
 			height: 46px;
 			position: absolute;
-			top: -27%;
-			left: -106%;
+			top: -32%;
+			left: -107%;
 		}
 
 		.tool-tip-custom-bar i {
@@ -1216,7 +1216,7 @@
 			</div>
 			<div th:if="${trailer ne null}" class="p-0 modal-body" style="width: 1280px; color: white">
 				<iframe width="800" height="auto"
-						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()} + '?autoplay=1&mute=1' " style="width: 800px; height: 600px"></iframe>
+						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()} " style="width: 800px; height: 600px"></iframe>
 			</div>
 			<div class="border-0 modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>

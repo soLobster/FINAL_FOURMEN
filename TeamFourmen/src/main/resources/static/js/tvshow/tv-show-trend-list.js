@@ -19,6 +19,8 @@ window.addEventListener('DOMContentLoaded', function (){
     const flexContainer  = document.querySelector('.flex-container');
     const btnLoadTvShow = document.querySelector('#btn-load-tvShow');
 
+    console.log(totalPages);
+
     console.log(timeWindow);
     console.log('LOCAL PATH = ' + pathName);
 
@@ -62,26 +64,26 @@ window.addEventListener('DOMContentLoaded', function (){
 
         let innerHtml = '';
 
-        if(page < totalPages) {
+        if(page < 10) {
             await
                 axios.get(url + queryString)
                     .then((response) => {
                         console.log('불러온 PAGE'  + response.data.page);
 
+                        // console.log(response.data);
+
                         page = response.data.page;
 
                         let tvShowListDTO = response.data;
 
-
-
                         for (let tvShowDto of tvShowListDTO.results) {
                             innerHtml += `
                                     <div class="rounded border-0 card text-bg-dark flex_box">
-                                         <a href="/tv/details/${tvShowDto.id}" class="text-black text-decoration-none">
-                                             <img class="rounded-top show_poster" src="${tvShowDto.poster_path ? 'https://image.tmdb.org/t/p/original' + tvShowDto.poster_path : '/image/default.png'}"  width="200" height="273" />
+                                         <a href="/tv/details/${tvShowDto.id}" class="text-black text-decoration-none tv-card">
+                                             <img class="rounded-top show_poster" src="${tvShowDto.poster_path ? 'https://image.tmdb.org/t/p/original' + tvShowDto.poster_path : '/image/default.png'}"  width="240" height="360" />
                                                  <div class="card-body">
 <!--                                                     <p class="fs-border mb-0 text-white card-title">${tvShowDto.name}</p>-->
-                                                     <p class="fs-border mb-0 text-white card-title">${abbreviateText(tvShowDto.name, 11)}</p>   
+                                                     <p class="fs-border mb-0 text-white card-title">${abbreviateText(tvShowDto.name, 15)}</p>   
                                                      <p class="fst-italic text-white-50 card-text">${tvShowDto.first_air_date}</p>
                                                  </div>
                                         </a>
