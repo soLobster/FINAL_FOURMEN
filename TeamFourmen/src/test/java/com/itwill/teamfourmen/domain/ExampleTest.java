@@ -61,22 +61,22 @@ public class ExampleTest {
 		
 	}
 
-	@Test
-	public void fileTest() {
-		String rootDr = File.listRoots()[1].getAbsolutePath();
-		log.info("rootDr = {}", rootDr);
-
-		log.info("root = {}", File.listRoots());
-
-	}
-	
-	@Test
-	public void fileTest() {
-		String rootDirectory = File.listRoots()[0].getAbsolutePath();
-		log.info("rootDirectory={}", rootDirectory);
-		
-		
-		
-	}
+//	@Test
+//	public void fileTest() {
+//		String rootDr = File.listRoots()[1].getAbsolutePath();
+//		log.info("rootDr = {}", rootDr);
+//
+//		log.info("root = {}", File.listRoots());
+//
+//	}
+//
+//	@Test
+//	public void fileTest() {
+//		String rootDirectory = File.listRoots()[0].getAbsolutePath();
+//		log.info("rootDirectory={}", rootDirectory);
+//
+//
+//
+//	}
 	
 }

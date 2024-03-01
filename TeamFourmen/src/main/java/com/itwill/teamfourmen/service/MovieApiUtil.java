@@ -46,7 +46,7 @@ public class MovieApiUtil {
 	 * @throws JsonMappingException 
 	 */
 	public MovieListDto getMovieList(MovieQueryParamDto paramDto) throws JsonMappingException, JsonProcessingException {
-		log.info("getMovieList(param={})", paramDto);
+//		log.info("getMovieList(param={})", paramDto);
 		
 		String uri = "";
 		String genresVariable = null;
@@ -87,7 +87,7 @@ public class MovieApiUtil {
 		List<Integer> genreList = paramDto.getWithGenres();
 		if (genreList != null) {
 			genresVariable = genreList.stream().map((x) -> x.toString()).collect(Collectors.joining("|")).toString();
-			log.info("genres={}", genresVariable);
+//			log.info("genres={}", genresVariable);
 		}
 		
 		String genres = genresVariable;
@@ -97,7 +97,7 @@ public class MovieApiUtil {
 		List<Integer> providerList = paramDto.getWithWatchProviders();
 		if (providerList != null) {
 			providersVariable = providerList.stream().map((x) -> x.toString()).collect(Collectors.joining("|")).toString();
-			log.info("providers={}", providersVariable);
+//			log.info("providers={}", providersVariable);
 		}
 		
 		String providers = providersVariable;
@@ -206,7 +206,7 @@ public class MovieApiUtil {
 	 */
 	public MovieCreditDto getMovieCredit(int id) {
 		
-		log.info("MovieCreditDto(id={})", id);
+//		log.info("MovieCreditDto(id={})", id);
 		
 		String queryParam = "?language=ko";
 		
@@ -233,7 +233,7 @@ public class MovieApiUtil {
 	 */
 	public List<MovieVideoDto> getMovieVideoList(int id) {
 				
-		log.info("getMovieVideoList()");
+//		log.info("getMovieVideoList()");
 		
 		String queryParam = "?language=ko";
 		
@@ -273,8 +273,8 @@ public class MovieApiUtil {
 	 */
 	public MovieProviderDto getMovieProviderList(int id) {
 		
-		log.info("getMovieProviderList(id={})", id);
-				
+//		log.info("getMovieProviderList(id={})", id);
+
 		WebClient client = WebClient.create(baseUrl);
 		String json = client.get()
 			.uri("/movie/" + id + "/watch/providers")
@@ -293,7 +293,7 @@ public class MovieApiUtil {
 			JsonNode countryNode = resultsNode.get("KR");
 			MovieProviderDto movieProviderDto = mapper.treeToValue(countryNode, MovieProviderDto.class);
 			
-			log.info("movieProviderDto={}", movieProviderDto);
+//			log.info("movieProviderDto={}", movieProviderDto);
 			
 			return movieProviderDto;
 		} catch (JsonProcessingException e) {
@@ -311,7 +311,7 @@ public class MovieApiUtil {
 	 */
 	public List<MovieDetailsDto> getMovieCollectionList(int collectionId) {
 		
-		log.info("getMovieCollectionList(id={})", collectionId);
+//		log.info("getMovieCollectionList(id={})", collectionId);
 		
 		String queryParam = "?language=ko";
 		
@@ -366,7 +366,7 @@ public class MovieApiUtil {
 	 */
 	public List<MovieDetailsDto> getRecommendedMovie(int id) {
 		
-		log.info("getRecommendedMovie(id={})", id);
+//		log.info("getRecommendedMovie(id={})", id);
 		
 		String queryParam = "?language=ko";
 		
