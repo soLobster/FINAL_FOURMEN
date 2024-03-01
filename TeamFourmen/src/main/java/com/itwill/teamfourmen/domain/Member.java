@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -34,6 +35,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@DynamicInsert
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @SequenceGenerator(name = "member_member_id_seq", sequenceName = "member_member_id_seq", allocationSize = 1)
@@ -47,7 +49,7 @@ public class Member {
 	    @Basic(optional = false)
 	    private String password;
 	    
-	    @Basic(optional = false)
+	    //@Basic(optional = false)
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_member_id_seq")
 	    private Long memberId;
 	    

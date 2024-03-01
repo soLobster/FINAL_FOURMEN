@@ -14,12 +14,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const nickname = signedInUser.getAttribute('nickname');	
 	const email = signedInUser.getAttribute('email');
 	
+	const usersaveprofile = signedInUser.getAttribute('usersaveprofile');
+	let profileImageUrl = '';	
+	
 	const pathName = location.pathname;
 	const pathNameList = pathName.split('/');
 	
 	const category = pathNameList[2];
 	const roomId = pathNameList[3];
 	
+	// profile image url구하기 위한 조건문
+	if (usersaveprofile.toLowerCase().startsWith('http')){
+        profileImageUrl = usersaveprofile;
+    } else if (!usersaveprofile.toLowerCase().startsWith('http') && usersaveprofile == 'userimage.png') {
+        profileImageUrl = '/image/userimage.png';
+    } else {
+        profileImageUrl = `/image?photo=${usersaveprofile}`;
+    }
+    
 	// SockJS 연결
 	const socket = new SockJS('/ws');
 	const stompClient = Stomp.over(socket);
@@ -33,7 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		stompClient.subscribe(`/topic/${category}/${roomId}`, onMessageReceived);
 		
-		stompClient.send('/app/chat.addUser', {}, JSON.stringify({type: 'JOIN', member: {email: email, nickname: nickname}, category: 'movie', roomId: roomId}));
+		stompClient.send('/app/chat.addUser', {}, JSON.stringify({type: 'JOIN', member: {email: email, nickname: nickname, usersaveprofile: profileImageUrl}
+		                                                          , category: 'movie', roomId: roomId}));
 	}
 	
 	function onError() {
@@ -83,16 +96,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 		} else if (message.type === 'SEND') {
 			
-			if (message.sender === nickname) {	// 내가 보낸 메세지인 경우			
+			if (message.member.nickname === nickname) {	// 내가 보낸 메세지인 경우			
 				console.log(message);
 				
 				chatBody.innerHTML += `
 		            <div class="each-chat-container chat-by-me-container">
 		                <div class="div-profile-photo">
-		                    <img class="profile-img" src="https://memberdata.s3.amazonaws.com/hi/hitsdd/photos/hitsdd_photo_gal__photo_1116899403.jpg">
+		                    <img class="profile-img" src="${message.member.usersaveprofile}">
 		                </div>
 		                <div class="msg-nickname-by-me-container">
-		                    <div class="chat-nickname">${message.sender}</div>
+		                    <div class="chat-nickname">${message.member.nickname}</div>
 		                    <div class="chat-msg-by-me">${message.content}</div>
 		                </div>
 		            </div>	
@@ -103,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				chatBody.innerHTML += `
 		            <div class="each-chat-container">
 		                <div class="div-profile-photo">
-		                    <img class="profile-img" src="https://dcimg4.dcinside.co.kr/viewimage.php?id=2ba8d227ea&no=24b0d769e1d32ca73fea8ffa11d0283138cbf06620a6c100700a55dbb30dbf98d153c8ce3c0b6e5de2517006b302f1acf9bfe5f1503771dcf0c92d5c996a8d6696f0cfc9a6b32cf3895cafd02e26ec2a9deff8a2bd5867c70b2579d846456795938a39fbdd">
+		                    <img class="profile-img" src="${message.member.usersaveprofile}">
 		                </div>
 		                <div class="msg-nickname-by-others-container">
 		                    <div class="chat-nickname">${message.member.nickname}</div>
@@ -136,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const messageInput = document.querySelector('.input-chat-form');
 							
 		
-		stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify({type: 'SEND', member: {email: email, nickname: nickname}
+		stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify({type: 'SEND', member: {email: email, nickname: nickname, usersaveprofile: profileImageUrl}
 								, content: messageInput.value, category: category, roomId: roomId}));
 		
 		messageInput.value = '';

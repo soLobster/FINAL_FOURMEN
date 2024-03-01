@@ -11,7 +11,7 @@
 </head>
 <body>
 	<main>
-        <header class="open-chat-header" th:email="${member.email}" th:nickname="${member.nickname}">
+        <header class="open-chat-header" th:email="${member.email}" th:nickname="${member.nickname}" th:usersaveprofile="${member.usersaveprofile}">
             <h4 th:text="${title} + ' 채팅방'"></h4>
             <div class="div-chat-users-num">
                 <i class="fa-solid fa-user"></i>

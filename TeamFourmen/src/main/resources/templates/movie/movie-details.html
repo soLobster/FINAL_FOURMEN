@@ -307,7 +307,7 @@
                         <div class="movie-card-image-container">
                             <img th:src="@{https://media.themoviedb.org/t/p/w138_and_h175_face{profilePath} (profilePath = ${cast.profilePath})}"
                              alt="출연진 사진" class="img-movie-card">
-                             <a class="movie-a-movie-card-overlay" th:href="@{/person/details/{castId} (castId=${cast.castId})}">
+                             <a class="movie-a-movie-card-overlay" th:href="@{/person/details/{personId} (personId=${cast.id})}">
                                 <div class="div-movie-card-overlay">
                                     <p th:text="${cast.name}" class="movie-card-name"></p>
                                     <p th:text="${cast.character}" class="movie-cast-character"></p>

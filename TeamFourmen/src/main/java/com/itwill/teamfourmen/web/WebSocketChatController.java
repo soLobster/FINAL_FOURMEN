@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,13 +35,12 @@ public class WebSocketChatController {
 	private final SimpMessageSendingOperations messagingTemplate;
 	private final WebSocketChatService chatService;
 	
-	
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/openchat/{category}/{roomId}")
 	public String getOpenChatWindow(@PathVariable("category") String category, @PathVariable("roomId") int roomId, Model model) {
 		
 		log.info("getOpenChatWindow(category={}, roomId={})", category, roomId);
 		
-		// TODO: TV show일 경우도 만들기.. 일단은 영화만
 		if (category.equals("movie")) {
 			MovieDetailsDto detailsDto = movieApiUtil.getMovieDetails(roomId);
 			String title = detailsDto.getTitle();
@@ -73,21 +73,27 @@ public class WebSocketChatController {
 	public void addMember(@Payload ChatMessageDto messageDto, SimpMessageHeaderAccessor headerAccessor) {
 		
 		log.info("addUser(messageDto={})", messageDto);
-				
 		
-        // WebSocket Session에 username추가
+		// 입장한 채팅방 ChatRoomDto객체 가져옴
+		ChatRoomDto roomDto = chatService.addMember(messageDto.getCategory(), messageDto.getRoomId(), messageDto.getMember());
+		// 입장한 채팅방의 창을 몇개나 띄웠는지 구함
+		int numOfChatRoomWindows = roomDto.getMembers().get(messageDto.getMember());
+		
+        // WebSocket Session에 member객체 추가
         headerAccessor.getSessionAttributes().put("member", messageDto.getMember());
         headerAccessor.getSessionAttributes().put("category", messageDto.getCategory());
         headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());
         
         log.info("headerAccessor={}", headerAccessor.toString());
         
-		chatService.addMember(messageDto.getCategory(), messageDto.getRoomId(), messageDto.getMember());
-		ChatRoomDto roomDto = chatService.getChatRoom(messageDto.getCategory(), messageDto.getRoomId());
+		// ChatRoomDto roomDto = chatService.getChatRoom(messageDto.getCategory(), messageDto.getRoomId());
 		
 		log.info("보낼 subscribe={}", "/topic/" + messageDto.getCategory() + "/" + messageDto.getRoomId());
 		
-		messagingTemplate.convertAndSend("/topic/" + messageDto.getCategory() + "/" + messageDto.getRoomId(), messageDto);
+		if (numOfChatRoomWindows <=1) {	// 이미 창을 띄운경우 입장메세지 보내지 않음.
+			messagingTemplate.convertAndSend("/topic/" + messageDto.getCategory() + "/" + messageDto.getRoomId(), messageDto);
+		}
+		
 		messagingTemplate.convertAndSend("/topic/" + messageDto.getCategory() + "/" + messageDto.getRoomId(), roomDto.getMembers().size());
 	}
 	

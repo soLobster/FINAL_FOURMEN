@@ -31,7 +31,7 @@ public class WebSocketChatService {
 	 */
 	public ChatRoomDto addMember(String category, int roomId, Member member) {
 		
-		log.info("addUser(category={}, roomId={}, nickname={})", category, roomId, member);
+		log.info("addUser(category={}, roomId={}, member={})", category, roomId, member);
 		
 		log.info("chatRooms={}", chatRooms);
 		
@@ -41,17 +41,25 @@ public class WebSocketChatService {
 		ChatRoomDto roomDto = chatRooms.get(key);
 		
 		if (roomDto == null) {	// 방이 존재하지 않을 때
-			Set<Member> members = new HashSet<Member>();
-			members.add(member);
+			HashMap<Member, Integer> members = new HashMap<>();
+			members.put(member, 1);
 			
 			roomDto = ChatRoomDto.builder().roomId(roomId).members(members).category(category).build();
+			
+			log.info("roomDto={}", roomDto);
 			
 			chatRooms.put(key, roomDto);
 			
 		} else {	// 방이 이미 존재할 때
+			int numWindows = 0;
+			// 유저가 해당 채팅방 창 띄운 횟수 업데이트
+			if (roomDto.getMembers().get(member) != null) {
+				numWindows = roomDto.getMembers().get(member);
+			}
 			
-			roomDto.getMembers().add(member);
+			numWindows++;			
 			
+			roomDto.getMembers().put(member, numWindows);
 		}
 		
 		log.info("업데이트된 roomDto={}", roomDto);
@@ -103,7 +111,6 @@ public class WebSocketChatService {
 			chatRooms.remove(key);
 			
 			log.info("업데이트된 roomDto={}", roomDto);
-
 			
 			return null;
 		} else {	// 유저가 나갔어도 해당 채팅방에 남아있는 유저가 있으면 그냥 채팅방 객체 리턴			
