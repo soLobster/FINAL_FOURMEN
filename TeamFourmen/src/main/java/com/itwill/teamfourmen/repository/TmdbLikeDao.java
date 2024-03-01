@@ -11,8 +11,11 @@ import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuer
 import com.itwill.teamfourmen.domain.TmdbLike;
 
 public interface TmdbLikeDao extends JpaRepository<TmdbLike, Long> {
-	
+
+	// 특정 이메일, 카테고리, 그리고 TmdbId를 가진 TmdbLike 엔티티를 찾음. 결과가 없는 경우 Optional.empty()를 반환.
 	Optional<TmdbLike> findByMemberEmailAndCategoryAndTmdbId(String email, String category, int tmdbId);
+	// 주어진 이메일, 카테고리, 그리고 TmdbId에 해당하는 TmdbLike 엔티티를 삭제
 	void deleteByMemberEmailAndCategoryAndTmdbId(String email, String category, int tmdbId);
+	// 주어진 이메일과 카테고리에 해당하는 모든 TmdbLike 엔티티들의 리스트를 반환
 	List<TmdbLike> findByMemberEmailAndCategory(String email, String category);
 }

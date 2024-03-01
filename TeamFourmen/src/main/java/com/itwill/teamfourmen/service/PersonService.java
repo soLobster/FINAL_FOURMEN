@@ -12,6 +12,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,6 +98,17 @@ public class PersonService {
 	// ************************************ 리스트 끝 ************************************ //
 
 	/**
+	 * 인물의 생년월일로 인물의 나이를 구하는 메서드.
+	 * @param birthday
+	 * 파라미터는 인물의 생년월일.
+	 * @return 인물의 생년월일을 LocalDate 타입으로 변환하여 인물의 나이를 구하고 그 값을 리턴.
+	 */
+	public int calculateAge(LocalDate birthday) {
+		LocalDate currentDate = LocalDate.now();
+		return Period.between(birthday, currentDate).getYears();
+	}
+
+	/**
 	 * JSON 데이터를 DetailsPersonDto 객체로 변환.
 	 * 인물의 상세 정보를 받아오기 위한 메서드.
 	 * @param id
@@ -138,21 +151,21 @@ public class PersonService {
 	 * 인물의 외부 링크 정보(sns, 홈페이지 등)를 받아오기 위한 메서드.
 	 * @param id
 	 * 파라미터는 인물의 id 값.
-	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDtoEnUS(영어), externalIDsDtoKoKR(한국어) 객체.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDto 객체.
 	 */
 	public ExternalIDsDto getExternalIDs(int id) {
 
 		// API 요청 주소 생성. (각 인물의 SNS, 유튜브, 홈페이지 등의 외부 아이디 정보를 받아옴)
 		String uri = String.format(apiUrl + "/person/" + id + "/external_ids" + "?api_key=%s", apiKey);
 
-		ExternalIDsDto externalIDsDtoEnUS;
-		externalIDsDtoEnUS = webClient.get()
+		ExternalIDsDto externalIDsDto;
+		externalIDsDto = webClient.get()
 				.uri(uri)
 				.retrieve()
 				.bodyToMono(ExternalIDsDto.class)
 				.block();
 
-		return externalIDsDtoEnUS;
+		return externalIDsDto;
 
 	}
 
@@ -195,11 +208,11 @@ public class PersonService {
 	}
 
 	/**
-	 * JSON 데이터를 받아 TvCreditsDto 객체로 변환.
+	 * JSON 데이터를 받아 tvCreditsDtoEnUS(영어), tvCreditsDtoKoKR(한국어) 객체로 변환.
 	 * 해당 인물이 cast(연기) 또는 crew(제작 등)로 참여한 TV 프로그램의 정보를 받아오기 위한 메서드.
 	 * @param id
 	 * 파라미터는 인물의 id 값.
-	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 externalIDsDtoEnUS(영어), externalIDsDtoKoKR(한국어) 객체.
+	 * @return API 요청으로 받아온 JSON 데이터를 매핑한 tvCreditsDtoEnUS(영어), tvCreditsDtoKoKR(한국어) 객체.
 	 */
 	public TvCreditsDto getTvCreditsEnUS(int id) {
 

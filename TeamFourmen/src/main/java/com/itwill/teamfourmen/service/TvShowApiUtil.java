@@ -58,7 +58,7 @@ public class TvShowApiUtil {
     &api_key=390e779304bcd53af3b649f4e27c6452
      */
     public TvShowListDTO getTvShowList (TvShowQueryParamDTO paramDTO) {
-        log.info("Get Tv Show List Param = {}", paramDTO);
+//        log.info("Get Tv Show List Param = {}", paramDTO);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -88,16 +88,16 @@ public class TvShowApiUtil {
         List<Integer> genreList = paramDTO.getWith_genres();
         if(genreList != null) {
             genreVariable =genreList.stream().map((x) -> x.toString()).collect(Collectors.joining("|"));
-            log.info("GENRES = {}", genreVariable);
+//            log.info("GENRES = {}", genreVariable);
         }
 
         String genres = genreVariable;
-        log.info("genres = {}", genres);
+//        log.info("genres = {}", genres);
 
         List<Integer> providerList = paramDTO.getWith_watch_provider();
         if(providerList != null) {
             providerVariable = providerList.stream().map((x) -> x.toString()).collect(Collectors.joining("|"));
-            log.info("PROVIDER = {}", providerVariable);
+//            log.info("PROVIDER = {}", providerVariable);
         }
 
         String providers = providerVariable;
@@ -157,7 +157,7 @@ public class TvShowApiUtil {
 
 
     public TvShowListDTO getTvShowList (String listCategory, int page) {
-        log.info("GET TV SHOW LIST Category = {}, Page = {}", listCategory, page);
+//        log.info("GET TV SHOW LIST Category = {}, Page = {}", listCategory, page);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -176,10 +176,10 @@ public class TvShowApiUtil {
                         .queryParam("api_key",API_KEY)
                         .buildAndExpand(String.valueOf(listCategory))
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+//                log.info("targetURL = {}", targetUrl);
                 break;
             default:
-                log.info("Wrong Pram - getTvShowList()");
+//                log.info("Wrong Pram - getTvShowList()");
                 break;
         }
 
@@ -189,7 +189,7 @@ public class TvShowApiUtil {
     }
 
     public TvShowListDTO getTrendTvShowList (String timeWindow, int page) {
-        log.info("Get Trend Tv Show List - TimeWindow = {} , Page = {}", timeWindow, page);
+//        log.info("Get Trend Tv Show List - TimeWindow = {} , Page = {}", timeWindow, page);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -207,10 +207,10 @@ public class TvShowApiUtil {
                     .queryParam("api_key", API_KEY)
                     .buildAndExpand(String.valueOf(timeWindow))
                     .toUriString();
-            log.info("targetURL = {}", targetUrl);
+//            log.info("targetURL = {}", targetUrl);
             break;
             default:
-                log.info("WRONG PARAM - getTrendTvShowList");
+//                log.info("WRONG PARAM - getTrendTvShowList");
                 break;
         }
 
@@ -233,7 +233,7 @@ public class TvShowApiUtil {
      */
 
     public TvShowListDTO getOttTvShowList (String platform, int page){
-        log.info("Get Ott Tv Show List platform = {}, page = {}" , platform, page);
+//        log.info("Get Ott Tv Show List platform = {}, page = {}" , platform, page);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -251,7 +251,7 @@ public class TvShowApiUtil {
                         .queryParam("with_watch_providers", 8)
                         .queryParam("api_key", API_KEY)
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+//                log.info("targetURL = {}", targetUrl);
                 break;
             case "disney_plus":
                 targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
@@ -262,7 +262,7 @@ public class TvShowApiUtil {
                         .queryParam("with_watch_providers", 337)
                         .queryParam("api_key", API_KEY)
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+//                log.info("targetURL = {}", targetUrl);
                 break;
             case "apple_tv":
                 targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
@@ -273,7 +273,7 @@ public class TvShowApiUtil {
                         .queryParam("with_watch_providers", 350)
                         .queryParam("api_key", API_KEY)
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+//                log.info("targetURL = {}", targetUrl);
                 break;
             case "amazone_prime":
                 targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
@@ -284,7 +284,7 @@ public class TvShowApiUtil {
                         .queryParam("with_watch_providers", 119)
                         .queryParam("api_key", API_KEY)
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+//                log.info("targetURL = {}", targetUrl);
                 break;
             case "watcha":
                 targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
@@ -295,7 +295,7 @@ public class TvShowApiUtil {
                         .queryParam("with_watch_providers", 97)
                         .queryParam("api_key", API_KEY)
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+//                log.info("targetURL = {}", targetUrl);
                 break;
             case "wavve":
                 targetUrl = UriComponentsBuilder.fromUriString(baseUrl)
@@ -306,10 +306,10 @@ public class TvShowApiUtil {
                         .queryParam("with_watch_providers", 356)
                         .queryParam("api_key", API_KEY)
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+//                log.info("targetURL = {}", targetUrl);
                 break;
             default:
-                log.info("WRONG PARAM - getOttTvShowList");
+//                log.info("WRONG PARAM - getOttTvShowList");
                 break;
         }
 
@@ -320,7 +320,7 @@ public class TvShowApiUtil {
 
     // 장르 가져오기
     public TvShowGenreListDTO getTvShowGenreList (String language) {
-        log.info("get TvShowGenreList - Language = {}", language);
+//        log.info("get TvShowGenreList - Language = {}", language);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -332,7 +332,7 @@ public class TvShowApiUtil {
                 .queryParam("language", language)
                 .queryParam("api_key", API_KEY)
                 .toUriString();
-        log.info("TARGET URL = {}", targetUrl);
+//        log.info("TARGET URL = {}", targetUrl);
 
         TvShowGenreListDTO tvShowGenreListDTO = restTemplate.getForObject(targetUrl, TvShowGenreListDTO.class);
 
@@ -342,7 +342,7 @@ public class TvShowApiUtil {
 
     // 장르별 TvShowList 출력
     public TvShowListDTO getGenreTvShowList (String genre, int page) {
-        log.info("get GenreTvShowList - Genre = {}, page = {}", genre, page);
+//        log.info("get GenreTvShowList - Genre = {}, page = {}", genre, page);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -358,7 +358,7 @@ public class TvShowApiUtil {
                 .queryParam("with_genres", genre)
                 .queryParam("api_key", API_KEY)
                 .toUriString();
-        log.info("TARGET URL = {}", targetUrl);
+//        log.info("TARGET URL = {}", targetUrl);
 
         TvShowListDTO tvShowListDTO = restTemplate.getForObject(targetUrl,TvShowListDTO.class);
         return  tvShowListDTO;
@@ -366,7 +366,7 @@ public class TvShowApiUtil {
 
 
     public TvShowDTO getTvShowDetails (int tvshow_id) {
-        log.info("get TvShow Season Detail - TVSHOW ID = {}", tvshow_id);
+//        log.info("get TvShow Season Detail - TVSHOW ID = {}", tvshow_id);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -380,7 +380,7 @@ public class TvShowApiUtil {
                 .queryParam("api_key", API_KEY)
                 .buildAndExpand(String.valueOf(tvshow_id))
                 .toUriString();
-        log.info("TARGET URL = {}",targetUrl);
+//        log.info("TARGET URL = {}",targetUrl);
 
         TvShowDTO tvShowDTO = restTemplate.getForObject(targetUrl, TvShowDTO.class);
 
@@ -388,7 +388,7 @@ public class TvShowApiUtil {
     }
 
     public TvShowVideoListDTO getTvShowVideo (int id){
-        log.info ("get TvShow Trailer Video - TVSHOW ID = {}", id);
+//        log.info ("get TvShow Trailer Video - TVSHOW ID = {}", id);
 
         String baseUrl = BASE_URL + "/tv";
 
@@ -413,13 +413,13 @@ public class TvShowApiUtil {
             e.printStackTrace();
         }
 
-        log.info("TVSHOW TRAILER VIDEO LIST = {}", tvShowVideoDTOList);
+//        log.info("TVSHOW TRAILER VIDEO LIST = {}", tvShowVideoDTOList);
 
         return tvShowVideoDTOList;
     }
 
     public TvShowWatchProviderListDTO getTvShowProvider(int tvshow_id){
-        log.info ("get TvShow Watch Provider List - TVSHOW_ID = {}", tvshow_id);
+//        log.info ("get TvShow Watch Provider List - TVSHOW_ID = {}", tvshow_id);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -432,7 +432,7 @@ public class TvShowApiUtil {
                 .queryParam("api_key", API_KEY)
                 .buildAndExpand(String.valueOf(tvshow_id))
                 .toUriString();
-        log.info("TARGET URL = {}", targetUrl);
+//        log.info("TARGET URL = {}", targetUrl);
 
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(targetUrl, String.class);
         String jsonString = responseEntity.getBody();
@@ -451,7 +451,7 @@ public class TvShowApiUtil {
     }
 
     public TvShowSeasonDTO getTvShowSeasonDetail (int tvshow_id ,int season_number){
-        log.info("get TvShow Season Detail - TVSHOW ID = {} , SEASON_NUM = {}", tvshow_id, season_number);
+//        log.info("get TvShow Season Detail - TVSHOW ID = {} , SEASON_NUM = {}", tvshow_id, season_number);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -467,7 +467,7 @@ public class TvShowApiUtil {
                 .queryParam("api_key", API_KEY)
                 .buildAndExpand(String.valueOf(tvshow_id), String.valueOf(season_number))
                 .toUriString();
-        log.info("TARGET URL = {}",targetUrl);
+//        log.info("TARGET URL = {}",targetUrl);
 
         TvShowSeasonDTO seasonDTO = restTemplate.getForObject(targetUrl, TvShowSeasonDTO.class);
 
@@ -475,7 +475,7 @@ public class TvShowApiUtil {
     }
 
     public TvShowEpisodeDTO getTvShowEpisodeDetail(int tvshow_id, int season_number, int episode_number){
-        log.info("get TvShow Episode Detail - TVSHOW ID = {} , SEASON_NUMBER = {}, EPISODE_NUMBER = {}", tvshow_id, season_number, episode_number);
+//        log.info("get TvShow Episode Detail - TVSHOW ID = {} , SEASON_NUMBER = {}, EPISODE_NUMBER = {}", tvshow_id, season_number, episode_number);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -493,7 +493,7 @@ public class TvShowApiUtil {
                 .queryParam("api_key", API_KEY)
                 .buildAndExpand(String.valueOf(tvshow_id), String.valueOf(season_number), String.valueOf(episode_number))
                 .toUriString();
-        log.info("TARGET URL = {}", targetUrl);
+//        log.info("TARGET URL = {}", targetUrl);
 
         TvShowEpisodeDTO episodeDTO = restTemplate.getForObject(targetUrl, TvShowEpisodeDTO.class);
 

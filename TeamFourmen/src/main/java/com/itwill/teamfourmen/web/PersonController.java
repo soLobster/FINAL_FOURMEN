@@ -13,7 +13,9 @@ import com.itwill.teamfourmen.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,9 +33,9 @@ public class PersonController {
 			Model model) {
 
 		// 서비스 메서드 호출
-		// 영어 데이터가 필요한 경우:
+		// 영어 데이터가 필요한 경우(인물 이름은 영어로만 받아옴):
 		PageAndListDto pageAndListDtoEnUS = personService.getPersonListEnUS(page);
-		// 한글 데이터가 필요한 경우:
+		// 한글 데이터가 필요한 경우(인물 이름은 영어로만 받아옴):
 		PageAndListDto pageAndListDtoKoKR = personService.getPersonListKoKR(page);
 
 		// 페이징 처리 관련 서비스 메서드 호출
@@ -41,6 +43,7 @@ public class PersonController {
 
 		model.addAttribute("pageInfoEnUS", pageAndListDtoEnUS.getPage());
 		model.addAttribute("pageInfoKoKR", pageAndListDtoKoKR.getPage());
+		pageAndListDtoKoKR.getPage();
 		model.addAttribute("personListEnUS", pageAndListDtoEnUS.getResults());
 		model.addAttribute("personListKoKR", pageAndListDtoKoKR.getResults());
 		model.addAttribute("paging", pagingDto);
@@ -55,11 +58,18 @@ public class PersonController {
 			Model model
 	) {
 
-		log.info("details(id={})", id);
+//		log.info("details(id={})", id);
 
 		// 서비스 메서드 호출 (인물의 id 값을 파라미터로 전달)
 		DetailsPersonDto detailsPersonDtoEnUS = personService.getPersonDetailsEnUS(id);
 		DetailsPersonDto detailsPersonDtoKoKR = personService.getPersonDetailsKoKR(id);
+
+		// 인물의 생년월일을 LocalDate 로 파싱.
+		LocalDate birthday = LocalDate.parse(detailsPersonDtoKoKR.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		// 나이 계산
+		int age = personService.calculateAge(birthday);
+		// 모델 객체에 인물의 나이 추가
+		model.addAttribute("age", age);
 
 		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 
