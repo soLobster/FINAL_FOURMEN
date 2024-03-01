@@ -74,7 +74,7 @@
                             </a>
                         </li>
                         <!-- 페이지 번호. 필요한 만큼만 페이지 번호 보여줌. 여기서는 10개씩 보이도록 함. -->
-                        <li class="page-item" th:each="pageNo : ${#numbers.sequence(paging.getStartPage(), paging.getEndPage())}" th:classappend="${pageNo == pageInfo} ? 'active'">
+                        <li class="page-item" th:each="pageNo : ${#numbers.sequence(paging.getStartPage(), paging.getEndPage())}" th:classappend="${pageNo == pageInfoKoKR} ? 'active'">
                             <a class="page-link" th:href="@{/person/list(page=${pageNo}, language=${param.language})}" th:text="${pageNo}">1</a>
                         </li>
                         <!-- 오른쪽 꺽쇠 하나. 누르면 현재 페이징의 마지막 페이지에서 + 1. 마지막 페이지 번호가 500일 때 오른쪽 꺽쇠 안 보임. -->

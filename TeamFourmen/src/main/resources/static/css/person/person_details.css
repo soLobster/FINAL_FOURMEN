@@ -28,15 +28,15 @@ body {
 .c_history {
     font-weight: 700;
     font-size: 1.15rem;
-    padding-top: 5px;
-    padding-bottom: 3px;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 /* C에서 인물 유명 분야 부분(포스터 이미지들) 스타일링 */
 .c_famous_field {
     font-weight: 700;
     font-size: 1.15rem;
     padding-top: 10px;
-    padding-bottom: 3px;
+    padding-bottom: 5px;
 }
 /* C에서 인물 약력(biography: 인물을 설명하는 글) 스타일링 */
 .c_person_biography {
@@ -46,14 +46,10 @@ body {
 }
 /* C에서 인물 약력 상세 정보 부분(출연작, 역할) 스타일링 */
 .c_titles, .c_makesAndSupports {
-    padding-top: 5px;
+    margin-top: 15px;
+    margin-bottom: 5px;
     font-weight: 700;
     font-size: 1.15rem;
-    padding-bottom: 5px;
-}
-/* C에서 인물 약력 상세 정보 부분 중 제작 및 지원 스타일링 */
-.c_makesAndSupports {
-    margin-top: 5px;
 }
 
 /* div 가로로 배치하기 */
@@ -108,7 +104,6 @@ a {
 }
 /* 인물 정보 내용 전체 스타일링 */
 .person_info_details p {
-
 }
 /* 인물 정보 내용 상세 부분의 제목들 스타일링 */
 .person_info_details {
@@ -122,6 +117,7 @@ a {
 }
 /* 인물 정보 내용 상세 부분의 내용들 스타일링 */
 .person_info_details_contents {
+    display: inline-block; /* span 태그는 인라인 요소이므로 display 속성을 따로 설정해줘야 함 */
     color: #2E2E2E;
     padding-bottom: 10px;
 }
@@ -235,7 +231,6 @@ a {
 
 /* 인물의 약력(출연작들이 테이블로 출력되는 div) */
 .history_famous_field_div {
-    padding-top: 10px;
 }
 
 /* 인물의 약력(history) 부분의 제목, 출시연도, 역할 */
@@ -251,6 +246,7 @@ a {
 .history_td_character, .history_td_titleOrName, .history_td_year {
     padding: 15px 15px;
     vertical-align: middle;
+    font-size: 15px;
 }
 
 /* 각 컬럼의 너비 설정 */
@@ -264,4 +260,85 @@ a {
     width: 32%;
 }
 
+/* 좋아요 버튼(따봉 버튼) 관련 스타일링 */
+.thumbs_up_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 버튼과 hr을 중앙 정렬 */
+}
+.thumbs_up_btn {
+    display: flex;
+    align-items: center; /* 이미지와 텍스트를 수직 중앙 정렬 */
+    padding: 5px; /* 필요에 따라 조정 */
+    border: none; /* 테두리 제거 */
+    background-color: transparent; /* 버튼 배경색 투명 */
+    cursor: pointer;
+}
+.thumbs_up_img {
+    width: 20px; /* 이미지 크기 조정 */
+    height: auto; /* 이미지 비율 유지 */
+    margin-right: 5px; /* 텍스트와의 간격 조정 */
+}
+.thumbs_up_span {
+    font-size: 13px; /* 텍스트 크기 조정 */
+}
+.hr_top_line, .hr_bottom_line {
+    width: 100%; /* hr의 너비를 부모 요소에 맞춤 */
+    border: 1px solid #ccc; /* 필요에 따라 스타일 조정 */
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* 좋아요를 눌렀을 때 적용할 스타일 */
+.liked .thumbs_up_img {
+    filter: grayscale(0%) brightness(1.2);
+}
+.liked .thumbs_up_span {
+    color: #ff4500; /* 예시 색상 */
+}
+
 /* 반응형 디자인 추가 */
+/* 작은 화면 (모바일) */
+@media screen and (max-width: 600px) {
+    .aAndBWrapper {
+        margin-left: 20px;
+    }
+    .c {
+        width: calc(100vw - 40px);
+        padding-left: 10px;
+    }
+    .profile_img {
+        width: 100px;
+        height: 150px;
+    }
+    .content_wrapper {
+        flex-direction: column;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+/* 태블릿 */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    .aAndBWrapper {
+        margin-left: 50px;
+    }
+    .c {
+        width: calc(100vw - 600px);
+    }
+    .profile_img {
+        width: 200px;
+        height: 300px;
+    }
+}
+
+/* 데스크탑 */
+@media screen and (min-width: 1025px) {
+    .aAndBWrapper {
+        margin-left: 300px;
+    }
+    .c {
+        padding-left: 30px;
+        width: calc(100vw - 900px);
+    }
+}
