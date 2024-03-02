@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -17,7 +18,7 @@
 	
 <body class="mainbody">
 	<a  href="http://localhost:8081" class="logo" target="_blank">
-    <img src="/image/포맨시네마로고.png" alt="">
+    <img th:src="@{image/logogood.png}" alt="">
   </a>
 
   <div class="sectionbig">
@@ -195,7 +196,7 @@
       	<button type="button" class="btn-close forgetclose" id="forgetbigclose" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="title">
-          <h1 class="title__h1 logintitle">Find ID<br>Find Password</h1> 
+           <img class="navbar-logo-image" th:src="@{image/logogood.png}">
         </div>
         <div class="buttons">
           <a id="signUp" class="buttons__signup letgo" href="#">Find Email</a>

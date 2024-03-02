@@ -1,8 +1,6 @@
 @charset "UTF-8";
 
-body{
-	background-color: rgb(31, 32, 41);
-}
+
 .search {
     padding-top: 3.5rem;
     padding-right: 18.5rem;
@@ -22,7 +20,7 @@ body{
     text-align: left;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    background-color: rgb(31, 32, 41);
+    background-color:#2D3A4A;
 }
 
 .search .forum-top-area .forum-search-area .forum-search-form-area {
@@ -116,21 +114,21 @@ body{
 }
 .freeboard-list{
 	justify-content: center;
-	background-color: rgb(31, 32, 41);
+	background-color:#2D3A4A;
 	color: white;
 		
 }
 .forum-select-box{
-		background-color: rgb(31, 32, 41);
+	background-color:#2D3A4A;
 	color: white;	
 }
 .forum-search-btn{
-	background-color: rgb(31, 32, 41);
+	background-color:#2D3A4A;
 	border:none;
 	color:white;
 }
 .membertable{
-	background-color: rgb(31, 32, 41);
+	background-color:#2D3A4A;
 	border:none;
 	color:white;
 	
@@ -143,7 +141,7 @@ body{
 	margin-bottom: 50px;
 }
 .page-link{
-	background-color: black;
+	background-color:#2D3A4A;
 	color: white;
 }
 

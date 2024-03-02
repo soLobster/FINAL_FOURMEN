@@ -157,7 +157,7 @@ public class TvShowApiUtil {
 
 
     public TvShowListDTO getTvShowList (String listCategory, int page) {
-        log.info("GET TV SHOW LIST Category = {}, Page = {}", listCategory, page);
+        //log.info("GET TV SHOW LIST Category = {}, Page = {}", listCategory, page);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -176,7 +176,7 @@ public class TvShowApiUtil {
                         .queryParam("api_key",API_KEY)
                         .buildAndExpand(String.valueOf(listCategory))
                         .toUriString();
-                log.info("targetURL = {}", targetUrl);
+                //log.info("targetURL = {}", targetUrl);
                 break;
             default:
                 log.info("Wrong Pram - getTvShowList()");
@@ -189,7 +189,7 @@ public class TvShowApiUtil {
     }
 
     public TvShowListDTO getTrendTvShowList (String timeWindow, int page) {
-        log.info("Get Trend Tv Show List - TimeWindow = {} , Page = {}", timeWindow, page);
+        //log.info("Get Trend Tv Show List - TimeWindow = {} , Page = {}", timeWindow, page);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -388,7 +388,7 @@ public class TvShowApiUtil {
     }
 
     public TvShowVideoListDTO getTvShowVideo (int id){
-        log.info ("get TvShow Trailer Video - TVSHOW ID = {}", id);
+        //log.info ("get TvShow Trailer Video - TVSHOW ID = {}", id);
 
         String baseUrl = BASE_URL + "/tv";
 
@@ -413,7 +413,7 @@ public class TvShowApiUtil {
             e.printStackTrace();
         }
 
-        log.info("TVSHOW TRAILER VIDEO LIST = {}", tvShowVideoDTOList);
+        //log.info("TVSHOW TRAILER VIDEO LIST = {}", tvShowVideoDTOList);
 
         return tvShowVideoDTOList;
     }

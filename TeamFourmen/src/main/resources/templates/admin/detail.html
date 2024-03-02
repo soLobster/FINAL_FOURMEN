@@ -9,10 +9,21 @@
 	rel="stylesheet"
 	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
 	crossorigin="anonymous">
-	<link rel="stylesheet" href="/css/mypage.css">
+
+	 <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>     
+	<link rel="stylesheet" th:href="@{/css/mypage.css}">
+	 <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
 </head>
 <body>
-<main>
+<header>
+       <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<section th:replace="~{/layout/MyPageBasic :: sectionFragment}"></section>
+
+<div class = "mypage-details-body" style="padding-bottom:20px;">
 
 	   <form th:action="@{/detail/update}" method="post" id="myForm" enctype="multipart/form-data">
     <div class="search">
@@ -162,14 +173,21 @@
          </div>	
    
     
-    </main>
+    </div>
     
     	
 </body>
+
+<script th:src="@{/js/detail.js}"></script>
 <script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
 		crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="/js/detail.js"></script>
+
+<script th:src="@{/js/admin2.js}"></script>
+<script th:src="@{/js/mypage.js}"></script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/Mypage/mypage-feature.js}"></script>
+
 </html>
