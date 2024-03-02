@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
+import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.dto.chat.ChatRoomDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,9 @@ public class WebSocketChatService {
 	 * @param nickname
 	 * @return ChatRoomDto타입의 유저가 접속한 채팅방 객체
 	 */
-	public ChatRoomDto addUser(String category, int roomId, String nickname) {
+	public ChatRoomDto addMember(String category, int roomId, Member member) {
 		
-		log.info("addUser(category={}, roomId={}, nickname={})", category, roomId, nickname);
+		log.info("addUser(category={}, roomId={}, member={})", category, roomId, member);
 		
 		log.info("chatRooms={}", chatRooms);
 		
@@ -40,17 +41,25 @@ public class WebSocketChatService {
 		ChatRoomDto roomDto = chatRooms.get(key);
 		
 		if (roomDto == null) {	// 방이 존재하지 않을 때
-			Set<String> users = new HashSet<String>();
-			users.add(nickname);
+			HashMap<Member, Integer> members = new HashMap<>();
+			members.put(member, 1);
 			
-			roomDto = ChatRoomDto.builder().roomId(roomId).users(users).category(category).build();
+			roomDto = ChatRoomDto.builder().roomId(roomId).members(members).category(category).build();
+			
+			log.info("roomDto={}", roomDto);
 			
 			chatRooms.put(key, roomDto);
 			
 		} else {	// 방이 이미 존재할 때
+			int numWindows = 0;
+			// 유저가 해당 채팅방 창 띄운 횟수 업데이트
+			if (roomDto.getMembers().get(member) != null) {
+				numWindows = roomDto.getMembers().get(member);
+			}
 			
-			roomDto.getUsers().add(nickname);
+			numWindows++;			
 			
+			roomDto.getMembers().put(member, numWindows);
 		}
 		
 		log.info("업데이트된 roomDto={}", roomDto);
@@ -87,22 +96,21 @@ public class WebSocketChatService {
 	 * @param nickname
 	 * @return
 	 */
-	public ChatRoomDto userLeft(String category, int roomId, String nickname) {
+	public ChatRoomDto userLeft(String category, int roomId, Member member) {
 		
-		log.info("userLeft(category={}, roomId={}, nickname={})", category, roomId, nickname);
+		log.info("userLeft(category={}, roomId={}, nickname={})", category, roomId, member);
 
 		String key = category + "_" + roomId;
 		
 		ChatRoomDto roomDto = chatRooms.get(key);
 		
-		roomDto.getUsers().remove(nickname);		
+		roomDto.getMembers().remove(member);		
 		
-		int numUsers = roomDto.getUsers().size(); 
+		int numUsers = roomDto.getMembers().size(); 
 		if (numUsers == 0) {	// 만약 유저가 나간 후 해당 채팅방에 남은 유저가 없으면 채팅방 삭제
 			chatRooms.remove(key);
 			
 			log.info("업데이트된 roomDto={}", roomDto);
-
 			
 			return null;
 		} else {	// 유저가 나갔어도 해당 채팅방에 남아있는 유저가 있으면 그냥 채팅방 객체 리턴			

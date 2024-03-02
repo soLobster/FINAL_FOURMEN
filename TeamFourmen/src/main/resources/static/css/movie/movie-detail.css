@@ -410,6 +410,10 @@
     position: relative;    
 }
 
+.movie-a-movie-card-overlay {
+    color: inherit;
+}
+
 .movie-whole-cards-container {
     display: flex;
     flex-wrap: nowrap;

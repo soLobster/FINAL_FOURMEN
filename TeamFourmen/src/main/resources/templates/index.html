@@ -3,15 +3,20 @@
 <html xmlns:th="http://www.thymeleaf.org"
 		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
+
 <head>
     <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>TEAM FOURMEN</title>
+        <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
     <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/theme.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
    <link rel="stylesheet" th:href="@{/css/user.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
  <style>
 
     *, *::after, *::before {
@@ -33,7 +38,7 @@
       background-color:   rgb(31, 32, 41);;
       color : rgb(196, 195, 202);
     }
-	
+
     .random-container {
       width: 100vw;
       margin: 0;
@@ -156,6 +161,8 @@
       overflow: hidden;
       width: auto;
       margin-right: 10px;
+       background-color:   rgb(31, 32, 41);
+      
     }
 
     .btn-slide-image {
@@ -177,10 +184,38 @@
     display: inline-block;
     width: auto; /* 부모 요소의 크기에 맞게 설정합니다 */
     height: auto; /* 부모 요소의 크기에 맞게 설정합니다 */
+     
+     
        
     
 }
+.ott-item-wrapper-actor:hover .card-img-overlay {
+    visibility: visible;
+    opacity: 1;
+     pointer-events: none; 
+  
+}
+.ott-item-wrapper-actor {
+    width: 200px; /* 원하는 부모 요소의 너비로 조정하세요 */
+    height: 200px; /* 원하는 부모 요소의 높이로 조정하세요 */
+    border-radius: 50%; /* 부모 요소를 원형으로 만듭니다 */
+    overflow: hidden; /* 이미지가 부모 요소를 넘어가지 않도록 합니다 */
+        position: relative;
+    display: inline-block;
+}
 
+.ott_img-actor{
+    width: 100%; /* 이미지를 부모 요소에 맞춰 가로로 채우기 */
+    height: auto; /* 이미지의 세로 비율을 유지하면서 자동으로 크기 조정 */
+    border-radius: 50%; /* 이미지를 원형으로 만듭니다 */
+    position: absolute; /* 이미지의 위치를 조정하기 위해 절대 위치로 설정합니다 */
+    top: 60%; /* 부모 요소의 상단을 기준으로 이미지를 세로 중앙에 배치합니다 */
+    left: 50%; /* 부모 요소의 왼쪽을 기준으로 이미지를 가로 중앙에 배치합니다 */
+    transform: translate(-50%, -50%);
+    }
+.actor-card{
+background-color: rgb(31, 32, 41);
+}    
 .card-img-overlay {
     visibility: hidden;
     opacity: 0;
@@ -271,7 +306,7 @@ color: #fbc500;
     width: 100%;
 }
 .wn, .list_unit>li {
-    display: table-row;
+    display: flex;
 }
 .wn, .list_unit>li>div {
     display: table-cell;
@@ -293,17 +328,50 @@ padding-bottom: 5px;
     color:white;
 }
 
-
+.text_num {
+    display: inline-block;
+   	font-size: 120px;
+   	font-weight: bold;
+    line-height: 24px;
+    border-radius: 5px;
+    text-align: center;
+}
+.text_num {
+    left: 20px;
+    position: relative;
+    top: -4px;
+    color:#7a7e96;
+}
 .ulno{
     list-style: none;
     padding: 0;
     margin: 0;
 }
+.actorpicture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.actorimage {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
   </style>
 </head>
 
 <body>
-    <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+    <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
 	
 
 	
@@ -322,9 +390,10 @@ padding-bottom: 5px;
       </button>
         <div class = "scroller mx-3 mt-3">
           <ol class = "tv_scoller">
-           <li class="border-0 card ott_item_card" th:each="moviecombined : ${moviecombineList}" th:object="${moviecombined}">
+           <li class="border-0 card ott_item_card" th:each="moviecombined, iterStat : ${moviecombineList.subList(0,15)}" th:object="${moviecombined}">
+    <span class="text_num"  th:text="${iterStat.count}"></span>
     <a th:href="@{/movie/details/{id}(id = ${moviecombined.movielistitemdto.id} )}" class="text-decoration-none">
-    <div class="ott-item-wrapper">
+    <div class="ott-item-wrapper border-0 card" style="overflow: hidden;">
         <img class="ott_img"
              th:if="${moviecombined.movielistitemdto.backdropPath != null}"
              th:src="@{'https://image.tmdb.org/t/p/w1280' + ${moviecombined.movielistitemdto.backdropPath}}"
@@ -332,7 +401,6 @@ padding-bottom: 5px;
         <img class="ott_img"
              th:unless="${moviecombined.movielistitemdto.backdropPath != null}"
              th:src="@{'/image/default-w600.png'}" width="auto" height="auto" />
-      
             <section class="card-img-overlay">
                 <div class="videobox" th:if="${moviecombined.key != null}">
                     <iframe style="width: 600px; height: 400px; object-fit: cover;"
@@ -340,7 +408,7 @@ padding-bottom: 5px;
                             
                 </div>
             </section>
-        
+       
     </div>
     </a>
 </li>
@@ -365,9 +433,10 @@ padding-bottom: 5px;
       </button>
         <div class = "scroller mx-3 mt-3">
           <ol class = "tv_scoller">
-           <li class="border-0 card ott_item_card" th:each="combined : ${combineList}" th:object="${combined}">
+           <li class="border-0 card ott_item_card" th:each="combined, iterStat : ${combineList.subList(0,15)}" th:object="${combined}">
+       <span class="text_num"  th:text="${iterStat.count}"></span>
     <a th:href="@{/tv/details/{id}(id = ${combined.tvShowDto.id} )}" class="text-decoration-none">
-    <div class="ott-item-wrapper">
+    <div class="ott-item-wrapper border-0 card" style="overflow: hidden;">
         <img class="ott_img"
              th:if="${combined.tvShowDto.backdrop_path != null}"
              th:src="@{'https://image.tmdb.org/t/p/w1280' + ${combined.tvShowDto.backdrop_path}}"
@@ -396,6 +465,109 @@ padding-bottom: 5px;
   </div>
   
   
+    	  <div class = "OTT">
+    <div class = "ott-header">
+   		<div class="actorpicture"><img class="actorimage" th:src="@{'https://image.tmdb.org/t/p/w1280' + ${randomactorphotox}}"/></div>
+        <h3 class = "ott-toptitle" th:text="${randomactornamex}+'\'s Works'"></h3>
+  
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+        <div class = "scroller mx-3 mt-3">
+          <ol class = "tv_scoller">
+           <li class="border-0 card ott_item_card" th:each="randomactorx : ${randomactorx}" th:object="${randomactorx}">
+     <th:block th:if="${randomactorx.mediaType == 'movie'}">
+        <a th:href="@{/movie/details/{id}(id=${randomactorx.id})}" class="text-decoration-none">
+    </th:block>
+    <th:block th:if="${randomactorx.mediaType == 'tv'}">
+        <a th:href="@{/tv/details/{id}(id=${randomactorx.id})}" class="text-decoration-none">
+    </th:block>
+    <div class="ott-item-wrapper">
+        <img class="ott_img"
+             th:if="${randomactorx.backdropPath != null}"
+             th:src="@{'https://image.tmdb.org/t/p/w1280' + ${randomactorx.backdropPath}}"
+             width="300" height="auto" />
+        <img class="ott_img"
+             th:unless="${randomactorx.backdropPath != null}"
+             th:src="@{'/image/default-w600.png'}" width="auto" height="auto" />
+      
+            <section class="card-img-overlay">
+                 <div class = "card-body">
+                  <p class="card-title fs-5 text-white" th:if="${randomactorx.mediaType == 'movie'}" th:text="${randomactorx.title}"></p>
+                  <p class="card-title fs-5 text-white" th:if="${randomactorx.mediaType == 'tv'}" th:text="${randomactorx.name}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:if="${randomactorx.mediaType == 'movie'}" th:text="${randomactorx.year}"></p>
+                   <p class = "card-text  fs-5 text-white fst-italic" th:if="${randomactorx.mediaType == 'tv'}" th:text="${randomactorx.year}"></p>
+                </div>
+            </section>
+        
+    </div>
+   </a>
+</li>
+          </ol>
+        </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+
+	  <div class = "OTT">
+    <div class = "ott-header">
+   		<div class="actorpicture"><img class="actorimage" th:src="@{'https://image.tmdb.org/t/p/w1280' + ${randomactorphoto}}"/></div>
+        <h3 class = "ott-toptitle" th:text="${randomactorname}+'\'s Works'"></h3>
+  
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+        <div class = "scroller mx-3 mt-3">
+          <ol class = "tv_scoller">
+           <li class="border-0 card ott_item_card" th:each="randomactor : ${randomactor}" th:object="${randomactor}">
+     <th:block th:if="${randomactor.mediaType == 'movie'}">
+        <a th:href="@{/movie/details/{id}(id=${randomactor.id})}" class="text-decoration-none">
+    </th:block>
+    <th:block th:if="${randomactor.mediaType == 'tv'}">
+        <a th:href="@{/tv/details/{id}(id=${randomactor.id})}" class="text-decoration-none">
+    </th:block>
+    <div class="ott-item-wrapper">
+        <img class="ott_img"
+             th:if="${randomactor.backdropPath != null}"
+             th:src="@{'https://image.tmdb.org/t/p/w1280' + ${randomactor.backdropPath}}"
+             width="300" height="auto" />
+        <img class="ott_img"
+             th:unless="${randomactor.backdropPath != null}"
+             th:src="@{'/image/default-w600.png'}" width="auto" height="auto" />
+      
+            <section class="card-img-overlay">
+                 <div class = "card-body">
+                  <p class="card-title fs-5 text-white" th:if="${randomactor.mediaType == 'movie'}" th:text="${randomactor.title}"></p>
+                  <p class="card-title fs-5 text-white" th:if="${randomactor.mediaType == 'tv'}" th:text="${randomactor.name}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:if="${randomactor.mediaType == 'movie'}" th:text="${randomactor.year}"></p>
+                   <p class = "card-text  fs-5 text-white fst-italic" th:if="${randomactor.mediaType == 'tv'}" th:text="${randomactor.year}"></p>
+                </div>
+            </section>
+        
+    </div>
+   </a>
+</li>
+          </ol>
+        </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+    
+  
+  
+   
  
   
   
@@ -411,7 +583,7 @@ padding-bottom: 5px;
 	<ul class="ulno">
 		<li class="page1 active">
 				<ul class="list_unit list_unit0">
-					<li class="has_rankB" th:each="posts, iterStat : ${toptvShowDto}" th:object="${posts}">
+					<li class="has_rankB" th:each="posts, iterStat : ${toptvShowDto.subList(0,7)}" th:object="${posts}">
 				<div class="list_rank_wrap box_rank rank1"><span class="list_rank text_en"  th:text="${iterStat.count}"></span></div>				<div class="list_main_wrap clearfix">
 			<span class="list_main">
 												<a class="title_link" href="/movietalk/91980364"  th:text="${posts.overview}"></a>
@@ -437,7 +609,7 @@ padding-bottom: 5px;
 	<ul class="ulno">
 		<li class="page1 active">
 				<ul class="list_unit list_unit1">
-						<li class="has_rankB" th:each="post, iterStat : ${topmovielist}" th:object="${post}">
+						<li class="has_rankB" th:each="post, iterStat : ${topmovielist.subList(0,7)}" th:object="${post}">
 				<div class="list_rank_wrap box_rank rank1"><span class="list_rank text_en"  th:text="${iterStat.count}"></span></div>				<div class="list_main_wrap clearfix">
 			<span class="list_main">
 												<a class="title_link" href="/movietalk/91980364"  th:text="${post.overview}"></a>
@@ -452,6 +624,54 @@ padding-bottom: 5px;
 </div>
 </div></div>
   </div>
+  
+    
+  
+   	  <div class = "OTT">
+    <div class = "ott-header">
+   		<i class="fa-solid fa-fire titlepic"></i>
+        <h3 class = "ott-toptitle">HOT ACTOR</h3>
+  		
+    </div>
+
+    <div class = "ott-container">
+      <button class = "btn-slide-image btn-prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+        <div class = "scroller mx-3 mt-3">
+          <ol class = "tv_scoller">
+           <li class="border-0 card ott_item_card actor-card" th:each="actor : ${actorlist}" th:object="${actor}">
+    <a th:href="@{/person/details/{id}(id = ${actor.actorinfo.id} )}" class="text-decoration-none">
+    <div class="ott-item-wrapper-actor">
+        <img class="ott_img-actor"
+             th:if="${actor.actorinfo.profilePath != null}"
+             th:src="@{'https://image.tmdb.org/t/p/w1280' + ${actor.actorinfo.profilePath}}"
+             width="300" height="auto" />
+        <img class="ott_img-actor"
+             th:unless="${actor.actorinfo.profilePath != null}"
+             th:src="@{'/image/person_default_image02.png'}" width="auto" height="auto" />
+      
+            <section class="card-img-overlay">
+                 <div class = "card-body">
+                  <p class = "card-title fs-5 text-white" th:text="${actor.actorinfo.name}"></p>
+                  <p class = "card-text  fs-5 text-white fst-italic" th:text="${actor.birthday}"></p>
+             
+                </div>
+            </section>
+        
+    </div>
+    </a>
+</li>
+          </ol>
+        </div>
+      <button class = "btn-slide-image btn-next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+  
+  
+  
   
      	  <div class = "OTT">
     <div class = "ott-header">
@@ -540,11 +760,9 @@ padding-bottom: 5px;
 
 
 	
-		<a th:href="@{/tv/main}">TV SHOW</a>
-	
-<a href="/admin">관리자페이지</a>
-	
 
+	
+ <footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>
 	
 
 
@@ -618,7 +836,25 @@ padding-bottom: 5px;
   
   
 </script>
+<script th:inline="javascript">
+    var mapOptions = {
+        center: new naver.maps.LatLng(37.4987, 127.0315), // 서울 시청 좌표
+        zoom: 15, // 확대 수준
+    };
 
+    var map = new naver.maps.Map('map', mapOptions);
+
+    var markerOptions = {
+        position: new naver.maps.LatLng(37.4987, 127.0315), // 서울 시청 좌표
+        map: map,
+    };
+
+    var marker = new naver.maps.Marker(markerOptions);
+
+ 
+
+    
+</script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 	</script>

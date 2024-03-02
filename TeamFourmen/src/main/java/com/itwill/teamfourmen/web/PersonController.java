@@ -1,19 +1,35 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Post;
+import com.itwill.teamfourmen.domain.PostLike;
+import com.itwill.teamfourmen.dto.board.CommentDto;
+import com.itwill.teamfourmen.dto.board.PostDto;
 import com.itwill.teamfourmen.dto.person.*;
+import com.itwill.teamfourmen.dto.post.PostCreateDto;
+
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwill.teamfourmen.service.BoardService;
 import com.itwill.teamfourmen.service.PersonService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,16 +40,17 @@ import java.util.stream.Collectors;
 public class PersonController {
 
 	private final PersonService personService;
-
+	private final BoardService boardService;
+	
 	@GetMapping("/list")
 	public String list(
 			@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
 			Model model) {
 
 		// 서비스 메서드 호출
-		// 영어 데이터가 필요한 경우:
+		// 영어 데이터가 필요한 경우(인물 이름은 영어로만 받아옴):
 		PageAndListDto pageAndListDtoEnUS = personService.getPersonListEnUS(page);
-		// 한글 데이터가 필요한 경우:
+		// 한글 데이터가 필요한 경우(인물 이름은 영어로만 받아옴):
 		PageAndListDto pageAndListDtoKoKR = personService.getPersonListKoKR(page);
 
 		// 페이징 처리 관련 서비스 메서드 호출
@@ -41,6 +58,7 @@ public class PersonController {
 
 		model.addAttribute("pageInfoEnUS", pageAndListDtoEnUS.getPage());
 		model.addAttribute("pageInfoKoKR", pageAndListDtoKoKR.getPage());
+		pageAndListDtoKoKR.getPage();
 		model.addAttribute("personListEnUS", pageAndListDtoEnUS.getResults());
 		model.addAttribute("personListKoKR", pageAndListDtoKoKR.getResults());
 		model.addAttribute("paging", pagingDto);
@@ -55,11 +73,32 @@ public class PersonController {
 			Model model
 	) {
 
-		log.info("details(id={})", id);
+//		log.info("details(id={})", id);
 
 		// 서비스 메서드 호출 (인물의 id 값을 파라미터로 전달)
 		DetailsPersonDto detailsPersonDtoEnUS = personService.getPersonDetailsEnUS(id);
 		DetailsPersonDto detailsPersonDtoKoKR = personService.getPersonDetailsKoKR(id);
+
+
+		// 인물의 생년월일을 처리하고 전달하는 코드.
+		if (detailsPersonDtoKoKR.getBirthday() != null) {
+			// 인물의 생년월일을 LocalDate로 파싱
+			LocalDate birthday = LocalDate.parse(detailsPersonDtoKoKR.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			// 나이 계산
+			int age = personService.calculateAge(birthday);
+			// 모델 객체에 인물의 나이 추가
+			model.addAttribute("age", age);
+		} else {
+			// 생년월일 정보가 null인 경우, 나이 대신 "-" 표시
+			model.addAttribute("age", "-");
+		}
+//		// 인물의 생년월일을 LocalDate 로 파싱.
+//		LocalDate birthday = LocalDate.parse(detailsPersonDtoKoKR.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//		// 나이 계산
+//		int age = personService.calculateAge(birthday);
+//		// 모델 객체에 인물의 나이 추가
+//		model.addAttribute("age", age);
+
 
 		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 
@@ -207,15 +246,15 @@ public class PersonController {
 		// *** 이 아래에서 중복을 제거 ***
 		// knownCredits 값이 어떻게 저장되어 있는지 확인
 		log.info("===============================================");
-		log.info("** 중복 제거 전 ** knownCreditsNameOrTitleSize(중복 제거 전 참여 작품 수)={}", knownCreditsNameOrTitle.size());
+//		log.info("** 중복 제거 전 ** knownCreditsNameOrTitleSize(중복 제거 전 참여 작품 수)={}", knownCreditsNameOrTitle.size());
 		// HastSet을 사용하여 중복을 제거. (name 과 title 만을 가지는 knownCreditsNameOrTitle 리스트를 중복 제거 처리)
 		Set<String> uniqueKnownCreditsNameOrTitle = new HashSet<>(knownCreditsNameOrTitle);
 		log.info("===============================================");
-		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleSize(중복 제거 후 참여 작품 수(set))={}", uniqueKnownCreditsNameOrTitle.size());
+//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleSize(중복 제거 후 참여 작품 수(set))={}", uniqueKnownCreditsNameOrTitle.size());
 		// 증복을 제거한 uniqueKnownCreditsNameOrTitle 을 다시 리스트로 변환.
 		List<String> uniqueKnownCreditsNameOrTitleList = new ArrayList<>(uniqueKnownCreditsNameOrTitle);
 		log.info("===============================================");
-		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleListSize(중복 제거 후 참여 작품 수(리스트))={}", uniqueKnownCreditsNameOrTitleList.size());
+//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleListSize(중복 제거 후 참여 작품 수(리스트))={}", uniqueKnownCreditsNameOrTitleList.size());
 		// ===============================  구분선  =============================== //
 		// HashSet을 사용하여 중복을 제거. (모든 요소를 가지는 리스트를 중복 제거 처리)
 		Set<CombinedCreditsCastDto> uniqueKnownCreditsAllCast = new HashSet<>(knownCreditsAllCast);
@@ -223,10 +262,10 @@ public class PersonController {
 		// 중복을 제거한 모든 요소를 가지는 set 을 다시 리스트로 변환.
 		List<CombinedCreditsCastDto> uniqueKnownCreditsAllCastList = new ArrayList<>(uniqueKnownCreditsAllCast);
 		log.info("===============================================");
-		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCastListSize(중복이 제거된 모든 Cast 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCastList.size());
+//		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCastListSize(중복이 제거된 모든 Cast 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCastList.size());
 		List<CombinedCreditsCrewDto> uniqueKnownCreditsAllCrewList = new ArrayList<>(uniqueKnownCreditsAllCrew);
 		log.info("===============================================");
-		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCrewListSize(중복이 제거된 모든 Crew 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCrewList.size());
+//		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCrewListSize(중복이 제거된 모든 Crew 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCrewList.size());
 
 		// 필터링한 CastList 를 모델에 추가. (중복 제거 O)
 		model.addAttribute("uniqueCastListPosterEnUS", uniqueCastListPosterEnUS);
@@ -258,6 +297,115 @@ public class PersonController {
 		return "person/person-details";
 	} // end details
 
-
+	
+	
+	// 게시판 관련 컨트롤러 메서드
+	@GetMapping("/board")
+	public String personBoardList(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		log.info("게시판 리스트 들어옴");
+		
+		Page<PostDto> postDtoList = boardService.getPostList("person", page);
+		postDtoList.forEach((post) -> {
+			Long likes = boardService.countLikes(post.getPostId());
+			post.setLikes(likes);
+		});
+		
+		// TODO: total element 타입 Long으로변경하는거 논의
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 5);		
+		log.info("pagingDto={}", pagingDto);
+		
+		model.addAttribute("category", "person");
+		model.addAttribute("postDtoList", postDtoList);
+		model.addAttribute("pagingDto", pagingDto);
+		
+		return "board/list";
+	}
+	
+	@GetMapping("/board/details")
+	public String personBoardDetails(@RequestParam(name = "id") Long id, Model model) {
+		log.info("personBoardDetails(id={})", id);
+		
+		PostDto postDetails = boardService.getPostDetail(id);
+		log.info("postDetails={}", postDetails);
+		
+		// 조회수 1 추가
+		boardService.addView(id);
+		
+		// 해당 게시물의 좋아요 개수
+		Long numLikes = boardService.countLikes(id);
+		
+		// 로그인한 유저가 해당 게시물을 좋아했는지 보기위해
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		PostLike haveLiked = boardService.haveLiked(signedInUser, id);
+		
+		// 해당 게시물의 댓글 리스트 가져옴
+		List<CommentDto> commentDtoList = boardService.getCommentList(id);
+		log.info("commentDtoList={}", commentDtoList);
+		
+		int numOfComments = boardService.getNumOfComments(commentDtoList);
+		
+		model.addAttribute("postDetails", postDetails);
+		model.addAttribute("numLikes", numLikes);
+		model.addAttribute("haveLiked", haveLiked);
+		model.addAttribute("boardName", "인물 게시판");
+		model.addAttribute("commentDtoList", commentDtoList);
+		model.addAttribute("numOfComments", numOfComments);
+		
+		
+		return "board/details";
+	}
+	
+	@GetMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")
+	public String personBoardCreate(Model model) {
+		log.info("인물 게시글 작성페이지");
+		
+		model.addAttribute("category", "person");
+		
+		return "board/create";
+	}
+	
+	/**
+	 * 게시글 작성하는 컨트롤러 메서드
+	 * @param postDto
+	 * @return
+	 */
+	@PostMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")	
+	public String postPersonBoard(@ModelAttribute PostCreateDto postDto) {
+		log.info("postPersonBoard(postDto={})", postDto);
+		
+		Post savedPost = boardService.post(postDto);
+		
+		return "redirect:/person/board/details?id=" + savedPost.getPostId();
+	}
+	
+	/**
+	 * 게시판 게시글 수정창으로 보내주는 컨트롤러 매서드
+	 * @param post
+	 * @param model
+	 * @return
+	 */
+	@PostMapping("/board/edit")
+	@PreAuthorize("isAuthenticated()")
+	public String editPersonBoard(@ModelAttribute Post post, Model model) {
+		
+		log.info("editPersonBoard(post={})", post);
+		model.addAttribute("post", post);
+		model.addAttribute("category", "person");
+		return "board/edit";
+	}
+	
+	
+	@PostMapping("/board/do-edit")
+	public String updatePersonPost(@ModelAttribute Post post) {
+		
+		log.info("updateMoviePost(post={})", post);
+		boardService.updatePost(post);
+		
+		return "redirect:/person/board/details?id=" + post.getPostId();
+	}
 
 }

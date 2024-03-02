@@ -224,6 +224,20 @@ public class FeatureService {
 		if(review.getMember().getEmail().equalsIgnoreCase(member.getEmail())){
 			reviewDao.delete(review);
 		}
+	/**
+	 * category가 pesron인 경우에 tmdbId의 개수를 가져와서 특정 인물의 좋아요 개수를 조회.
+	 * @param tmdbId
+	 * tmdbId: 조회하고자 하는 Tmdb ID(인물의 id)
+	 * @return 좋아요 개수
+	 */
+	public int getLikesCountFOrPersonCategory(int tmdbId) {
+		String category = "person";
+		int likesCount = tmdbLikeDao.countByTmdbIdAndCategory(tmdbId, category);
+
+		log.info("특정 인물의 좋아요 개수: tmdbID={}, likesCount={}", tmdbId, likesCount);
+
+		return likesCount;
+
 	}
 
 }

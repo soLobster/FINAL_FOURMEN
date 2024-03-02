@@ -6,14 +6,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import jakarta.persistence.Basic;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +41,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@DynamicInsert
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@SequenceGenerator(name = "member_member_id_seq", sequenceName = "member_member_id_seq", allocationSize = 1)
 @Entity @Table(name = "member")
 public class Member {
 
@@ -39,6 +54,10 @@ public class Member {
 	    
 	    @Basic(optional = false)
 	    private String password;
+	    
+	    //@Basic(optional = false)
+	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_member_id_seq")
+	    private Long memberId;
 	    
 	    @Basic(optional = false)
 	    private String name;

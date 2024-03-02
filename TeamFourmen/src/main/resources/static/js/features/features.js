@@ -114,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		} else {	// 만약 이미 좋아요를 누른 상태라면.
 
-
 			axios.post('/feature/like/delete', data)
 				.then((response) => {
 					console.log("좋아요 이미 눌름.. 좋아요 취소");

@@ -2,6 +2,7 @@ package com.itwill.teamfourmen.dto.board;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -39,9 +40,18 @@ public class CommentDto {
 	
 	private LocalDateTime createdTime;
 	
+	// 현재시간과 createdTime이 24시간 이내로 차이날 경우, 시간차를 분으로 나타내는 변수
+	private Long timeDifferenceInMinute;
+	
 	private Long likes;
 	
+	private Long replyTo;
+	
+	private String authorNicknameReplyingTo;
+	
 	private List<CommentLike> commentLikesList = new ArrayList<>();
+	
+	private List<CommentDto> repliesList = new ArrayList<>();
 	
 	public static CommentDto fromEntity(Comment comment) {
 		
@@ -52,7 +62,22 @@ public class CommentDto {
 					.content(comment.getContent())
 					.createdTime(comment.getCreatedTime())
 					.likes(comment.getLikes())
-					.build();		
+					.replyTo(comment.getReplyTo())
+					.authorNicknameReplyingTo(comment.getAuthorNicknameReplyingTo())
+					.commentLikesList(new ArrayList<CommentLike>())
+					.repliesList(new ArrayList<CommentDto>())
+					.build();
 	}
+	
+	
+	public static final Comparator<CommentDto> ORDER_BY_COMMENT_ID_ASC = new Comparator<CommentDto>() {
+
+		@Override
+		public int compare(CommentDto commentDto1, CommentDto commentDto2) {
+			
+			return Long.compare(commentDto1.getCommentId(), commentDto2.getCommentId());
+		}
+				
+	};
 	
 }
