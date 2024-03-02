@@ -88,7 +88,7 @@
 
 </head>
 <body>
-	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+	<nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
 	<h1>영화디테일</h1>
 	<header id="movie-details-header">
         <div id="movie-background-color-div">
@@ -307,11 +307,12 @@
                         <div class="movie-card-image-container">
                             <img th:src="@{https://media.themoviedb.org/t/p/w138_and_h175_face{profilePath} (profilePath = ${cast.profilePath})}"
                              alt="출연진 사진" class="img-movie-card">
-                            
-                            <div class="div-movie-card-overlay">
-                                <p th:text="${cast.name}" class="movie-card-name"></p>
-                                <p th:text="${cast.character}" class="movie-cast-character"></p>
-                            </div>                   
+                             <a class="movie-a-movie-card-overlay" th:href="@{/person/details/{personId} (personId=${cast.id})}">
+                                <div class="div-movie-card-overlay">
+                                    <p th:text="${cast.name}" class="movie-card-name"></p>
+                                    <p th:text="${cast.character}" class="movie-cast-character"></p>
+                                </div>
+                            </a>                                              
                          </div>
                     </div>                    
                 </div>
@@ -468,8 +469,12 @@
                             <p class="provider-options"><span th:each="option : ${provider.options}" th:text="${!optionStat.last ? option + ', ' : option}"></span></p>
                         </div> -->
                     </div>
+                    <br>
                 </div>
-
+               <small class = "my-0">Powered By</small><br>
+                <a th:href="@{'https://www.justwatch.com/kr'}" target="_blank">
+                    <span><img th:src = "@{'/image/justwatch.svg'}" width="auto" height="15"/></span>
+                </a>
             </section>
             
             <section class="movie-detailed-description aside-section">

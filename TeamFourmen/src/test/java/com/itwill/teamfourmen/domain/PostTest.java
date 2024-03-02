@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.itwill.teamfourmen.dto.post.PostDto;
+import com.itwill.teamfourmen.dto.post.PostCreateDto;
 import com.itwill.teamfourmen.repository.PostRepository;
 import com.itwill.teamfourmen.service.BoardService;
 
@@ -28,7 +28,7 @@ public class PostTest {
 		Assertions.assertNotNull(boardService);
 		log.info("--- boardService = {}", boardService);
 		
-		PostDto dto = new PostDto(null, "cirche1@naver.com", "aaa", "bbb", "movie", null, null, null, null);
+		PostCreateDto dto = new PostCreateDto(null, "cirche1@naver.com", "aaa", "bbb", "movie", null, null, null, null);
 		boardService.post(dto);
 		
 //		boardService.post(null);

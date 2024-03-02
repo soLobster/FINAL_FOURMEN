@@ -49,7 +49,7 @@
 
     	/* 이미지 관련 */
 figure.image {
-    text-align: center;
+    margin: 0 auto;
 }
 
         /* 이미지 크기 관련 */
@@ -160,11 +160,15 @@ figure.image {
     border-radius: 50%;
     overflow: hidden;
     display: inline-block;
+    min-width: 48px;
+    min-height: 48px;
+    
 }
 
 .post-comment-each-profile {
     width: 100%;
-    height: auto;
+    min-width: 100%;
+    min-height: 100%;
     object-fit: cover;  
 }
 
@@ -206,7 +210,7 @@ figure.image {
     gap: 8px;
     flex-wrap: nowrap;
     
-    margin: 0 0 0.5rem 0;
+    margin: 0 1rem 0.5rem 0;
     
 }
 
@@ -239,6 +243,7 @@ figure.image {
 }
     /* 댓글 몸체 */
 .post-comment-body-container {
+    margin-top: 16px;
     padding: 0.5 
 }
 
@@ -250,6 +255,7 @@ figure.image {
     justify-content: space-between;
     
     margin-top: 0.5rem;
+    margin-right: 1rem;
 }
 
 .post-comment-like-container:hover {
@@ -270,6 +276,7 @@ figure.image {
     	/* 각 댓글의 답근달기 버튼 */
 .post-comment-reply-container {
     margin-top: 16px;
+    margin-right: 1rem;
     display: flex;
     justify-content: end;
 }
@@ -280,8 +287,17 @@ figure.image {
     font-weight: 700;
     border: none;
     border-radius: 4px;
-}    	
+}
 
+.span-post-comment-replied-author {
+    cursor: pointer;
+}
+
+        /* 답장받은 댓글, 대댓글을 하이라이트 하기 위한 css */
+.post-comment-replied {
+    background-color: #1a659e!important;
+    transition: all 1s ease-in;
+}
 
         /* 본인작성 댓글일 때 삭제버튼 */
 .btn-post-comment-delete {
@@ -313,7 +329,7 @@ figure.image {
     	/* 대댓글 부분 컨테이너 */
 .post-comment-each-reply-container {
     background-color: #333533;
-}    	
+}
     	
 .post-comment-reply-author-create-date-container {
     display: flex;
@@ -323,4 +339,14 @@ figure.image {
 
 .post-comment-reply-l-icon-container {
     margin-right: 12px;
+}
+
+.post-comment-reply-body-container {
+    margin-left: 48px;
+}
+
+            /* 답변받는 글쓴이 */
+.span-post-comment-replied-author {
+    color: #5c6b73;
+    font-style: italic;
 }

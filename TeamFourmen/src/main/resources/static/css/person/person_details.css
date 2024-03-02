@@ -4,7 +4,7 @@
 /* person-details.html 에 포함 */
 
 body {
-    background-color: white;
+/*    background-color: white;*/
 }
 
 /* a와 b를 묶는 클래스((A)인물 대표 사진, (B)소셜 링크/인물 정보 묶음) */
@@ -28,15 +28,15 @@ body {
 .c_history {
     font-weight: 700;
     font-size: 1.15rem;
-    padding-top: 5px;
-    padding-bottom: 3px;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 /* C에서 인물 유명 분야 부분(포스터 이미지들) 스타일링 */
 .c_famous_field {
     font-weight: 700;
     font-size: 1.15rem;
     padding-top: 10px;
-    padding-bottom: 3px;
+    padding-bottom: 5px;
 }
 /* C에서 인물 약력(biography: 인물을 설명하는 글) 스타일링 */
 .c_person_biography {
@@ -46,14 +46,10 @@ body {
 }
 /* C에서 인물 약력 상세 정보 부분(출연작, 역할) 스타일링 */
 .c_titles, .c_makesAndSupports {
-    padding-top: 5px;
+    margin-top: 15px;
+    margin-bottom: 5px;
     font-weight: 700;
     font-size: 1.15rem;
-    padding-bottom: 5px;
-}
-/* C에서 인물 약력 상세 정보 부분 중 제작 및 지원 스타일링 */
-.c_makesAndSupports {
-    margin-top: 5px;
 }
 
 /* div 가로로 배치하기 */
@@ -64,15 +60,17 @@ body {
 }
 
 p {
-    color: black;
+    /*color: black;*/
 }
 
 span {
-    color: black;
+    color: #888888;
 }
 
 a {
     text-decoration: none;
+    font-weight: 700;
+    color: #BDBDBD;
 }
 
 /* social links 스타일링 */
@@ -83,7 +81,7 @@ a {
 .social_links span a {
     text-decoration: none;
     margin-right: 10px;
-    color: black;
+    /*color: black;*/
     /*color: white;*/
 }
 .social_links a i {
@@ -108,21 +106,23 @@ a {
 }
 /* 인물 정보 내용 전체 스타일링 */
 .person_info_details p {
-
+    /*color: #888888;*/
 }
 /* 인물 정보 내용 상세 부분의 제목들 스타일링 */
 .person_info_details {
     font-size: 15px;
+
 }
 /* 인물 정보 내용 상세 부분의 제목들 스타일링 */
 .person_info_details_titles {
     font-weight: 600;
-    color: black;
+    color: #bfbfbf;
     padding-bottom: 2px;
 }
 /* 인물 정보 내용 상세 부분의 내용들 스타일링 */
 .person_info_details_contents {
-    color: #2E2E2E;
+    display: inline-block; /* span 태그는 인라인 요소이므로 display 속성을 따로 설정해줘야 함 */
+    color: #888888;
     padding-bottom: 10px;
 }
 
@@ -169,18 +169,18 @@ a {
 }
 /* 스크롤바 트랙(배경) */
 .horizontal-scroll::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1); /* 트랙의 배경을 투명하게 설정 */
+    background: rgba(255, 255, 255, 0.1); /* 트랙의 배경을 투명하게 설정 */
     border-radius: 10px; /* 트랙의 모서리를 둥글게 */
 }
 /* 스크롤바 썸(드래그하는 부분) */
 .horizontal-scroll::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.5); /* 썸의 배경을 반투명하게 설정 */
+    background: rgba(200, 200, 200, 0.5); /* 썸의 배경을 반투명하게 설정 */
     border-radius: 10px; /* 썸의 모서리를 둥글게 */
 }
 /* 스크롤바 썸:hover(마우스 오버 시) */
 .horizontal-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.8); /* 마우스 오버 시 썸의 배경을 더 불투명하게 설정 */
-    color: #888888;
+    background: rgba(100, 100, 100, 0.7); /* 마우스 오버 시 썸의 배경을 더 불투명하게 설정 */
+    color: inherit;
 }
 
 /* 포스터 이미지 위에 마우스를 오버하면 div 로 작성한 포스터 정보가 출력되도록 하는 코드 */
@@ -197,8 +197,8 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(200, 200, 200, 0.8); /* 투명한 회색 배경 */
-    color: black; /* 텍스트 색상 */
+    background-color: rgba(150, 150, 150, 0.8); /* 투명한 회색 배경 */
+    /*color: black; !* 텍스트 색상 *!*/
     opacity: 0; /* 초기에는 안 보이도록 설정 */
     transition: opacity 0.3s ease; /* 페이드 인/아웃 효과를 위한 transition */
     display: flex; /* Flexbox 레이아웃 사용 */
@@ -216,12 +216,14 @@ a {
     font-weight: 700; /* 볼드체 적용 */
     font-size: 1.05rem;
     padding-bottom: 10px;
+    color: black;
 }
 .movie-title, .tv-name, .movie-mediaType, .tv-mediaType, .poster-info {
     width: 90%; /* 포스터 이미지의 너비에 맞게 조정하되, 양쪽에 여백을 주기 위해 100%보다 조금 작게 설정 */
     text-align: center; /* 텍스트를 중앙 정렬 */
     overflow-wrap: break-word; /* 긴 단어가 요소의 너비를 넘어갈 경우 줄바꿈 */
     white-space: normal; /* 공백 문자의 처리 방식을 정의. 기본값인 normal은 공백과 줄바꿈을 합쳐서 텍스트를 자동으로 줄바꿈함 */
+    color: black;
 }
 .movie-mediaType, .tv-mediaType {
     font-size: 0.9rem;
@@ -235,13 +237,12 @@ a {
 
 /* 인물의 약력(출연작들이 테이블로 출력되는 div) */
 .history_famous_field_div {
-    padding-top: 10px;
 }
 
 /* 인물의 약력(history) 부분의 제목, 출시연도, 역할 */
 .history_tr {
-    border-top: 1px solid #D8D8D8; /* 너비, 스타일, 색상 */
-    border-bottom: 1px solid #D8D8D8;
+    border-top: 1px solid #888888; /* 너비, 스타일, 색상 */
+    border-bottom: 1px solid #888888;
 }
 
 .history_td_year {
@@ -251,6 +252,7 @@ a {
 .history_td_character, .history_td_titleOrName, .history_td_year {
     padding: 15px 15px;
     vertical-align: middle;
+    font-size: 15px;
 }
 
 /* 각 컬럼의 너비 설정 */
@@ -264,4 +266,89 @@ a {
     width: 32%;
 }
 
+/* 좋아요 버튼(따봉 버튼) 관련 스타일링 */
+.thumbs_up_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 버튼과 hr을 중앙 정렬 */
+}
+.thumbs_up_btn {
+    display: flex;
+    align-items: center; /* 이미지와 텍스트를 수직 중앙 정렬 */
+    padding: 5px; /* 필요에 따라 조정 */
+    border: none; /* 테두리 제거 */
+    background-color: transparent; /* 버튼 배경색 투명 */
+    cursor: pointer;
+}
+.thumbs_up_img {
+    width: 20px; /* 이미지 크기 조정 */
+    height: auto; /* 이미지 비율 유지 */
+    margin-right: 5px; /* 텍스트와의 간격 조정 */
+    color: #adb5bd;
+}
+.thumbs_up_span {
+    font-size: 13px; /* 텍스트 크기 조정 */
+    color: #adb5bd;
+}
+
+.hr_top_line, .hr_bottom_line {
+    width: 100%; /* hr의 너비를 부모 요소에 맞춤 */
+    border: 1px solid #ccc; /* 필요에 따라 스타일 조정 */
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* 좋아요를 눌렀을 때 적용할 스타일 */
+.liked .thumbs_up_img {
+    /*filter: grayscale(0%) brightness(1.2);*/
+    /*filter: invert(100%);*/
+}
+.liked .thumbs_up_span {
+    color: #FA5858;
+}
+
 /* 반응형 디자인 추가 */
+/* 작은 화면 (모바일) */
+@media screen and (max-width: 600px) {
+    .aAndBWrapper {
+        margin-left: 20px;
+    }
+    .c {
+        width: calc(100vw - 40px);
+        padding-left: 10px;
+    }
+    .profile_img {
+        width: 100px;
+        height: 150px;
+    }
+    .content_wrapper {
+        flex-direction: column;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+/* 태블릿 */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    .aAndBWrapper {
+        margin-left: 50px;
+    }
+    .c {
+        width: calc(100vw - 600px);
+    }
+    .profile_img {
+        width: 200px;
+        height: 300px;
+    }
+}
+
+/* 데스크탑 */
+@media screen and (min-width: 1025px) {
+    .aAndBWrapper {
+        margin-left: 300px;
+    }
+    .c {
+        padding-left: 30px;
+        width: calc(100vw - 900px);
+    }
+}

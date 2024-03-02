@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <title>TEAM FOURMEN LAYOUT</title>
-<script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav id="navbar-container" th:fragment="navigation-bar">
@@ -12,6 +11,7 @@
             <a th:href="@{/}">      
                 <div class="navbar-logo-container">
                     <img class="navbar-logo-image" th:src="@{image/logogood.png}">
+
                 </div>
             </a>
             <div class="navbar-menu-outer-container nav-div-width-adjustment">
@@ -57,13 +57,13 @@
                             <span>Sign out</span>
                         </a>
                     </div>
-                     <div class="profile-picture" id="profile-picture">
 
-    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
-    <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
-	
+                     <div class="div-profile-image" id="profile-picture" th:nickname="${member.nickname}" th:email="${member.email}">
+                        <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
+                        <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile == 'userimage.png'}" th:src="@{/image/userimage.png}" class="profile-image">
+                        <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
+                	</div>
 
-	</div>
                 </th:block>
             </div>
         </div>
@@ -112,13 +112,7 @@
                     <div class="navbar-detailed-menu-list">
                         <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/day}">TV SHOW Trending Day LIST</a></div>
                         <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/week}">TV SHOW Trending Week LIST</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV SHOW Top_rated LIST</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/netflix}">TV SHOW Watch on Netflix</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/disney_plus}">TV SHOW Watch on Disney Plus</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/apple_tv}">TV SHOW Watch Apple Tv</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/amazon_prime}">TV SHOW Watch on Amazon Prime Video</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/watcha}">TV SHOW Watch on Watcha</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/ott/wavve}">TV SHOW Watch on Wavve</a></div>                   
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV SHOW Top_rated LIST</a></div>                  
                         <div class="navbar-each-menu-item"><a th:href="@{/tv/board}">TV Free Board</a></div>                   
                     </div>
 
@@ -151,10 +145,14 @@
             <div class="navbar-detailed-x-container">
                 <div class="navbar-detailed-x-div-mypage">
                    <a href='/mypage'><div class="profile-picture mypage-profile">
-
+    
+                   <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
+                   <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile == 'userimage.png'}" th:src="@{/image/userimage.png}" class="profile-image" >
+                   <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile"> 
+    <!--
     <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
     <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
-	
+	-->
 
 	</div></a><div sec:authorize="hasRole('USER')" th:text="${member.nickname}"></div>
 			  <div sec:authorize="hasRole('ADMIN')">ADMIN</div>
@@ -240,8 +238,6 @@
                 <div class="navbar-detailed-menu-items-mypage">
                     <div class="navbar-detailed-menu-list-mypage">
                         <div class="navbar-each-menu-item-mypage"><a th:href="@{/logout}">Logout</a></div>
-
-                       
                     </div>
                 </div>
             </div>                             

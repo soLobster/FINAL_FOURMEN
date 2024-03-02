@@ -1,5 +1,7 @@
 package com.itwill.teamfourmen.config;
 
+import java.util.HashMap;
+
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.dto.chat.ChatMessageDto;
 import com.itwill.teamfourmen.dto.chat.ChatRoomDto;
 import com.itwill.teamfourmen.service.WebSocketChatService;
@@ -39,21 +42,26 @@ public class WebSocketEventListener {
 		
 		log.info("유저 연결 끊김");
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-		String nickname = (String) headerAccessor.getSessionAttributes().get("nickname");
+		Member member = (Member) headerAccessor.getSessionAttributes().get("member");
 		String category = (String) headerAccessor.getSessionAttributes().get("category");
 		Integer roomId = (Integer) headerAccessor.getSessionAttributes().get("roomId");
 		
+		ChatRoomDto roomDto = chatService.getChatRoom(category, roomId);
+		// HashMap<Member, Integer> memberMapInRoom = roomDto.getMembers();
+		int numOfWindows = roomDto.getMembers().get(member);
+		numOfWindows--;
+		roomDto.getMembers().put(member, numOfWindows); // 유저가 띄운 창 개수 하나 빼고 채팅방의 Members 맵 업데이트함
 		
-		if (nickname != null) {
+		if (member != null && numOfWindows <= 0) {
 			
-			ChatMessageDto chatMessage = ChatMessageDto.builder().sender(nickname).type("LEAVE").build();
+			ChatMessageDto chatMessage = ChatMessageDto.builder().member(member).type("LEAVE").build();
 						
-			ChatRoomDto roomDto = chatService.userLeft(category, roomId, nickname);
+			ChatRoomDto roomDtoAfterLeave = chatService.userLeft(category, roomId, member);
 			
 			messagingTemplate.convertAndSend("/topic/" + category + "/" + roomId, chatMessage);
 			
-			if (roomDto != null) {
-				messagingTemplate.convertAndSend("/topic/" + category + "/" + roomId, roomDto.getUsers().size());	
+			if (roomDtoAfterLeave != null) {
+				messagingTemplate.convertAndSend("/topic/" + category + "/" + roomId, roomDtoAfterLeave.getMembers().size());	
 			}
 			
 			

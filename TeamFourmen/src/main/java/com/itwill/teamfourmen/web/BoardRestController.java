@@ -31,11 +31,29 @@ public class BoardRestController {
 	
 	private final BoardService boardService;
 	
+	
+	/**
+	 * 게시글 삭제하는 컨트롤러 메서드
+	 * @param postId
+	 */
 	@DeleteMapping("/delete/{postId}")
 	public void deletePost(@PathVariable(name = "postId") Long postId) {
 		log.info("deletePost(postId={})", postId);
 		
 		boardService.deletePost(postId);
+	}
+	
+	/**
+	 * PostId를 아규먼트로 받아 postId에 해당하는 게시글의 댓글 개수를 반환
+	 * @param postId
+	 * @return
+	 */
+	@GetMapping("/{postId}/num-of-comments")
+	public ResponseEntity<Integer> getNumOfComments(@PathVariable(name = "postId")Long postId) {
+		List<CommentDto> commentDtoList = boardService.getCommentList(postId);
+		int numOfComments = boardService.getNumOfComments(commentDtoList);
+		
+		return ResponseEntity.ok(numOfComments);
 	}
 	
 	
@@ -66,6 +84,11 @@ public class BoardRestController {
 		
 	}
 	
+	/**
+	 * postId를 아규먼트로 받아 postId에 해당하는 댓글 데이터를 반환하는 컨트롤러 메서드
+	 * @param postId
+	 * @return
+	 */
 	@GetMapping("/comment/refresh")
 	public ResponseEntity<List<CommentDto>> refreshComment(@RequestParam(name = "postId") Long postId) {
 		

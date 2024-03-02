@@ -1,7 +1,6 @@
 /**
  * board-create.js
  */
-
 document.addEventListener('DOMContentLoaded', function() {
 	const editor = document.querySelector('#editor');
 	
@@ -14,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	ClassicEditor.create(editor, {
 		language: "ko",
-		
+
         ckfinder: {
             uploadUrl: "/ckeditor/image/upload",
             withCredentials: true

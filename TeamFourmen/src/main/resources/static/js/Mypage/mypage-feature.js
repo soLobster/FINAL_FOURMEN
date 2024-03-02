@@ -13,10 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const pathName = location.pathname;
     const userEmail = pathName.split('/')[3];
 
-
-
-
-    const loggedInUser = document.querySelector('.div-profile-image').getAttribute('email');
+    const loggedInUser = document.querySelector('.profile-picture').getAttribute('email');
 
     console.log('로그인 유저 = '+loggedInUser);
 

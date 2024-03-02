@@ -58,6 +58,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	
 	
+	// aws위한 의존성
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	
+	
 	// Querydsl ----
 	
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta' // springboot 3.0 이상일때
