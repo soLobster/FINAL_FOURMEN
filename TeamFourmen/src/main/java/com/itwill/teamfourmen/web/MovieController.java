@@ -90,7 +90,7 @@ public class MovieController {
 		
 		log.info("보드서비스={}", boardService);
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -109,7 +109,7 @@ public class MovieController {
 		getInitialList("now_playing", model);
 		
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -127,7 +127,7 @@ public class MovieController {
 		
 		getInitialList("top_rated", model);
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -145,7 +145,7 @@ public class MovieController {
 		
 		getInitialList("upcoming", model);
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -165,7 +165,7 @@ public class MovieController {
 		
 		getInitialList(filterDto, model);		
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -177,7 +177,7 @@ public class MovieController {
 		
 		getInitialList(searchDto, model);
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -313,7 +313,7 @@ public class MovieController {
 //		model.addAttribute("movieReviewList", movieReviewList);
 //		model.addAttribute("myReview", myReview);
 		
-		return "/movie/movie-details";
+		return "movie/movie-details";
 	}
 	
 	@GetMapping("/board")
@@ -334,7 +334,7 @@ public class MovieController {
 		model.addAttribute("postDtoList", postDtoList);
 		model.addAttribute("pagingDto", pagingDto);
 		
-		return "/board/list";
+		return "board/list";
 	}
 	
 	@GetMapping("/board/details")
@@ -370,7 +370,7 @@ public class MovieController {
 		model.addAttribute("numOfComments", numOfComments);
 		
 		
-		return "/board/details";
+		return "board/details";
 	}
 	
 	@GetMapping("/board/create")
@@ -380,7 +380,7 @@ public class MovieController {
 		
 		model.addAttribute("category", "movie");
 		
-		return "/board/create";
+		return "board/create";
 	}
 	
 	/**
@@ -411,7 +411,7 @@ public class MovieController {
 		log.info("editMovieBoard(post={})", post);
 		model.addAttribute("post", post);
 		model.addAttribute("category", "movie");
-		return "/board/edit";
+		return "board/edit";
 	}
 	
 	

@@ -294,7 +294,7 @@ public class PersonController {
 		model.addAttribute("postDtoList", postDtoList);
 		model.addAttribute("pagingDto", pagingDto);
 		
-		return "/board/list";
+		return "board/list";
 	}
 	
 	@GetMapping("/board/details")
@@ -330,7 +330,7 @@ public class PersonController {
 		model.addAttribute("numOfComments", numOfComments);
 		
 		
-		return "/board/details";
+		return "board/details";
 	}
 	
 	@GetMapping("/board/create")
@@ -340,7 +340,7 @@ public class PersonController {
 		
 		model.addAttribute("category", "person");
 		
-		return "/board/create";
+		return "board/create";
 	}
 	
 	/**
@@ -371,7 +371,7 @@ public class PersonController {
 		log.info("editPersonBoard(post={})", post);
 		model.addAttribute("post", post);
 		model.addAttribute("category", "person");
-		return "/board/edit";
+		return "board/edit";
 	}
 	
 	

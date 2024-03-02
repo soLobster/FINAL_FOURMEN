@@ -51,7 +51,7 @@ public class WebSocketChatController {
 			model.addAttribute("title", title);
 		}
 		
-		return "/chat/openchat";
+		return "chat/openchat";
 	}
 	
 	

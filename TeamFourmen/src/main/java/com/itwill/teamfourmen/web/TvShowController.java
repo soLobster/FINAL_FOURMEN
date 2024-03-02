@@ -450,7 +450,7 @@ public class TvShowController {
 		model.addAttribute("postDtoList", postDtoList);
 		model.addAttribute("pagingDto", pagingDto);
 		
-		return "/board/list";
+		return "board/list";
 	}
 	
 	@GetMapping("/board/details")
@@ -486,7 +486,7 @@ public class TvShowController {
 		model.addAttribute("numOfComments", numOfComments);
 		
 		
-		return "/board/details";
+		return "board/details";
 	}
 	
 	@GetMapping("/board/create")
@@ -496,7 +496,7 @@ public class TvShowController {
 		
 		model.addAttribute("category", "tv");
 		
-		return "/board/create";
+		return "board/create";
 	}
 	
 	/**
@@ -527,7 +527,7 @@ public class TvShowController {
 		log.info("editTvBoard(post={})", post);
 		model.addAttribute("post", post);
 		model.addAttribute("category", "tv");
-		return "/board/edit";
+		return "board/edit";
 	}
 	
 	
