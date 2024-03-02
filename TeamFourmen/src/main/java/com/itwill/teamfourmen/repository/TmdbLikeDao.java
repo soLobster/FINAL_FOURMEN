@@ -18,4 +18,6 @@ public interface TmdbLikeDao extends JpaRepository<TmdbLike, Long> {
 	void deleteByMemberEmailAndCategoryAndTmdbId(String email, String category, int tmdbId);
 	// 주어진 이메일과 카테고리에 해당하는 모든 TmdbLike 엔티티들의 리스트를 반환
 	List<TmdbLike> findByMemberEmailAndCategory(String email, String category);
+	// 주어진 tmdbId와 category가 "person"인 TmdbLike 엔티티들의 개수를 반환
+	int countByTmdbIdAndCategory(int tmdbId, String category);
 }

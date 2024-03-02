@@ -4,7 +4,7 @@
 
 /* 페이지 배경색 설정 */
 body {
-    background-color: black;
+    /*background-color: inherit;*/
 }
 
 .container-fluid {
@@ -33,7 +33,7 @@ body {
     font-weight: 700;
     font-size: 30px;
     margin-bottom: 2.5rem;
-    color: white;
+    /*color: white;*/
 }
 
 /* 4(열)x5(행) 그리드 생성 */
@@ -49,7 +49,7 @@ body {
 
 /* 카드 스타일링 */
 .item_profile_card {
-    background: white;
+    background: #bfbfbf;
     border: 1px solid black;
     border-radius: 4px;
     display: flex;
@@ -86,11 +86,27 @@ body {
     white-space: nowrap; /* 텍스트를 한 줄에 표시 */
     overflow: hidden; /* 넘치는 내용 숨기기 */
     text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
-
 }
 .meta p a {
     text-decoration-line: none;
     color: black;
+}
+
+/* 페이지네이션 스타일링 */
+.pagination .page-link {
+    color: #6c757d; /* 페이지 번호 텍스트 색상을 어두운 회색으로 설정 */
+    background-color: #e9ecef; /* 배경 색상을 회색으로 설정 */
+    border-color: #dee2e6; /* 테두리 색상을 회색 계열로 설정 */
+}
+.pagination .page-link:hover {
+    color: #495057; /* 호버 시 텍스트 색상을 더 어두운 회색으로 변경 */
+    background-color: #dee2e6; /* 호버 시 배경 색상을 더 진한 회색으로 변경 */
+    border-color: #ced4da; /* 호버 시 테두리 색상을 조정 */
+}
+.pagination .page-item.active .page-link {
+    color: #fff; /* 활성 페이지 번호 텍스트 색상을 흰색으로 설정 */
+    background-color: #6c757d; /* 활성 페이지 배경 색상을 어두운 회색으로 설정 */
+    border-color: #6c757d; /* 활성 페이지 테두리 색상을 어두운 회색으로 설정 */
 }
 
 /* 반응형 스타일링 */

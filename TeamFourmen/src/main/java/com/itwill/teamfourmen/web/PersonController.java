@@ -64,12 +64,26 @@ public class PersonController {
 		DetailsPersonDto detailsPersonDtoEnUS = personService.getPersonDetailsEnUS(id);
 		DetailsPersonDto detailsPersonDtoKoKR = personService.getPersonDetailsKoKR(id);
 
-		// 인물의 생년월일을 LocalDate 로 파싱.
-		LocalDate birthday = LocalDate.parse(detailsPersonDtoKoKR.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		// 나이 계산
-		int age = personService.calculateAge(birthday);
-		// 모델 객체에 인물의 나이 추가
-		model.addAttribute("age", age);
+
+		// 인물의 생년월일을 처리하고 전달하는 코드.
+		if (detailsPersonDtoKoKR.getBirthday() != null) {
+			// 인물의 생년월일을 LocalDate로 파싱
+			LocalDate birthday = LocalDate.parse(detailsPersonDtoKoKR.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			// 나이 계산
+			int age = personService.calculateAge(birthday);
+			// 모델 객체에 인물의 나이 추가
+			model.addAttribute("age", age);
+		} else {
+			// 생년월일 정보가 null인 경우, 나이 대신 "-" 표시
+			model.addAttribute("age", "-");
+		}
+//		// 인물의 생년월일을 LocalDate 로 파싱.
+//		LocalDate birthday = LocalDate.parse(detailsPersonDtoKoKR.getBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//		// 나이 계산
+//		int age = personService.calculateAge(birthday);
+//		// 모델 객체에 인물의 나이 추가
+//		model.addAttribute("age", age);
+
 
 		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 
@@ -217,15 +231,15 @@ public class PersonController {
 		// *** 이 아래에서 중복을 제거 ***
 		// knownCredits 값이 어떻게 저장되어 있는지 확인
 		log.info("===============================================");
-		log.info("** 중복 제거 전 ** knownCreditsNameOrTitleSize(중복 제거 전 참여 작품 수)={}", knownCreditsNameOrTitle.size());
+//		log.info("** 중복 제거 전 ** knownCreditsNameOrTitleSize(중복 제거 전 참여 작품 수)={}", knownCreditsNameOrTitle.size());
 		// HastSet을 사용하여 중복을 제거. (name 과 title 만을 가지는 knownCreditsNameOrTitle 리스트를 중복 제거 처리)
 		Set<String> uniqueKnownCreditsNameOrTitle = new HashSet<>(knownCreditsNameOrTitle);
 		log.info("===============================================");
-		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleSize(중복 제거 후 참여 작품 수(set))={}", uniqueKnownCreditsNameOrTitle.size());
+//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleSize(중복 제거 후 참여 작품 수(set))={}", uniqueKnownCreditsNameOrTitle.size());
 		// 증복을 제거한 uniqueKnownCreditsNameOrTitle 을 다시 리스트로 변환.
 		List<String> uniqueKnownCreditsNameOrTitleList = new ArrayList<>(uniqueKnownCreditsNameOrTitle);
 		log.info("===============================================");
-		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleListSize(중복 제거 후 참여 작품 수(리스트))={}", uniqueKnownCreditsNameOrTitleList.size());
+//		log.info("** 중복 제거 후 ** uniqueKnownCreditsNameOrTitleListSize(중복 제거 후 참여 작품 수(리스트))={}", uniqueKnownCreditsNameOrTitleList.size());
 		// ===============================  구분선  =============================== //
 		// HashSet을 사용하여 중복을 제거. (모든 요소를 가지는 리스트를 중복 제거 처리)
 		Set<CombinedCreditsCastDto> uniqueKnownCreditsAllCast = new HashSet<>(knownCreditsAllCast);
@@ -233,10 +247,10 @@ public class PersonController {
 		// 중복을 제거한 모든 요소를 가지는 set 을 다시 리스트로 변환.
 		List<CombinedCreditsCastDto> uniqueKnownCreditsAllCastList = new ArrayList<>(uniqueKnownCreditsAllCast);
 		log.info("===============================================");
-		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCastListSize(중복이 제거된 모든 Cast 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCastList.size());
+//		log.info("** 모든 요소를 가지는 Cast 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCastListSize(중복이 제거된 모든 Cast 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCastList.size());
 		List<CombinedCreditsCrewDto> uniqueKnownCreditsAllCrewList = new ArrayList<>(uniqueKnownCreditsAllCrew);
 		log.info("===============================================");
-		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCrewListSize(중복이 제거된 모든 Crew 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCrewList.size());
+//		log.info("** 모든 요소를 가지는 Crew 리스트 중복 제거 후 리스트의 크기 ** uniqueKnownCreditsAllCrewListSize(중복이 제거된 모든 Crew 요소를 가지는 리스트의 크기)={}", uniqueKnownCreditsAllCrewList.size());
 
 		// 필터링한 CastList 를 모델에 추가. (중복 제거 O)
 		model.addAttribute("uniqueCastListPosterEnUS", uniqueCastListPosterEnUS);

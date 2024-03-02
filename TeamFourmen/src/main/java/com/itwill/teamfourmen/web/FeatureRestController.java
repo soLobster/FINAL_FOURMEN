@@ -1,11 +1,8 @@
 package com.itwill.teamfourmen.web;
 
 import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
 import com.itwill.teamfourmen.domain.Review;
@@ -62,6 +59,18 @@ public class FeatureRestController {
 	public void addReviewLike(@RequestBody ReviewLikeDTO reviewLikeDto) {
 		log.info("addReviewLike(reviewLike={})", reviewLikeDto);
 		featureService.controllReviewLike(reviewLikeDto);
+	}
+
+	/**
+	 * 특정 tmdbId와 category가 "person"인 경우의 좋아요 개수를 조회하는 API 엔드포인트.
+	 * @param tmdbId 조회하고자 하는 Tmdb ID
+	 * @return 좋아요 개수
+	 */
+	@GetMapping("/like/count")
+	public ResponseEntity<Integer> getLikesCountForPerson(@RequestParam int tmdbId) {
+		int likesCount = featureService.getLikesCountFOrPersonCategory(tmdbId);
+		log.info("getLikesCountForPerson: tmdbId={}, likesCount={}", tmdbId, likesCount);
+		return ResponseEntity.ok(likesCount);
 	}
 
 
