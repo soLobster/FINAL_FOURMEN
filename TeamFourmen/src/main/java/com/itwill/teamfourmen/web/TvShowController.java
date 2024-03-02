@@ -6,15 +6,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.itwill.teamfourmen.domain.*;
+import com.itwill.teamfourmen.dto.board.CommentDto;
+import com.itwill.teamfourmen.dto.board.PostDto;
+import com.itwill.teamfourmen.dto.person.PageAndListDto;
+import com.itwill.teamfourmen.dto.post.PostCreateDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.*;
+import com.itwill.teamfourmen.service.BoardService;
 import com.itwill.teamfourmen.service.CommentService;
 import com.itwill.teamfourmen.service.FeatureService;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.TvShowApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
@@ -42,8 +49,10 @@ public class TvShowController {
 	private final ImdbRatingUtil imdbRatingUtil;
 	private final FeatureService featureService;
 	private final CommentService commentService;
-
+	private final BoardService boardService;
+	
 	private String category = "tv";
+	
 
 	@GetMapping("/main")
 	public String getTvShowMain(Model model){
@@ -418,6 +427,120 @@ public class TvShowController {
 
 		return "tvshow/season-details";
 	}
+	
+	
+	
+	// 게시판 관련 컨트롤러 메서드
+	
+	@GetMapping("/board")
+	public String tvBoardList(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		log.info("게시판 리스트 들어옴");
+		
+		Page<PostDto> postDtoList = boardService.getPostList("tv", page);
+		postDtoList.forEach((post) -> {
+			Long likes = boardService.countLikes(post.getPostId());
+			post.setLikes(likes);
+		});
+		
+		// TODO: total element 타입 Long으로변경하는거 논의
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 5);		
+		log.info("pagingDto={}", pagingDto);
+		
+		model.addAttribute("category", "tv");
+		model.addAttribute("postDtoList", postDtoList);
+		model.addAttribute("pagingDto", pagingDto);
+		
+		return "board/list";
+	}
+	
+	@GetMapping("/board/details")
+	public String tvBoardDetails(@RequestParam(name = "id") Long id, Model model) {
+		log.info("movieBoardDetails(id={})", id);
+		
+		PostDto postDetails = boardService.getPostDetail(id);
+		log.info("postDetails={}", postDetails);
+		
+		// 조회수 1 추가
+		boardService.addView(id);
+		
+		// 해당 게시물의 좋아요 개수
+		Long numLikes = boardService.countLikes(id);
+		
+		// 로그인한 유저가 해당 게시물을 좋아했는지 보기위해
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		PostLike haveLiked = boardService.haveLiked(signedInUser, id);
+		
+		// 해당 게시물의 댓글 리스트 가져옴
+		List<CommentDto> commentDtoList = boardService.getCommentList(id);
+		log.info("commentDtoList={}", commentDtoList);
+		
+		int numOfComments = boardService.getNumOfComments(commentDtoList);
+		
+		model.addAttribute("postDetails", postDetails);
+		model.addAttribute("numLikes", numLikes);
+		model.addAttribute("haveLiked", haveLiked);
+		model.addAttribute("boardName", "TV게시판");
+		model.addAttribute("commentDtoList", commentDtoList);
+		model.addAttribute("numOfComments", numOfComments);
+		
+		
+		return "board/details";
+	}
+	
+	@GetMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")
+	public String personBoardCreate(Model model) {
+		log.info("티비 게시글 작성페이지");
+		
+		model.addAttribute("category", "tv");
+		
+		return "board/create";
+	}
+	
+	/**
+	 * 게시글 작성하는 컨트롤러 메서드
+	 * @param postDto
+	 * @return
+	 */
+	@PostMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")	
+	public String postTvBoard(@ModelAttribute PostCreateDto postDto) {
+		log.info("postTvBoard(postDto={})", postDto);
+		
+		Post savedPost = boardService.post(postDto);
+		
+		return "redirect:/tv/board/details?id=" + savedPost.getPostId();
+	}
+	
+	/**
+	 * 게시판 게시글 수정창으로 보내주는 컨트롤러 매서드
+	 * @param post
+	 * @param model
+	 * @return
+	 */
+	@PostMapping("/board/edit")
+	@PreAuthorize("isAuthenticated()")
+	public String editTvBoard(@ModelAttribute Post post, Model model) {
+		
+		log.info("editTvBoard(post={})", post);
+		model.addAttribute("post", post);
+		model.addAttribute("category", "tv");
+		return "board/edit";
+	}
+	
+	
+	@PostMapping("/board/do-edit")
+	public String updateTvPost(@ModelAttribute Post post) {
+		
+		log.info("updateTvPost(post={})", post);
+		boardService.updatePost(post);
+		
+		return "redirect:/tv/board/details?id=" + post.getPostId();
+	}	
+	
+	
 
 	private void getInitialList(String pageName, Model model) {
 

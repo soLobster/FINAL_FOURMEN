@@ -29,6 +29,10 @@ public class PageAndListDto {
 		
 		log.debug("paging(page={})", page);
 		
+		if (totPages == 0) {
+			totPages = 1;
+		}
+		
 		page++;	// 0페이지부터 시작하기 때문에 1더해줌..
 		
 		int startPage = (int) Math.ceil( ((double) page / pagesShownInBar) - 1 ) * pagesShownInBar + 1 ;

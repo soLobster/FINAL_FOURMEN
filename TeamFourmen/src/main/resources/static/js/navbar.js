@@ -217,28 +217,32 @@ const navbarmypagebackground = document.querySelector('.navbar-mypage-background
 
 let closemypage = document.querySelector('#close-mypage');
 
-
-profilepicture.addEventListener('click', () => {
-    // 요소들에 클래스 추가
-    navbarmypagebackground.classList.add('body-detailed-menu-open-mypage');
-    detailedmypageMenu.classList.add('navbar-detailed-menu-mypage-open');
-
-    // 오른쪽으로 메뉴가 나타나도록 right 값을 변경
-    detailedmypageMenu.style.right = '0';
-    
-    // 투명도를 1로 변경하여 배경이 나타나도록 함
-    setTimeout(() => {
-        navbarmypagebackground.style.opacity = '1';
-    }, 10); // 약간의 지연 추가
-});
+if (profilepicture) {
+	profilepicture.addEventListener('click', () => {
+	    // 요소들에 클래스 추가
+	    navbarmypagebackground.classList.add('body-detailed-menu-open-mypage');
+	    detailedmypageMenu.classList.add('navbar-detailed-menu-mypage-open');
 	
-closemypage.addEventListener('click',()=>{
-	  navbarmypagebackground.style.opacity = '0';
-    setTimeout(() => {
-        navbarmypagebackground.classList.remove('body-detailed-menu-open-mypage');
-        detailedmypageMenu.classList.remove('navbar-detailed-menu-mypage-open');
-        detailedmypageMenu.style.right = '-280px'; // 다시 메뉴를 숨김
-    },80); // 이동 애니메이션이 끝난 후에 클래스를 제거하고 위치를 변경하도록 함 (0.5초)
-});	
+	    // 오른쪽으로 메뉴가 나타나도록 right 값을 변경
+	    detailedmypageMenu.style.right = '0';
+	    
+	    // 투명도를 1로 변경하여 배경이 나타나도록 함
+	    setTimeout(() => {
+	        navbarmypagebackground.style.opacity = '1';
+	    }, 10); // 약간의 지연 추가
+	});	
+}
+
+if (closemypage) {
+	closemypage.addEventListener('click',()=>{
+		  navbarmypagebackground.style.opacity = '0';
+	    setTimeout(() => {
+	        navbarmypagebackground.classList.remove('body-detailed-menu-open-mypage');
+	        detailedmypageMenu.classList.remove('navbar-detailed-menu-mypage-open');
+	        detailedmypageMenu.style.right = '-280px'; // 다시 메뉴를 숨김
+	    },80); // 이동 애니메이션이 끝난 후에 클래스를 제거하고 위치를 변경하도록 함 (0.5초)
+	});	
+}	
+
 	
 });
