@@ -8,13 +8,14 @@
         rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
   <link th:href="@{/css/navbar.css}" rel="stylesheet">
   <link th:href="@{/css/theme.css}" rel="stylesheet">
   <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
   <style>
 
     .mypage-details-body-reviews {
-      background-color: #264653;
+      background-color: #2D3A4A;
       width: 1000px;
       margin: 0 auto;
 
@@ -46,6 +47,11 @@
       width: 100px;
       height: auto;
       border-radius: .5rem;
+      border: 1px solid rgba(196, 195, 202, 0.2);
+    }
+
+    .review-item-poster > a > img:hover {
+      border-color: #33ff33;
     }
 
     .review-item-content-article-header {
@@ -131,7 +137,6 @@
 
 
   </style>
-  <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>

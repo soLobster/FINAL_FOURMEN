@@ -79,6 +79,15 @@
             color: white;
         }
 
+        .content-article {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.2;
+            text-align: left;
+        }
+
         .content-article:hover {
             color: #c4c3ca;
         }
@@ -361,7 +370,7 @@
                         <div class = "review-item-body" style="display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
                             <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
                                 <section class = "review-item-user-profile-img">
-                                    <img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}">
+                                    <img th:src="@{${review.getMember().getUsersaveprofile()}}">
                                 </section>
                             </a>
                             <section class= "review-item-content">

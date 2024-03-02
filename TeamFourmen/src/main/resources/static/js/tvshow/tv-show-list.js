@@ -77,7 +77,7 @@ window.addEventListener('DOMContentLoaded', function (){
                             innerHtml += `
                                     <div class="rounded border-0 card text-bg-dark flex_box">
                                          <a href="/tv/details/${tvShowDto.id}" class="text-black text-decoration-none poster-a-tag">
-                                             <img class="rounded-top show_poster" src="${tvShowDto.poster_path ? 'https://image.tmdb.org/t/p/original' + tvShowDto.poster_path : '/image/default.png'}"  width="200" height="273" />
+                                             <img class="rounded-top show_poster" src="${tvShowDto.poster_path ? 'https://image.tmdb.org/t/p/w500' + tvShowDto.poster_path : '/image/default.png'}"  width="200" height="300" />
                                                  <div class="card-body">
 <!--                                                     <p class="fs-border mb-0 text-white card-title">${tvShowDto.name}</p>-->
                                                      <p class="fs-border mb-0 text-white card-title">${abbreviateText(tvShowDto.name, 11)}</p>   

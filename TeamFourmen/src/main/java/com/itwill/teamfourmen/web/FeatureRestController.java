@@ -61,6 +61,12 @@ public class FeatureRestController {
 		featureService.controllReviewLike(reviewLikeDto);
 	}
 
+	@DeleteMapping("/review")
+	public void deleteReview(@RequestParam (name = "reviewId") Long reviewId, @RequestParam (name = "email") String email){
+		log.info("DELETE REVIEW REVIEW_Id = {} , REVIEWER_EMAIL = {}", reviewId, email);
+		featureService.deleteReview(reviewId,email);
+  }
+
 	/**
 	 * 특정 tmdbId와 category가 "person"인 경우의 좋아요 개수를 조회하는 API 엔드포인트.
 	 * @param tmdbId 조회하고자 하는 Tmdb ID

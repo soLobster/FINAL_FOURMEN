@@ -6,6 +6,7 @@ import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.mypage.MypageDTO;
+import com.itwill.teamfourmen.dto.person.DetailsPersonDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.service.*;
@@ -31,6 +32,7 @@ public class MyPageController {
     private final TvShowApiUtil tvShowApiUtil;
     private final MovieApiUtil movieApiUtil;
     private final MyPageService myPageService;
+    private final PersonService personService;
 
     @GetMapping("/")
     public void mypage() {
@@ -146,6 +148,15 @@ public class MyPageController {
                     myPageLikedList.add(mypageDTO);
 
                     continue;
+
+                case "person":
+                    DetailsPersonDto personDto = personService.getPersonDetailsEnUS(works.getTmdbId());
+                    mypageDTO.setId(personDto.getId());
+                    mypageDTO.setName(personDto.getName());
+                    mypageDTO.setCategory(category);
+                    mypageDTO.setImagePath(personDto.getProfilePath());
+
+                    myPageLikedList.add(mypageDTO);
 
                 default:
                     log.info("없어요!!!");

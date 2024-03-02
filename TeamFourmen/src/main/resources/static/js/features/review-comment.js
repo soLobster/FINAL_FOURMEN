@@ -17,6 +17,23 @@ document.addEventListener('DOMContentLoaded',  function () {
 
     const loggedInUser = document.querySelector('.div-profile-image').getAttribute('email');
 
+    const commentTextArea = document.querySelector('#comment-content');
+
+    // console.log(commentTextArea);
+
+    commentTextArea.addEventListener('input', function (){
+       const maxLength = 499;
+       let currentLength = commentTextArea.value.length;
+
+       if(currentLength > maxLength) {
+           let overFlow = currentLength - maxLength;
+
+           commentTextArea.value = commentTextArea.value.substring(0, maxLength);
+
+           alert('댓글은 최대 ' + maxLength + '자까지 입력 가능합니다. 초과된 댓글은 삭제 됩니다.');
+       }
+    });
+
     // const commentWriterEmail = document.querySelector('.user-info').getAttribute('email');
     let userEmail;
 

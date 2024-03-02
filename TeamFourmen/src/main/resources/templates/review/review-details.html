@@ -9,8 +9,10 @@
           rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
           crossorigin="anonymous">
-    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+
     <style>
 
         @font-face {
@@ -39,9 +41,35 @@
         .main-section {
             width: 1000px;
             min-width: 1000px;
-            margin: 50px auto;
+            margin: 0px auto;
             display: flex;
             /*background-color: darkslategray;*/
+        }
+
+        .works-review-page-header{
+            margin: 0 auto;
+            width: 1000px;
+            min-width: 1000px;
+            padding-left: 15px;
+        }
+
+        .works-review-page-header a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .works-review-page-header a:hover {
+            color: #8dabfb;
+        }
+
+        .works-review-page-header-item {
+            display: flex;
+            font-size: 20px;
+            gap: 10px;
+        }
+
+        .works-review-page-header-item i {
+            padding-top: 5px;
         }
 
         .left-works-info-section{
@@ -185,8 +213,8 @@
         }
 
         .works-review-body-header > .works-title-opening-year {
-            padding-top: 12px;
-            padding-left: 15px;
+            padding-top: 6px;
+            padding-left: 5px;
             font-style: italic;
         }
 
@@ -218,6 +246,7 @@
             display: flex;
             gap: 5px;
             padding-bottom: 20px;
+            justify-content: space-between;
         }
 
         .btn-like-review {
@@ -226,6 +255,14 @@
             border: none;
             position: relative;
             margin-left: 17px;
+        }
+
+        .btn-delete-review {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            position: relative;
+            margin-right: 10px;
         }
 
         .works-review-footer .fa-thumbs-up {
@@ -242,6 +279,10 @@
         .works-review-footer span {
             font-style: italic;
             font-weight: bolder;
+        }
+
+        .works-review-footer .btn-delete-review:hover .fa-trash {
+            color: #33ff33;
         }
 
         .works-review-like-users{
@@ -283,11 +324,12 @@
 
         .comment-body {
             display: flex;
+            gap: 20px;
         }
 
         .comment-body > .user-info {
-            width: 15%;
-            min-width: 150px;
+            width: 20%;
+            min-width: 160px;
             display: flex;
             gap: 10px;
         }
@@ -330,9 +372,15 @@
             font-style: italic;
         }
 
-        .comment-body > .comment-content {
+        .comment-content {
             width: 80%;
+            margin-top: 2px;
             min-width: 380px;
+        }
+
+        .comment-content-article{
+            width: 460px;
+            max-width: 460px;
         }
 
         .comment-footer {
@@ -428,7 +476,6 @@
         }
 
     </style>
-    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
     <link th:href="@{/css/theme.css}" rel="stylesheet">
 </head>
 <body class = "ko v4">
@@ -438,6 +485,15 @@
 </header>
 
 <main>
+
+    <div class = "works-review-page-header">
+        <a th:href="@{/reviews/{category}/{id}(category = ${works.getCategory()}, id = ${works.getId()})}">
+            <div class = "works-review-page-header-item">
+                <i class="fa-solid fa-list"></i>
+                <span th:text="${works.getName()} + ' 전체 리뷰 보러가기'"></span>
+            </div>
+        </a>
+    </div>
 
     <section class = "main-section">
 
@@ -466,7 +522,7 @@
             <div class = "works-review-div">
                 <div class = "works-review-header">
                     <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
-                        <img class ="works-review-users-profile-img" th:src="${'/image?photo=' + review.getMember().getUsersaveprofile()}" />
+                        <img class ="works-review-users-profile-img" th:src="${review.getMember().getUsersaveprofile()}" />
                     </a>
                     <span>Review By</span>
                     <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
@@ -478,7 +534,7 @@
                         <a th:href="@{/{category}/details/{id}(category = ${works.getCategory()}, id = ${works.getId()})}">
                             <h2 class = "works-title" th:text="${works.getName()}"></h2>
                         </a>
-                        <h4 class = "works-title-opening-year">2024</h4>
+                        <h4 class = "works-title-opening-year" th:text=" '(' + ${works.getYear()} + ')' "></h4>
                     </div>
                     <div class = "works-review-body-rating">
                         <div class = "star-ratings" th:rating="${review.getRating()}"></div>
@@ -492,6 +548,12 @@
                         <i class="fa-solid fa-thumbs-up"></i>
                         <span class ="me-2" th:text="${countReviewLiked} + ' '"></span>Likes
                     </button>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <button type="button" id = "delete-review" class ="btn-delete-review" th:reviewId = "${review.getReviewId()}"
+                        th:email="${review.getMember().getEmail()}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </th:block>
                 </div>
             </div>
 
@@ -524,7 +586,8 @@
                                         <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
                                             <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
                                                 <div>
-                                                    <img th:src = "@{'/image?photo=' + ${comment.getMember().getUsersaveprofile()}}" />
+                                                    <img th:if="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
+                                                    <img th:unless="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{/image/userimage.png}" />
                                                 </div>
                                             </a>
                                             <div class = "user-name-created-date">
@@ -535,7 +598,7 @@
                                             </div>
                                         </section>
                                         <section class = "comment-content">
-                                            <article th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
+                                            <article class ="comment-content-article" th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
                                         </section>
                                     </div>
                                     <div class = "comment-footer">
@@ -569,7 +632,7 @@
                         </ul>
                     </th:block>
                 </div>
-<!--                <th:block sec:authorize= "isAuthenticated()" th:if="${member.email ne review.getMember().getEmail()}">-->
+                <th:block sec:authorize= "isAuthenticated()">
                     <div class="works-comments-footer">
                         <section class = "comment-textarea">
                             <input class="d-none" id="comment-writer-email" th:email = "${member.email}">
@@ -577,7 +640,7 @@
                         </section>
                         <button class = "mt-2 btn btn-success" id = "comment-reg-btn">등록</button>
                     </div>
-<!--                </th:block>-->
+                </th:block>
             </div>
         </section>
 

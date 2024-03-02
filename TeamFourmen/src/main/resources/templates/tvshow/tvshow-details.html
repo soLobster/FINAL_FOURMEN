@@ -8,6 +8,8 @@
 		  rel="stylesheet"
 		  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
 		  crossorigin="anonymous">
+	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+
 	<link th:href="@{/css/navbar.css}" rel="stylesheet">
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
 
@@ -158,8 +160,8 @@
 			width: 46px;
 			height: 46px;
 			position: absolute;
-			top: -27%;
-			left: -106%;
+			top: -32%;
+			left: -107%;
 		}
 
 		.btn-tv-review {
@@ -168,8 +170,8 @@
 			width: 46px;
 			height: 46px;
 			position: absolute;
-			top: -27%;
-			left: -106%;
+			top: -32%;
+			left: -107%;
 		}
 
 		.tool-tip-custom-bar i {
@@ -647,6 +649,15 @@
 			color: white;
 		}
 
+		.content-article{
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			line-height: 1.2;
+			text-align: left;
+		}
+
 		.content-article:hover {
 			color: #c4c3ca;
 		}
@@ -785,15 +796,14 @@
 
 	</style>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
-	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
 
 </head>
 <body class = "ko v4">
 <header>
 	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
-	<a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>
-	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
+<!--	<a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>-->
+<!--	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">-->
 </header>
 
 <main>
@@ -897,7 +907,7 @@
 				<div class = "cast List_scroller">
 						<ol class = "people_scroller">
 							<li class="border-0 card people_card" th:each=" people : ${tvShowCast} " th:object=" ${people} ">
-								<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/original' + ${people.getProfile_path()}" width="180" height="273"/>
+								<img class = "people_img" th:if="${people.profile_path ne null and people.profile_path ne 'null'}"  th:src = " 'https:/image.tmdb.org/t/p/h632' + ${people.getProfile_path()}" width="180" height="273"/>
 								<img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
 								<a th:href="@{/person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
 									<section class = "card-img-overlay">
@@ -921,7 +931,7 @@
 				<div class = "season List_scroller mt-3">
 					<ol class = "season_scroller">
 						<li class = "border-0 card season_card" th:each=" season : ${seasonList} " th:object="${season}">
-							<img class="season_img" th:if="${season.poster_path ne null and season.poster_path ne 'null'}"  th:src=" @{'https:/image.tmdb.org/t/p/original' + ${season.getPoster_path()}} " width="180" height="273" />
+							<img class="season_img" th:if="${season.poster_path ne null and season.poster_path ne 'null'}"  th:src=" @{'https:/image.tmdb.org/t/p/w500' + ${season.getPoster_path()}} " width="180" height="273" />
 							<img class="season_img" th:unless="${season.poster_path ne null and season.poster_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
 							<a th:href="@{${tvShowDto.getId() + '/season/'} + ${season.getSeason_number()}}" class = "text-decoration-none">
 								<section class="card-img-overlay">
@@ -957,7 +967,7 @@
 							<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
 								<a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
 									<section class = "review-item-user-profile-img" >
-										<img th:src="@{'/image?photo=' + ${review.getMember().getUsersaveprofile()}}"
+										<img th:src="@{${review.getMember().getUsersaveprofile()}}"
 											style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
 									</section>
 								</a>
@@ -1007,7 +1017,7 @@
 						<li class = "border-0 card recommendation_card" th:each=" recommendation : ${tvShowReco} " th:object="${recommendation}">
 							<img class = "recommendation_img"
 								 th:if = "${recommendation.getBackdrop_path() ne null and recommendation.getBackdrop_path() ne 'null' and recommendation.getBackdrop_path() ne ''}"
-								 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${recommendation.getBackdrop_path()}}" width="250" height="141"/>
+								 th:src = "@{'https:/image.tmdb.org/t/p/w1280' + ${recommendation.getBackdrop_path()}}" width="250" height="141"/>
 							<img class = "recommendation_img"
 								 th:unless = "${recommendation.getBackdrop_path() ne null and recommendation.getBackdrop_path() ne 'null' and recommendation.getBackdrop_path() ne ''}"
 								 th:src = "@{'/image/default-w600.png'}" width="250" height="141"/>
@@ -1082,10 +1092,7 @@
 				<p class = "mt-0 fs-4" th:text="${tvShowDto.getStatus()}"></p>
 				<p class = "my-0">방송사</p>
 				<section class = "p-0" th:each=" network : ${networkList} " th:object="${network}">
-					<a th:href="@{''}" target="_blank" class="text-white text-decoration-none">
-<!--						<span class = "my-3 fs-5" th:text="${network.getName()}"></span><br>-->
-						<img class = "mt-2 mb-0 pt-0" th:src="@{'https://image.tmdb.org/t/p/original' + ${network.getLogo_path()}}" width="110" height="auto" style="background-color: white; border: 3px solid white">
-					</a>
+					<img class = "mt-2 mb-0 pt-0" th:src="@{'https://image.tmdb.org/t/p/original' + ${network.getLogo_path()}}" width="110" height="auto" style="background-color: white; border: 3px solid white">
 				</section>
 				<p class = "mt-3 mb-0">원어</p>
 				<p class = "mt-0 fs-3" th:text="${tvShowDto.getOriginal_language()}"></p>
@@ -1209,7 +1216,7 @@
 			</div>
 			<div th:if="${trailer ne null}" class="p-0 modal-body" style="width: 1280px; color: white">
 				<iframe width="800" height="auto"
-						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()} + '?autoplay=1&mute=1' " style="width: 800px; height: 600px"></iframe>
+						th:src=" 'https://www.youtube.com/embed/' + ${trailer.get(0).getKey()} " style="width: 800px; height: 600px"></iframe>
 			</div>
 			<div class="border-0 modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>

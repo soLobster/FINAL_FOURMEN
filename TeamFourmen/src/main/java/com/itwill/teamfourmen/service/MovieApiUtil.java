@@ -233,7 +233,7 @@ public class MovieApiUtil {
 	 */
 	public List<MovieVideoDto> getMovieVideoList(int id) {
 				
-		//log.info("getMovieVideoList()");
+//		log.info("getMovieVideoList()");
 
 		
 		String queryParam = "?language=ko";

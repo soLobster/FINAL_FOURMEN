@@ -391,7 +391,7 @@ public class TvShowApiUtil {
     }
 
     public TvShowVideoListDTO getTvShowVideo (int id){
-        //log.info ("get TvShow Trailer Video - TVSHOW ID = {}", id);
+//        log.info ("get TvShow Trailer Video - TVSHOW ID = {}", id);
 
 
         String baseUrl = BASE_URL + "/tv";

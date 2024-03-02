@@ -9,10 +9,11 @@
         rel="stylesheet" 
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
         crossorigin="anonymous">
-	<link th:href="@{/css/navbar.css}" rel="stylesheet">
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
+	<link th:href="@{/css/user.css}" rel="stylesheet">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
 	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
 
 	<style>
 
@@ -50,6 +51,11 @@
 				"sidebar body" 1fr
 				/ 1fr 4fr;
 			gap: 8px;
+		}
+
+		h2{
+			color: #fbc500;
+			font-weight: bolder;
 		}
 
 		.search_section {
@@ -91,7 +97,7 @@
 		.flex_box {
 			width: 200px;
 			/*표기되는 포스터 높이*/
-			height: 353px;
+			height: 380px;
 			margin-left: 10px;
 			margin-right: 10px;
 			margin-bottom: 35px;
@@ -268,16 +274,16 @@
 		}
 
 	</style>
-	<link th:href="@{/css/theme.css}" rel="stylesheet">
 </head>
 
 <body>
 <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
 
 	<main>
-		<h3>TV SHOW LIST</h3>
-
-		<a th:href="@{/}">HOME</a>
+		<div style="margin-left: 60px">
+			<h2>TV SHOW LIST</h2>
+		</div>
+<!--		<a th:href="@{/}">HOME</a>-->
 
 		<section class="layout">
 
@@ -581,9 +587,9 @@
 					<div class = "rounded border-0 card text-bg-dark flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
 						<a th:href = "@{/tv/details/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none poster-a-tag">
 							<img class = "rounded-top show_poster" th:if="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
-								 th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="200" height="273" />
+								 th:src = "@{'https:/image.tmdb.org/t/p/w500' + ${tvshow.getPoster_path()}}" width="200" height="300" />
 							<img class = "rounded-top show_poster" th:unless="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
-								 th:src = "@{'/image/default.png'}" width="200" height="273" />
+								 th:src = "@{'/image/default.png'}" width="200" height="300" />
 							<div class="card-body">
 								<p class = "fs-border mb-0 card-title text-white" th:utext="${#strings.abbreviate(tvshow.getName(), 11)}"></p>
 								<p class = "fst-italic card-text text-white-50" th:text="${tvshow.getFirst_air_date()}"></p>

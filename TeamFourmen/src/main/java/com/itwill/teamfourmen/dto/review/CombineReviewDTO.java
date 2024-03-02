@@ -3,6 +3,8 @@ package com.itwill.teamfourmen.dto.review;
 import com.itwill.teamfourmen.domain.ImdbRatings;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class CombineReviewDTO {
 
@@ -12,4 +14,9 @@ public class CombineReviewDTO {
     private String category;
     private ImdbRatings imdbRatings;
     private String imdbId;
+
+    private LocalDate openingDate;
+
+    private int year;
+
 }
