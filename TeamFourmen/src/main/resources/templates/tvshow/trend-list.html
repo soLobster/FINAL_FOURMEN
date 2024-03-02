@@ -180,7 +180,7 @@
             <div class = "rounded border-0 card text-bg-dark flex_box" th:each=" tvshow : ${tvShowDto} " th:object="${tvshow}">
               <a th:href = "@{/tv/details/{id}(id = ${tvshow.getId()} )}" class = "text-black text-decoration-none tv-card">
                 <img class = "rounded-top show_poster" th:if="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
-                     th:src = "@{'https:/image.tmdb.org/t/p/original' + ${tvshow.getPoster_path()}}" width="240" height="360" />
+                     th:src = "@{'https:/image.tmdb.org/t/p/w500' + ${tvshow.getPoster_path()}}" width="240" height="360" />
                 <img class = "rounded-top show_poster" th:unless="${tvshow.getPoster_path() ne null and tvshow.getPoster_path() ne 'null' and tvshow.getPoster_path() ne ''}"
                      th:src = "@{'/image/default.png'}" width="240" height="360" />
                 <div class="card-body">

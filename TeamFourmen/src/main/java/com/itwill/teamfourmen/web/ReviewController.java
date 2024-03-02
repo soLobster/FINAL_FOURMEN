@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +124,9 @@ public class ReviewController {
                 combineReviewDTO.setCategory(category);
                 combineReviewDTO.setName(moviesInfo.getTitle());
                 combineReviewDTO.setPosterPath(moviesInfo.getPosterPath());
+                LocalDate releaseDate = moviesInfo.getReleaseDate();
+                int releaseYear =  releaseDate.getYear();
+                combineReviewDTO.setYear(releaseYear);
                 break;
             case "tv" :
                 TvShowDTO tvInfo = tvShowApiUtil.getTvShowDetails(tmdbId);
@@ -130,6 +134,9 @@ public class ReviewController {
                 combineReviewDTO.setCategory(category);
                 combineReviewDTO.setName(tvInfo.getName());
                 combineReviewDTO.setPosterPath(tvInfo.getPoster_path());
+                String firstAirDate = tvInfo.getFirst_air_date().substring(0,4);
+                log.info("불러온 첫 방영일 = {}",firstAirDate);
+                combineReviewDTO.setYear(Integer.parseInt(firstAirDate));
                 break;
             default:
                 log.info("WRONG CATEGORY");

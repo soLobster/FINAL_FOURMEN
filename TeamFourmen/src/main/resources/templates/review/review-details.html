@@ -213,8 +213,8 @@
         }
 
         .works-review-body-header > .works-title-opening-year {
-            padding-top: 12px;
-            padding-left: 15px;
+            padding-top: 6px;
+            padding-left: 5px;
             font-style: italic;
         }
 
@@ -534,7 +534,7 @@
                         <a th:href="@{/{category}/details/{id}(category = ${works.getCategory()}, id = ${works.getId()})}">
                             <h2 class = "works-title" th:text="${works.getName()}"></h2>
                         </a>
-                        <h4 class = "works-title-opening-year">2024</h4>
+                        <h4 class = "works-title-opening-year" th:text=" '(' + ${works.getYear()} + ')' "></h4>
                     </div>
                     <div class = "works-review-body-rating">
                         <div class = "star-ratings" th:rating="${review.getRating()}"></div>
@@ -548,10 +548,12 @@
                         <i class="fa-solid fa-thumbs-up"></i>
                         <span class ="me-2" th:text="${countReviewLiked} + ' '"></span>Likes
                     </button>
-                    <button type="button" id = "delete-review" class ="btn-delete-review" th:reviewId = "${review.getReviewId()}"
-                    th:email="${review.getMember().getEmail()}">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <button type="button" id = "delete-review" class ="btn-delete-review" th:reviewId = "${review.getReviewId()}"
+                        th:email="${review.getMember().getEmail()}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </th:block>
                 </div>
             </div>
 
@@ -584,8 +586,8 @@
                                         <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
                                             <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
                                                 <div>
-                                                    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
-                                                    <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src = "@{/image/userimage.png}" />
+                                                    <img th:if="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
+                                                    <img th:unless="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{/image/userimage.png}" />
                                                 </div>
                                             </a>
                                             <div class = "user-name-created-date">
@@ -630,7 +632,7 @@
                         </ul>
                     </th:block>
                 </div>
-<!--                <th:block sec:authorize= "isAuthenticated()" th:if="${member.email ne review.getMember().getEmail()}">-->
+                <th:block sec:authorize= "isAuthenticated()">
                     <div class="works-comments-footer">
                         <section class = "comment-textarea">
                             <input class="d-none" id="comment-writer-email" th:email = "${member.email}">
@@ -638,7 +640,7 @@
                         </section>
                         <button class = "mt-2 btn btn-success" id = "comment-reg-btn">등록</button>
                     </div>
-<!--                </th:block>-->
+                </th:block>
             </div>
         </section>
 

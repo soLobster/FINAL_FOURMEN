@@ -13,7 +13,26 @@ document.addEventListener('DOMContentLoaded', async function () {
     const pathName = location.pathname;
     const userEmail = pathName.split('/')[3];
 
-    const loggedInUser = document.querySelector('.div-profile-image').getAttribute('email');
+    let loggedInUser = '';
+    async function checkCurrentUser() {
+        try {
+            const response = await axios.get('/api/user/current-user');
+
+            console.log(response.data);
+
+            return response.data;
+
+        } catch (error) {
+            console.log('사용자 상태 확인 오류', error);
+            return false;
+        }
+    }
+
+    if(await checkCurrentUser() !== 'anonymousUser') {
+        loggedInUser = document.querySelector('.div-profile-image').getAttribute('email');
+    } else {
+        loggedInUser = 'NON_MEMBER';
+    }
 
     console.log('로그인 유저 = '+loggedInUser);
 
@@ -65,8 +84,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             const likedTvShowLink = document.querySelector('.nav-item:nth-child(5) .nav-link');
             likedTvShowLink.href = `/mypage/details/${userEmail}/tv`
 
-            // const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
-            // likedPersonLink.href = `/mypage/details/${userEmail}/person`
+            const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
+            likedPersonLink.href = `/mypage/details/${userEmail}/person`
 
         });
 
@@ -123,8 +142,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
     // 유저 팔로워 팔로우 추가 해야함
-    followButton.addEventListener('click', followUser);
-
+    if(await checkCurrentUser() !== 'anonymousUser') {
+        followButton.addEventListener('click', followUser);
+    }
     async function followUser() {
         console.log('팔로우 할 유저의 이메일 = ' + userEmail);
 
@@ -175,16 +195,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }  // 팔로우 추가/삭제
 
-    // 로그인 유저와 마이페이지의 유저가 다르면 프로필 편집 불가
-    if(userEmail !== loggedInUser) {
-        editProfile.classList.add('d-none');
-    }
-
-    // 로그인 유저와 마이페이지 유저가 같다면 팔로우 불가
-    if(userEmail === loggedInUser){
-        followButton.classList.add('d-none');
-    }
-
     const category = pathName.split('/')[4].toUpperCase();
 
     console.log(category);
@@ -192,6 +202,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     if(location.pathname.split('/')[4] != 'profile'){
         likedListTitle.textContent = category + ' Liked List';
     }
+
+    // 로그인 유저와 마이페이지의 유저가 다르면 프로필 편집 불가
+    if(userEmail !== await checkCurrentUser()) {
+        editProfile.classList.add('d-none');
+    }
+
+    // 로그인 유저와 마이페이지 유저가 같다면 팔로우 불가
+    if(userEmail === await checkCurrentUser()){
+        followButton.classList.add('d-none');
+    }
+
 
 
 
