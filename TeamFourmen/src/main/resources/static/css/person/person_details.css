@@ -290,6 +290,7 @@ a {
     font-size: 13px; /* 텍스트 크기 조정 */
     color: #adb5bd;
 }
+
 .hr_top_line, .hr_bottom_line {
     width: 100%; /* hr의 너비를 부모 요소에 맞춤 */
     border: 1px solid #ccc; /* 필요에 따라 스타일 조정 */

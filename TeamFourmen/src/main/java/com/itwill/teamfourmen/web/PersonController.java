@@ -64,6 +64,7 @@ public class PersonController {
 		DetailsPersonDto detailsPersonDtoEnUS = personService.getPersonDetailsEnUS(id);
 		DetailsPersonDto detailsPersonDtoKoKR = personService.getPersonDetailsKoKR(id);
 
+
 		// 인물의 생년월일을 처리하고 전달하는 코드.
 		if (detailsPersonDtoKoKR.getBirthday() != null) {
 			// 인물의 생년월일을 LocalDate로 파싱
@@ -82,6 +83,7 @@ public class PersonController {
 //		int age = personService.calculateAge(birthday);
 //		// 모델 객체에 인물의 나이 추가
 //		model.addAttribute("age", age);
+
 
 		ExternalIDsDto externalIDsDto = personService.getExternalIDs(id);
 

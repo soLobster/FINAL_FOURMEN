@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // 로그인을 했으면, nav 바에 로그인한 유저의 프로필 사진이 있을 것이므로 이것으로 로그인, 비로그인 상태를 구분함.
+
     const signedInUser = document.querySelector('.div-profile-image'); // 로그인한 유저의 프로필 사진 컨테이너
     console.log(signedInUser);
 
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .catch((error) => {
                     console.log(`에러 발생! ${error}`)
+
                 })
 
             return;

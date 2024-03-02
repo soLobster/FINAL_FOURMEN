@@ -122,6 +122,7 @@
                                                th:if="${detailsPersonKoKR.getPlaceOfBirth() != null and detailsPersonKoKR.getPlaceOfBirth() != 'null' and !detailsPersonKoKR.getPlaceOfBirth().isEmpty()}"
                                                th:text="${detailsPersonKoKR.getPlaceOfBirth()}"></p>
                                             <p class="person_info_details_contents"
+
                                                th:if="${detailsPersonKoKR.getPlaceOfBirth() == null || detailsPersonKoKR.getPlaceOfBirth() == 'null' || detailsPersonKoKR.getPlaceOfBirth().isEmpty()}">-</p>
                                         </section>
 
@@ -163,6 +164,7 @@
                                             <!-- 약력 부분은 ko 데이터가 없으면 en 데이터로 받아오기. -->
                                             <p class="c_person_biography" th:if="${detailsPersonKoKR.getBiography().isEmpty() || detailsPersonKoKR.getBiography() == null || detailsPersonKoKR.getBiography() == 'null'}" th:text="${detailsPersonEnUS.getBiography()}"></p>
                                             <p class="c_person_biography" th:if="${!detailsPersonKoKR.getBiography().isEmpty() && detailsPersonKoKR.getBiography() != null && detailsPersonKoKR.getBiography() != 'null'}" th:text="${detailsPersonKoKR.getBiography()}"></p>
+
                                             <!-- 두 약력 모두 비어 있고 이름이 비어 있지 않을 때 메시지 표시 -->
                                             <p class="c_person_biography" th:if="${detailsPersonEnUS.getBiography().isEmpty()} and ${detailsPersonKoKR.getBiography().isEmpty()} and !${detailsPersonKoKR.getName().isEmpty()}" th:text="${detailsPersonKoKR.getName()} + '의 약력 란이 비어있습니다.'"></p>
                                         </div>
@@ -271,6 +273,7 @@
                                                             <!-- tv 인 경우 "@{/{mediaType}/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.mediaType})}" -->
                                                             <a th:if="${uCrewList.mediaType eq 'tv'}"
                                                                th:href="@{/{mediaType}/details/{id}(mediaType=${uCrewList.mediaType}, id=${uCrewList.id})}">
+
                                                                 <div class="tv-poster-container">
                                                                     <img class="poster_img"
                                                                          th:if="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
@@ -458,5 +461,6 @@
     <script th:src="@{/js/navbar.js}"></script>
 <!--    &lt;!&ndash; 인물이 출연한 작품의 포스터 이미지 버튼 슬라이드를 적용하는 js &ndash;&gt;-->
 <!--    <script th:src="@{/js/person/person-poster-slide.js}"></script>-->
+
 </body>
 </html>
