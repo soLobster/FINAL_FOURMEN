@@ -109,21 +109,21 @@ public class SecurityConfig {
         //  1) SecurityConfig 빈에서 @EnableMethodSecurity 애너테이션을 사용.
         //  2) 각각의 컨트롤러 메서드에서 @PreAuthorize, @PostAuthorize 애너테이션을 사용.
         
-        /*
+        
         http.authorizeHttpRequests((auth) -> 
             //auth.anyRequest().authenticated() 모든 요청주소에 대해서 (role에 상관없이) 아이디/비밀번호
             //auth.anyRequest().hasRole("USER") // 모든 요청 주소에 대해서 USER 권한을 가진 아이디/비밀번호 로그인.
             
             // 페이지마다 로그인 필요한 페이지와 그렇지 않은 페이지 구분해서 설정: 
             auth
-                .requestMatchers("/post/create", "/post/details/**", "/post/update/**", "/post/delete/**", "/api/comment/**") // 매칭되는 페이지 PathVariable, QueryString 주의...ㅎ
-                .hasRole("USER") // 가능한 역할
+                .requestMatchers("/admin", "/admin/detail/**", "/admin/search/**") // 매칭되는 페이지 PathVariable, QueryString 주의...ㅎ
+                .hasRole("ADMIN") // 가능한 역할
                 .anyRequest() // 위에서 매칭한 페이지를 제외한 리퀘스트는
                 .permitAll() // 전부 승인 
                 // 설정 순서가 중요하다.
         
         );
-        */
+        
         
         return http.build();
     }

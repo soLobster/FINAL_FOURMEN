@@ -3,9 +3,14 @@ package com.itwill.teamfourmen.web;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -41,6 +46,12 @@ import com.itwill.teamfourmen.dto.movie.MovieListDto;
 import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
+import com.itwill.teamfourmen.dto.person.CombinedCreditsCastDto;
+import com.itwill.teamfourmen.dto.person.CombinedCreditsDto;
+import com.itwill.teamfourmen.dto.person.DetailsPersonDto;
+import com.itwill.teamfourmen.dto.person.MainCombinedActor;
+import com.itwill.teamfourmen.dto.person.PageAndListDto;
+import com.itwill.teamfourmen.dto.person.PopularPersonDto;
 import com.itwill.teamfourmen.dto.tvshow.CombinedDto;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowListDTO;
@@ -50,6 +61,7 @@ import com.itwill.teamfourmen.service.HomeService;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.MemberService;
 import com.itwill.teamfourmen.service.MovieApiUtil;
+import com.itwill.teamfourmen.service.PersonService;
 import com.itwill.teamfourmen.service.TvShowApiUtil;
 
 import jakarta.servlet.http.Cookie;
@@ -82,75 +94,98 @@ public class HomeController {
 	private final TvShowApiUtil apiUtil;
 
 	private final ImdbRatingUtil imdbRatingUtil;
-
+	private final PersonService personService;
+		
 	private String category = "tv";
 	
 	@GetMapping("/")
 	public String home(Model model) throws JsonMappingException, JsonProcessingException {
-		log.info("HOME()");
-		TvShowListDTO listDTO = apiUtil.getTrendTvShowList("week", 1);
+		//log.info("HOME()");
 		//log.info("listDto = {}", listDTO);
 
 //		model.addAttribute("listDTO", listDTO);
 
-		log.info("TOTALPAGES = {}", listDTO.getTotal_pages());
+		//log.info("TOTALPAGES = {}", listDTO.getTotal_pages());
 
-		List<TvShowDTO> tvShowDto = listDTO.getResults();
-	
+		List<TvShowDTO> tvShowDto = new ArrayList<>();
+		
+		for (int week = 1; week <= 3; week++) {
+		    TvShowListDTO listDTO = apiUtil.getTrendTvShowList("week", week);
+		    List<TvShowDTO> tvShowDt = listDTO.getResults();
+		    tvShowDto.addAll(tvShowDt);
+		}
 		
 		List<CombinedDto> combineList = new ArrayList<>();
 		
 		// 각 TV 쇼에 대해 동영상을 가져오고, 모든 동영상을 하나의 리스트에 추가
 		for (TvShowDTO tvShow : tvShowDto) {
 			CombinedDto combined = new CombinedDto();
-			combined.setTvShowDto(tvShow);
+			//combined.setTvShowDto(tvShow);
 		    TvShowVideoListDTO tvShowVideoDTOList = apiUtil.getTvShowVideo(tvShow.getId());
 		    List<TvShowVideoDTO> tvShowTrailerList = tvShowVideoDTOList.getResults();
 		   
 		    if (!tvShowTrailerList.isEmpty()) {
 		        TvShowVideoDTO firstVideo = tvShowTrailerList.get(0);
-		        combined.setKey(firstVideo.getKey());
+		        if(firstVideo.getKey() != null) {
+		        	combined.setTvShowDto(tvShow);
+		        	combined.setKey(firstVideo.getKey());
+		        	combineList.add(combined); 
+		        }
+		       
 		    }    	
-		    combineList.add(combined);    
+		       
 		}
 		    
 		
 		
-			log.info("combined={}",combineList);
-			log.info("combinedsisize={}",combineList.size());
+			//log.info("combined={}",combineList);
+			//log.info("combinedsisize={}",combineList.size());
 		
 		model.addAttribute("combineList",combineList);
+		
+		
+		List<MovieListItemDto> movielist = new ArrayList<>();
 
+		// 3 페이지까지 반복해서 영화 목록을 가져와서 리스트에 추가
+		for (int page = 1; page <= 3; page++) {
+		    // MovieQueryParamDto 설정
+		    MovieQueryParamDto paramDto = new MovieQueryParamDto();
+		    paramDto.setListCategory("popular");
+		    paramDto.setPage(page);
+		    
+		    // 영화 목록 가져오기
+		    MovieListDto movieListDto = movieapiUtil.getMovieList(paramDto);
+		    
+		    // 현재 페이지의 영화 목록 가져오기
+		    List<MovieListItemDto> movielistt = movieListDto.getResults();
+		    
+		    // 현재 페이지의 영화 목록을 전체 영화 리스트에 추가
+		    movielist.addAll(movielistt);
+		}
 		
-		MovieQueryParamDto paramDto = new MovieQueryParamDto();
-		paramDto.setListCategory("popular");
-		
-		MovieListDto movielistDto = movieapiUtil.getMovieList(paramDto);
-		//log.info("listDto={}", listDto);		
-		
-		 List<MovieListItemDto> movielist =movielistDto.getResults();
-		
-		log.info("movielist={}",movielist);
 		
 		List<MovieCombinedDto> moviecombineList = new ArrayList<>();
 		
 		// 각 TV 쇼에 대해 동영상을 가져오고, 모든 동영상을 하나의 리스트에 추가
 		for (MovieListItemDto movie : movielist) {
-			MovieCombinedDto moviecombined = new MovieCombinedDto();
-			moviecombined.setMovielistitemdto(movie);		    
+			MovieCombinedDto moviecombined = new MovieCombinedDto();		    
 			List<MovieVideoDto> MovieVideoDTOList = movieapiUtil.getMovieVideoList(movie.getId());
 	
 		    if (!MovieVideoDTOList.isEmpty()) {
 		    	String firstVideo = MovieVideoDTOList.get(0).getKey();
-		    	log.info(" key={}", firstVideo);
-		    	moviecombined.setKey(firstVideo);
+		    	//log.info(" key={}", firstVideo);
+		    	 if(firstVideo != null) {
+		    		 moviecombined.setMovielistitemdto(movie);
+			        	moviecombined.setKey(firstVideo);
+			            moviecombineList.add(moviecombined); 
+			        }
 		        
 		    }    	
-		    moviecombineList.add(moviecombined);    
+		   
 		}
 		
-		log.info(" moviecombineList={}", moviecombineList);
-		log.info(" moviecombineListsszie={}", moviecombineList.size());
+		//log.info(" moviecombineList={}", moviecombineList);
+		//log.info(" moviecombineListsszie={}", moviecombineList.size());
 		model.addAttribute("moviecombineList", moviecombineList);
 
 		MovieQueryParamDto paramDtoo = new MovieQueryParamDto();
@@ -161,7 +196,7 @@ public class HomeController {
 		
 		 List<MovieListItemDto> topmovielist =movielistDtoo.getResults();
 		
-		log.info("topmovielist={}",topmovielist);
+		//log.info("topmovielist={}",topmovielist);
 		model.addAttribute("topmovielist", topmovielist);
 		
 		TvShowListDTO toplistDTO = apiUtil.getTvShowList("top_rated", 1);
@@ -169,8 +204,97 @@ public class HomeController {
 
 		List<TvShowDTO> toptvShowDto = toplistDTO.getResults();
 		
+		
 		model.addAttribute("toptvShowDto",toptvShowDto);
 		
+		PageAndListDto pageAndListDtoEnUS = personService.getPersonListEnUS(1);
+		List<PopularPersonDto> popularactor = pageAndListDtoEnUS.getResults();
+		
+		List<MainCombinedActor> actorlist = new ArrayList<>();
+		
+		// 각 TV 쇼에 대해 동영상을 가져오고, 모든 동영상을 하나의 리스트에 추가
+		for (PopularPersonDto actor : popularactor) {
+			MainCombinedActor actorcombined = new MainCombinedActor();		    
+			DetailsPersonDto detailsPersonDtoEnUS = personService.getPersonDetailsEnUS(actor.getId());
+	
+		    if (detailsPersonDtoEnUS != null) {
+		    	String birthday = detailsPersonDtoEnUS.getBirthday();
+		    	String placeOfBirth =detailsPersonDtoEnUS.getPlaceOfBirth();
+		    	//log.info(" key={}", firstVideo);
+		    	 if(actor.getProfilePath() != null) {
+		    		actorcombined.setActorinfo(actor);
+		    		actorcombined.setBirthday(birthday);
+		    		actorcombined.setPlaceOfBirth(placeOfBirth);
+		    		actorlist.add(actorcombined); 
+			        }
+		        
+		    }    	
+		   
+		}
+		
+	
+		model.addAttribute("actorlist",actorlist);	
+		
+		
+		  Random random = new Random();
+	        int randomIndex = random.nextInt(popularactor.size());
+	        
+	        // 랜덤 인덱스를 사용하여 PopularPersonDto 선택
+	        PopularPersonDto randomActor = popularactor.get(randomIndex);
+	       // log.info("radomactor={}",randomActor.getId());
+
+    	Set<String> uniqueCastPosterPath = new HashSet<>();
+
+			
+			CombinedCreditsDto combinedCreditsDtoKoKR = personService.getCombinedCreditsKoKR(randomActor.getId());
+			model.addAttribute("randomactorname",randomActor.getName());
+			model.addAttribute("randomactorphoto",randomActor.getProfilePath());
+			List<CombinedCreditsCastDto> castListKoKR = combinedCreditsDtoKoKR.getCast();
+			List<CombinedCreditsCastDto> sortedCastListKoKR = new ArrayList<>(castListKoKR);
+			sortedCastListKoKR.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+			List<CombinedCreditsCastDto> uniqueCastListPosterKoKR = castListKoKR .stream()
+					.filter(cast -> cast.getBackdropPath() != null) // posterPath가 null이 아닌 경우만 필터링합니다.
+			        .filter(cast -> uniqueCastPosterPath.add(cast.getBackdropPath())) // 중복되지 않는 posterPath만 선택합니다.
+			        .limit(30) // 최대 30개의 항목을 선택합니다.
+			        .collect(Collectors.toList());
+			// 필터링한 Cast 를 voteCount 기준 내림차순 정렬.
+			
+			uniqueCastListPosterKoKR.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+			//log.info("listdfsfd={}",uniqueCastListPosterKoKR);
+			model.addAttribute("randomactor",uniqueCastListPosterKoKR);
+			
+			
+			  Random randomx = new Random();
+		        int randomIndexx = randomx.nextInt(popularactor.size());
+		        while (randomIndexx == randomIndex) {
+		            randomIndexx = random.nextInt(popularactor.size());
+		        }
+
+		        
+		        // 랜덤 인덱스를 사용하여 PopularPersonDto 선택
+		        PopularPersonDto randomActorx = popularactor.get(randomIndexx);
+		        //log.info("radomactor={}",randomActorx.getId());
+		        
+	        
+	    	Set<String> uniqueCastPosterPathx = new HashSet<>();
+
+				
+				CombinedCreditsDto combinedCreditsDtoKoKRx = personService.getCombinedCreditsKoKR(randomActorx.getId());
+				model.addAttribute("randomactornamex",randomActorx.getName());
+				model.addAttribute("randomactorphotox",randomActorx.getProfilePath());
+				List<CombinedCreditsCastDto> castListKoKRx = combinedCreditsDtoKoKRx.getCast();
+				List<CombinedCreditsCastDto> sortedCastListKoKRx = new ArrayList<>(castListKoKRx);
+				sortedCastListKoKRx.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+				List<CombinedCreditsCastDto> uniqueCastListPosterKoKRx = castListKoKRx .stream()
+						.filter(castx -> castx.getBackdropPath() != null) // posterPath가 null이 아닌 경우만 필터링합니다.
+				        .filter(castx -> uniqueCastPosterPathx.add(castx.getBackdropPath())) // 중복되지 않는 posterPath만 선택합니다.
+				        .limit(30) // 최대 30개의 항목을 선택합니다.
+				        .collect(Collectors.toList());
+				// 필터링한 Cast 를 voteCount 기준 내림차순 정렬.
+				
+				uniqueCastListPosterKoKRx.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+				//log.info("listdfsfd={}",uniqueCastListPosterKoKRx);
+				model.addAttribute("randomactorx",uniqueCastListPosterKoKRx);
 		return "index";
 	}
 	
@@ -429,7 +553,7 @@ public class HomeController {
         
         memberservice.deleteByEmail(email);
         
-        return "redirect:/";
+        return "redirect:/logout";
     }
     
     
@@ -462,5 +586,6 @@ public class HomeController {
 	        
 	      
 	    };
+	    
 
 }

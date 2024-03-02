@@ -33,7 +33,7 @@ body {
     width: 1000px;
     height: 220px;
     margin: 0 auto;
-    background-color: #264653;
+    background-color: #2D3A4A;
 }
 
 .mypage-details-navbar {
@@ -156,7 +156,7 @@ div.edit-profile:hover {
 }
 
 .mypage-details-body {
-    background-color: #264653;
+    background-color:#2D3A4A;
     width: 1000px;
     margin: 0 auto;
 }

@@ -10,7 +10,8 @@
         <div class="navbar-inner-container">
             <a th:href="@{/}">      
                 <div class="navbar-logo-container">
-                    <img class="navbar-logo-image" src="/image/fourmenLogo.png">
+                    <img class="navbar-logo-image" th:src="@{image/logogood.png}">
+
                 </div>
             </a>
             <div class="navbar-menu-outer-container nav-div-width-adjustment">
@@ -153,7 +154,8 @@
     <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
 	-->
 
-	</div></a><div th:text="${member.nickname}"></div>
+	</div></a><div sec:authorize="hasRole('USER')" th:text="${member.nickname}"></div>
+			  <div sec:authorize="hasRole('ADMIN')">ADMIN</div>
                     <i class="fa-solid fa-xmark navbar-detailed-x-mypage" id="close-mypage"></i>
                 </div>
             </div>
@@ -166,11 +168,19 @@
                     </div>
 
                 </div>
-                <div class="navbar-detailed-menu-items-mypage">
+                <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
                     <div class="navbar-detailed-menu-list-mypage">
                         <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Page</a></div>
-                          <div class="navbar-each-menu-item-mypage"><a th:href="@{/person/list?language=ko}">My follower</a></div>
-                    	<div class="navbar-each-menu-item-mypage"><a th:href="@{/person/list?language=ko}">My following</a></div>
+                          <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My follower</a></div>
+                    	<div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My following</a></div>
+                    </div>
+                </div>
+                 <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
+                    <div class="navbar-detailed-menu-list-mypage">
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/admin}">Member management</a></div>
+                          <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Page</a></div>
+                          <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My follower</a></div>
+                    	<div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My following</a></div>
                     </div>
                 </div>
             </div>
@@ -183,17 +193,26 @@
                     </div>
                         
                 </div>
-                <div class="navbar-detailed-menu-items-mypage">
+                <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
 
                     <div class="navbar-detailed-menu-list-mypage">
-                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/tv/trending/day}">My Review</a></div>
-                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/tv/trending/week}">My Playlist</a></div>
-                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/tv/ott/wavve}">My Forum</a></div>                        
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Review</a></div>
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Playlist</a></div>
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Forum</a></div>                        
+                    </div>
+
+                </div>
+                <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
+
+                    <div class="navbar-detailed-menu-list-mypage">
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/movie/popular}">Movie Page</a></div>
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/tv/trending/day}">Tv show Page</a></div>
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/person/list?language=ko}">Actor Page</a></div>                        
                     </div>
 
                 </div>
             </div>   
-            <div class="navbar-detailed-menu-section-container-mypage">
+            <div class="navbar-detailed-menu-section-container-mypage" sec:authorize="hasRole('USER')">
                 <div class="navbar-detailed-menu-title-mypage">
                     <div>
                         <span><i class="fa-solid fa-heart"></i></span>
@@ -202,9 +221,9 @@
                 </div>
                 <div class="navbar-detailed-menu-items-mypage">
                     <div class="navbar-detailed-menu-list-mypage">
-                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/movie/popular}">Movie likes</a></div>
-                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/movie/now_playing}">Tv show likes</a></div>
-                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/movie/top_rated}">Actor likes</a></div>
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">Movie likes</a></div>
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">Tv show likes</a></div>
+                        <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">Actor likes</a></div>
                        
                     </div>
                 </div>
