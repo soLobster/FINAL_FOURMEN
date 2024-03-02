@@ -838,30 +838,22 @@ padding-bottom: 5px;
 </script>
 <script th:inline="javascript">
     var mapOptions = {
-        center: new naver.maps.LatLng(37.5665, 126.9780), // 서울 시청 좌표
+        center: new naver.maps.LatLng(37.4987, 127.0315), // 서울 시청 좌표
         zoom: 15, // 확대 수준
     };
 
     var map = new naver.maps.Map('map', mapOptions);
 
     var markerOptions = {
-        position: new naver.maps.LatLng(37.5665, 126.9780), // 서울 시청 좌표
+        position: new naver.maps.LatLng(37.4987, 127.0315), // 서울 시청 좌표
         map: map,
     };
 
     var marker = new naver.maps.Marker(markerOptions);
 
-    // 정보 창 생성
-    var infowindow = new naver.maps.InfoWindow({
-        content: '<div class="custom-infowindow"><h3>서울 시청</h3><p>주소 : 서울특별시 중구 세종대로 110</p><img src="https://maps.gstatic.com/tactile/pane/default_geocode-1x.png" alt="서울 시청"></div>',
-        disableAutoPan: true, // 지도 자동 이동 비활성화
-        removable: true // 닫기 버튼 표시
-    });
+ 
 
-    // 마커를 클릭했을 때 정보 창 열기
-    naver.maps.Event.addListener(marker, 'click', function() {
-        infowindow.open(map, marker.getPosition());
-    });
+    
 </script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
