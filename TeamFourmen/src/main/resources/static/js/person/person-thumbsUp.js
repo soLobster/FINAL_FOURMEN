@@ -34,9 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (likedStatus === 'true') {
         divDidLikeAlready.classList.add('user-liked-already');
         thumbsUpBtn.classList.add('liked'); // 좋아요 상태 클래스 추가
+        // 좋아요를 누른 상태의 이미지로 변경
+        thumbsUpImg.src = '/icons/free-icon-thumbs-up-cancel-10692400.png';
     } else {
         divDidLikeAlready.classList.remove('user-liked-already');
         thumbsUpBtn.classList.remove('liked'); // 좋아요 상태 클래스 제거
+        // 좋아요를 누르지 않은 상태의 이미지로 변경
+        thumbsUpImg.src = '/icons/free-icon-thumbs-up-firstLike-10691706.png';
     }
 
     // 페이지 로드 시 좋아요 수 조회.
@@ -69,11 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             axios.post('/feature/like/add', data)
                 .then((response) => {
-                    console.log("좋아요를 누르지 않았을 경우 좋아요 누름")
+                    console.log("좋아요 누르지 않은 경우: 좋아요 누름")
                     // divDidLikeAlready 요소의 클래스 목록에 'user-liked-already' 클래스를 토글.
                     // 이 토글 작업으로 UI 상에서 사용자가 해당 항목에 좋아요를 눌렀다는 것을 시각적으로 표시.
                     divDidLikeAlready.classList.toggle('user-liked-already');
                     thumbsUpBtn.classList.add('liked'); // 좋아요 상태 클래스 추가(css 적용)
+                    // 좋아요 이미지를 '좋아요 상태' 이미지로 변경.
+                    thumbsUpImg.src = '/icons/free-icon-thumbs-up-cancel-10692400.png'
                     localStorage.setItem(`liked-${tmdbId}`, 'true'); // localStorage에 좋아요 상태 저장
                     fetchLikesCount(); // 좋아요 수 업데이트
                 })
@@ -87,11 +93,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
             axios.post('/feature/like/delete', data)
                 .then((response) => {
-                    console.log("좋아요 이미 누름. 좋아요 취소");
+                    console.log("좋아요 이미 누름: 좋아요 취소");
+                    // alert('좋아요를 취소합니다.');
                     // divDidLikeAlready 요소의 클래스 목록에 'user-liked-already' 클래스를 토글.
                     // 이 토글 작업으로 UI 상에서 사용자가 해당 항목에 좋아요를 눌렀다는 것을 시각적으로 표시.
                     divDidLikeAlready.classList.toggle('user-liked-already');
                     thumbsUpBtn.classList.remove('liked'); // 좋아요 상태 클래스 제거(css 제거)
+                    // 좋아요 이미지를 '좋아요 되돌리기(취소) 상태' 이미지로 변경.
+                    thumbsUpImg.src = '/icons/free-icon-thumbs-up-firstLike-10691706.png';
                     localStorage.removeItem(`liked-${tmdbId}`); // localStorage에서 좋아요 상태 제거
                     fetchLikesCount(); // 좋아요 수 업데이트
                 })
