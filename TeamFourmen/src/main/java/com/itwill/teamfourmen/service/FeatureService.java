@@ -214,16 +214,17 @@ public class FeatureService {
 		return likedList;
 	}
 
-	public void deleteReview (Long reviewId , String email){
+	public void deleteReview (Long reviewId , String email) {
 		log.info("DELETE REVIEW SERVICE REVIEW_ID = {} , EMAIl = {}", reviewId, email);
 
 		Review review = reviewDao.findByReviewId(reviewId);
 
 		Member member = Member.builder().email(email).build();
 
-		if(review.getMember().getEmail().equalsIgnoreCase(member.getEmail())){
+		if (review.getMember().getEmail().equalsIgnoreCase(member.getEmail())) {
 			reviewDao.delete(review);
 		}
+	}
 	/**
 	 * category가 pesron인 경우에 tmdbId의 개수를 가져와서 특정 인물의 좋아요 개수를 조회.
 	 * @param tmdbId
