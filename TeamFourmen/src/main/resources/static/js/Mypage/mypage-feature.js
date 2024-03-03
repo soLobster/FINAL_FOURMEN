@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     console.log(category);
 
-    if(location.pathname.split('/')[4] != 'profile'){
+    if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews'){
         likedListTitle.textContent = category + ' Liked List';
     }
 
