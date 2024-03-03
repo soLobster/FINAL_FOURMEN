@@ -53,10 +53,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 email,
                 name,
                 nickname,
-                usersaveprofile
+                usersaveprofile,
+                type
             } = response.data;
             console.log('불러온 유저 정보');
-            console.log('EAMIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile);
+            console.log('EAMIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile , 'TYPE = ' + type);
 
             // 유저의 닉네임을 표기
             const userNickname = nickname;
@@ -65,8 +66,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             console.log('불러온 이미지 = '+usersaveprofile);
 
-            if(usersaveprofile != ''){
+            if(type !== 'web'){
                  userProfileImg.setAttribute('src', usersaveprofile);
+            } else {
+                userProfileImg.setAttribute('src',  '/image/userimage.png')
             }
 
             browsersTitle.textContent = userNickname + ' ' + 'DashBoard';

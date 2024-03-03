@@ -289,6 +289,15 @@
             padding-top: 40px;
         }
 
+        .works-review-like-users a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .works-review-like-users a:hover {
+            color: #8dabfb;
+        }
+
         .works-review-like-users p {
             font-size: 20px;
             border-bottom: 2px solid rgba(256, 256, 256 , 0.5);
@@ -298,7 +307,7 @@
             padding-top: 0;
             display: flex;
             gap: 10px;
-            justify-content: center;
+            justify-content: start;
             overflow: hidden;
         }
 
@@ -471,6 +480,49 @@
             margin: 0 0 0 13px;
         }
 
+        .liked-user-list ul {
+
+        }
+
+        .liked-user{
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px 15px 20px;
+        }
+
+        .liked-user a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+        }
+
+        .liked-user a:hover {
+            color: #c4c3ca;
+        }
+
+        .liked-user .liked-user-profile-img-div {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .liked-user-profile-img{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid transparent;
+        }
+
+        .liked-user-profile-img:hover{
+            border-color: #33ff33;
+        }
+
+        .liked-user-profile-overview-div {
+            display: flex;
+            flex-direction: column;
+        }
+
         .btn-success {
             align-self: flex-end;
         }
@@ -559,24 +611,24 @@
 
             <!--  여기까지 리뷰 표기 -->
 
-            <div class ="works-review-like-users">
-                <p>LIKED THESE REVIEWS</p>
-                <div class = "users-horizontal">
-                    <img class ="works-review-users-profile-img" th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://i.namu.wiki/i/R17xh_K5hWjF-rOjrQkleVrgey6H_VLUT9HldYjKuxygX9pVXNIwyXvGwcRmoKi5-iM5Kd6SuiXINHlPHp_43-O7dLYa_JyRg9eHE5H24kSnyVCZvr2E29jn3mazoWz-cgflhsy65LmzZZn_PpegDA.webp}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://www.ikbc.co.kr/data/kbc/image/2023/08/13/kbc202308130007.800x.0.jpg}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://i.namu.wiki/i/R17xh_K5hWjF-rOjrQkleVrgey6H_VLUT9HldYjKuxygX9pVXNIwyXvGwcRmoKi5-iM5Kd6SuiXINHlPHp_43-O7dLYa_JyRg9eHE5H24kSnyVCZvr2E29jn3mazoWz-cgflhsy65LmzZZn_PpegDA.webp}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://www.ikbc.co.kr/data/kbc/image/2023/08/13/kbc202308130007.800x.0.jpg}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://file2.nocutnews.co.kr/newsroom/image/2023/06/21/202306210855316394_0.jpg}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://i.namu.wiki/i/R17xh_K5hWjF-rOjrQkleVrgey6H_VLUT9HldYjKuxygX9pVXNIwyXvGwcRmoKi5-iM5Kd6SuiXINHlPHp_43-O7dLYa_JyRg9eHE5H24kSnyVCZvr2E29jn3mazoWz-cgflhsy65LmzZZn_PpegDA.webp}"/>
-                    <img class ="works-review-users-profile-img" th:src = "@{https://www.ikbc.co.kr/data/kbc/image/2023/08/13/kbc202308130007.800x.0.jpg}"/>
+            <th:block th:if="${likedUser.size() ne 0}">
+                <div class ="works-review-like-users">
+                    <a href="#" id = "open-liked-user-modal" data-toggle="modal" data-target = "#liked-user-modal">
+                        <p>좋아요한 사람들</p>
+                    </a>
+                    <div class = "users-horizontal">
+                        <a th:each=" user : ${likedUser}" th:href="@{/mypage/details/{id}/profile(id = ${user.getMember().getEmail()})}">
+                            <img class ="works-review-users-profile-img" th:if ="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{${user.getMember().getUsersaveprofile()}}"/>
+                            <img class ="works-review-users-profile-img" th:unless = "${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}"/>
+                        </a>
+                    </div>
                 </div>
-            </div>
+            </th:block>
+
 
             <div class = "works-comments-div">
                 <div class = "works-comments-header">
-                    <p class = "mb-1">Comments</p>
+                    <p class = "mb-1">댓글</p>
                 </div>
                 <div class ="works-comments-body">
                     <th:block th:if="${!reviewComments.isEmpty()}">
@@ -652,7 +704,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark">
             <div class="border-0 modal-header">
-                <h5 class="modal-title text-white" id="trailerModalLabel">댓글 수정</h5>
+                <h5 class="modal-title text-white" id="commentModalLabel">댓글 수정</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div style="width: 100%; color: white">
@@ -661,6 +713,36 @@
             <div class="border-0 modal-footer">
                 <button type="button" class="btn btn-success" id = "comment-update-btn" data-bs-dismiss="modal">수정</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="liked-user-modal" tabindex="-1" aria-labelledby="liked-user-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content bg-dark">
+            <div class="border-0 modal-header">
+                <h5 class="modal-title text-white" id="likedModalLabel">좋아요한 사람들</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class = "liked-user-list" style="width: 100%; color: white">
+
+                <div class = "liked-user" th:each=" user : ${likedUser}" th:email = "${user.getMember().getEmail()}">
+                    <a th:href="@{/mypage/details/{id}/profile(id = ${user.getMember().getEmail()})}" >
+                        <div class = "liked-user-profile-img-div">
+                            <img class = "liked-user-profile-img" th:if="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{ ${user.getMember().getUsersaveprofile()} }" />
+                            <img class = "liked-user-profile-img" th:unless="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}" />
+                        </div>
+                        <div class = "ms-3 liked-user-profile-overview-div">
+                            <span class = "fs-5 liked-user-profile-nickname" th:text="${user.getMember().getNickname()}"></span>
+                            <span class ="liked-user-reviews"
+                                  th:text="${ '리뷰 : ' + user.getMember().getReviews().size()}">
+                            </span>
+                        </div>
+                    </a>
+                    <button class ="mb-2 btn btn-success btn-sm">팔로우</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -698,6 +780,12 @@
             starRatingElements.innerHTML += '<i class="halfScore">½</i>';
         }
 
+    });
+
+    document.getElementById("open-liked-user-modal").addEventListener('click', function (e) {
+        e.preventDefault();
+        let modal = new bootstrap.Modal(document.getElementById("liked-user-modal"));
+        modal.show();
     });
 
 </script>

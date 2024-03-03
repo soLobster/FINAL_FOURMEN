@@ -8,11 +8,13 @@ import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.repository.ReviewCommentLikeRepository;
 import com.itwill.teamfourmen.repository.ReviewDao;
+import com.itwill.teamfourmen.repository.ReviewLikeRepository;
 import com.itwill.teamfourmen.service.*;
 import jakarta.persistence.Basic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
@@ -42,6 +44,7 @@ public class ReviewController {
     private final CommentService commentService;
     private final FeatureService featureService;
     private final ReviewCommentLikeRepository reviewCommentLikeRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
 
     // 특정 영화 / TV 의 전체 리뷰를 불러옴
     @GetMapping("/{category}/{id}")
@@ -158,6 +161,12 @@ public class ReviewController {
         Long countReviewLiked = featureService.getNumOfReviewLike(reviewId);
 
         model.addAttribute("countReviewLiked", countReviewLiked);
+
+        Page<ReviewLike> likedUser = featureService.getUserWhoLikedReview(reviewId, 0);
+
+        model.addAttribute("likedUser", likedUser.getContent());
+
+        log.info("SIZE = {}",likedUser.getContent().size());
 
         boolean didUserLikedReview = featureService.didReviewLike(singleReview, signedInUser);
 
