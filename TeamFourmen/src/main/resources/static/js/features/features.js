@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return itemsListInPlaylist;
 	}
 	
+	// 플레이리스트 추가 함수
 	const addPlaylist = async function() {
 		
 		const btnClosePlaylistModal = document.querySelector('.btn-close-playlist-modal');
@@ -109,12 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			return;
 		}
 		
-		
-					
-		
-		
 	});
 	
+	
+	// 새 플레이리스트 생성 버튼 이벤트리스너
 	if (btnCreateNewPlaylist) {
 		
 		btnCreateNewPlaylist.addEventListener('click', function(){

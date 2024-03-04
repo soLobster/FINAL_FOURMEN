@@ -3,6 +3,7 @@ package com.itwill.teamfourmen.web;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
+import com.itwill.teamfourmen.domain.Playlist;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.MemberModifyDto;
@@ -10,6 +11,7 @@ import com.itwill.teamfourmen.dto.MemberSearchDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.mypage.MypageDTO;
 import com.itwill.teamfourmen.dto.person.DetailsPersonDto;
+import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.service.*;
@@ -144,7 +146,7 @@ public class MyPageController {
         return "redirect:" + redirectUrl;
     }
     
-
+    
     @GetMapping("/delete")
     public String delete(@RequestParam(name = "email") String email) {
        
@@ -232,6 +234,21 @@ public class MyPageController {
 
         return "mypage/details-review-list";
     }
+	    
+	    
+    @GetMapping("/details/{memberId}/playlist")
+    public String getPlaylists(@PathVariable(name = "memberId") Long memberId, Model model) {
+    	log.info("getPlaylists(memberId={})", memberId);
+    	
+    	List<PlaylistDto> playlistDtoList = featureService.getPlaylist(memberId);
+    	
+    	
+    	
+    	model.addAttribute("playlistDtoList", playlistDtoList);
+    	
+    	return "mypage/details-playlist";
+    }
+	    
 
     @GetMapping("/details/{memberId}/{category}")
     public String getLikedList(Model model, @PathVariable(name = "memberId") Long memberId, @PathVariable(name = "category") String category){

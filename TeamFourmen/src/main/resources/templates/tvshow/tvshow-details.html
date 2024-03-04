@@ -857,8 +857,8 @@
 					</div>
 				</div>
 				<div class = "mb-4 user_custom_bar">
-					<div class = "tool-tip-custom-bar" id = "custom-list" data-bs-toggle="modal" data-bs-target="#playListModal">
-						<i class="fa-solid fa-list"></i>
+					<div class = "tool-tip-custom-bar" id = "custom-list" data-bs-toggle="modal" data-bs-target="#playListModal">                        
+						<i class="fa-solid fa-list btn-playlist"></i>
 						<span class = "custom-bar-text">플레이 리스트 저장</span>
 					</div>
 					<div class = "tool-tip-custom-bar div-like" id = "custom-like" th:classappend="${tmdbLike} ne null ? 'user-liked-already'">
@@ -1102,6 +1102,62 @@
 	</div>
 </main>
 
+<!-- 플레이리스트 모달 -->
+<div class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Play List</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body playlist-modal">
+                <div class="div-movie-add-playlist">
+                    <button class="btn-add-new-playlist" data-bs-target="#createPlaylistModal" data-bs-toggle="modal">
+                        <i class="fa-solid fa-folder-plus"></i><span class="ms-3">New Playlist</span>
+                    </button>   
+                </div>
+                <div class="div-playlist-container">
+                    <div class="div-each-playlist-container" th:if="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}" th:each="eachPlaylist : ${userPlaylist}">
+                        <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
+                        <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                    </div>
+                    <div th:unless="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}">
+                        플레이리스트가 존재하지 않습니다.
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-close-playlist-modal" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary btn-add-playlist">추가</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 새 플레이리스트 만들기 모달 -->
+<div class="modal fade" th:if="${member != null}" id="createPlaylistModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">New Playlist</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>새 플레이리스트 이름</h5>
+                <input type="text" class="form-control input-playlist-name">
+                <div class="div-playlist-private">
+                    <label for="playlist-private">나만 보기</label>
+                    <input id="playlist-private" class="input-is-private" type="checkbox" name="isPrivate" value="Y">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-to-first-modal" data-bs-target="#playListModal" data-bs-toggle="modal">이전</button>
+                <button class="btn btn-success btn-create-new-playlist">만들기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 리뷰 모달 -->
 <div class="modal fade" id="reviewModal" th:if = "${member ne null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -1176,35 +1232,6 @@
 </div>
 <!-- 리뷰 모달 끝 -->
 
-<!-- 플레이 리스트 모달 -->
-<div class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-		<div class="modal-content bg-dark">
-			<div class="modal-header">
-				<h5 class="modal-title text-white" id="playListModalLabel">Play List</h5>
-				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<form>
-				<div class="modal-body" >
-					<div class = "border-bottom none-play-list">
-						<p class = "text-white">생성된 재생 목록이 없습니다.</p>
-						<a th:href="@{''}" class="text-decoration-none text-white fs-4">
-							<i class="fa-solid fa-folder-plus"></i><span class="ms-3">재생 목록을 만들어 보세요.</span>
-						</a>
-						<p class="text-info fs-5 fst-italic">TODO : 마이페이지 재생 목록 생성 페이지로 이동.</p>
-					</div>
-					<div class = "exist-play-list">
-						<p class="text-info fs-5 fst-italic">TODO : 생성된 재생목록 표기</p>
-					</div>
-				</div>
-			</form>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
-			</div>
-		</div>
-	</div>
-</div>
 
 <!-- 트레일러 모달 -->
 <div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">

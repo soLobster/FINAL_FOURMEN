@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
+import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.repository.PlaylistItemRepository;
 import com.itwill.teamfourmen.repository.PlaylistRepository;
 import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
@@ -277,10 +278,32 @@ public class FeatureService {
 		return playlist;
 	}
 	
-	public List<PlaylistItem> getItemsInPlaylist(Long playlistItem) {		
-		log.info("getItemsInPlaylist(playlistId={})", playlistItem);
+	/**
+	 * 유저의 회원번호를 아규먼트로 받아, 해당유저의 플레이리스트Dto리스트 리턴함
+	 * @param memberId
+	 * @return
+	 */
+	public List<PlaylistDto> getPlaylist(Long memberId) {
+		log.info("getPlaylist(memberId={})", memberId);
 		
-		List<PlaylistItem> playlistItemsList = playlistItemDao.findAllByPlaylistPlaylistId(playlistItem);
+		List<Playlist> playlist = playlistDao.findAllByMemberMemberId(memberId);
+		List<PlaylistDto> playlistDto = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		playlistDto.forEach((dto) -> dto.setPlaylistItemList(getItemsInPlaylist(dto.getPlaylistId())));
+		
+		
+		return playlistDto;
+	}
+	
+	/**
+	 * playlistId아규먼트로 받아 playlistItem타입을 객체로 받아,
+	 * 해당 playlist에 포함된 playlist items들의 리스트를 리턴
+	 * @param playlistItem
+	 * @return
+	 */
+	public List<PlaylistItem> getItemsInPlaylist(Long playlistId) {		
+		log.info("getItemsInPlaylist(playlistId={})", playlistId);
+		
+		List<PlaylistItem> playlistItemsList = playlistItemDao.findAllByPlaylistPlaylistId(playlistId);
 		log.info("playlist={}", playlistItemsList);
 		
 		return playlistItemsList;
