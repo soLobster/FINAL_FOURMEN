@@ -98,7 +98,8 @@ public class FollowService {
         log.info("DID ALREADY FOLLOW FROM = {} ,  TO = {}", fromUser.getEmail(), toUser.getEmail());
 
         Follow targetFollow = followRepository.findByFromUserEmailAndToUserEmail(fromUser.getEmail(), toUser.getEmail());
-
+        
+        
         log.info("follow??? = {}", targetFollow);
 
         if(targetFollow != null){

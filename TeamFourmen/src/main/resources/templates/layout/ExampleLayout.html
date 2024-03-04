@@ -47,7 +47,7 @@
                 </th:block>
                 <th:block sec:authorize="isAuthenticated()">
                     <div class="nav-div-width-adjustment">
-                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}" class="navbar-link">
+                        <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${member.memberId})}" class="navbar-link">
                             <span th:nickname = "${member.nickname}">My Dash Board</span>
                         </a>
                     </div>

@@ -23,10 +23,10 @@ public class MyPageRestController {
     private final MyPageService myPageService;
 
     @GetMapping("/user-info")
-    public ResponseEntity<Member> getMemberInfo(@RequestParam(name = "email") String email){
-        log.info("GET MEMBER INFO = {} ", email);
+    public ResponseEntity<Member> getMemberInfo(@RequestParam(name = "memberId") Long memberId){
+        log.info("GET MEMBER INFO = {} ", memberId);
 
-        Member userInfo = myPageService.getMember(email);
+        Member userInfo = myPageService.getMember(memberId);
 
         return ResponseEntity.ok(userInfo);
     }

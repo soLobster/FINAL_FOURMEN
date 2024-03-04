@@ -134,6 +134,7 @@
     margin-right: 24px;
     margin-bottom: 36px;
     border-radius: 50%;
+    cursor: pointer;
     background-color: #013a63;
 }
 
@@ -212,6 +213,66 @@
     border: none;
     background-color: transparent;
 }
+
+    /* 모달 바디 색 변경 */
+.modal-body {
+    background-color: rgb(31, 32, 41);
+    color: rgb(196, 195, 202);
+}
+
+
+    /* 플레이리스트 관련 모달 */
+.playlist-modal {
+    max-height: 500px;
+    overflow-y: auto;
+}    
+    
+.div-movie-add-playlist {
+    margin-bottom: 1rem;
+}
+
+
+		/* 각각의 플레이리스트에 대해 */
+.div-each-playlist-container {
+    border-bottom: 0.1px #fff solid;
+}		
+		
+.div-each-playlist-container:last-child {
+    border-bottom: none;
+}
+
+.label-each-playlist {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.label-each-playlist:hover {
+    background-color: #03045e;
+}
+
+.checkbox-each-playlist:checked + .label-each-playlist {
+    background-color: #023e8a;
+}
+        
+.btn-add-new-playlist {
+    width: 100%;
+    border: none;
+    background-color: #3a86ff;
+    font: 1.1rem;
+    color: #fff;
+    padding: 4px 0;
+    font-weight: 700;
+}
+
+.div-playlist-private {
+    text-align: right;
+    margin-top: 1rem;
+}
+
+
 
     /* 리뷰 모달 관련 */
 .movie-review-modal-title {

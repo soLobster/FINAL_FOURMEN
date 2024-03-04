@@ -11,7 +11,10 @@
 document.addEventListener('DOMContentLoaded', async function () {
 
     const pathName = location.pathname;
-    const userEmail = pathName.split('/')[3];
+    //const userEmail = pathName.split('/')[3];
+    const memberId = pathName.split('/')[3];
+
+	let userEmail = '';
 
     let loggedInUser = '';
     async function checkCurrentUser() {
@@ -44,10 +47,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const likedListTitle = document.querySelector('.category-like-list');
 
-    console.log('마이페이지 유저 = ' + userEmail);
+    console.log('마이페이지 유저 = ' + memberId);
 
     // 유저의 정보를 가져옴
-   await axios.get(`/api/mypage/user-info?email=${userEmail}`)
+   await axios.get(`/api/mypage/user-info?memberId=${memberId}`)
         .then((response) => {
             const {
                 email,
@@ -70,22 +73,24 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
+            
+            userEmail = email;
 
             // 유저 대시보드 공통 네비게이션에 링크를 걸어준다.
             const profileLink = document.querySelector('.nav-item:nth-child(1) .nav-link');
-            profileLink.href = `/mypage/details/${userEmail}/profile`;
+            profileLink.href = `/mypage/details/${memberId}/profile`;
 
             const reviewsLink = document.querySelector('.nav-item:nth-child(2) .nav-link');
-            reviewsLink.href = `/mypage/details/${userEmail}/reviews`;
+            reviewsLink.href = `/mypage/details/${memberId}/reviews`;
 
             const likedMovieLink = document.querySelector('.nav-item:nth-child(4) .nav-link');
-            likedMovieLink.href = `/mypage/details/${userEmail}/movie`
+            likedMovieLink.href = `/mypage/details/${memberId}/movie`
 
             const likedTvShowLink = document.querySelector('.nav-item:nth-child(5) .nav-link');
-            likedTvShowLink.href = `/mypage/details/${userEmail}/tv`
+            likedTvShowLink.href = `/mypage/details/${memberId}/tv`
 
             const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
-            likedPersonLink.href = `/mypage/details/${userEmail}/person`
+            likedPersonLink.href = `/mypage/details/${memberId}/person`
 
         });
 
@@ -199,7 +204,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     console.log(category);
 
-    if(location.pathname.split('/')[4] != 'profile'){
+	if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management'){
         likedListTitle.textContent = category + ' Liked List';
     }
 
@@ -210,6 +215,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // 로그인 유저와 마이페이지 유저가 같다면 팔로우 불가
     if(userEmail === await checkCurrentUser()){
+		console.log(`userEmail=${userEmail}`);
         followButton.classList.add('d-none');
     }
 

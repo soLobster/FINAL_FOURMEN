@@ -18,7 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, String>{
     @EntityGraph(attributePaths = "roles")
     Optional<Member> findByEmail(String email);
     
- 
+    
     Member findByNameAndPhone(String name, String phone);
     
     // select m, r.roles
@@ -32,6 +32,8 @@ public interface MemberRepository extends JpaRepository<Member, String>{
     Member findByNickname(String nickname);
     
     Member findByPhone(String phone);
+    
+    Optional<Member> findByMemberId(Long memberId);
     
     void deleteByEmail(String email);
     

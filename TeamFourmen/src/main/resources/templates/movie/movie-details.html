@@ -131,8 +131,11 @@
                     </div>
                     <!-- 좋아요, 트레일러 등 -->
                     <div class="movie-like-trailer-container">
-                        <div class="movie-like-item">
-                            <i class="fa-solid fa-list"></i>
+                        <!-- 플레이리스트 -->
+                        <div th:id="${member} != null ? 'playListModalLabel'" class="movie-like-item div-playlist">
+                            <button class="movie-like-button btn-playlist" data-bs-toggle="modal" data-bs-target="#playListModal">
+                                <i class="fa-solid fa-list"></i>
+                            </button>
                         </div>
                         <!-- 좋아요 -->
                         <div class="movie-like-item div-like" th:classappend="${tmdbLike} != null ? 'user-liked-already'">
@@ -141,7 +144,7 @@
                             </button>
                         </div>
                         <!-- 리뷰 -->
-                        <div class="movie-like-item div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'">
+                        <div  class="movie-like-item div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'">
                             <button type="button" class="btn-movie-review" data-bs-toggle="modal" data-bs-target="#movie-review">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
@@ -174,9 +177,65 @@
                             </div>
                         </th:block>           
                     </div>
+                    
+                    <!-- 플레이리스트 모달 -->
+                    <div class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModal" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">Play List</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body playlist-modal">
+                                    <div class="div-movie-add-playlist">
+                                        <button class="btn-add-new-playlist" data-bs-target="#createPlaylistModal" data-bs-toggle="modal">
+                                            <i class="fa-solid fa-folder-plus"></i><span class="ms-3">New Playlist</span>
+                                        </button>   
+                                    </div>
+                                    <div class="div-playlist-container">
+                                        <div class="div-each-playlist-container" th:if="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}" th:each="eachPlaylist : ${userPlaylist}">
+                                            <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
+                                            <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                                        </div>
+                                        <div th:unless="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}">
+                                            플레이리스트가 존재하지 않습니다.
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-close-playlist-modal" data-bs-dismiss="modal">닫기</button>
+                                    <button type="button" class="btn btn-primary btn-add-playlist">추가</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 새 플레이리스트 만들기 모달 -->
+                    <div class="modal fade" th:if="${member != null}" id="createPlaylistModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">New Playlist</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h5>새 플레이리스트 이름</h5>
+                                    <input type="text" class="form-control input-playlist-name">
+                                    <div class="div-playlist-private">
+                                        <label for="playlist-private">나만 보기</label>
+                                        <input id="playlist-private" class="input-is-private" type="checkbox" name="isPrivate" value="Y">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary btn-to-first-modal" data-bs-target="#playListModal" data-bs-toggle="modal">이전</button>
+                                    <button class="btn btn-success btn-create-new-playlist">만들기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- 리뷰 남기기 모달 -->
                     <div class="modal fade" id="movie-review" th:if="${member != null && myReview == null}" tabindex="-1" aria-labelledby="movie-review" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5 movie-review-modal-title" th:text="Review"></h1>

@@ -38,22 +38,22 @@ public class MyPageController {
     public void mypage() {
     }
 
-    @GetMapping("/details/{id}/profile")
-    public String getMyPageDetails(Model model, @PathVariable (name = "id") String email){
-        log.info("get MY PAGE DETAILS USER EMAIL = {}", email);
+    @GetMapping("/details/{memberId}/profile")
+    public String getMyPageDetails(Model model, @PathVariable (name = "memberId") Long memberId){
+        log.info("get MY PAGE DETAILS MEMBERID = {}", memberId);
 
-        Member profile = myPageService.getMember(email);
-
+        Member profile = myPageService.getMember(memberId);
+        
         model.addAttribute("profile", profile);
 
         return "mypage/details-profile";
     }
 
-    @GetMapping("/details/{id}/reviews")
-    public String getReviews(Model model, @PathVariable( name = "id") String email){
+    @GetMapping("/details/{memberId}/reviews")
+    public String getReviews(Model model, @PathVariable( name = "memberId") Long memberId){
 
 
-        List<Review> myAllReview =  featureService.getAllMyReview(email);
+        List<Review> myAllReview =  featureService.getAllMyReview(memberId);
 
         model.addAttribute("myAllReview", myAllReview);
 
@@ -114,11 +114,11 @@ public class MyPageController {
         return "mypage/details-review-list";
     }
 
-    @GetMapping("/details/{id}/{category}")
-    public String getLikedList(Model model, @PathVariable(name = "id") String email, @PathVariable(name = "category") String category){
-        log.info("GET LIKED LIST - EMAIL = {}, CATEGORY = {}", email, category);
+    @GetMapping("/details/{memberId}/{category}")
+    public String getLikedList(Model model, @PathVariable(name = "memberId") Long memberId, @PathVariable(name = "category") String category){
+        log.info("GET LIKED LIST - MEMBERID = {}, CATEGORY = {}", memberId, category);
 
-        Member member = Member.builder().email(email).build();
+        Member member = Member.builder().memberId(memberId).build();
 
         List<TmdbLike> likedList = featureService.getLikedList(member, category);
         List<MypageDTO> myPageLikedList = new ArrayList<>();
@@ -170,5 +170,9 @@ public class MyPageController {
 
         return "mypage/details-liked-list";
     }
+    
+    
+    
+    
 
 }

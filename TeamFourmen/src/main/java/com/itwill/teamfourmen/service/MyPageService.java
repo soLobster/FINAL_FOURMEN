@@ -14,7 +14,11 @@ import java.util.Optional;
 public class MyPageService {
 
     private final MemberRepository memberDao;
-
+    
+    public Member getMember(Long memberId) {
+    	return memberDao.findByMemberId(memberId).orElse(null);
+    }
+    
     public Member getMember(String email){
 
         Member member = Member.builder().email(email).build();

@@ -28,6 +28,7 @@ import com.itwill.teamfourmen.domain.Comment;
 import com.itwill.teamfourmen.domain.CommentLike;
 import com.itwill.teamfourmen.domain.ImdbRatings;
 import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Playlist;
 import com.itwill.teamfourmen.domain.Post;
 import com.itwill.teamfourmen.domain.PostLike;
 import com.itwill.teamfourmen.domain.Review;
@@ -192,6 +193,10 @@ public class MovieController {
 		
 		log.info("movieDetails(id={})", id);
 		
+		Review myReview = null;
+		List<Playlist> userPlaylist = null;
+		
+		
 		// 영화 디테일 정보 가져오기
 		MovieDetailsDto movieDetailsDto = apiUtil.getMovieDetails(id);
 		//log.info("movieDetailsDto={}", movieDetailsDto);
@@ -252,8 +257,11 @@ public class MovieController {
 		String email = authentication.getName();
 		Member signedInUser = Member.builder().email(email).build();
 		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "movie", id);	// 만약 좋아요 이미 눌렀으면 TmdbLike객체 리턴됨
-
-		//		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
+		
+		log.info("email={}", email);
+		if (!email.equals("anonymousUser")) {
+			myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);			
+		}
 
 		// 관련 리뷰 가져옴
 		List<Review> movieReviewList = featureService.getReviews("movie", id);
@@ -273,13 +281,19 @@ public class MovieController {
 			reviewComment.put(reviewId, numOfComment);
 			reviewLiked.put(reviewId, numOfLiked);
 		}
-
+		
+		
+		// 로그인한 유저의 플레이리스트 가져오기
+		if (!email.equals("anonymousUser")) {
+			userPlaylist = featureService.getPlaylist(email);
+			log.info("userPlaylist={}", userPlaylist);
+		}
+		
 		model.addAttribute("numOfReviewLiked", reviewLiked);
 		model.addAttribute("numOfReviewComment", reviewComment);
 
 
 //		List<Review> movieReviewList = featureService.getReviews("movie", id);
-//		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
 		
 		// 내가 좋아요 누른 리뷰들 가져옴
 		
@@ -292,7 +306,9 @@ public class MovieController {
 		model.addAttribute("movieExternalIdDto", movieExternalIdDto);
 		model.addAttribute("recommendedList", recommendedList);
 		model.addAttribute("releaseItemDto", releaseItemDto);
-
+		model.addAttribute("myReview", myReview);
+		model.addAttribute("userPlaylist", userPlaylist);
+		
 		// imdb rating을 가져오기 위함...
 		// id = TMDB의 movie id , category = 제일 상단에 이미 선언 "movie"
 		String imdbId = imdbRatingUtil.getImdbId(id, category);
@@ -311,7 +327,6 @@ public class MovieController {
 
     
 //		model.addAttribute("movieReviewList", movieReviewList);
-//		model.addAttribute("myReview", myReview);
 		
 		return "movie/movie-details";
 	}
@@ -342,7 +357,7 @@ public class MovieController {
 		log.info("movieBoardDetails(id={})", id);
 		
 		PostDto postDetails = boardService.getPostDetail(id);
-		log.info("postDetails={}", postDetails);
+		// log.info("postDetails={}", postDetails);
 		
 		// 조회수 1 추가
 		boardService.addView(id);
