@@ -14,16 +14,22 @@ import java.util.Optional;
 public class MyPageService {
 
     private final MemberRepository memberDao;
-
-    public Member getMember(Long memberId){
-
-        Member member = Member.builder().memberId(memberId).build();
-
-        Optional<Member> findMember = memberDao.findByEmail(member.getEmail());
-
-        Member targetmember = findMember.orElseThrow();
-
-        return targetmember;
+    
+    public Member getMember(Long memberId) {
+    	return memberDao.findByMemberId(memberId).orElse(null);
     }
+    
+
+//    public Member getMember(Long memberId){
+//
+//
+//        Member member = Member.builder().memberId(memberId).build();
+//
+//        Optional<Member> findMember = memberDao.findByEmail(member.getEmail());
+//
+//        Member targetmember = findMember.orElseThrow();
+//
+//        return targetmember;
+//    }
 
 }

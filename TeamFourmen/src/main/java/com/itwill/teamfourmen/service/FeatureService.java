@@ -5,13 +5,15 @@ import java.util.Optional;
 
 import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
+import com.itwill.teamfourmen.repository.PlaylistItemRepository;
+import com.itwill.teamfourmen.repository.PlaylistRepository;
 import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.Review;
@@ -33,7 +35,10 @@ public class FeatureService {
 	private final TmdbLikeDao tmdbLikeDao;
 	private final ReviewLikeRepository reviewLikeDao;
 	private final ReviewCommentsRepository commentDao;
-
+	private final PlaylistRepository playlistDao;
+	private final PlaylistItemRepository playlistItemDao;
+	private final MemberRepository memberDao;
+	
 	public void postReview(Review review) {
 
 		log.info("postReview(reviewDto={})", review);
@@ -209,12 +214,25 @@ public class FeatureService {
 
 		return myAllReivew;
 	}
+	
+	public List<Review> getAllMyReview (Long memberId) {
+		log.info("GET ALL MY REVIEW MEMBERID = {}", memberId);
+		
+		List<Review> myAllReview = reviewDao.findAllByMemberMemberId(memberId);
+		
+		for(Review review : myAllReview) {
+			log.info("My review = {}", review);
+		}
+		
+		return myAllReview;
+	}
 
 	public List<TmdbLike> getLikedList (Member member, String category){
-		log.info("GET LIKED LIST OF CATEGORY = {}, MEMBER EMAIL = {}", category, member.getEmail());
-
-		List<TmdbLike> likedList = tmdbLikeDao.findByMemberEmailAndCategory(member.getEmail(), category);
-
+		log.info("GET LIKED LIST OF CATEGORY = {}, MemberID = {}", category, member.getMemberId());
+		Member theMember = memberDao.findByMemberId(member.getMemberId()).orElse(null);
+		
+		List<TmdbLike> likedList = tmdbLikeDao.findByMemberEmailAndCategory(theMember.getEmail(), category);
+		
 		return likedList;
 	}
 
@@ -244,6 +262,53 @@ public class FeatureService {
 		return likesCount;
 
 	}
+	
+	/**
+	 * 유저의 아이디(email)을 아규먼트로 받아, 해당 유저의 플레이리스트들을 리턴함.
+	 * 플레이리스트가 없을 경우 빈 문자열을 리턴
+	 * @param email
+	 * @return
+	 */
+	public List<Playlist> getPlaylist(String email) {
+		log.info("getPlaylist(email={})", email);
+		
+		List<Playlist> playlist = playlistDao.findAllByMemberEmail(email);
+		
+		return playlist;
+	}
+	
+	public List<PlaylistItem> getItemsInPlaylist(Long playlistItem) {		
+		log.info("getItemsInPlaylist(playlistId={})", playlistItem);
+		
+		List<PlaylistItem> playlistItemsList = playlistItemDao.findAllByPlaylistPlaylistId(playlistItem);
+		log.info("playlist={}", playlistItemsList);
+		
+		return playlistItemsList;
+	}
+	
+	
+	/**
+	 * playlist타입의 객체를 아규먼트로 받아 새로운 플레이리스트를 만드는 서비스 메서드
+	 * @param playlist
+	 */
+	@Transactional
+	public void createPlaylist(Playlist playlist) {
+		
+		log.info("createPlaylist(playlist={})", playlist);
+		
+		playlistDao.save(playlist);
+				
+	}
+	
+	@Transactional
+	public PlaylistItem addItemToPlaylist(PlaylistItem playlistItem) {
+		log.info("playlistItem={}", playlistItem);
+		
+		PlaylistItem savedPlaylistItem = playlistItemDao.save(playlistItem);
+		
+		return savedPlaylistItem;
+	}
+	
 
 	public Page<ReviewLike> getUserWhoLikedReview(Long reviewId, int page){
 

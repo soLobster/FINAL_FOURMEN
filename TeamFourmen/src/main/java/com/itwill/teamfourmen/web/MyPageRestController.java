@@ -26,17 +26,17 @@ public class MyPageRestController {
     public ResponseEntity<Member> getMemberInfo(@RequestParam(name = "memberId") Long memberId){
         log.info("GET MEMBER INFO = {} ", memberId);
 
-        Member userInfo = myPageService.getMember(email);
+        Member userInfo = myPageService.getMember(memberId);
 
         return ResponseEntity.ok(userInfo);
     }
 
 
     @GetMapping("/get-num-of-reviews")
-    public ResponseEntity<Integer> getNumReviews(@RequestParam(name = "memberId") String memberId){
-        log.info("GET REVIEWS NUM WHO  = {} ", email);
+    public ResponseEntity<Integer> getNumReviews(@RequestParam(name = "memberId") Long memberId){
+        log.info("GET REVIEWS NUM WHO  = {} ", memberId);
 
-        List<Review> allReview =  featureService.getAllMyReview(email);
+        List<Review> allReview =  featureService.getAllMyReview(memberId);
 
         int numOfReview = 0;
 
