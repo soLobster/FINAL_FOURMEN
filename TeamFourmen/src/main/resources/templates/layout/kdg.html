@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>TEAM FOURMEN LAYOUT</title>
+</head>
+<body>
+<nav id="navbar-container" th:fragment="navigation-bar">
+
+    <div class="navbar-inner-container">
+        <!-- 포맨 로고 부분(로고 이미지, 메인페이지 링크) -->
+        <a th:href="@{/}">
+            <div class="navbar-logo-container">
+                <img class="navbar-logo-image" th:src="@{/image/logogood.png}">
+            </div>
+        </a>
+
+        <!-- 메뉴 버튼 -->
+        <div class="navbar-menu-outer-container nav-div-width-adjustment">
+            <button class="navbar-menu-btn">
+                    <span class="navbar-menu-text-icon-span nav-div-width-adjustment">
+                        <i class="fa-solid fa-bars navbar-menu-hamburger-icon"></i>
+                        <span>MENU</span>
+                    </span>
+            </button>
+        </div>
+
+        <!-- 검색창 부분 -->
+        <div class="navbar-search-container">
+            <div class="navbar-search-inner-container">
+                <form th:action="@{/search}" method="get"> <!-- 검색 결과 페이지로 이동 -->
+                    <!-- 검색 입력 필드 -->
+                    <div class="navbar-search-input-container" >
+                        <label>
+                            <input name="query" class="navbar-search-input" type="text" maxlength="50" placeholder="콘텐츠, 인물, 컬렉션, 유저를 검색해보세요.">
+                        </label>
+                    </div>
+                    <!-- 검색 아이콘(돋보기) -->
+                    <button class="navbar-search-button" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 유저 관련 부분(로그인, 회원가입, 대시보드, 유저 프로필 이미지) -->
+        <!-- 유저 로그인 여부에 따라 다르게 보임 -->
+        <!-- 비로그인 상태: sign In    Sign Up -->
+        <!-- 로그인 상태: My Dash Board    Sign out -->
+        <!-- 유저 프로필 이미지 -->
+        <div class="navbar-user-div">
+            <!-- sec:authorize="isAnonymous()"는 현재 사용자가 익명, 즉 로그인하지 않은 상태임을 확인하는 데 사용. -->
+            <!-- 참일 경우: sign In / Sign Up 표시. -->
+            <th:block sec:authorize="isAnonymous()">
+                <div class="nav-div-width-adjustment">
+                    <a th:href="@{/login}" class="navbar-link">
+                        <span>Sign In</span>
+                    </a>
+                </div>
+                <div class="nav-div-width-adjustment">
+                    <a th:href="@{/login}" class="navbar-link">
+                        <span>Sign Up</span>
+                    </a>
+                </div>
+            </th:block>
+            <!-- sec:authorize="isAuthenticated()"는 현재 사용자가 인증되었음, 즉 로그인한 상태임을 확인하는 데 사용. -->
+            <!-- 참일 경우: My Dash Board / Sign Out 표시. -->
+            <th:block sec:authorize="isAuthenticated()">
+                <div class="nav-div-width-adjustment">
+                    <a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}" class="navbar-link">
+                        <span th:nickname = "${member.nickname}">My Dash Board</span>
+                    </a>
+                </div>
+                <div class="nav-div-width-adjustment">
+                    <a th:href="@{/logout}" class="navbar-link">
+                        <span>Sign Out</span>
+                    </a>
+                </div>
+                <!-- 유저 프로필 이미지 -->
+                <!-- 사용자의 프로필 이미지 URL(usersaveprofile)이 HTTP로 시작하는지 여부에 따라 다른 img 태그 사용. -->
+                <div class="div-profile-image" id="profile-picture" th:nickname="${member.nickname}" th:email="${member.email}">
+                    <!-- 첫 번째 img 태그는 URL이 HTTP로 시작하는 경우 외부 소스에서 이미지를 로드. -->
+                    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}" id="profile_s_img" class="profile-image" alt="User Profile">
+                    <!-- 두 번째 img 태그는 프로필 이미지가 기본 이미지(userimage.png)인 경우 사용. -->
+                    <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile == 'userimage.png'}" th:src="@{/image/userimage.png}" class="profile-image">
+                    <!-- 세 번째 img 태그는 사용자의 프로필 이미지가 외부 URL이 아니고, 기본 이미지도 아닌 다른 이미지인 경우, 서버에 저장된 해당 이미지를 표시 -->
+                    <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="profile_s_imgg" class="profile-image" alt="User Profile">
+                </div>
+            </th:block>
+        </div>
+    </div>
+
+    <!-- 디테일 메뉴들 -->
+    <!-- 메뉴가 활성화될 때의 배경을 위한 div -->
+    <div class="navbar-background"></div>
+    <!-- 모든 디테일 메뉴를 포함하는 메인 컨테이너 역할을 하는 div -->
+    <div class="navbar-detailed-menu">
+
+        <!-- !!! 왼쪽(메뉴 버튼 클릭 시 화면 너비가 작을 때 나옴), 오른쪽(유저 프로필 이미지를 클릭했을 때 나옴) 사이드바 관련 코드 !!! -->
+        <!-- 닫기 버튼 -->
+        <!-- navbar-detailed-x-container 내에 위치한 fa-xmark 아이콘은 사용자가 상세 메뉴를 닫을 수 있게 하는 닫기(X) 버튼. -->
+        <div class="navbar-detailed-x-container">
+            <div class="navbar-detailed-x-div">
+                <i class="fa-solid fa-xmark navbar-detailed-x"></i>
+            </div>
+        </div>
+
+        <!-- 영화, TV 쇼, 인물 -->
+        <!-- Movie -->
+        <div class="navbar-detailed-menu-section-container">
+            <div class="navbar-detailed-menu-title">
+                <div>
+                    <span><i class="fa-solid fa-film"></i></span>
+                    <span>Movie</span>
+                </div>
+                <div class="navbar-chevron-div">
+                    <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                    <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                </div>
+            </div>
+            <div class="navbar-detailed-menu-items">
+                <div class="navbar-detailed-menu-list">
+                    <div class="navbar-each-menu-item"><a th:href="@{/movie/popular}">인기 영화</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/movie/now_playing}">현재 상영 영화</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/movie/top_rated}">최고 평점 영화</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/movie/upcoming}">상영 예정 영화</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/movie/board}">영화 게시판</a></div>
+                </div>
+            </div>
+        </div>
+        <!-- TV Show -->
+        <div class="navbar-detailed-menu-section-container">
+            <div class="navbar-detailed-menu-title">
+                <div>
+                    <span><i class="fa-solid fa-tv"></i></span>
+                    <span>TV Show</span>
+                </div>
+                <div class="navbar-chevron-div">
+                    <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                    <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                </div>
+            </div>
+            <div class="navbar-detailed-menu-items">
+
+                <div class="navbar-detailed-menu-list">
+                    <div class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV Show List</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/day}">오늘의 인기 Top 200</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/week}">이주의 인기 Top 200</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/tv/board}">TV Show 게시판</a></div>
+                </div>
+
+            </div>
+        </div>
+        <!-- People -->
+        <div class="navbar-detailed-menu-section-container">
+            <div class="navbar-detailed-menu-title">
+                <div>
+                    <span><i class="fa-solid fa-user-group"></i></span>
+                    <span>People</span>
+                </div>
+                <div class="navbar-chevron-div">
+                    <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                    <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                </div>
+            </div>
+            <div class="navbar-detailed-menu-items">
+                <div class="navbar-detailed-menu-list">
+                    <div class="navbar-each-menu-item"><a th:href="@{/person/list}">인기 인물</a></div>
+                    <div class="navbar-each-menu-item"><a th:href="@{/person/board}">인물 게시판</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <!-- !!! 유저 프로필 이미지를 눌렀을 때 나오는 사이드바 관련 코드 !!! -->
+        <!-- Spring Security와 Thymeleaf를 함께 사용하여 현재 사용자가 인증되었는지 확인.
+             isAuthenticated()가 참이면, 이 블록 내의 내용이 렌더링됨.
+             즉, 사용자가 로그인한 상태일 때만 이 블록 내의 내용을 볼 수 있음. -->
+        <th:block sec:authorize="isAuthenticated()">
+
+            <!-- 유저의 마이페이지에 대한 배경을 설정하는 div -->
+            <div class="navbar-mypage-background"></div>
+
+            <!-- 유저의 마이페이지의 메뉴를 포함하는 div:
+                 유저 프로필 이미지, 유저 마이 페이지, 팔로우, 리뷰, 좋아요 -->
+            <div class="navbar-detailed-mypage-menu">
+                <!-- 유저 프로필 이미지, 닉네임, 닫기(X) 버튼 -->
+                <div class="navbar-detailed-x-container">
+                    <div class="navbar-detailed-x-div-mypage">
+                        <!-- 유저 프로필 이미지를 누르면 유저 마이페이지로 이동하는 a 태그-->
+                        <!--                        <a href='/mypage'>-->
+                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">
+                            <!-- 유저 프로필 이미지를 조건에 따라 표시 -->
+                            <div class="profile-picture mypage-profile">
+                                <div class="div-profile-image">
+                                    <!-- 첫 번째 img 태그는 URL이 HTTP로 시작하는 경우 외부 소스에서 이미지를 로드. -->
+                                    <!--                                    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"-->
+                                    <!--                                         th:src="${member.usersaveprofile}" id="profile_s_img" class="profile-image"-->
+                                    <!--                                         alt="User Profile">-->
+                                    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
+                                         th:src="${member.usersaveprofile}" id="profile_s_img" class="profile-image"
+                                         alt="User Profile">
+                                    <!-- 두 번째 img 태그는 프로필 이미지가 기본 이미지(userimage.png)인 경우 사용. -->
+                                    <!--                                    <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile == 'userimage.png'}"-->
+                                    <!--                                         th:src="@{/image/userimage.png}" class="profile-image">-->
+                                    <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile == 'userimage.png'}"
+                                         th:src="@{/image/userimage.png}" class="profile-image">
+                                    <!-- 세 번째 img 태그는 사용자의 프로필 이미지가 외부 URL이 아니고, 기본 이미지도 아닌 다른 이미지인 경우, 서버에 저장된 해당 이미지를 표시 -->
+                                    <!--                                    <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}"-->
+                                    <!--                                         th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="profile_s_imgg"-->
+                                    <!--                                         class="profile-image" alt="User Profile">-->
+                                    <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}"
+                                         th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="profile_s_imgg"
+                                         class="profile-image" alt="User Profile">
+                                    <!--
+                                    <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
+                                    <img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="@{'/image?photo=' + ${member.usersaveprofile}}"  id="profile_s_imgg" class="profile-image" alt="User Profile">
+                                    -->
+                                </div>
+                            </div>
+                        </a>
+                        <!-- 유저가 USER 역할인 경우 유저의 닉네임을 표시 -->
+                        <div style="margin-top: 16px" sec:authorize="hasRole('USER')" th:text="${member.nickname}"></div>
+                        <!-- 유저가 ADMIN 역할인 경우 ADMIN 표시 -->
+                        <div style="margin-top: 16px; color:#fbc500;" sec:authorize="hasRole('ADMIN')">ADMIN</div>
+                        <!-- 닫기(X) 버튼 -->
+                        <i style="margin-top: 16px;" class="fa-solid fa-xmark navbar-detailed-x-mypage" id="close-mypage"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- My Page, My Follower, My Following -->
+                    <div class="navbar-detailed-menu-section-container-mypage">
+                        <div class="navbar-detailed-menu-title-mypage">
+                            <div>
+                                <span><i class="fa-solid fa-user"></i></span>
+                            </div>
+                        </div>
+                        <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
+                            <!--                                <div class="navbar-detailed-menu-list-mypage">-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Page</a></div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Follower</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Following</a>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <div class="navbar-detailed-menu-list-mypage">
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Page</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Follower</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Following</a></div>
+                            </div>
+                        </div>
+                        <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
+                            <!--                                <div class="navbar-detailed-menu-list-mypage">-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/admin}">Member-->
+                            <!--                                        Management</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Page</a></div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Follower</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Following</a>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <div class="navbar-detailed-menu-list-mypage">
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/management(id = ${member.email})}">Member management</a>
+                                </div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Page</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My follower</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My following</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- My Review, My Playlist, My Forum -->
+                    <div class="navbar-detailed-menu-section-container-mypage">
+                        <div class="navbar-detailed-menu-title-mypage">
+                            <div>
+                                <span><i class="fa-solid fa-list"></i></span>
+                            </div>
+                        </div>
+                        <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
+                            <!--                                <div class="navbar-detailed-menu-list-mypage">-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Review</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Playlist</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">My Forum</a></div>-->
+                            <!--                                </div>-->
+                            <div class="navbar-detailed-menu-list-mypage">
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/reviews(id = ${member.email})}">My Review</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Playlist</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Forum</a></div>
+                            </div>
+                        </div>
+                        <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
+                            <!--                                <div class="navbar-detailed-menu-list-mypage">-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/movie/popular}">Movie-->
+                            <!--                                        Page</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/tv/trending/day}">Tv show-->
+                            <!--                                        Page</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/person/list}">Actor-->
+                            <!--                                        Page</a></div>-->
+                            <!--                                </div>-->
+                            <div class="navbar-detailed-menu-list-mypage">
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/movie/popular}">Movie Page</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/tv/trending/day}">Tv Show Page</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/person/list}">Actor Page</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Movie Likes, Tv Show Likes, Actor Likes -->
+                    <div class="navbar-detailed-menu-section-container-mypage" sec:authorize="hasRole('USER')">
+                        <div class="navbar-detailed-menu-title-mypage">
+                            <div>
+                                <span><i class="fa-solid fa-heart"></i></span>
+                            </div>
+                        </div>
+                        <div class="navbar-detailed-menu-items-mypage">
+                            <!--                                <div class="navbar-detailed-menu-list-mypage">-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">Movie Likes</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">TV Show Likes</a>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage}">Actor Likes</a>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <div class="navbar-detailed-menu-list-mypage">
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/movie(id = ${member.email})}">Movie Likes</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/tv(id = ${member.email})}">TV Show Likes</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a
+                                        th:href="@{/mypage/details/{id}/person(id = ${member.email})}">Actor Likes</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Logout -->
+                    <div class="navbar-detailed-menu-section-container-mypage">
+                        <div class="navbar-detailed-menu-title-mypage">
+                            <div>
+                                <span><i class="fa-solid fa-right-from-bracket"></i></span>
+                            </div>
+                        </div>
+                        <div class="navbar-detailed-menu-items-mypage">
+                            <div class="navbar-detailed-menu-list-mypage">
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/logout}">Logout</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+</nav>
+</body>
+</html>
