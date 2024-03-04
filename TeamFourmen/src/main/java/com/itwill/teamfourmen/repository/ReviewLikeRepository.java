@@ -2,6 +2,8 @@ package com.itwill.teamfourmen.repository;
 
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.Review;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.itwill.teamfourmen.domain.ReviewLike;
 
@@ -16,4 +18,6 @@ public interface ReviewLikeRepository extends JpaRepository<ReviewLike, Long> {
     ReviewLike findByReviewAndMember(Review review, Member member);
 
     Long countByReview(Review review);
+
+    Page<ReviewLike> findByReview(Review review, Pageable pageable);
 }

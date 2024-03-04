@@ -12,7 +12,7 @@
         <h1 class="me-2" id = "user-nick-name"></h1>
         <th:block sec:authorize="isAuthenticated()">
           <div class = "edit-profile">
-            <a class = "text-white" th:href = "@{'/mypage'}" role="button">
+            <a class = "text-white" id="myedit" role="button">
               <i class="fa-solid fa-ellipsis"></i>
             </a>
             <span class="edit-profile-text">Edit Profile</span>
@@ -21,7 +21,7 @@
             <button class="btn btn-sm btn-primary follow">팔로우</button>
           </div>
         </th:block>
-        <div sec:authorize="hasRole('ADMIN')" style="padding-left:20px;">관리자</div>
+        <div sec:authorize="hasRole('ADMIN')" style="padding-left:20px; color:#fbc500;">ADMIN</div>
       </div>
       <div class="overview-review-network">
         <h4 class="review-num">
@@ -68,7 +68,7 @@
           <a class="nav-link">Person</a>
         </li>
         <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-          <a class="nav-link" th:href="@{/admin}">Member Management</a>
+          <a class="nav-link" th:href="@{/mypage/details/__${member.email}__/management}">Member Management</a>
         </li>
       </ul>
     </div>

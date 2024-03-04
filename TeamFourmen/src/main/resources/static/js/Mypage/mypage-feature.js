@@ -50,31 +50,38 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log('마이페이지 유저 = ' + memberId);
 
     // 유저의 정보를 가져옴
+
    await axios.get(`/api/mypage/user-info?memberId=${memberId}`)
         .then((response) => {
             const {
+                memberId,
                 email,
                 name,
                 nickname,
-                usersaveprofile
+                usersaveprofile,
+                type
             } = response.data;
             console.log('불러온 유저 정보');
-            console.log('EAMIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile);
+            console.log('MEMBER ID = ' + memberId +'EMAIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile , 'TYPE = ' + type);
 
             // 유저의 닉네임을 표기
             const userNickname = nickname;
             const nicknameElement = document.querySelector('#user-nick-name');
             nicknameElement.textContent = userNickname;
 
-            console.log('불러온 이미지 = '+usersaveprofile);
+            console.log('불러온 이미지 = ' + usersaveprofile);
 
-            if(usersaveprofile != ''){
+            if(type !== 'web'){
                  userProfileImg.setAttribute('src', usersaveprofile);
+            } else {
+                userProfileImg.setAttribute('src',  '/image/userimage.png')
             }
 
             browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
             
             userEmail = email;
+            
+            console.log('쑤셔넣은 이메일임 = ' +userEmail);
 
             // 유저 대시보드 공통 네비게이션에 링크를 걸어준다.
             const profileLink = document.querySelector('.nav-item:nth-child(1) .nav-link');
@@ -91,6 +98,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
             likedPersonLink.href = `/mypage/details/${memberId}/person`
+            
+            const myeditLink =document.querySelector('a#myedit');
+            myeditLink.href = `/mypage/details/${memberId}/edit`;
 
         });
 
@@ -111,12 +121,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
     // 리뷰 카운트를 구해서 유저 정보 우측에 추가함
-    await axios.get(`/api/mypage/get-num-of-reviews?email=${userEmail}`)
+    await axios.get(`/api/mypage/get-num-of-reviews?memberId=${memberId}`)
         .then((response) => {
             const reviewCount = response.data;
             console.log('불러온 리뷰의 수 = ' + reviewCount);
             const reviewLinkElement = document.querySelector('.review-num a');
-            reviewLinkElement.href = `/mypage/details/${userEmail}/reviews`
+            reviewLinkElement.href = `/mypage/details/${memberId}/reviews`
 
             const reviewNumElement = document.querySelector('.review-num .value');
             reviewNumElement.textContent = reviewCount;
@@ -204,7 +214,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     console.log(category);
 
-	if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management'){
+
+ if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management' 
+ && location.pathname.split('/')[4] != 'admindetail' && location.pathname.split('/')[4] != 'search' && location.pathname.split('/')[4] != 'edit'){
         likedListTitle.textContent = category + ' Liked List';
     }
 

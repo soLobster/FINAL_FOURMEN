@@ -33,10 +33,10 @@ public class MyPageRestController {
 
 
     @GetMapping("/get-num-of-reviews")
-    public ResponseEntity<Integer> getNumReviews(@RequestParam(name = "email") String email){
-        log.info("GET REVIEWS NUM WHO  = {} ", email);
+    public ResponseEntity<Integer> getNumReviews(@RequestParam(name = "memberId") Long memberId){
+        log.info("GET REVIEWS NUM WHO  = {} ", memberId);
 
-        List<Review> allReview =  featureService.getAllMyReview(email);
+        List<Review> allReview =  featureService.getAllMyReview(memberId);
 
         int numOfReview = 0;
 

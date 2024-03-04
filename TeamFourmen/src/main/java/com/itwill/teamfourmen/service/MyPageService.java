@@ -19,15 +19,17 @@ public class MyPageService {
     	return memberDao.findByMemberId(memberId).orElse(null);
     }
     
-    public Member getMember(String email){
 
-        Member member = Member.builder().email(email).build();
-
-        Optional<Member> findMember = memberDao.findByEmail(member.getEmail());
-
-        Member targetmember = findMember.orElseThrow();
-
-        return targetmember;
-    }
+//    public Member getMember(Long memberId){
+//
+//
+//        Member member = Member.builder().memberId(memberId).build();
+//
+//        Optional<Member> findMember = memberDao.findByEmail(member.getEmail());
+//
+//        Member targetmember = findMember.orElseThrow();
+//
+//        return targetmember;
+//    }
 
 }
