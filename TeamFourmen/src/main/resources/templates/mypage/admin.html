@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -11,10 +12,11 @@
 	crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/admin.css}">
 	 <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>     
-	<link rel="stylesheet" th:href="@{/css/mypage.css}">
-	 <link th:href="@{/css/navbar.css}" rel="stylesheet">
+	<link th:href="@{/css/mypage.css}" rel="stylesheet" >
     <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
     <link th:href="@{/css/theme.css}" rel="stylesheet">
+        <link th:href="@{/css/navbar.css}" rel="stylesheet">
+        <link th:href="@{/css/footer.css}" rel="stylesheet">
 </head>
 <body>
      <header>
@@ -23,12 +25,12 @@
 
 <section th:replace="~{/layout/MyPageBasic :: sectionFragment}"></section>
 
-<div class = "mypage-details-body" style="padding-bottom:20px;">    
-    			
-    <section role="search" class="search">
+<div class = "mypage-details-body" style="padding-bottom:20px; margin-bottom:50px;">
+
+<section role="search" class="search">
         <div class="forum-top-area">
             <div class="forum-search-area">
-            <form method="get" th:action="@{/admin/search}"  style="display: flex; padding-right: 40px;">
+            <form method="get"  th:action="@{/mypage/details/__${adminuser}__/search}" style="display: flex; padding-right: 40px;">
                 <div class="forum-search-select-area">
                 
     			
@@ -67,7 +69,7 @@
     
     <!-- board-list-content 게시판 글 리스트 테이블 -->
     <section class="freeboard-list">
-        <table class="membertable">
+        <table class="membertable" id="memberTable">
             <colgroup>
                 <col style="width: 200px;">
                 <col style="width: 100px;">
@@ -78,12 +80,12 @@
             </colgroup>
             <thead>
             <tr>
-                <th>아이디</th>
-                <th>이름</th>
-                <th>닉네임</th>
-                <th>전화번호</th>
-                <th>로그인경로</th>
-                <th>가입시간</th>
+     			<th id="idHeader">아이디</th>
+                <th id="nameHeader">이름</th>
+                <th id="nicknameHeader">닉네임</th>
+                <th id="phoneHeader">전화번호</th>
+                <th id="typeHeader">로그인경로</th>
+                <th id="timeHeader">가입시간</th>
               
             </tr>
             </thead>
@@ -92,7 +94,7 @@
    
                 <tr th:each="member : ${data}" th:object="${member}">
         			<td>
-    <a th:href="@{/admin/detail(email=${member.email})}" th:text="*{email}" class="memeberdetailroot"></a>
+    <a th:href="@{'/mypage/details/' + ${adminuser} + '/admindetail/'+${member.email}}" th:text="*{email}" class="memeberdetailroot"></a>
 </td>
                     <td th:text="*{name}"></td>
                     <td th:text="*{nickname}"></td>
@@ -107,32 +109,38 @@
     </section>
 </div>
 
-<div>
+	<div>
     <ul class="pagination justify-content-center">
         <li class="page-item" th:classappend="${!data.hasPrevious} ? 'disabled'">
-            <a class="page-link" th:href="@{search(category=${param.category}, keyword=${param.keyword}, p=${data.number - 1})}">&lt;</a>
+            <a class="page-link" th:href="@{admin(p=${data.number - 1})}">&lt;</a>
         </li>
         <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, data.totalPages - 1)}"
             th:if="${pageNo > data.number - 5 && pageNo <= data.number + 5}"
             th:classappend="${pageNo == data.number} ? 'act'">
-            <a class="page-link" th:href="@{search(category=${param.category}, keyword=${param.keyword}, p=${pageNo})}" th:text="${pageNo + 1}"></a>
+            <a class="page-link" th:href="@{admin(p=${pageNo})}" th:text="${pageNo + 1}"></a>
         </li>
         <li class="page-item" th:classappend="${!data.hasNext} ? 'disabled'">
-            <a class="page-link" th:href="@{search(category=${param.category}, keyword=${param.keyword}, p=${data.number + 1})}">&gt;</a>
+            <a class="page-link" th:href="@{admin(p=${data.number + 1})}">&gt;</a>
         </li>
     </ul>
 </div>
+   
+    
+
 </div>
+    
+    			
+<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
 
 </body>
+    <script th:src="@{/js/footer.js}"></script>
 <script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
 		crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/admin.js}"></script>
-<script th:src="@{/js/admin2.js}"></script>
-<script th:src="@{/js/mypage.js}"></script>
+
 <script th:src="@{/js/navbar.js}"></script>
 <script th:src="@{/js/Mypage/mypage-feature.js}"></script>
+
 </html>

@@ -486,7 +486,7 @@ if(e.target.value==='' || e.target.value.length >4){
 	
 	document.querySelector('#btndelete').addEventListener('click', function() {
 	 let parameterValues = document.querySelector('input#userid').value;
-	 let newURLd = "/admindelete?email=" + parameterValues;
+	 let newURLd = "/mypage/admindelete?email=" + parameterValues;
 	 window.location.href = newURLd; // 새로운 URL로 이동
 	});
 	

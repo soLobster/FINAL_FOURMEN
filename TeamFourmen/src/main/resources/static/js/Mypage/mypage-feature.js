@@ -79,14 +79,17 @@ document.addEventListener('DOMContentLoaded', async function () {
             reviewsLink.href = `/mypage/details/${userEmail}/reviews`;
 
             const likedMovieLink = document.querySelector('.nav-item:nth-child(4) .nav-link');
-            likedMovieLink.href = `/mypage/details/${userEmail}/movie`
+            likedMovieLink.href = `/mypage/details/${userEmail}/movie`;
 
             const likedTvShowLink = document.querySelector('.nav-item:nth-child(5) .nav-link');
-            likedTvShowLink.href = `/mypage/details/${userEmail}/tv`
+            likedTvShowLink.href = `/mypage/details/${userEmail}/tv`;
 
             const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
-            likedPersonLink.href = `/mypage/details/${userEmail}/person`
-
+            likedPersonLink.href = `/mypage/details/${userEmail}/person`;
+            
+			
+			const myeditLink =document.querySelector('a#myedit');
+			myeditLink.href = `/mypage/details/${userEmail}/edit`;
         });
 
     // 팔로우 체크
@@ -199,7 +202,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     console.log(category);
 
-    if(location.pathname.split('/')[4] != 'profile'){
+ if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management' 
+ && location.pathname.split('/')[4] != 'admindetail' && location.pathname.split('/')[4] != 'search' && location.pathname.split('/')[4] != 'edit'){
         likedListTitle.textContent = category + ' Liked List';
     }
 
