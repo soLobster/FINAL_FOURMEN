@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log('팔로우 추가 오류', error);
         }
     }
+
     async function unFollowUser(userEmail , button) {
 
         const result = confirm('정말 언팔로우 하시겠습니까??');
