@@ -6,6 +6,10 @@ import java.util.Optional;
 import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
 import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -239,6 +243,17 @@ public class FeatureService {
 
 		return likesCount;
 
+	}
+
+	public Page<ReviewLike> getUserWhoLikedReview(Long reviewId, int page){
+
+		Review review = Review.builder().reviewId(reviewId).build();
+
+		Pageable pageable = PageRequest.of(page, 10, Sort.by("reviewLikeId").descending());
+
+		Page<ReviewLike> likedUser = reviewLikeDao.findByReview(review, pageable);
+
+		return likedUser;
 	}
 
 }

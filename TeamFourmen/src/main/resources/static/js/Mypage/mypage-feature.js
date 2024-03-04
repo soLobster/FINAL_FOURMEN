@@ -11,7 +11,7 @@
 document.addEventListener('DOMContentLoaded', async function () {
 
     const pathName = location.pathname;
-    const userEmail = pathName.split('/')[3];
+    const memberId = pathName.split('/')[3];
 
     let loggedInUser = '';
     async function checkCurrentUser() {
@@ -44,53 +44,57 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const likedListTitle = document.querySelector('.category-like-list');
 
-    console.log('마이페이지 유저 = ' + userEmail);
+    console.log('마이페이지 유저 = ' + memberId);
 
     // 유저의 정보를 가져옴
-   await axios.get(`/api/mypage/user-info?email=${userEmail}`)
+   await axios.get(`/api/mypage/user-info?email=${memberId}`)
         .then((response) => {
             const {
+                memberId,
                 email,
                 name,
                 nickname,
-                usersaveprofile
+                usersaveprofile,
+                type
             } = response.data;
             console.log('불러온 유저 정보');
-            console.log('EAMIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile);
+            console.log('MEMBER ID = ' + memberId +'EMAIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile , 'TYPE = ' + type);
 
             // 유저의 닉네임을 표기
             const userNickname = nickname;
             const nicknameElement = document.querySelector('#user-nick-name');
             nicknameElement.textContent = userNickname;
 
-            console.log('불러온 이미지 = '+usersaveprofile);
+            console.log('불러온 이미지 = ' + usersaveprofile);
 
-            if(usersaveprofile != ''){
+            if(type !== 'web'){
                  userProfileImg.setAttribute('src', usersaveprofile);
+            } else {
+                userProfileImg.setAttribute('src',  '/image/userimage.png')
             }
 
             browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
 
             // 유저 대시보드 공통 네비게이션에 링크를 걸어준다.
             const profileLink = document.querySelector('.nav-item:nth-child(1) .nav-link');
-            profileLink.href = `/mypage/details/${userEmail}/profile`;
+            profileLink.href = `/mypage/details/${memberId}/profile`;
 
             const reviewsLink = document.querySelector('.nav-item:nth-child(2) .nav-link');
-            reviewsLink.href = `/mypage/details/${userEmail}/reviews`;
+            reviewsLink.href = `/mypage/details/${memberId}/reviews`;
 
             const likedMovieLink = document.querySelector('.nav-item:nth-child(4) .nav-link');
-            likedMovieLink.href = `/mypage/details/${userEmail}/movie`
+            likedMovieLink.href = `/mypage/details/${memberId}/movie`
 
             const likedTvShowLink = document.querySelector('.nav-item:nth-child(5) .nav-link');
-            likedTvShowLink.href = `/mypage/details/${userEmail}/tv`
+            likedTvShowLink.href = `/mypage/details/${memberId}/tv`
 
             const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
-            likedPersonLink.href = `/mypage/details/${userEmail}/person`
+            likedPersonLink.href = `/mypage/details/${memberId}/person`
 
         });
 
     // 팔로우 체크
-    await axios.get(`/api/follow/${userEmail}`)
+    await axios.get(`/api/follow/${memberId}`)
         .then((reponse) => {
             console.log('현재 페이지 유저 팔로우 체크 TRUE OR FALSE = ' + reponse.data);
             const isAlreadyFollow = reponse.data;
@@ -106,12 +110,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
     // 리뷰 카운트를 구해서 유저 정보 우측에 추가함
-    await axios.get(`/api/mypage/get-num-of-reviews?email=${userEmail}`)
+    await axios.get(`/api/mypage/get-num-of-reviews?email=${memberId}`)
         .then((response) => {
             const reviewCount = response.data;
             console.log('불러온 리뷰의 수 = ' + reviewCount);
             const reviewLinkElement = document.querySelector('.review-num a');
-            reviewLinkElement.href = `/mypage/details/${userEmail}/reviews`
+            reviewLinkElement.href = `/mypage/details/${memberId}/reviews`
 
             const reviewNumElement = document.querySelector('.review-num .value');
             reviewNumElement.textContent = reviewCount;
@@ -121,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
     // 팔로워 / 팔로잉 수 가져오기
-    await axios.get(`/api/follow/${userEmail}/follower`)
+    await axios.get(`/api/follow/${memberId}/follower`)
         .then((response) => {
             const targetUserSocialCount = response.data;
 
@@ -199,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     console.log(category);
 
-    if(location.pathname.split('/')[4] != 'profile'){
+    if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management'){
         likedListTitle.textContent = category + ' Liked List';
     }
 
