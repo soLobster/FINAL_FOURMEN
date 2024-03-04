@@ -98,7 +98,7 @@
                             th:src="@{/image/userimage.png}" class="profile-image">
                         <!-- 세 번째 img 태그는 사용자의 프로필 이미지가 외부 URL이 아니고, 기본 이미지도 아닌 다른 이미지인 경우, 서버에 저장된 해당 이미지를 표시 -->
                         <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}"
-                            th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="profile_s_imgg"
+                            th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="profile_s_img"
                             class="profile-image" alt="User Profile">
                     </div>
                 </th:block>
@@ -186,8 +186,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <th:block sec:authorize="isAuthenticated()">
             <div class="navbar-mypage-background"></div>
