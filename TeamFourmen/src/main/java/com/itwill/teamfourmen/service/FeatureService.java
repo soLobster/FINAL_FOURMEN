@@ -33,6 +33,7 @@ public class FeatureService {
 	private final TmdbLikeDao tmdbLikeDao;
 	private final ReviewLikeRepository reviewLikeDao;
 	private final ReviewCommentsRepository commentDao;
+	private final MemberRepository memberDao;
 
 	public void postReview(Review review) {
 
@@ -196,12 +197,12 @@ public class FeatureService {
 	 * @param email
 	 * @return Review 리스트
 	 */
-	public List<Review> getAllMyReview (String email) {
-		log.info("GET ALL MY REVIEW E-MAIL = {}", email);
+	public List<Review> getAllMyReview (Long memberId) {
+		log.info("GET ALL MY REVIEW E-MAIL = {}", memberId);
 
-		Member member = Member.builder().email(email).build();
+		Member targetMember = memberDao.findByMemberId(memberId);
 
-		List<Review> myAllReivew = reviewDao.findByMemberEmail(member.getEmail());
+		List<Review> myAllReivew = reviewDao.findByMemberEmail(targetMember.getEmail());
 
 		for(Review review : myAllReivew) {
 			log.info("My review = {}", review);

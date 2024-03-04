@@ -53,10 +53,10 @@ public class MyPageController {
     }
 
     @GetMapping("/details/{id}/profile")
-    public String getMyPageDetails(Model model, @PathVariable (name = "id") String email){
-        log.info("get MY PAGE DETAILS USER EMAIL = {}", email);
+    public String getMyPageDetails(Model model, @PathVariable (name = "id") Long memberId){
+        log.info("get MY PAGE DETAILS USER EMAIL = {}", memberId);
 
-        Member profile = myPageService.getMember(email);
+        Member profile = myPageService.getMember(memberId);
 
         model.addAttribute("profile", profile);
 
@@ -64,12 +64,12 @@ public class MyPageController {
     }
     
     @GetMapping("/details/{id}/management")
-    public String getManagementDetails(@RequestParam(name = "p", defaultValue = "0") int p,Model model, @PathVariable (name = "id") String email){
-        log.info("get MY PAGE DETAILS USER EMAIL = {}", email);
+    public String getManagementDetails(@RequestParam(name = "p", defaultValue = "0") int p,Model model, @PathVariable (name = "id") Long memberId){
+        log.info("get MY PAGE DETAILS USER EMAIL = {}", memberId);
 
 		Page<Member> data = memberservice.getmemberlist(p);
-	    model.addAttribute("data",data);
-	    model.addAttribute("adminuser",email);
+	    model.addAttribute("data", data);
+	    model.addAttribute("adminuser", memberId);
 
         return "mypage/admin";
     }
@@ -171,10 +171,10 @@ public class MyPageController {
     
     
     @GetMapping("/details/{id}/reviews")
-    public String getReviews(Model model, @PathVariable( name = "id") String email){
+    public String getReviews(Model model, @PathVariable( name = "id") Long memberId){
 
 
-        List<Review> myAllReview =  featureService.getAllMyReview(email);
+        List<Review> myAllReview =  featureService.getAllMyReview(memberId);
 
         model.addAttribute("myAllReview", myAllReview);
 

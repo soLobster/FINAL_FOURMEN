@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const pathName = location.pathname;
     const memberId = pathName.split('/')[3];
 
+	let userEmail = '';
+
     let loggedInUser = '';
     async function checkCurrentUser() {
         try {
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log('마이페이지 유저 = ' + memberId);
 
     // 유저의 정보를 가져옴
-   await axios.get(`/api/mypage/user-info?email=${memberId}`)
+   await axios.get(`/api/mypage/user-info?memberId=${memberId}`)
         .then((response) => {
             const {
                 memberId,
@@ -66,6 +68,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             nicknameElement.textContent = userNickname;
 
             console.log('불러온 이미지 = ' + usersaveprofile);
+            
+            userEmail = email;
 
             if(type !== 'web'){
                  userProfileImg.setAttribute('src', usersaveprofile);
@@ -92,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             likedPersonLink.href = `/mypage/details/${memberId}/person`
             
             const myeditLink =document.querySelector('a#myedit');
-            myeditLink.href = `/mypage/details/${userEmail}/edit`;
+            myeditLink.href = `/mypage/details/${memberId}/edit`;
 
         });
 
@@ -113,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
     // 리뷰 카운트를 구해서 유저 정보 우측에 추가함
-    await axios.get(`/api/mypage/get-num-of-reviews?email=${memberId}`)
+    await axios.get(`/api/mypage/get-num-of-reviews?memberId=${memberId}`)
         .then((response) => {
             const reviewCount = response.data;
             console.log('불러온 리뷰의 수 = ' + reviewCount);

@@ -17,9 +17,9 @@ public class MyPageService {
 
     public Member getMember(Long memberId){
 
-        Member member = Member.builder().memberId(memberId).build();
-
-        Optional<Member> findMember = memberDao.findByEmail(member.getEmail());
+    	Member targetMember = memberDao.findByMemberId(memberId);
+    	
+        Optional<Member> findMember = memberDao.findByEmail(targetMember.getEmail());
 
         Member targetmember = findMember.orElseThrow();
 
