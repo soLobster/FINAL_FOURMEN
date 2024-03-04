@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text= "${review.getMember().getName() + ' 님이 '  +  works.getName()} + '에 남긴 리뷰 - 포맨'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+
+    <style>
+
+        @font-face {
+            font-family: 'Pretendard';
+            font-weight: 400;
+            font-style: normal;
+            src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+            src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix') format('embedded-opentype'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff') format('woff'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf') format("truetype");
+            font-display: swap;
+        }
+
+
+        /* 폰트 적용 */
+        body {
+            font-family: 'Pretendard';
+            background-color: #264653;
+        }
+
+        main {
+            margin: 0 auto;
+        }
+
+        .main-section {
+            width: 1000px;
+            min-width: 1000px;
+            margin: 0px auto;
+            display: flex;
+            /*background-color: darkslategray;*/
+        }
+
+        .works-review-page-header{
+            margin: 0 auto;
+            width: 1000px;
+            min-width: 1000px;
+            padding-left: 15px;
+        }
+
+        .works-review-page-header a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .works-review-page-header a:hover {
+            color: #8dabfb;
+        }
+
+        .works-review-page-header-item {
+            display: flex;
+            font-size: 20px;
+            gap: 10px;
+        }
+
+        .works-review-page-header-item i {
+            padding-top: 5px;
+        }
+
+        .left-works-info-section{
+            width: 300px;
+            min-width: 300px;
+            /*background-color: #888888;*/
+            padding: 15px;
+        }
+
+        .works-poster-div {
+            width: 270px;
+            height: auto;
+            border-radius: .5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .works-poster-img {
+            width: 270px;
+            height: auto;
+            object-fit: cover;
+            border-radius: .5rem;
+        }
+
+        .works-poster-div::before {
+            content: ''; /* 가상 요소의 콘텐츠 비우기 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent; /* 투명한 보더 설정 */
+            border-radius: .5rem;
+            transition: ease-in-out;
+        }
+
+        .works-poster-div:hover::before {
+            border-color: #33ff33; /* 호버 시 보더 색상 변경 */
+        }
+
+        .center-works-review-and-comments-section {
+            width: 700px;
+            min-width: 700px;
+            /*background-color: #155d27;*/
+            padding: 15px;
+        }
+
+        .imdb-rating-div{
+            display: flex;
+            justify-content: space-between;
+            width: 270px;
+            padding: 15px 8px 0 8px;
+        }
+
+        .imdb-rating {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .imdb-logo-img {
+            width: 120px;
+            height: auto;
+            border: 3px solid transparent;
+        }
+
+        .imdb-logo-img:hover {
+            border: 3px solid white;
+            border-radius: .5rem;
+            transition: ease-in-out;
+        }
+
+        .imdb-rating {
+            padding: 4px;
+            font-size: 18px;
+            font-style: italic;
+            font-weight: bolder;
+            color: white;
+        }
+
+        .works-review-header {
+            display: flex;
+            gap: 10px;
+        }
+
+        .works-review-header {
+            border-bottom: 2px solid rgba(256, 256, 256, 0.5);
+        }
+
+        .works-review-header > a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .works-review-header > a:hover {
+            color: #8dabfb;
+        }
+
+        .works-review-div {
+            border-bottom: 2px solid rgba(256, 256, 256, 0.5);
+            margin-top: 10px;
+        }
+
+        .works-review-div span{
+            padding: 13px 0 0 5px;
+        }
+
+        .works-review-users-name {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-family: 'Pretendard';
+            font-weight: bolder;
+        }
+
+        .works-review-users-profile-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid white;
+            object-fit: cover;
+        }
+
+        .works-review-users-profile-img:hover {
+            border: 2px solid #33ff33;
+        }
+
+        .works-review-body {
+            padding: 20px;
+        }
+
+        .works-review-body-header {
+            display: flex;
+        }
+
+        .works-review-body-header > a {
+            text-decoration: none;
+        }
+
+        .works-review-body-header > a :hover {
+            color: #8dabfb;
+        }
+
+        .works-review-body-header > .works-title-opening-year {
+            padding-top: 6px;
+            padding-left: 5px;
+            font-style: italic;
+        }
+
+        .works-title {
+            font-family: 'Pretendard';
+            font-weight: bolder;
+            color: white;
+        }
+
+        .works-review-body-rating {
+            display: flex;
+            gap: 10px;
+        }
+
+        .star-ratings {
+            display: flex;
+            color: #33ff33;
+            font-size: 17px;
+        }
+
+        .works-review-body-content {
+            padding-top: 20px;
+            font-size: 23px;
+            color: white;
+            font-family: 'Pretendard';
+        }
+
+        .works-review-footer {
+            display: flex;
+            gap: 5px;
+            padding-bottom: 20px;
+            justify-content: space-between;
+        }
+
+        .btn-like-review {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            position: relative;
+            margin-left: 17px;
+        }
+
+        .btn-delete-review {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .works-review-footer .fa-thumbs-up {
+            font-size: 20px;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .works-review-footer .btn-like-review:hover .fa-thumbs-up,
+        .works-review-footer .btn-like-review:active .fa-thumbs-up {
+                color: #33ff33;
+        }
+
+        .works-review-footer span {
+            font-style: italic;
+            font-weight: bolder;
+        }
+
+        .works-review-footer .btn-delete-review:hover .fa-trash {
+            color: #33ff33;
+        }
+
+        .works-review-like-users{
+            padding-top: 40px;
+        }
+
+        .works-review-like-users a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .works-review-like-users a:hover {
+            color: #8dabfb;
+        }
+
+        .works-review-like-users p {
+            font-size: 20px;
+            border-bottom: 2px solid rgba(256, 256, 256 , 0.5);
+        }
+
+        .users-horizontal{
+            padding-top: 0;
+            display: flex;
+            gap: 10px;
+            justify-content: start;
+            overflow: hidden;
+        }
+
+        .works-comments-div {
+            padding-top: 40px;
+        }
+
+        .works-comments-header p {
+            font-size: 20px;
+            border-bottom: 2px solid rgba(256, 256, 256 , 0.5);
+        }
+
+        .works-comments-list {
+            list-style-type: none;
+            padding: 10px 5px 0 10px;
+        }
+
+        .works-comment {
+            padding : 10px 20px 10px 10px;
+            border-top: 1px solid rgba(256, 256, 256, 0.3);
+            border-bottom: 1px solid rgba(256, 256, 256, 0.3);
+        }
+
+        .comment-body {
+            display: flex;
+            gap: 20px;
+        }
+
+        .comment-body > .user-info {
+            width: 20%;
+            min-width: 160px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .user-info > a > div > img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid white;
+            object-fit: cover;
+            margin-top: 5px;
+        }
+
+        .user-info > a > div > img:hover {
+            border: 1px solid #33ff33;
+        }
+
+        .user-name-created-date {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name-created-date > a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .user-name-created-date > a:hover {
+            color: #8dabfb;
+        }
+
+        .user-name-created-date > a >.comment-username {
+            font-family: 'Pretendard';
+            font-size: 15px;
+            font-weight: bolder;
+        }
+
+        .user-name-created-date > .comment-register-date {
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .comment-content {
+            width: 80%;
+            margin-top: 2px;
+            min-width: 380px;
+        }
+
+        .comment-content-article{
+            width: 460px;
+            max-width: 460px;
+        }
+
+        .comment-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .comment-footer .like-comment-count-div {
+            font-size: 13px;
+            padding-left: 40px;
+            padding-top: 5px;
+        }
+
+        .comment-like-or-report > button ,
+        .comment-update-or-comment-delete > button {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            position: relative;
+            z-index: 1;
+            cursor: none;
+        }
+
+        .comment-like-or-report > button > span,
+        .comment-update-or-comment-delete > button > span{
+            position: absolute;
+            font-weight: bolder;
+            transform: translateX(-50%);
+            background-color: darkslategrey;
+            color: inherit;
+            left: 50%;
+            top: 0%;
+            white-space: nowrap;
+            padding: 5px 10px;
+            border-radius: .25rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 0;
+        }
+
+        .comment-like-or-report > button > span:before,
+        .comment-update-or-comment-delete > button > span:before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 80%;
+            transform: translateX(-50%);
+            border: 13px solid;
+            border-color: darkslategrey #0000 #0000 #0000;
+            z-index: 0;
+        }
+
+        .comment-like-or-report > button > i:before,
+        .comment-update-or-comment-delete > button > i:before {
+            font-size: 13px;
+            color: inherit;
+            z-index: -99;
+        }
+
+        .comment-like-or-report > button:hover > i:before,
+        .comment-update-or-comment-delete > button:hover > i:before {
+                color: #33ff33;
+                z-index: -99;
+        }
+
+        .comment-like-or-report > button:hover > span,
+        .comment-update-or-comment-delete > button:hover > span {
+            visibility: visible;
+            top: -150%;
+            opacity: 1;
+        }
+
+        .comment-like-or-report > button > i,
+        .comment-update-or-comment-delete > button > i {
+            pointer-events: none; /* 아이콘에 대한 클릭 이벤트 비활성화 */
+        }
+
+        .works-comments-footer {
+            border: 2px solid rgba(256, 256, 256 , 0.3);
+            border-radius: .25rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 80%;
+            min-width: 650px;
+            padding: 15px;
+            margin: 0 0 0 13px;
+        }
+
+        .liked-user-list ul {
+
+        }
+
+        .liked-user{
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px 15px 20px;
+        }
+
+        .liked-user a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+        }
+
+        .liked-user a:hover {
+            color: #c4c3ca;
+        }
+
+        .liked-user .liked-user-profile-img-div {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .liked-user-profile-img{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid transparent;
+        }
+
+        .liked-user-profile-img:hover{
+            border-color: #33ff33;
+        }
+
+        .liked-user-profile-overview-div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-success {
+            align-self: flex-end;
+        }
+
+    </style>
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+</head>
+<body class = "ko v4">
+
+<header>
+    <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<main>
+
+    <div class = "works-review-page-header">
+        <a th:href="@{/reviews/{category}/{id}(category = ${works.getCategory()}, id = ${works.getId()})}">
+            <div class = "works-review-page-header-item">
+                <i class="fa-solid fa-list"></i>
+                <span th:text="${works.getName()} + ' 전체 리뷰 보러가기'"></span>
+            </div>
+        </a>
+    </div>
+
+    <section class = "main-section">
+
+        <section class = "left-works-info-section">
+
+            <a th:href="@{/{category}/details/{id}(category = ${works.getCategory()} , id = ${works.getId()})}">
+            <!-- a 태그가 밖에 있어야 한다. -->
+                <div class = "works-poster-div">
+                    <img class = "works-poster-img" th:src = "@{'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${works.getPosterPath()}}"/>
+                </div>
+            </a>
+
+            <div class = "imdb-rating-div">
+                <a th:href="@{'https://www.imdb.com/title/' + ${works.getImdbId()}}">
+                    <img class ="imdb-logo-img" th:src = "@{'/icons/imdb_icon_large.svg'}">
+                </a>
+                <div class = "imdb-rating">
+                    <span th:text="${works.getImdbRatings().getAveragerating() + ' / 10'}"></span>
+                    <span th:text="${works.getImdbRatings().getNumvotes()} + ' votes'"></span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class = "center-works-review-and-comments-section">
+            <div class = "works-review-div">
+                <div class = "works-review-header">
+                    <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                        <img class ="works-review-users-profile-img" th:src="${review.getMember().getUsersaveprofile()}" />
+                    </a>
+                    <span>Review By</span>
+                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                        <h4 class = "works-review-users-name" th:text="${review.getMember().getName()}"></h4>
+                    </a>
+                </div>
+                <div class = "works-review-body">
+                    <div class ="works-review-body-header">
+                        <a th:href="@{/{category}/details/{id}(category = ${works.getCategory()}, id = ${works.getId()})}">
+                            <h2 class = "works-title" th:text="${works.getName()}"></h2>
+                        </a>
+                        <h4 class = "works-title-opening-year" th:text=" '(' + ${works.getYear()} + ')' "></h4>
+                    </div>
+                    <div class = "works-review-body-rating">
+                        <div class = "star-ratings" th:rating="${review.getRating()}"></div>
+                        <div th:text="${'reviewed on ' + review.changeDateType(review.getCreatedDate())}"></div>
+                    </div>
+                    <article class="works-review-body-content" th:text="${review.getContent()}"></article>
+                </div>
+                <div class ="works-review-footer" id = "like-review">
+                    <button type="button" class = "btn-like-review" th:reviewId = "${review.getReviewId()}"
+                           th:email = "${review.getMember().getEmail()}" th:classappend="${likedReview} ? 'isLikedReview' : '' ">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                        <span class ="me-2" th:text="${countReviewLiked} + ' '"></span>Likes
+                    </button>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <button type="button" id = "delete-review" class ="btn-delete-review" th:reviewId = "${review.getReviewId()}"
+                        th:email="${review.getMember().getEmail()}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </th:block>
+                </div>
+            </div>
+
+            <!--  여기까지 리뷰 표기 -->
+
+            <th:block th:if="${likedUser.size() ne 0}">
+                <div class ="works-review-like-users">
+                    <a href="#" id = "open-liked-user-modal" data-toggle="modal" data-target = "#liked-user-modal">
+                        <p>좋아요한 사람들</p>
+                    </a>
+                    <div class = "users-horizontal">
+                        <a th:each=" user : ${likedUser}" th:href="@{/mypage/details/{id}/profile(id = ${user.getMember().getEmail()})}">
+                            <img class ="works-review-users-profile-img" th:if ="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{${user.getMember().getUsersaveprofile()}}"/>
+                            <img class ="works-review-users-profile-img" th:unless = "${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}"/>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+
+
+            <div class = "works-comments-div">
+                <div class = "works-comments-header">
+                    <p class = "mb-1">댓글</p>
+                </div>
+                <div class ="works-comments-body">
+                    <th:block th:if="${!reviewComments.isEmpty()}">
+                        <ul class = "works-comments-list">
+                            <li class = "works-comment" th:each=" comment : ${reviewComments}" th:commentId = "${comment.getCommentId()}">
+                                    <div class = "comment-body">
+                                        <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
+                                            <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
+                                                <div>
+                                                    <img th:if="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
+                                                    <img th:unless="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{/image/userimage.png}" />
+                                                </div>
+                                            </a>
+                                            <div class = "user-name-created-date">
+                                                <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
+                                                    <span class = "comment-username" th:text="${comment.getMember().getNickname()}"></span>
+                                                </a>
+                                                <span class = "comment-register-date" th:text="${comment.getCreatedDate().toLocalDate()}"></span>
+                                            </div>
+                                        </section>
+                                        <section class = "comment-content">
+                                            <article class ="comment-content-article" th:articleCommentId = "${comment.getCommentId()}" th:text="${comment.getContent()}"></article>
+                                        </section>
+                                    </div>
+                                    <div class = "comment-footer">
+                                        <div class = "like-comment-count-div">
+                                            Likes <span th:text="${comment.getLikes()}"></span>
+                                        </div>
+                                        <th:block sec:authorize="isAuthenticated()">
+                                            <div th:if="${member.email eq comment.getMember().getEmail()}" class = "comment-update-or-comment-delete" th:commentId = "${comment.getCommentId()}">
+                                                <button type="button" class = "btn-show-update-comment-modal" data-bs-toggle="modal", data-bs-target="#update-comment-modal">
+                                                    <i class="fa-solid fa-pen" id = "upadate-comment"></i>
+                                                    <span>수정</span>
+                                                </button>
+                                                <button type="button" class = "btn-delete-comment" th:email = "${comment.getMember().getEmail()}">
+                                                    <i class="fa-solid fa-trash" id = "delete-comment"></i>
+                                                    <span>삭제</span>
+                                                </button>
+                                            </div>
+                                            <div th:unless="${member.email eq comment.getMember().getEmail()}" class = "comment-like-or-report" th:commentId = "${comment.getCommentId()}">
+                                               <button type="button" class = "btn-like-comment" th:id = "${comment.getCommentId()}" th:classappend="${isLIkedMap.get(comment.getCommentId())} ? 'isLiked' : '' ">
+                                                    <i class="fa-solid fa-thumbs-up"></i>
+                                                    <span>좋아요</span>
+                                               </button>
+                                                <button type="button" class = "btn-report-comment">
+                                                    <i class="fa-solid fa-flag" id = "report-comment"></i>
+                                                    <span>신고</span>
+                                                </button>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                            </li>
+                        </ul>
+                    </th:block>
+                </div>
+                <th:block sec:authorize= "isAuthenticated()">
+                    <div class="works-comments-footer">
+                        <section class = "comment-textarea">
+                            <input class="d-none" id="comment-writer-email" th:email = "${member.email}">
+                            <textarea id = "comment-content" class ="form-control" placeholder="댓글을 입력해주세요" rows = "4"></textarea>
+                        </section>
+                        <button class = "mt-2 btn btn-success" id = "comment-reg-btn">등록</button>
+                    </div>
+                </th:block>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+<!-- 댓글 수정 모달 -->
+<div class="modal fade" id="update-comment-modal" tabindex="-1" aria-labelledby="update-comment-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark">
+            <div class="border-0 modal-header">
+                <h5 class="modal-title text-white" id="commentModalLabel">댓글 수정</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="width: 100%; color: white">
+                <textarea class = "form-control" id = "update-modal-text-area" rows = "5"></textarea>
+            </div>
+            <div class="border-0 modal-footer">
+                <button type="button" class="btn btn-success" id = "comment-update-btn" data-bs-dismiss="modal">수정</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="liked-user-modal" tabindex="-1" aria-labelledby="liked-user-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content bg-dark">
+            <div class="border-0 modal-header">
+                <h5 class="modal-title text-white" id="likedModalLabel">좋아요한 사람들</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class = "liked-user-list" style="width: 100%; color: white">
+
+                <div class = "liked-user" th:each=" user : ${likedUser}" th:email = "${user.getMember().getEmail()}">
+                    <a th:href="@{/mypage/details/{id}/profile(id = ${user.getMember().getEmail()})}" >
+                        <div class = "liked-user-profile-img-div">
+                            <img class = "liked-user-profile-img" th:if="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{ ${user.getMember().getUsersaveprofile()} }" />
+                            <img class = "liked-user-profile-img" th:unless="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}" />
+                        </div>
+                        <div class = "ms-3 liked-user-profile-overview-div">
+                            <span class = "fs-5 liked-user-profile-nickname" th:text="${user.getMember().getNickname()}"></span>
+                            <span class ="liked-user-reviews"
+                                  th:text="${ '리뷰 : ' + user.getMember().getReviews().size()}">
+                            </span>
+                        </div>
+                    </a>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <button class ="mb-2 btn btn-success notFollowed"
+                                th:id = "${ 'user-' + user.getMember().getMemberId() }"
+                                th:email = "${user.getMember().getEmail()}">팔로우</button>
+                    </th:block>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+<script th:src="@{/js/navbar.js}"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+       const starRatingElements = document.querySelector('.star-ratings');
+
+       const rating = parseFloat(starRatingElements.getAttribute('rating'));
+
+       const integerPart = Math.floor(rating);
+       const decimalPart = rating - integerPart;
+
+        // 별표로 변환하는 함수
+        function convertToStars(numStars) {
+            let stars = '';
+            for (let i = 0; i < numStars; i++) {
+                stars += '<i class="fa-solid fa-star"></i>';
+            }
+            return stars;
+        }
+
+        starRatingElements.innerHTML = convertToStars(integerPart);
+
+        // 소수 부분이 .5인 경우 '½' 이모지 추가
+        if (decimalPart === 0.5) {
+            starRatingElements.innerHTML += '<i class="halfScore">½</i>';
+        }
+
+    });
+
+    document.getElementById("open-liked-user-modal").addEventListener('click', function (e) {
+        e.preventDefault();
+        let modal = new bootstrap.Modal(document.getElementById("liked-user-modal"));
+        modal.show();
+    });
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script th:src="@{/js/features/review-details.js}"></script>
+<script th:src="@{/js/features/review-liked-users.js}"></script>
+<script th:src="@{/js/features/review-comment.js}"></script>
+</body>
+</html>

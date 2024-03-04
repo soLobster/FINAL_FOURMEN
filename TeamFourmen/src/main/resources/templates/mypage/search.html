@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+	crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/admin.css}">
+	 <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>     
+	<link rel="stylesheet" th:href="@{/css/mypage.css}">
+	 <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+     <link th:href="@{/css/footer.css}" rel="stylesheet">
+</head>
+<body>
+     <header>
+       <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<section th:replace="~{/layout/MyPageBasic :: sectionFragment}"></section>
+
+<div class = "mypage-details-body" style="padding-bottom:20px; margin-bottom:50px;">    
+    			
+    <section role="search" class="search">
+        <div class="forum-top-area">
+            <div class="forum-search-area">
+            <form method="get" th:action="@{/mypage/details/__${adminuser}__/search}"   style="display: flex; padding-right: 40px;">
+                <div class="forum-search-select-area">
+                
+    			
+                    <select class="forum-select-box" name="category" id="selectCategory">
+         				<option class="forum-select-option" name="email" value="e">아이디</option>
+            			<option class="forum-select-option" name="name" value="n">이름</option>
+            			<option class="forum-select-option" name="nickname" value="ni">닉네임</option>
+            			<option class="forum-select-option" name="phone" value="p">전화번호</option>
+            			<option class="forum-select-option" name="type" value="t">로그인경로</option>
+
+                  <!--    <option class="forum-select-option" value="userid" name="userid">아이디</option>
+                        <option class="forum-select-option" value="name" name="name">이름</option>
+                        <option class="forum-select-option" value="nickname" name="nickname">닉네임</option>
+                        <option class="forum-select-option" value="phone" name="phone">전화번호</option>
+                        <option class="forum-select-option" value="email" name="email">이메일</option>
+                        <option class="forum-select-option" value="grade" name="grade">등급</option>   -->  
+                    </select>
+                </div>
+                <div class="forum-search-form-area">
+                    <input maxlength="30" id=forum-search-input autocomplete="on" placeholder="검색어를 입력하세요." type="text" name="keyword"/>
+                </div>	
+				 
+                <div class="forum-search-btn-area">
+                    <button class="forum-search-btn" id="searchUser">	
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </section>
+	<div class="place">
+    
+    <!-- board-list-content 게시판 글 리스트 테이블 -->
+    <section class="freeboard-list">
+        <table class="membertable">
+            <colgroup>
+                <col style="width: 200px;">
+                <col style="width: 100px;">
+                <col style="width: 180px;">
+                <col style="width: 150px;">
+                <col style="width: 150px;">
+                <col style="width: 180px;">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>닉네임</th>
+                <th>전화번호</th>
+                <th>로그인경로</th>
+                <th>가입시간</th>
+              
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            
+   
+                <tr th:each="member : ${data}" th:object="${member}">
+        			<td>
+    <a th:href="@{/admin/detail(email=${member.email})}" th:text="*{email}" class="memeberdetailroot"></a>
+</td>
+                    <td th:text="*{name}"></td>
+                    <td th:text="*{nickname}"></td>
+                    <td th:text="*{phone}"></td>
+                    <td th:text="*{type}"></td>
+                    <td th:text="*{created_time}"></td>
+            
+                </tr>
+   
+            </tbody>
+        </table>
+    </section>
+</div>
+
+<div>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${!data.hasPrevious} ? 'disabled'">
+            <a class="page-link" th:href="@{search(category=${param.category}, keyword=${param.keyword}, p=${data.number - 1})}">&lt;</a>
+        </li>
+        <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, data.totalPages - 1)}"
+            th:if="${pageNo > data.number - 5 && pageNo <= data.number + 5}"
+            th:classappend="${pageNo == data.number} ? 'act'">
+            <a class="page-link" th:href="@{search(category=${param.category}, keyword=${param.keyword}, p=${pageNo})}" th:text="${pageNo + 1}"></a>
+        </li>
+        <li class="page-item" th:classappend="${!data.hasNext} ? 'disabled'">
+            <a class="page-link" th:href="@{search(category=${param.category}, keyword=${param.keyword}, p=${data.number + 1})}">&gt;</a>
+        </li>
+    </ul>
+</div>
+</div>
+<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
+</body>
+    <script th:src="@{/js/footer.js}"></script>
+<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/admin.js}"></script>
+<script th:src="@{/js/admin2.js}"></script>
+<script th:src="@{/js/mypage.js}"></script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/Mypage/mypage-feature.js}"></script>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>     
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/board/board-details.css}" rel="stylesheet">
+</head>
+<body>
+	
+    <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
+    <h2 th:text="${boardName}"></h2>
+	<section class="post-whole-container">
+        <div class="post-head-container">
+            <div class="post-title-container">
+                <div class="post-title" th:text="${postDetails.title}" th:postId="${postDetails.postId}"></div>
+                <div class="post-created-time-modified-container">
+                    <!-- 게시시간이 하루 이내이면 시간, 분 차이로 알려줌 -->                                        
+                    <div th:if="${postDetails.timeDifferenceInMinute != null && postDetails.timeDifferenceInMinute lt 60}" class="post-created-time" th:text="|${postDetails.timeDifferenceInMinute}분 전|"></div>
+                    <div th:if="${postDetails.timeDifferenceInMinute != null && postDetails.timeDifferenceInMinute ge 60}" class="post-created-time" th:text="|${postDetails.timeDifferenceInMinute / 60}시간 전|"></div>
+                    <div th:if="${postDetails.timeDifferenceInMinute == null}" class="post-created-time" th:text="${#temporals.format(postDetails.createdTime, 'yyyy-MM-dd hh:mm')}"></div>
+                    <div class="post-modified" th:if="${postDetails.modifiedTime != null}" th:text="|(수정됨)|"></div>
+                </div>
+            </div>
+            <div class="post-author-other-info-container">
+                <div class="div-post-author" th:text="${postDetails.member.nickname}"></div>
+                <div class="post-views-likes-container">
+                    <div>
+                        <i class="fa-solid fa-eye"></i>
+                        <span th:text="${postDetails.views}"></span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-heart"></i>
+                        <span class="span-num-likes" th:text="${numLikes}"></span>
+                    </div>
+                    <div>
+                        <span>comment</span>
+                        <span class="span-num-comments" th:text="${numOfComments}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-content-container">
+            <div class="div-post-content" th:utext="${postDetails.content}"></div>
+        </div>
+        <div class="post-btn-container">
+            <div></div>
+            <div class="like-btn-container">
+                <button class="btn-like-post" th:classappend="${haveLiked} != null ? 'liked-already'">
+                    <span class="span-like-btn">좋아요</span>
+                    <i class="fa-solid fa-thumbs-up"></i>
+                </button>
+            </div>
+            <div class="delete-edit-btn-container">
+                <th:block th:if="${member != null && postDetails.member.email == member.email}">
+                    <button class="btn-delete-post" th:postId="${postDetails.postId}">삭제</button>
+                    <button class="btn-edit-post" th:postId="${postDetails.postId}">수정</button>
+                </th:block>
+            </div>
+        </div>
+        <!-- 댓글 구분선 -->
+        <div class="div-divider"></div>
+        <!-- 댓글 시작 -->
+        <div class="comment-header-container">
+            <div class="div-num-comments">
+                <span>댓글</span>
+                <span class="span-num-comments" th:text="${numOfComments}"></span><span>개</span>
+            </div>
+            <div>
+                <button class="btn-post-comment-refresh">새로고침 <i class="fa-solid fa-rotate"></i></button>
+            </div>
+        </div>
+        <div class="post-textarea-container">
+            <textarea class="textarea-post-comment"></textarea>
+            <button class="btn-add-post-comment">댓글 등록</button>
+        </div>
+        <div class="post-comment-container">
+            <!-- 각 댓글에 대한 부분 -->
+            <div th:each="comment : ${commentDtoList}">
+                <div class="post-comment-each-container" th:commentId="${comment.commentId}">            
+                    <div class="post-comment-each-header">
+                        <div class="post-comment-author-create-date-container post-comment-text-vertical-center">
+                            <div class="post-comment-each-profile-container">                                                                
+                                <img class="post-comment-each-profile" th:if="${comment.member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${comment.member.usersaveprofile}"  id="profile_s_img" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!comment.member.usersaveprofile.toLowerCase().startsWith('http') && comment.member.usersaveprofile == 'userimage.png'}" th:src="@{/image/userimage.png}" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!comment.member.usersaveprofile.toLowerCase().startsWith('http') && comment.member.usersaveprofile != 'userimage.png'}" th:src="@{'/image?photo=' + ${comment.member.usersaveprofile}}" alt="User Profile">                                
+                            </div>
+                            <div class="post-comment-each-author" th:text="${comment.member.nickname}"></div>
+                            <div th:if="${comment.member.email == postDetails.member.email}" class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>
+                        </div>
+                        <!-- 댓글 게시 시간이 24시간 이내일 경우 분 또는 시간 전으로 알려줌 -->
+                        <div th:if="${comment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute lt 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${comment.timeDifferenceInMinute}분 전|"></div>
+                        <div th:if="${comment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute ge 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${comment.timeDifferenceInMinute / 60}시간 전|"></div>
+                        <div th:if="${comment.timeDifferenceInMinute == null}" th:text="${#temporals.format(comment.createdTime, 'yyyy-MM-dd')}" class="post-comment-each-created-time post-comment-text-vertical-center"></div>
+                    </div>
+                    <div class="post-comment-body-container">
+                        <div class="post-comment-content" th:text="${comment.content}"></div>
+                        <div class="post-comment-each-like-container">
+                            <div>
+                                <span>likes</span>
+                                <span class="span-num-comment-likes" th:text="${#lists.size(comment.commentLikesList)}"></span>
+                            </div>
+                            <th:block th:unless="${member != null && comment.member.nickname == member.nickname}">
+                                <div class="post-comment-each-like-report-icon-container">
+                                    <div class="post-comment-like-container" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}" th:classappend="${member != null && #lists.contains(comment.commentLikesList.![member.email], member.email)} ? 'post-comment-already-liked'">
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                    </div>
+                                    <div>
+                                        <i class="fa-solid fa-flag"></i>
+                                    </div>
+                                </div> 
+                            </th:block>
+                            <th:block th:if="${member != null && comment.member.nickname == member.nickname}">
+                                <div></div>
+                                <div>
+                                    <button class="btn-post-comment-delete" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
+                                </div>                            
+                            </th:block>                
+                        </div>
+                        <div class="post-comment-reply-container">
+                            <button class="btn-post-comment-reply">답글</button>                    
+                        </div>
+                        <div class="d-none post-comment-add-reply-container">
+                            <textarea class="textarea-post-comment-reply"></textarea>
+                            <button class="btn-post-comment-add-reply" th:commentId="${comment.commentId}" th:author="${comment.member.nickname}">댓글 등록</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 대댓글 부분 -->
+                <div class="post-comment-each-container post-comment-each-reply-container" th:each="replyComment : ${comment.repliesList}" th:commentId="${replyComment.commentId}">
+                    <div class="post-comment-each-header">
+                        <div class="post-comment-reply-author-create-date-container post-comment-text-vertical-center">
+                            <div class="post-comment-reply-l-icon-container post-comment-text-vertical-center">
+                                <i class="fa-solid fa-l"></i>
+                            </div>
+                            <div class="post-comment-each-profile-container">
+                                <img class="post-comment-each-profile" th:if="${replyComment.member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${replyComment.member.usersaveprofile}"  id="profile_s_img" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!replyComment.member.usersaveprofile.toLowerCase().startsWith('http') && replyComment.member.usersaveprofile == 'userimage.png'}" th:src="@{/image/userimage.png}" alt="User Profile">
+                                <img class="post-comment-each-profile" th:if="${!replyComment.member.usersaveprofile.toLowerCase().startsWith('http') && replyComment.member.usersaveprofile != 'userimage.png'}" th:src="@{'/image?photo=' + ${replyComment.member.usersaveprofile}}" alt="User Profile">
+                            </div>
+                            <div class="post-comment-each-author post-comment-text-vertical-center" th:text="${replyComment.member.nickname}"></div>
+                            <div class="post-comment-by-post-author post-comment-text-vertical-center" th:if="${replyComment.member.email == postDetails.member.email}">작성자</div>
+                        </div>
+                        <!-- 대댓글 작성시간이 24시간 이내일 경우 분 또는 시간으로 나타냄 -->
+                        <div th:if="${replyComment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute lt 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${replyComment.timeDifferenceInMinute}분 전|"></div>
+                        <div th:if="${replyComment.timeDifferenceInMinute != null && comment.timeDifferenceInMinute ge 60}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="|${replyComment.timeDifferenceInMinute / 60}시간 전|"></div>
+                        <div th:if="${replyComment.timeDifferenceInMinute == null}" class="post-comment-each-created-time post-comment-text-vertical-center" th:text="${#temporals.format(replyComment.createdTime, 'yyyy-MM-dd')}"></div>
+                    </div>
+                    <div class="post-comment-body-container post-comment-reply-body-container">
+                        <div class="post-comment-content">
+                            <span class="span-post-comment-replied-author" th:replyTo="${replyComment.replyTo}" th:text="${replyComment.authorNicknameReplyingTo}"></span>
+                            <span class="span-post-comment-content" th:text="${replyComment.content}"></span>
+                        </div>
+                        <div class="post-comment-each-like-container">
+                            <div>
+                                <span>likes</span>
+                                <span class="span-num-comment-likes" th:text="${#lists.size(replyComment.commentLikesList)}"></span>
+                            </div>
+                            <th:block th:unless="${member != null && replyComment.member.nickname == member.nickname}">
+                                <div class="post-comment-each-like-report-icon-container">
+                                    <div class="post-comment-like-container" th:commentId="${replyComment.commentId}" th:author="${replyComment.member.nickname}" th:classappend="${member != null && #lists.contains(replyComment.commentLikesList.![member.email], member.email)} ? 'post-comment-already-liked'">
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                    </div>
+                                    <div>
+                                        <i class="fa-solid fa-flag"></i>
+                                    </div>
+                                </div> 
+                            </th:block>
+                            <th:block th:if="${member != null && replyComment.member.nickname == member.nickname}">
+                                <div></div>
+                                <div>
+                                    <button class="btn-post-comment-delete" th:commentId="${replyComment.commentId}" th:author="${replyComment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
+                                </div>                            
+                            </th:block>                
+                        </div>
+                        <div class="post-comment-reply-container">
+                            <button class="btn-post-comment-reply">답글</button>                    
+                        </div>
+                        <div class="d-none post-comment-add-reply-container">
+                            <textarea class="textarea-post-comment-reply"></textarea>
+                            <button class="btn-post-comment-add-reply" th:commentId="${replyComment.commentId}" th:author="${replyComment.member.nickname}">댓글 등록</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+	<script th:src="@{/js/navbar.js}"></script>
+	<script th:src="@{/js/board/board-details.js}"></script>
+</body>
+</html>

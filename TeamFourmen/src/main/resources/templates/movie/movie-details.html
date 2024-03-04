@@ -6,13 +6,98 @@
 	
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-	<link th:href="@{/css/theme.css}" rel="stylesheet">
-    <link th:href="@{/css/movie/movie-detail.css}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
-    
+	<link th:href="@{/css/theme.css}" rel="stylesheet">
+    <link th:href="@{/css/review/review-star.css}" rel="stylesheet">
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/movie/movie-detail.css}" rel="stylesheet">
+
+    <style>
+        .movie-review {
+            margin-top: 20px;
+        }
+
+        .movie-review  a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .movie-review a:hover {
+            color: #8dabfb;
+        }
+
+        .movieAllReview {
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        .review-item {
+            border-top: 1px solid  #6c757d;
+        }
+
+        .review-item-user-profile-img-a-tag {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        .review-item-user-profile-img {
+            width: 55px;
+            height: 55px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .review-item-user-profile-img > img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 1px solid rgba(256, 256, 256, 0.5);
+            object-fit: cover
+        }
+
+        .review-item-user-profile-img > img:hover {
+            border: 1px solid #33ff33;
+        }
+
+        .review-item-content > div {
+            padding: 0 0 10px 0;
+            margin-left: 20px;
+        }
+
+        .reviewer-nickname {
+            font-size: 20px;
+            font-weight: bolder;
+        }
+
+        .review-item-content-footer > i {
+            color: inherit;
+        }
+
+        .review-item-content-article > a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .content-article {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        .content-article:hover {
+            color: #c4c3ca;
+        }
+
+    </style>
+
+
 </head>
 <body>
-	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+	<nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
 	<h1>영화디테일</h1>
 	<header id="movie-details-header">
         <div id="movie-background-color-div">
@@ -21,16 +106,6 @@
                     <img class="detail_poster"
                         th:src="@{~/api/image/proxy(url='https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${movieDetailsDto.posterPath})}" alt="포스터">
                 </div>
-                <!-- <div class="movie-provider-container" th:if="${movieProviderList != null}">
-                    <div class="each-provider-container"  th:each="provider : ${movieProviderList}">
-                        <div class="div-movie-provider-logo">
-                            <img class="movie-provider-logo" th:src="@{https://media.themoviedb.org/t/p/original{logoPath} (logoPath = ${provider.logoPath})}">
-                        </div>
-                        <div class="div-movie-provider-options">
-                            <span th:each="option : ${provider.options}" th:text="${!optionStat.last ? option + ', ' : option}"></span>
-                        </div>
-                    </div>
-                </div>  -->
             </div>
             <section class="movie-details-description-container">
                 <div class="movie-description-inner-container">            
@@ -38,9 +113,11 @@
                         <h2 th:text="|${movieDetailsDto.title} (${movieDetailsDto.releaseDate.year})|" class="movie-title" th:if="${movieDetailsDto.releaseDate != null}"></h2>
                         <h2 th:text="${movieDetailsDto.title}" class="movie-title" th:if="movieDetailsDto.releaseDate == null"></h2>
                         <div class="movie-etc-info">
-                            <div class="div-movie-certificate" th:if="${releaseItemDto != null}">
-                                <span th:text="|${releaseItemDto.certification}+|"></span>
-                            </div>
+                            <th:block th:if="${releaseItemDto != null}">
+                                <div class="div-movie-certificate" th:if="${releaseItemDto.certification != ''}">
+                                    <span th:text="|${releaseItemDto.certification}+|"></span>
+                                </div>
+                            </th:block>
                             <div>
                                 <span th:text="${movieDetailsDto.releaseDate}"></span>
                             </div>
@@ -57,12 +134,24 @@
                         <div class="movie-like-item">
                             <i class="fa-solid fa-list"></i>
                         </div>
-                        <div  class="movie-like-item">
-                            <i class="fa-regular fa-heart"></i>
+                        <!-- 좋아요 -->
+                        <div class="movie-like-item div-like" th:classappend="${tmdbLike} != null ? 'user-liked-already'">
+                            <button class="movie-like-button btn-add-like" type="button">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
                         </div>
-                        <div  class="movie-like-item">
-                            <i class="fa-solid fa-star"></i>
+                        <!-- 리뷰 -->
+                        <div class="movie-like-item div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'">
+                            <button type="button" class="btn-movie-review" data-bs-toggle="modal" data-bs-target="#movie-review">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
                         </div>
+                        <!-- 오픈채팅 -->
+                        <div class="movie-like-item">
+                            <button class="movie-like-button btn-open-chat">                                                
+                                <i class="fa-regular fa-comment"></i>
+                            </button>                            
+                        </div>                                                                          
                         
                         <!-- 트레일러가 있는 경우에만 이 버튼과 모달 보여주기 -->
                         <th:block th:if="${!#lists.isEmpty(movieTrailerList) and movieTrailerList != null}">
@@ -85,7 +174,84 @@
                             </div>
                         </th:block>           
                     </div>
-                        
+                    <!-- 리뷰 남기기 모달 -->
+                    <div class="modal fade" id="movie-review" th:if="${member != null && myReview == null}" tabindex="-1" aria-labelledby="movie-review" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5 movie-review-modal-title" th:text="Review"></h1>
+                                    <button type="button" class="btn-header-close" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="fa-solid fa-xmark"></i>                                    
+                                    </button>
+                                </div>
+                                <div class="modal-body movie-review-modal-body">
+                                    <!-- 모달 몸체 작성 -->
+                                    <div class="review-poster-container">
+                                        <div class="div-moview-review-poster">
+                                            <img th:src="@{https://image.tmdb.org/t/p/w342/{posterPath} (posterPath=${movieDetailsDto.posterPath})}">
+                                        </div>
+                                    </div>
+                                    <div class="div-movie-review-comment">
+                                        <h4 th:text="${movieDetailsDto.title}"></h4>
+                                        
+                                        <form class="review-form">
+                                            <div class="textarea-count-characters-container">
+                                                <textarea class="text-area-review-comment" placeholder="리뷰 작성를 남겨 주세요. (1000자)" maxlength="1000" name="content" required></textarea>
+                                                <div class="div-review-count-characters"><span class="span-review-count-characthers">0</span> / 1000자</div>
+                                            </div>
+                                            <div class="review-spoiler-rating-title-container">
+                                                <div class="div-movie-review-spoiler-checkbox">
+                                                    <input type="checkbox" name="includeSpoiler" id="checkboxSpoiler" value="Y">
+                                                    <label for="checkboxSpoiler">스포일러가 포함되어 있습니까?</label>
+                                                </div>
+                                                <h5>평점</h5>
+                                            </div>
+                                            <div class="review-stars-container">
+                                                <fieldset class="rating">                            
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star5" value="5" required>
+                                                    <label for="star5" class="full" title="5 stars"></label>                                        
+                                                                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star4half" value="4.5" required>
+                                                    <label for="star4half" class="half" title="4.5 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star4" value="4" required>
+                                                    <label for="star4" class="full" title="4 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star3half" value="3.5" required>
+                                                    <label for="star3half" class="half" title="3.5 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star3" value="3" required>
+                                                    <label for="star3" class="full" title="3 stars"></label>
+                                                                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star2half" value="2.5" required>
+                                                    <label for="star2half" class="half" title="2.5 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star2" value="2" required>
+                                                    <label for="star2" class="full" title="2 stars"></label>
+                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star1half" value="1.5" required>
+                                                    <label for="star1half" class="half" title="1.5 stars"></label>
+                                                                                                    
+                                                    <input type="radio" name="rating" class="review-checkbox" id="star1" value="1" required>
+                                                    <label for="star1" class="full" title="1 stars"></label>
+                                                                                        
+                                                    <input type="radio" name="rating" class="review-checkbox" id="starhalf" value="0.5" required>
+                                                    <label for="starhalf" class="half" title="0.5 stars"></label>
+                                                </fieldset>                                            
+                                            </div>
+                                        </form>
+                                    </div>      
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    <button type="button" class="btn btn-primary btn-send-review">저장</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
                     <!-- 트레일러 동영상을 위한 Modal -->
                     <th:block th:if="${!#lists.isEmpty(movieTrailerList) and movieTrailerList != null}">
                         <div class="modal fade" id="movieTrailerModal" tabindex="-1" data-bs-backdrop="static" data-keyboard="false"
@@ -132,7 +298,7 @@
                     <div class="movie-director-container">
                         <h5>감독</h5>
                         <div class="movie-director-name-container">
-                            <div if:th="${directorList != null}" th:each="director : ${directorList}" th:text="${director.name}" class="movie-director-name"></div>
+                            <div th:if="${directorList != null}" th:each="director : ${directorList}" th:text="${director.name}" class="movie-director-name"></div>
                         </div>
                     </div>
                 </div>
@@ -150,11 +316,12 @@
                         <div class="movie-card-image-container">
                             <img th:src="@{https://media.themoviedb.org/t/p/w138_and_h175_face{profilePath} (profilePath = ${cast.profilePath})}"
                              alt="출연진 사진" class="img-movie-card">
-                            
-                            <div class="div-movie-card-overlay">
-                                <p th:text="${cast.name}" class="movie-card-name"></p>
-                                <p th:text="${cast.character}" class="movie-cast-character"></p>
-                            </div>                   
+                             <a class="movie-a-movie-card-overlay" th:href="@{/person/details/{personId} (personId=${cast.id})}">
+                                <div class="div-movie-card-overlay">
+                                    <p th:text="${cast.name}" class="movie-card-name"></p>
+                                    <p th:text="${cast.character}" class="movie-cast-character"></p>
+                                </div>
+                            </a>                                              
                          </div>
                     </div>                    
                 </div>
@@ -185,10 +352,64 @@
             <div class="div-horizontal-line"></div>
             
             <!-- TODO: 한줄평 작성 구현하기 -->
-            <section class="main-section">
-                <div>한줄평 작성 예정</div>
-            </section>
-            
+
+            <div class = "movie-review">
+                <th:block th:if="${movieReviewList.size() ne 0}">
+                <section style="display: flex">
+                    <h3>리뷰</h3>
+                    <a class = "movieAllReview" th:href="@{/reviews/{category}/{id}(category = 'movie', id = ${movieDetailsDto.getId()})}">
+                        <span>전체 리뷰 보러가기</span>
+                    </a>
+                </section>
+
+                <section class="popular-review-section">
+
+                    <div class = "review-item" th:each=" review : ${movieReviewList}"
+                     style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+                        <input class = "d-none" th:email="${review.getMember().getEmail()}">
+                        <div class = "review-item-body" style="display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                <section class = "review-item-user-profile-img">
+                                    <img th:src="@{${review.getMember().getUsersaveprofile()}}">
+                                </section>
+                            </a>
+                            <section class= "review-item-content">
+                                <div class = "review-item-content-header">
+                                    <section>
+                                        <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px;">Review By</span>
+                                    </section>
+                                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                        <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
+                                    </a>
+                                    <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
+                                </div>
+                                <div class = "review-item-content-article">
+                                    <a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
+                                        <article class = "content-article"
+                                                 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+                                                    th:text="${review.getContent()}"></article>
+                                        <article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
+                                            스포일러가 포함된 리뷰 입니다. <br> 상세페이지에서 확인 하세요.
+                                        </article>
+                                    </a>
+                                </div>
+                                <div class = "review-item-content-footer">
+                                    <i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' ' "></span> Likes
+                                    <i class="ms-3 me-2 fa-solid fa-comment"></i><span th:text="${numOfReviewComment.get(review.getReviewId()) + ' ' }"></span>Comments
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                </section>
+                </th:block>
+                <th:block th:unless="${movieReviewList.size() ne 0}">
+                    <h3 class="my-3">남겨진 리뷰가 없습니다</h3>
+                </th:block>
+
+            </div>
+
+
             <div class="div-horizontal-line" th:if="${!#lists.isEmpty(recommendedList)}"></div>
             
             <selection th:if="${!#lists.isEmpty(recommendedList)}" class="movie-collection-container main-section movie-card-container">
@@ -257,8 +478,12 @@
                             <p class="provider-options"><span th:each="option : ${provider.options}" th:text="${!optionStat.last ? option + ', ' : option}"></span></p>
                         </div> -->
                     </div>
+                    <br>
                 </div>
-
+               <small class = "my-0">Powered By</small><br>
+                <a th:href="@{'https://www.justwatch.com/kr'}" target="_blank">
+                    <span><img th:src = "@{'/image/justwatch.svg'}" width="auto" height="15"/></span>
+                </a>
             </section>
             
             <section class="movie-detailed-description aside-section">
@@ -285,11 +510,42 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <script th:inline="javascript">
     	const backdropPath = [[${movieDetailsDto.backdropPath}]];
     </script>
+    <script th:src="@{/js/navbar.js}"></script>
     <script th:src="@{/js/image/img-dominant-color.js}"></script>
     <script th:src="@{/js/movie/movie-image-slide.js}"></script>
+    <script th:src="@{/js/movie/movie-detail.js}"></script>
+    <script th:src="@{/js/features/features.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const starRatingElements = document.querySelectorAll('#view-star-rating');
+
+        starRatingElements.forEach( element => {
+            const rating = parseFloat(element.getAttribute('rating'));
+
+            const integerPart = Math.floor(rating); // 정수
+            const decimalPart = rating - integerPart; // 소수
+
+            for (let i = 0; i < integerPart; i++) {
+                const starIcon = document.createElement('i');
+                starIcon.classList.add('fa-solid', 'fa-star');
+                element.appendChild(starIcon);
+            }
+
+            if (decimalPart === 0.5) {
+                const halfStarRating = document.createElement('i');
+                halfStarRating.classList.add('halfScore');
+                halfStarRating.innerText = '½';
+                element.appendChild(halfStarRating);
+            }
+
+        });
+    });
+
+</script>
 	
 	
 </body>

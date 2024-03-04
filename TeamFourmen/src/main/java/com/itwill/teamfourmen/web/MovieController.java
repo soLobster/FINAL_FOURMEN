@@ -1,29 +1,56 @@
 package com.itwill.teamfourmen.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+
+import com.itwill.teamfourmen.domain.ImdbRatings;
+import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
+import com.itwill.teamfourmen.service.ImdbRatingUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.itwill.teamfourmen.domain.Comment;
+import com.itwill.teamfourmen.domain.CommentLike;
+import com.itwill.teamfourmen.domain.ImdbRatings;
+import com.itwill.teamfourmen.domain.Member;
+import com.itwill.teamfourmen.domain.Post;
+import com.itwill.teamfourmen.domain.PostLike;
+import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.TmdbLike;
+import com.itwill.teamfourmen.dto.board.CommentDto;
+import com.itwill.teamfourmen.dto.board.PostDto;
 import com.itwill.teamfourmen.dto.movie.MovieCastDto;
 import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
 import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
-import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
-import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
 import com.itwill.teamfourmen.dto.movie.MovieListDto;
-import com.itwill.teamfourmen.dto.movie.MovieListItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
 import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
+import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
+import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
+import com.itwill.teamfourmen.dto.person.PageAndListDto;
+import com.itwill.teamfourmen.dto.post.PostCreateDto;
+import com.itwill.teamfourmen.service.BoardService;
+import com.itwill.teamfourmen.service.FeatureService;
+import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.MovieApiUtil;
 import com.itwill.teamfourmen.service.MovieDetailService;
 
@@ -38,7 +65,15 @@ public class MovieController {
 	
 	private final MovieApiUtil apiUtil;
 	private final MovieDetailService detailService;
+	private final FeatureService featureService;
+	private final BoardService boardService;
 	
+	// IMDB RATING을 가져오기 위함.
+	private String category = "movie";
+	private final ImdbRatingUtil imdbRatingUtil;
+	
+	
+
 	/**
 	 * 인기영화 리스트 컨트롤러
 	 * @param model
@@ -53,7 +88,9 @@ public class MovieController {
 		
 		getInitialList("popular", model);
 		
-		return "/movie/movie-list";
+		log.info("보드서비스={}", boardService);
+		
+		return "movie/movie-list";
 	}
 	
 	
@@ -72,7 +109,7 @@ public class MovieController {
 		getInitialList("now_playing", model);
 		
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -90,7 +127,7 @@ public class MovieController {
 		
 		getInitialList("top_rated", model);
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -108,7 +145,7 @@ public class MovieController {
 		
 		getInitialList("upcoming", model);
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -128,7 +165,7 @@ public class MovieController {
 		
 		getInitialList(filterDto, model);		
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -140,7 +177,7 @@ public class MovieController {
 		
 		getInitialList(searchDto, model);
 		
-		return "/movie/movie-list";
+		return "movie/movie-list";
 	}
 	
 	
@@ -150,18 +187,18 @@ public class MovieController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("/details")
-	public String movieDetails(@RequestParam(name = "id") int id, Model model) {
+	@GetMapping("/details/{id}")
+	public String movieDetails(@PathVariable(name = "id") int id, Model model) {
 		
 		log.info("movieDetails(id={})", id);
 		
 		// 영화 디테일 정보 가져오기
 		MovieDetailsDto movieDetailsDto = apiUtil.getMovieDetails(id);
-		log.info("movieDetailsDto={}", movieDetailsDto);
+		//log.info("movieDetailsDto={}", movieDetailsDto);
 		
 		// TODO: 만약 credit dto가 없을 리가 있을까 생각해보자..
 		MovieCreditDto movieCreditDto = apiUtil.getMovieCredit(id);
-		log.info("movieCreditDto={}", movieCreditDto);
+		//log.info("movieCreditDto={}", movieCreditDto);
 		List<MovieCrewDto> directorList = movieCreditDto.getCrew().stream().filter((x) -> x.getJob().equals("Director")).toList();	// 감독만 꺼내온 리스트
 		List<MovieCastDto> castList = movieCreditDto.getCast();	// 출연진만 꺼내온 리스트
 		
@@ -173,7 +210,7 @@ public class MovieController {
 			movieTrailerList = movieVideoList.stream().filter((x) -> x.getType().equals("Trailer")).toList();
 		}
 		
-		log.info("movieVideoList = {}", movieVideoList);
+		//log.info("movieVideoList = {}", movieVideoList);
 		
 		
 		// 영화 provider 리스트 가져오기
@@ -210,6 +247,42 @@ public class MovieController {
 		// 해당 영화와 관련된 추천영화 목록 가져옴
 		List<MovieDetailsDto> recommendedList = apiUtil.getRecommendedMovie(id);
 		
+		// 좋아요 눌렀는지 여부 가져옴
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "movie", id);	// 만약 좋아요 이미 눌렀으면 TmdbLike객체 리턴됨
+
+		//		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
+
+		// 관련 리뷰 가져옴
+		List<Review> movieReviewList = featureService.getReviews("movie", id);
+		int endIndex = Math.min(4, movieReviewList.size());
+		movieReviewList = movieReviewList.subList(0, endIndex);
+		model.addAttribute("movieReviewList", movieReviewList);
+
+		Map<Long, Integer> reviewComment = new HashMap<>();
+		Map<Long, Long> reviewLiked = new HashMap<>();
+
+		for(Review movieReview : movieReviewList){
+			Long reviewId = movieReview.getReviewId();
+
+			int numOfComment = featureService.getNumOfReviewComment(reviewId);
+			Long numOfLiked = featureService.getNumOfReviewLike(reviewId);
+
+			reviewComment.put(reviewId, numOfComment);
+			reviewLiked.put(reviewId, numOfLiked);
+		}
+
+		model.addAttribute("numOfReviewLiked", reviewLiked);
+		model.addAttribute("numOfReviewComment", reviewComment);
+
+
+//		List<Review> movieReviewList = featureService.getReviews("movie", id);
+//		Review myReview = featureService.getMyReviewInTmdbWork(email, "movie", id);
+		
+		// 내가 좋아요 누른 리뷰들 가져옴
+		
 		model.addAttribute("movieDetailsDto", movieDetailsDto);
 		model.addAttribute("movieCreditDto", movieCreditDto);
 		model.addAttribute("directorList", directorList);
@@ -219,11 +292,137 @@ public class MovieController {
 		model.addAttribute("movieExternalIdDto", movieExternalIdDto);
 		model.addAttribute("recommendedList", recommendedList);
 		model.addAttribute("releaseItemDto", releaseItemDto);
+
+		// imdb rating을 가져오기 위함...
+		// id = TMDB의 movie id , category = 제일 상단에 이미 선언 "movie"
+		String imdbId = imdbRatingUtil.getImdbId(id, category);
+		ImdbRatings imdbRatings = imdbRatingUtil.getImdbRating(imdbId);
+
+		if(imdbRatings != null) {
+			log.info("IMDB RATINGS = {}", imdbRatings);
+		} else {
+			log.info("IMDB RATINGS IS NULL");
+		}
+		// 객체로 넘어감. 원하는 값은 imdbRatings -> getter를 통해서
+		// IMDB 아이콘은 static/icons/imdb-icon.svg 파일...!
+		model.addAttribute("imdbRatings", imdbRatings);
+
+		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
+
+    
+//		model.addAttribute("movieReviewList", movieReviewList);
+//		model.addAttribute("myReview", myReview);
 		
-		return "/movie/movie-details";
+		return "movie/movie-details";
+	}
+	
+	@GetMapping("/board")
+	public String movieBoardList(Model model, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		log.info("게시판 리스트 들어옴");
+		
+		Page<PostDto> postDtoList = boardService.getPostList("movie", page);
+		postDtoList.forEach((post) -> {
+			Long likes = boardService.countLikes(post.getPostId());
+			post.setLikes(likes);
+		});
+		
+		// TODO: total element 타입 Long으로변경하는거 논의
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 5);		
+		log.info("pagingDto={}", pagingDto);
+		
+		model.addAttribute("category", "movie");
+		model.addAttribute("postDtoList", postDtoList);
+		model.addAttribute("pagingDto", pagingDto);
+		
+		return "board/list";
+	}
+	
+	@GetMapping("/board/details")
+	public String movieBoardDetails(@RequestParam(name = "id") Long id, Model model) {
+		log.info("movieBoardDetails(id={})", id);
+		
+		PostDto postDetails = boardService.getPostDetail(id);
+		log.info("postDetails={}", postDetails);
+		
+		// 조회수 1 추가
+		boardService.addView(id);
+		
+		// 해당 게시물의 좋아요 개수
+		Long numLikes = boardService.countLikes(id);
+		
+		// 로그인한 유저가 해당 게시물을 좋아했는지 보기위해
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = Member.builder().email(email).build();
+		PostLike haveLiked = boardService.haveLiked(signedInUser, id);
+		
+		// 해당 게시물의 댓글 리스트 가져옴
+		List<CommentDto> commentDtoList = boardService.getCommentList(id);
+		log.info("commentDtoList={}", commentDtoList);
+		
+		int numOfComments = boardService.getNumOfComments(commentDtoList);
+		
+		model.addAttribute("postDetails", postDetails);
+		model.addAttribute("numLikes", numLikes);
+		model.addAttribute("haveLiked", haveLiked);
+		model.addAttribute("boardName", "영화게시판");
+		model.addAttribute("commentDtoList", commentDtoList);
+		model.addAttribute("numOfComments", numOfComments);
+		
+		
+		return "board/details";
+	}
+	
+	@GetMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")
+	public String movieBoardCreate(Model model) {
+		log.info("영화 게시글 작성페이지");
+		
+		model.addAttribute("category", "movie");
+		
+		return "board/create";
+	}
+	
+	/**
+	 * 게시글 작성하는 컨트롤러 메서드
+	 * @param postDto
+	 * @return
+	 */
+	@PostMapping("/board/create")
+	@PreAuthorize("isAuthenticated()")	
+	public String postMovieBoard(@ModelAttribute PostCreateDto postDto) {
+		log.info("postMovieBoard(postDto={})", postDto);
+		
+		Post savedPost = boardService.post(postDto);
+		
+		return "redirect:/movie/board/details?id=" + savedPost.getPostId();
+	}
+	
+	/**
+	 * 게시판 게시글 수정창으로 보내주는 컨트롤러 매서드
+	 * @param post
+	 * @param model
+	 * @return
+	 */
+	@PostMapping("/board/edit")
+	@PreAuthorize("isAuthenticated()")
+	public String editMovieBoard(@ModelAttribute Post post, Model model) {
+		
+		log.info("editMovieBoard(post={})", post);
+		model.addAttribute("post", post);
+		model.addAttribute("category", "movie");
+		return "board/edit";
 	}
 	
 	
+	@PostMapping("/board/do-edit")
+	public String updateMoviePost(@ModelAttribute Post post) {
+		
+		log.info("updateMoviePost(post={})", post);
+		boardService.updatePost(post);
+		
+		return "redirect:/movie/board/details?id=" + post.getPostId();
+	}
 	
 	// 이 아래로는 일반 메서드 모음
 	
@@ -241,7 +440,7 @@ public class MovieController {
 		paramDto.setListCategory(pageName);
 		
 		MovieListDto listDto = apiUtil.getMovieList(paramDto);
-		log.info("listDto={}", listDto);		
+		//log.info("listDto={}", listDto);		
 				
 		List<MovieGenreDto> movieGenreList = apiUtil.getMovieGenreList();
 		
@@ -263,11 +462,15 @@ public class MovieController {
 		
 		
 		MovieListDto listDto = apiUtil.getMovieList(paramDto);
-		log.info("listDto={}", listDto);		
+		// log.info("listDto={}", listDto);		
 				
 		List<MovieGenreDto> movieGenreList = apiUtil.getMovieGenreList();
+				
 		model.addAttribute("listDto", listDto);
 		model.addAttribute("movieGenreList", movieGenreList);
 	}
+	
+	
+	
 	
 }

@@ -2,6 +2,7 @@ package com.itwill.teamfourmen.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,9 +46,12 @@ public class MovieApiUtil {
 	 * @throws JsonMappingException 
 	 */
 	public MovieListDto getMovieList(MovieQueryParamDto paramDto) throws JsonMappingException, JsonProcessingException {
-		log.info("getMovieList(param={})", paramDto);
+//		log.info("getMovieList(param={})", paramDto);
 		
 		String uri = "";
+		String genresVariable = null;
+		String providersVariable = null;
+		String watchRegionVariable = null;
 //		String queryParam = "?language=ko&page=" + page;
 				
 		
@@ -79,6 +83,33 @@ public class MovieApiUtil {
 		
 		String uriToPassIn = uri;
 		
+		// genres 파라미터 포매팅
+		List<Integer> genreList = paramDto.getWithGenres();
+		if (genreList != null) {
+			genresVariable = genreList.stream().map((x) -> x.toString()).collect(Collectors.joining("|")).toString();
+//			log.info("genres={}", genresVariable);
+		}
+		
+		String genres = genresVariable;
+		
+		
+		// provider 파라미터 포매팅
+		List<Integer> providerList = paramDto.getWithWatchProviders();
+		if (providerList != null) {
+			providersVariable = providerList.stream().map((x) -> x.toString()).collect(Collectors.joining("|")).toString();
+//			log.info("providers={}", providersVariable);
+		}
+		
+		String providers = providersVariable;
+			// provider필터하려면 watch region필요하기 때문에 있는경우에 추가.
+		if(providers != null) {
+			watchRegionVariable = "KR";
+		} else {
+			watchRegionVariable = null;
+		}
+		
+		String watchRegion = watchRegionVariable;
+		
 		WebClient client = WebClient.create(baseUrl);
 		
 		MovieListDto movieListDto = client.get()
@@ -92,7 +123,9 @@ public class MovieApiUtil {
 						.queryParam("with_original_language", paramDto.getWithOriginalLanguage())
 						.queryParam("with_runtime.gte", paramDto.getWithRuntimeGte())
 						.queryParam("with_runtime.lte", paramDto.getWithRuntimeLte())
-						.queryParam("with_genres", paramDto.getWithGenres())
+						.queryParam("with_genres", genres)
+						.queryParam("watch_region", watchRegion)
+						.queryParam("with_watch_providers", providers)	// 고치기
 						.queryParam("query", paramDto.getQuery())
 						.build())				
 				.header("Authorization", token)
@@ -160,7 +193,7 @@ public class MovieApiUtil {
 			.bodyToMono(MovieDetailsDto.class)
 			.block();
 		
-		log.info("movieDetailsDto={}", movieDetailsDto);
+		// log.info("movieDetailsDto={}", movieDetailsDto);
 		
 		return movieDetailsDto;
 	}
@@ -173,7 +206,7 @@ public class MovieApiUtil {
 	 */
 	public MovieCreditDto getMovieCredit(int id) {
 		
-		log.info("MovieCreditDto(id={})", id);
+//		log.info("MovieCreditDto(id={})", id);
 		
 		String queryParam = "?language=ko";
 		
@@ -186,7 +219,7 @@ public class MovieApiUtil {
 				.bodyToMono(MovieCreditDto.class)
 				.block();
 		
-		log.info("movieCreditDto={}", movieCreditDto);
+		// log.info("movieCreditDto={}", movieCreditDto);
 		
 		return movieCreditDto;
 	}
@@ -200,7 +233,8 @@ public class MovieApiUtil {
 	 */
 	public List<MovieVideoDto> getMovieVideoList(int id) {
 				
-		log.info("getMovieVideoList()");
+//		log.info("getMovieVideoList()");
+
 		
 		String queryParam = "?language=ko";
 		
@@ -227,7 +261,8 @@ public class MovieApiUtil {
 		}
 		
 		
-		log.info("movie video list = {}", movieVideoList);
+		//log.info("movie video list = {}", movieVideoList);
+
 		
 		return movieVideoList;
 	}	
@@ -240,8 +275,8 @@ public class MovieApiUtil {
 	 */
 	public MovieProviderDto getMovieProviderList(int id) {
 		
-		log.info("getMovieProviderList(id={})", id);
-				
+//		log.info("getMovieProviderList(id={})", id);
+
 		WebClient client = WebClient.create(baseUrl);
 		String json = client.get()
 			.uri("/movie/" + id + "/watch/providers")
@@ -260,7 +295,7 @@ public class MovieApiUtil {
 			JsonNode countryNode = resultsNode.get("KR");
 			MovieProviderDto movieProviderDto = mapper.treeToValue(countryNode, MovieProviderDto.class);
 			
-			log.info("movieProviderDto={}", movieProviderDto);
+//			log.info("movieProviderDto={}", movieProviderDto);
 			
 			return movieProviderDto;
 		} catch (JsonProcessingException e) {
@@ -278,7 +313,7 @@ public class MovieApiUtil {
 	 */
 	public List<MovieDetailsDto> getMovieCollectionList(int collectionId) {
 		
-		log.info("getMovieCollectionList(id={})", collectionId);
+//		log.info("getMovieCollectionList(id={})", collectionId);
 		
 		String queryParam = "?language=ko";
 		
@@ -333,7 +368,7 @@ public class MovieApiUtil {
 	 */
 	public List<MovieDetailsDto> getRecommendedMovie(int id) {
 		
-		log.info("getRecommendedMovie(id={})", id);
+//		log.info("getRecommendedMovie(id={})", id);
 		
 		String queryParam = "?language=ko";
 		
@@ -402,5 +437,30 @@ public class MovieApiUtil {
 		
 	}
 	
+	/**
+	 * 영화의 모든 provider의 리스트를 반화하는 메서드
+	 * @return 영화의 MovieProviderItemDto타입의 모든 provider의 리스트
+	 * @throws JsonProcessingException
+	 * @throws IllegalArgumentException
+	 */
+	public List<MovieProviderItemDto> getAllMovieProviders() throws JsonProcessingException, IllegalArgumentException {
+		
+		WebClient client = WebClient.create(baseUrl);
+		
+		JsonNode node = client.get()
+				.uri("/watch/providers/movie")
+				.header("Authorization", token)
+				.retrieve()
+				.bodyToMono(JsonNode.class)
+				.block();
+		
+		JsonNode resultsNode = node.get("results");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		MovieProviderItemDto[] providerArray = mapper.treeToValue(resultsNode, MovieProviderItemDto[].class);
+		List<MovieProviderItemDto> providerList = Arrays.asList(providerArray);
+		
+		return providerList;
+	}
 	
 }	// MovieApiUtil 클래스 끝

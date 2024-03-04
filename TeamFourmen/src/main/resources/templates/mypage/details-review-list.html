@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+  <link th:href="@{/css/navbar.css}" rel="stylesheet">
+  <link th:href="@{/css/theme.css}" rel="stylesheet">
+  <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
+     <link th:href="@{/css/footer.css}" rel="stylesheet">
+  <style>
+
+    .mypage-details-body-reviews {
+      background-color: #2D3A4A;
+      width: 1000px;
+      margin: 0 auto;
+
+      padding: 20px 100px 20px 100px;
+    }
+
+    .review-item {
+      width: 800px;
+      min-width: 400px;
+      border-top: 1px solid #eeeeee;
+      border-bottom: 1px solid #eeeeee;
+      padding: 20px 20px 20px 20px;
+      margin-bottom: 30px;
+    }
+
+    .review-item-body {
+      display: flex;
+    }
+
+    .review-item-poster{
+      width: 100px;
+      min-width: 100px;
+      height: auto;
+      text-align: left;
+      margin: 0 20px 0 0px;
+    }
+
+    .review-item-poster > a > img {
+      width: 100px;
+      height: auto;
+      border-radius: .5rem;
+      border: 1px solid rgba(196, 195, 202, 0.2);
+    }
+
+    .review-item-poster > a > img:hover {
+      border-color: #33ff33;
+    }
+
+    .review-item-content-article-header {
+      display: flex;
+      margin-bottom: 0;
+      font-family: 'Pretendard';
+    }
+
+    .review-item-content-article-rating-date {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .review-item-title {
+      text-decoration: none;
+      color: white;
+    }
+
+    .review-item-title:hover {
+      color: #8dabfb;
+    }
+
+    /*.review-item-content-article-rating-date > > i {*/
+    /*  font-size: 15px;*/
+    /*  color: #70e000;*/
+    /*}*/
+
+    #starRating > i {
+      color: #33ff33;
+      font-size: 15px;
+    }
+
+    #starRating > .halfScore {
+      color: #33ff33;
+      font-size: 15px;
+    }
+
+    .review-item-content-article-rating-date > small {
+      font-style: italic;
+      color: #adb5bd;
+    }
+
+    .review-item-content-article-body {
+
+    }
+
+    .review-item-content-article-body-footer {
+      margin-top: 30px;
+      display: flex;
+    }
+
+    .review-item-content-article-body-footer > div {
+      margin-right: 20px;
+    }
+
+    .review-item-article-content-a-tag {
+      text-decoration: none;
+      color: white;
+    }
+
+    .review-item-article-content-a-tag:hover {
+      color: #e6e6e9;
+    }
+
+    .review-item-content-article-body-content {
+      width: 650px;
+      height: auto;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    .review-item-recommend > i {
+      color: inherit;
+    }
+
+    .review-item-content-article-body-footer > div > i {
+      font-size: 17px;
+    }
+
+
+  </style>
+</head>
+<body>
+<header>
+  <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<section th:replace="~{/layout/MyPageBasic :: sectionFragment}"></section>
+
+<div class="mypage-details-body" style="margin-bottom:50px;">
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link " th:href="@{''}">Movie</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{''}">Tv Show</a>
+    </li>
+  </ul>
+
+  <div class = "mypage-details-body-reviews">
+
+    <div class = "review-item" th:each=" review : ${myAllReview}">
+      <input class = "d-none" th:category = "${review.getCategory()}">
+      <!--  카테고리 "movie" or "tv"  -->
+      <div class="review-item-body" th:each=" works : ${combineInfoList}">
+        <th:block th:if = "${review.getTmdbId() eq works.getId()}">
+        <section class="review-item-poster">
+          <a th:href="@{/{category}/details/{id}(category = ${review.getCategory()}, id = ${works.getId()})}">
+            <img class = "review-item-poster-img"  th:src="@{https://image.tmdb.org/t/p/w342/{posterPath} (posterPath=${works.getPosterPath()})}">
+          </a>
+        </section>
+        <section class = "review-item-content">
+          <article class = "review-item-content-article">
+            <div class = "review-item-content-article-header">
+              <a class="review-item-title" th:href="@{/{category}/details/{id}(category = ${review.getCategory()} , id = ${works.getId()})}">
+                <h3 th:text="${works.getName()}">
+                </h3>
+              </a>
+<!--              <span class = "ms-1 mt-2" th:text="${ '(' + tvshow.getFirst_air_date().substring(0, 4) + ')'}">-->
+<!--              </span>-->
+            </div>
+            <div class = "review-item-content-article-rating-date">
+              <span th:rating="${review.getRating()}" id = "starRating"></span>
+              <small class="ms-2 mt-1" th:text="${review.changeDateType(review.getCreatedDate())}"></small>
+            </div>
+            <div class = "review-item-content-article-body">
+              <a class = "review-item-article-content-a-tag" th:href="@{/reviews/{reviews_id}( reviews_id = ${review.getReviewId()})}">
+                <section class = "review-item-content-article-body-content" th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}" th:text="${review.getContent()}"></section>
+                <section class = "review-item-content-article-body-content" th:unless="${review.getIsSpoiler().equalsIgnoreCase('n')}" >스포일러가 포함된 리뷰 입니다.</section>
+              </a>
+              <section class = "review-item-content-article-body-footer">
+                <div class = "review-item-recommend">
+                  <i class="fa-solid fa-thumbs-up"></i>
+                  <span class = "ms-2" th:text="${numOfReviewLiked.get(review.getReviewId())} + ' '"></span> Likes
+                </div>
+                <div class = "review-item-comment">
+                  <i class="fa-solid fa-comment"></i>
+                  <span class = "ms-2" th:text="${numOfReviewComment.get(review.getReviewId())} + ' '"></span> Comments
+                </div>
+              </section>
+            </div>
+          </article>
+        </section>
+        </th:block>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+</div>
+<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
+
+    <script th:src="@{/js/footer.js}"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function (){
+    const starRatingElements = document.querySelectorAll('#starRating');
+
+    starRatingElements.forEach(element => {
+      const rating = parseFloat(element.getAttribute('rating')); // 부동 소수점으로 변환
+
+      const integerPart = Math.floor(rating); // 정수 부분
+      const decimalPart = rating - integerPart; // 소수 부분
+
+      // 정수 부분에 해당하는 별 아이콘 생성하여 추가
+      for (let i = 0; i < integerPart; i++) {
+        const starIcon = document.createElement('i');
+        starIcon.classList.add('fa-solid', 'fa-star');
+        element.appendChild(starIcon);
+      }
+
+      // 소수 부분이 .5인 경우 '½' 이모지 추가
+      if (decimalPart === 0.5) {
+        const halfStarRating = document.createElement('i');
+        halfStarRating.classList.add('halfScore');
+        halfStarRating.innerText = '½';
+        element.appendChild(halfStarRating);
+      }
+    });
+  });
+
+
+
+</script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/Mypage/mypage-feature.js}"></script>
+</body>
+
+</html>

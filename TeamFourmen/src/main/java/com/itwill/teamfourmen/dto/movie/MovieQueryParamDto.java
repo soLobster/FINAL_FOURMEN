@@ -37,6 +37,7 @@ public class MovieQueryParamDto {
 	@JsonSerialize(using = LocalDateSerializer.class)	
 	private LocalDate primaryReleaseDateLte;
 	
+	private List<Integer> withWatchProviders;
 	private String withOriginalLanguage;
 	private Integer withRuntimeGte;
 	private Integer withRuntimeLte;

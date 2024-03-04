@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>작품별 리뷰</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+
+    <style>
+
+        @font-face {
+            font-family: 'Pretendard';
+            font-weight: 400;
+            font-style: normal;
+            src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+            src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix') format('embedded-opentype'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff') format('woff'),
+            url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf') format("truetype");
+            font-display: swap;
+        }
+
+        /* 폰트 적용 */
+        body {
+            font-family: 'Pretendard';
+            background-color: #264653;
+        }
+
+        main {
+        }
+
+        .main-section {
+            width: 1200px;
+            min-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            /*background-color: darkslategray;*/
+        }
+
+        .review-list {
+            width: 900px;
+            min-width: 700px;
+            padding: 10px;
+            /*background-color: #264653;*/
+        }
+
+        .side-bar {
+            width: 300px;
+            min-width: 200px;
+            padding: 15px;
+            /*background-color: #8dabfb;*/
+        }
+
+        .works-poster {
+            width: 270px;
+            height: auto;
+            border-radius: .5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .works-poster-img {
+            width: 270px;
+            border-radius: .5rem;
+            height: auto;
+            object-fit: cover
+        }
+
+
+        .works-poster:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-radius: .5rem;
+            transition: ease-in-out;
+        }
+
+        .works-poster:hover::before {
+            border: 3px solid #33ff33;
+        }
+
+        .review-list-header-title-a-tag {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .review-list-header-title{
+            font-family: 'Pretendard';
+        }
+
+        .review-list-header-title:hover {
+            color: #8dabfb;
+        }
+
+        .review-list {
+            /*background-color: #155d27;*/
+            padding: 5px 10px 5px 10px;
+        }
+
+        .review-list-item {
+            padding: 15px 5px 15px 5px;
+        }
+
+        .review-item {
+            border-bottom: 1px solid rgba(256, 256, 256, 0.5);
+            height: auto;
+            padding: 0 0 10px 0;
+            margin-left: 30px;
+            margin-right: 30px
+        }
+
+        .review-item-user-profile-img-a-tag {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+        }
+
+        .review-item-user-profile-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+        }
+
+        .review-item-user-profile-img > img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover
+        }
+
+        .review-item-user-profile-img > img:hover {
+            border: 2px solid #33ff33;
+        }
+
+        .review-item-content > div {
+            padding: 0 0 10px 0;
+            margin-left: 20px;
+        }
+
+        .review-item-content-header {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .review-item-content-nickname-rating > a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .review-item-content-nickname-rating > a:hover {
+            color: #8dabfb;
+        }
+
+        .reviewer-nickname {
+            font-size: 20px;
+            font-family: 'Pretendard';
+        }
+
+        .review-item-content-header > span > i {
+            font-size: 13px;
+            color: #33ff33;
+        }
+
+        .review-item-content-header > a{
+            text-decoration: none;
+            color: white;
+        }
+
+        .review-item-content-header > a:hover {
+            color: #8dabfb;
+        }
+
+        .review-item-content-footer > i {
+            color: inherit;
+        }
+
+        .review-item-content-article > a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .content-article {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        .content-article:hover {
+            color: #c4c3ca;
+        }
+
+    </style>
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+</head>
+<body class = "ko v4">
+    <header>
+        <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
+<!--        <a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>-->
+        <input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">
+    </header>
+    <main>
+        <section class = "main-section">
+            <section class = "review-list">
+                <div class ="p-2 review-list-header" style="display: flex; border-bottom: 1px solid rgba(256, 256, 256, 0.5);">
+                    <a class = "review-list-header-title-a-tag" th:href="@{/{category}/details/{id}(category = ${worksDto.getCategory()} ,id = ${worksDto.getId()})}">
+                        <h1 class = "review-list-header-title" th:text="${worksDto.getName()}"></h1>
+                    </a>
+                    <h4 class ="mt-3 ms-2">의 리뷰</h4>
+                </div>
+
+                <div class = "review-list-item">
+
+                    <div class = "review-item" th:each=" review : ${worksReviewList}">
+
+                        <div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                <section class = "review-item-user-profile-img">
+                                        <img th:src="@{${review.getMember().getUsersaveprofile()}}"
+                                             style="">
+                                </section>
+                            </a>
+                            <section class = "review-item-content">
+                                <div class = "review-item-content-header">
+                                    <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
+                                    <div class = "review-item-content-nickname-rating">
+                                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                        <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
+                                    </a>
+                                    <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
+                                    </div>
+                                </div>
+                                <div class = "review-item-content-article">
+                                    <a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
+                                        <article class = "content-article"
+                                                 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+                                                 th:text="${review.getContent()}"></article>
+                                        <article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
+                                            스포일러가 포함된 리뷰입니다. <br> 상세페이지에서 확인하세요.
+                                        </article>
+                                    </a>
+                                </div>
+                                <div class = "review-item-content-footer">
+                                    <i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' '"></span> Likes
+                                    <i class="ms-3 me-2 fa-solid fa-comment"></i><span class = "review-comment-size" th:text="${numOfReviewComment.get(review.getReviewId()) + ' '}"></span>Comments
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!--  사이드바 영역  -->
+
+            <section class = "side-bar">
+
+                <a th:href="@{/{category}/details/{id}(category = ${worksDto.getCategory()}, id = ${worksDto.getId()})}">
+                    <div class = "works-poster" style="width: 270px;">
+                            <img class ="works-poster-img" th:src = " @{'https:/image.tmdb.org/t/p/original' + ${worksDto.getPosterPath()}} "/>
+                    </div>
+                </a>
+
+
+            </section>
+        </section>
+
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+    <script th:src="@{/js/navbar.js}"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const starRatingElements = document.querySelectorAll('#view-star-rating');
+
+        starRatingElements.forEach( element => {
+            const rating = parseFloat(element.getAttribute('rating'));
+
+            const integerPart = Math.floor(rating); // 정수
+            const decimalPart = rating - integerPart; // 소수
+
+            for (let i = 0; i < integerPart; i++) {
+                const starIcon = document.createElement('i');
+                starIcon.classList.add('fa-solid', 'fa-star');
+                element.appendChild(starIcon);
+            }
+
+            if (decimalPart === 0.5) {
+                const halfStarRating = document.createElement('i');
+                halfStarRating.classList.add('halfScore');
+                halfStarRating.innerText = '½';
+                element.appendChild(halfStarRating);
+            }
+
+        });
+    });
+
+
+
+
+</script>
+</body>
+</html>
