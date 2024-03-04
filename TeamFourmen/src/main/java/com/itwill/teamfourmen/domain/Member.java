@@ -131,4 +131,9 @@ public class Member {
 		@OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
 		@JsonIgnore
 		private List<Follow> followers;
+
+		@ToString.Exclude
+		@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+		@JsonIgnore
+		private List<Review> reviews;
 }
