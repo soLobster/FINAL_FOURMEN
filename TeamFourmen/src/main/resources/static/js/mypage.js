@@ -86,7 +86,7 @@ btnupdate.setAttribute('disabled', 'disabled');
 
 
 
-			const uri = `login/phone/${phone}`;
+			const uri = `/login/phone/${phone}`;
 			console.log(uri);
 
 			axios.get(uri)
@@ -180,7 +180,7 @@ if(e.target.value==='' || e.target.value.length >4){
 
 		const phone=e.target.value;
 		
-		const uri = `login/checkphone/${phone}`;
+		const uri = `/login/checkphone/${phone}`;
 		const response= await axios.get(uri);
 		
 		
@@ -217,7 +217,7 @@ if(e.target.value==='' || e.target.value.length >4){
 
 async function checknickname(e){
 		const nickname=e.target.value;
-		const uri = `login/checknickname/${nickname}`;
+		const uri = `/login/checknickname/${nickname}`;
 		const response= await axios.get(uri);
 		
 		const checkNicknameResult = document.querySelector('div#checkNicknameResult');
@@ -313,7 +313,7 @@ document.querySelector('#btndelete').addEventListener('click', function() {
 	let deleteemailbye = document.querySelector('#deleteemailbye');
 
 	 let parameterValue = document.querySelector('input#userid').value;
-	 let newURL = "/delete?email=" + parameterValue;
+	 let newURL = "/mypage/delete?email=" + parameterValue;
 
     // href 속성에 새로운 주소 설정
    
@@ -351,7 +351,7 @@ if(e.target.value==='' || e.target.value.length >20){
 	async function checklastcheck(e){
 		const password=e.target.value;
 
-		const uri = `checkpassword/${password}`
+		const uri = `/checkpassword/${password}`
 		const response= await axios.get(uri);
 		
 		if(e.target.value.length <=25){
@@ -447,7 +447,7 @@ if(e.target.value==='' || e.target.value.length >4){
 
 			ifemailinsert.style.display = 'block';
 
-			const uri = `login/email/${email}`;
+			const uri = `/login/email/${email}`;
 			console.log(uri);
 
 			axios.get(uri)
@@ -474,7 +474,7 @@ if(e.target.value==='' || e.target.value.length >4){
 						} else {
 							console.log("인증비번실패");
 							document.querySelector('input#checkemail').value ='';
-							deleteemailbye.setAttribute('href', '/mypage');
+							location.reload();
 						}
 
 					});
