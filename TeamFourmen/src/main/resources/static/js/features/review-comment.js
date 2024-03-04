@@ -55,8 +55,7 @@ document.addEventListener('DOMContentLoaded',  function () {
 
     const isLikedIcon = document.querySelectorAll('.btn-like-comment');
 
-    console.log(isLikedIcon);
-
+    // console.log(isLikedIcon);
 
     for(icon of isLikedIcon){
         if(icon.classList.contains('isLiked')) {

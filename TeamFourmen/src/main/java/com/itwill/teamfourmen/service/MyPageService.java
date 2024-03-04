@@ -15,9 +15,9 @@ public class MyPageService {
 
     private final MemberRepository memberDao;
 
-    public Member getMember(String email){
+    public Member getMember(Long memberId){
 
-        Member member = Member.builder().email(email).build();
+        Member member = Member.builder().memberId(memberId).build();
 
         Optional<Member> findMember = memberDao.findByEmail(member.getEmail());
 
