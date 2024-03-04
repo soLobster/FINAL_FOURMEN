@@ -64,7 +64,7 @@ p {
 }
 
 span {
-    color: #888888;
+    color: #bfbfbf;
 }
 
 a {
@@ -264,6 +264,17 @@ a {
 }
 .history_td_character {
     width: 32%;
+}
+
+/* 마우스 오버(hover) 시 밑줄 나오게 하기 */
+.history_td_titleOrName:hover {
+    text-decoration: underline;
+    /*text-underline-position:under; !* 밑줄이 너무 붙어있을 경우 추가 *!*/
+    text-underline-color: #8f8f8c;
+}
+a:hover {
+    text-decoration: underline;
+    text-underline-color: #8f8f8c;
 }
 
 /* 좋아요 버튼(따봉 버튼) 관련 스타일링 */

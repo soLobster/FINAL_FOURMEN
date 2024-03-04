@@ -1,8 +1,7 @@
 @charset "UTF-8";
-	/* 토글버튼 메뉴 아이템들 */
+/* 토글버튼 메뉴 아이템들 */
 
 body{
-	
 	overflow-x: hidden;
 }
 .navbar-detailed-menu-items-mypage {
@@ -21,9 +20,7 @@ body{
     margin-bottom: 1rem;
 }
 
-
-
-.navbar-each-menu-item:hover-mypage a {
+.navbar-each-menu-item-mypage:hover a {
     text-decoration: underline;
 }
 
@@ -32,7 +29,6 @@ body{
     color: inherit;
     
 }
-
 
 .body-detailed-menu-open-mypage {
     position: fixed;
@@ -49,8 +45,7 @@ body{
     font-size: 1.8rem;
     font-weight: 700;
     display: flex;
-   margin-left: 10px;
-  
+    margin-left: 10px;
 }
 
 .navbar-detailed-menu-title-mypage span {
@@ -60,15 +55,16 @@ body{
     display: inline-block;    
 }
 .navbar-detailed-menu-section-container-mypage {
-        margin-left: 1rem;
-        display: flex;
-    }
-   .navbar-detailed-x-div-mypage {
-        display: flex;
-        align-items: center;        
-        position: relative;        
-        min-height: 3.5rem;                     
-    }
+    margin-left: 1rem;
+    margin-top: 1rem;
+    display: flex;
+}
+.navbar-detailed-x-div-mypage {
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-height: 3.5rem;
+}
 .navbar-detailed-x-mypage {
     position: absolute;
     cursor: pointer;
@@ -99,15 +95,14 @@ body{
 }
 .mypage-profile{
 	margin-top: 20px;
-	margin-bottom: 20px;
 	margin-left: 15px;
 	margin-right:10px;
 }
     
 .body-element-mypage-navbar{
+    position: fixed;
+}
 
-        position: fixed;
-   }
 #navbar-container {
     max-width: 100%;
     min-width: 100%;
@@ -183,7 +178,7 @@ body{
 
 /* 검색 부분 */
 .navbar-search-container {
-    flex-grow: 4;
+    flex-grow: 2;
    
 }
 
@@ -195,11 +190,11 @@ body{
 
 .navbar-search-input-container {
     border-radius: 8px;
-    overflow: hidden;    
+    overflow: hidden;
 }
 
 .navbar-search-input {
-    width: 100%;
+    width: 80%;
 }
 
 .navbar-search-button {
@@ -211,7 +206,6 @@ body{
     transform: translateY(-50%);
     color: #66666e;
 }
-
 
 /* 유저관련(로그인, 로그아웃, 등등) */
 .navbar-user-div {
@@ -239,7 +233,6 @@ body{
     min-height: 100%;
 }
 
-
 /* 메뉴 버튼 토글 관련, 디테일 메뉴(누르면 디테일 메뉴 보여줌) */
 .navbar-detailed-menu {
     display: flex;
@@ -255,11 +248,9 @@ body{
     transition: none;
 }
 
-
 .navbar-detailed-x-div {
     display: none;
 }
-
 
 .navbar-detailed-menu-title {
     font-size: 1.8rem;
@@ -267,11 +258,13 @@ body{
     display: flex;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .navbar-detailed-menu-title span {
     color: #fbc500;
-    width: 24px;
+    /*width: 24px;*/
     font-size: 1.3rem;
     display: inline-block;    
 }
@@ -284,7 +277,7 @@ body{
     display: none;
 }
 
-	/* 토글버튼 메뉴 아이템들 */
+/* 토글버튼 메뉴 아이템들 */
 .navbar-detailed-menu-items {
     font-size: 1rem;
     font-weight: 400;
@@ -300,8 +293,6 @@ body{
     margin-bottom: 1rem;
 }
 
-
-
 .navbar-each-menu-item:hover a {
     text-decoration: underline;
 }
@@ -311,6 +302,18 @@ body{
     color: inherit;
 }
 
+/* 영화, tv, 인물 i 태그 (아이콘) 스타일링
+   아이콘에 오른쪽 마진을 주어 텍스트를 정렬하기 위함
+   왼쪽 사이드바 */
+/* 영화 아이콘 */
+.fa-solid.fa-film {
+    margin-right: 6px;
+    font-size: 20px;
+}
+/* tv, 인물 아이콘 */
+.fa-solid.fa-tv, .fa-solid.fa-user-group {
+    margin-right: 6px;
+}
 
 @media(max-width: 1024px) {
     
@@ -324,7 +327,7 @@ body{
         left: 0;
         transform: translateX(-100%);
         
-            background-color: rgb(31, 32, 41);
+        background-color: rgb(31, 32, 41);
                 
         overflow-y: auto;
         
@@ -361,11 +364,9 @@ body{
         z-index: 2;
     }
         
-    
     .navbar-detailed-x-container {
-        border-bottom: 1px solid #e9ecef;        
+        /*border-bottom: 1px solid #e9ecef;        */
     }
-    
     
     .navbar-detailed-x-div {
         display: flex;
@@ -380,7 +381,6 @@ body{
         right: 1rem;
     }
     
-    
     .navbar-detailed-menu-list {
         height: 0;
         transition: height 0.5s ease-in-out;
@@ -390,8 +390,7 @@ body{
         
     }
     
-    
-    	/* 제목관련 */
+    /* 제목관련 */
     .navbar-detailed-menu-title {
         font-size: 1.3rem;
         font-weight: 700;
@@ -400,14 +399,12 @@ body{
         gap: 1rem;
         cursor: pointer;
     }
-        
-    
+
     .navbar-detailed-menu-title span {
         color: #fbc500;
-        width: 24px;
-        font-size: 1.1rem;
-        
-        display: inline-block;    
+        /*width: 24px;*/
+        font-size: 1rem;
+        display: inline-block;
     }
     
     .navbar-chevron-div {
@@ -443,10 +440,10 @@ body{
     
     .navbar-detailed-menu-section-container {
         margin-left: 1rem;
+        margin-top: 1rem;
     }
     
 }
-
 
 @media (max-width: 1048px) {
     .navbar-search-container {
@@ -456,7 +453,7 @@ body{
 }
 
 @media (max-width: 880px) {
-    
+
     .navbar-inner-container {
         width: 100%;
         justify-content: space-between;
@@ -480,8 +477,7 @@ body{
         margin-right: 0.5rem;
         flex-grow: 1;
     }*/
-    
-    
+
     /* 메뉴 버튼 관련 */
     .navbar-menu-outer-container {
         margin: 0;
@@ -503,6 +499,3 @@ body{
     }
     
 }
-
-
-
