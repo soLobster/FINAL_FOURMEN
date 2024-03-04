@@ -5,7 +5,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // 로그인을 했으면, nav 바에 로그인한 유저의 프로필 사진이 있을 것이므로 이것으로 로그인, 비로그인 상태를 구분함.
-
     const signedInUser = document.querySelector('.div-profile-image'); // 로그인한 유저의 프로필 사진 컨테이너
     console.log(signedInUser);
 
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         divDidLikeAlready.classList.add('user-liked-already');
         thumbsUpBtn.classList.add('liked'); // 좋아요 상태 클래스 추가
         // 좋아요를 누른 상태의 이미지로 변경
-        thumbsUpImg.src = '/icons/free-icon-thumbs-up-cancel-10692400.png';
+        thumbsUpImg.src = '/icons/free-icon-thumbs-up-firstLike-10691706.png';
     } else {
         divDidLikeAlready.classList.remove('user-liked-already');
         thumbsUpBtn.classList.remove('liked'); // 좋아요 상태 클래스 제거
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     divDidLikeAlready.classList.toggle('user-liked-already');
                     thumbsUpBtn.classList.add('liked'); // 좋아요 상태 클래스 추가(css 적용)
                     // 좋아요 이미지를 '좋아요 상태' 이미지로 변경.
-                    thumbsUpImg.src = '/icons/free-icon-thumbs-up-cancel-10692400.png'
+                    thumbsUpImg.src = '/icons/free-icon-thumbs-up-firstLike-10691706.png'
                     localStorage.setItem(`liked-${tmdbId}`, 'true'); // localStorage에 좋아요 상태 저장
                     fetchLikesCount(); // 좋아요 수 업데이트
                 })
