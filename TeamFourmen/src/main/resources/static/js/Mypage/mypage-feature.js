@@ -90,6 +90,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
             likedPersonLink.href = `/mypage/details/${memberId}/person`
+            
+            const myeditLink =document.querySelector('a#myedit');
+            myeditLink.href = `/mypage/details/${userEmail}/edit`;
 
         });
 
@@ -203,7 +206,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     console.log(category);
 
-    if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management'){
+ if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management' 
+ && location.pathname.split('/')[4] != 'admindetail' && location.pathname.split('/')[4] != 'search' && location.pathname.split('/')[4] != 'edit'){
         likedListTitle.textContent = category + ' Liked List';
     }
 

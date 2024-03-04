@@ -301,23 +301,13 @@ public class HomeController {
 				uniqueCastListPosterKoKRx.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
 				//log.info("listdfsfd={}",uniqueCastListPosterKoKRx);
 				model.addAttribute("randomactorx",uniqueCastListPosterKoKRx);
+				
 		return "index";
 	}
 	
-	@GetMapping("/mypage")
-	public void mypage() {
-		
 
-		
-	}
 
-	@GetMapping("/admin")
-	public void admin(@RequestParam(name = "p", defaultValue = "0") int p, Model model) {
-		Page<Member> data = memberservice.getmemberlist(p);
-	    model.addAttribute("data",data);
-		
-	}
-	
+
 	
 	
 
@@ -409,27 +399,6 @@ public class HomeController {
 	    }
 	
 		 	
-		 	 @PostMapping("/mypage/update")
-		     public String updateUser(@ModelAttribute MemberModifyDto dto) throws IllegalStateException, IOException {
-
-		         // 여기서 비밀번호를 비교하고 처리하면 됩니다.		 		
-		 		String rootDirectory = File.listRoots()[0].getAbsolutePath();
-		 		 String sDirectory = rootDirectory + "ojng" + File.separator + "image";
-		 		memberservice.update(dto, sDirectory);
-		 		
-		 		return "redirect:/mypage";
-
-		     }
-		 	 
-		 	 
-		 	 @PostMapping("/detail/update")
-		     public String updateadmin(@ModelAttribute MemberModifyDto dto) throws IllegalStateException, IOException {
-		         // 여기서 비밀번호를 비교하고 처리하면 됩니다.
-		 		String sDirectory = "C:/image";
-		 		memberservice.update(dto, sDirectory);
-		 		
-		 		return "redirect:/admin";
-		 	 }
 		    
 		 	@GetMapping("/image")
 			public ResponseEntity<Resource> getImage(@RequestParam(name= "photo") String photo) {
@@ -553,45 +522,12 @@ public class HomeController {
     }
 
 
-    @GetMapping("/delete")
-    public String delete(@RequestParam(name = "email") String email) {
-       
-        
-        memberservice.deleteByEmail(email);
-        
-        return "redirect:/logout";
-    }
     
+
     
-    @GetMapping("/admin/detail")
-    public void detail(@RequestParam(name = "email") String email, Model model) {
-       
-        
-        Member member = memberservice.getmemberdetail(email);
-        model.addAttribute("members",member);        
-        
-    }
+
     
-    @GetMapping("/admindelete")
-    public String admindelete(@RequestParam(name = "email") String email) {
-       
-        
-        memberservice.deleteByEmail(email);
-        
-        return "redirect:/admin";
-    }
-    
-	  @GetMapping("/admin/search")
-	    public void search(@ModelAttribute MemberSearchDto dto, Model model) {
-	        log.info("search(dto={})", dto);
-	        
-	        // Service 메서드 호출 -> 검색 결과 -> Model -> View
-	        Page<Member> data = memberservice.search(dto);
-	        model.addAttribute("data", data);
-	        log.info("data={}",data);
-	        
-	      
-	    };
+
 	    
 
 }
