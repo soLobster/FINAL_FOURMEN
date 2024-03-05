@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberDTO {
 
-    // 이메일만 필요함...
     private String email;
 
     public static MemberDTO from(Member member){
         return new MemberDTO(member.getEmail());
     }
+
 }

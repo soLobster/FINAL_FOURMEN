@@ -3,13 +3,17 @@ package com.itwill.teamfourmen.service;
 import com.itwill.teamfourmen.domain.Follow;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
+import com.itwill.teamfourmen.domain.Post;
+import com.itwill.teamfourmen.dto.board.PostDto;
 import com.itwill.teamfourmen.dto.follow.MemberDTO;
 import com.itwill.teamfourmen.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -19,6 +23,8 @@ public class FollowService {
 
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
+
+    private int memberPerPage = 10;
 
     // 팔로우 추가
     public boolean addFollow(MemberDTO fromUser, MemberDTO toUser){
@@ -72,8 +78,8 @@ public class FollowService {
 
         Map<String, Integer> targetUserSocialCount = new HashMap<>();
             try {
-                int followers = followRepository.countByFromUserEmail(targetMember.getEmail());
-                int followings = followRepository.countByToUserEmail(targetMember.getEmail());
+                int followings = followRepository.countByFromUserEmail(targetMember.getEmail());
+                int followers = followRepository.countByToUserEmail(targetMember.getEmail());
 
                 log.info("NUM OF FOLLOWERS = {}",followers);
 
@@ -107,6 +113,40 @@ public class FollowService {
         } else {
             return false;
         }
+    }
+
+    // 팔로우 목록 페이지
+    public Page<Follow> getFollowPage(Long memberId, int page){
+        log.info("GET FOLLOWER LIST fromUser MEMBER_ID = {}, page = {}", memberId , page);
+
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow();
+
+        Pageable pageable = PageRequest.of(page, memberPerPage, Sort.by("createdTime").descending());
+
+        List<Follow> followList = member.getFollowers();
+
+        int start = (int)pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), followList.size());
+        Page<Follow> followPage = new PageImpl<>(followList.subList(start,end), pageable, followList.size());
+
+        return followPage;
+    }
+
+    // 팔로잉 목록 페이지
+    public Page<Follow> getFollowingPage(Long memberId , int page){
+        log.info("GET FOLLOWING LIST toUSER MEMBER_ID = {} , page = {}", memberId , page);
+
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow();
+
+        Pageable pageable = PageRequest.of(page, memberPerPage , Sort.by("createdTime").descending());
+
+        List<Follow> followingList = member.getFollowings();
+
+        int start = (int)pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), followingList.size());
+        Page<Follow> followingPage = new PageImpl<>(followingList.subList(start, end), pageable, followingList.size());
+
+        return followingPage;
     }
 
 }
