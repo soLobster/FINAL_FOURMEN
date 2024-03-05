@@ -1,6 +1,10 @@
 @charset "UTF-8";
 
 @charset "UTF-8";
+.boardtitle{
+	padding-left: 110px;
+	color:#fbc500;
+}
 
 .board-edit-form-container {
     width: 85%;
@@ -56,14 +60,15 @@
 
 .btn-board-edit{
     padding: 0.8rem 1rem;
-    background-color: #007200;
+    background-color: #fbc500;
+    color: #102770;
     font-weight: 700;
-    color: inherit;
+
     border: none;
     border-radius: 8px;
 }
 
 .btn-board-edit:hover {
-    background-color: #38b000;
-    color: black;
+	background-color: #102770;
+    color: #fbc500;
 }

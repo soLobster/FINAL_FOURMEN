@@ -2,18 +2,31 @@
 @import "reset.css";
 /* person-lists.html 에 포함 */
 
-/* 페이지 배경색 설정 */
-body {
+ @font-face {
+      font-family: 'Pretendard-Regular';
+      src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+ }
+
+    body{
+    
+      font-family: 'Pretendard-Regular';
     /*background-color: inherit;*/
 }
-
+.titlepic{
+	color:#fbc500;
+}
+.title{
+	color:#fbc500;
+}
 .container-fluid {
     display: flex;
     justify-content: center;
 }
 
 .inner_block {
-    margin: 50px 12.5rem;
+    margin: 0px 12.5rem 50px 12.5rem;
 }
 
 .inner_block .inner_content .content {
@@ -49,8 +62,8 @@ body {
 
 /* 카드 스타일링 */
 .item_profile_card {
-    background: #bfbfbf;
-    border: 1px solid black;
+    background: rgb(31, 32, 41);;
+    border:none;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
@@ -68,6 +81,9 @@ body {
     height: auto; /* 높이를 자동으로 설정하여 비율 유지 */
     object-fit: cover; /* 이미지가 컨테이너를 꽉 채우도록 설정 */
 }
+.person_img:hover{
+	border: 4px solid #fbc500;
+}
 /* 카드 내 디폴트 이미지 스타일링 */
 .default_person_img {
     width: 470px; /* 너비를 210px로 고정 */
@@ -76,6 +92,7 @@ body {
 }
 
 /* 카드 내 글(인물 이름) 스타일링 */
+
 .meta .name {
     font-weight: 600;
     font-size: 1.2rem;
@@ -86,17 +103,18 @@ body {
     white-space: nowrap; /* 텍스트를 한 줄에 표시 */
     overflow: hidden; /* 넘치는 내용 숨기기 */
     text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
+    
 }
 .meta p a {
     text-decoration-line: none;
-    color: black;
+    	color:white;
 }
 
 /* 페이지네이션 스타일링 */
 .pagination .page-link {
-    color: #6c757d; /* 페이지 번호 텍스트 색상을 어두운 회색으로 설정 */
-    background-color: #e9ecef; /* 배경 색상을 회색으로 설정 */
-    border-color: #dee2e6; /* 테두리 색상을 회색 계열로 설정 */
+	background-color: #fbc500;
+    color: #102770;
+    border:none;
 }
 .pagination .page-link:hover {
     color: #495057; /* 호버 시 텍스트 색상을 더 어두운 회색으로 변경 */
@@ -104,9 +122,8 @@ body {
     border-color: #ced4da; /* 호버 시 테두리 색상을 조정 */
 }
 .pagination .page-item.active .page-link {
-    color: #fff; /* 활성 페이지 번호 텍스트 색상을 흰색으로 설정 */
-    background-color: #6c757d; /* 활성 페이지 배경 색상을 어두운 회색으로 설정 */
-    border-color: #6c757d; /* 활성 페이지 테두리 색상을 어두운 회색으로 설정 */
+	background-color: #102770;
+    color: #fbc500;
 }
 
 /* 반응형 스타일링 */

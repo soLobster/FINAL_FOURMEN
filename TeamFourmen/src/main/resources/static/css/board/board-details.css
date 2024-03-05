@@ -4,7 +4,10 @@
     width: 85%;
     margin: 1rem auto;
 }
-
+.boardtitle{
+	padding-left: 110px;
+	color:#fbc500;
+}
 /* 게시글 제목, 작성날짜, 조회수 등 포함한 헤더부분 */
 .post-head-container {
     margin: 1.5rem 0;
@@ -18,7 +21,8 @@
     background-color: #495057;
     
     padding: 1rem 0.5rem;
-    
+    border-radius: 8px;
+    color:white;
 }
 
 .post-created-time-modified-container {
@@ -193,6 +197,9 @@ figure.image {
     flex-grow: 1;
     height: 100%;
     resize: none;
+    border-radius: 8px;
+    background-color: lightgray;
+    
     
 }
 
@@ -200,7 +207,17 @@ figure.image {
     
     white-space: nowrap;
     height: 100%;
-    
+    border-radius: 8px;
+    background-color: #102770;
+    color: #fbc500;
+}
+.btn-post-comment-refresh{
+    background-color: rgb(31, 32, 41);
+    color: white;
+    border-radius: 8px;	
+}
+.btn-post-comment-refresh:hover{
+	color:lightgray;
 }
 
     /* 각 댓글 관련 */
@@ -319,11 +336,17 @@ figure.image {
     flex-grow: 1;
     height: 100%;
     resize: none;
+    border-radius: 8px;
+    background-color: lightgray;
+    
 }
 
 .btn-post-comment-add-reply {
     white-space: nowrap;
     height: 100%;
+    background-color: #102770;
+    color: #fbc500;
+    border-radius: 8px;
 }
 
     	/* 대댓글 부분 컨테이너 */

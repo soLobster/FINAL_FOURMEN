@@ -66,4 +66,6 @@ public class Comment {
 	private Long replyTo;
 	
 	private String authorNicknameReplyingTo;
+	
+	
 }

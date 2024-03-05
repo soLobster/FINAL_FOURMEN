@@ -68,7 +68,7 @@
           <a class="nav-link">Person</a>
         </li>
         <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-          <a class="nav-link" th:href="@{/mypage/details/__${member.email}__/management}">Member Management</a>
+          <a class="nav-link" th:href="@{/mypage/details/__${member.memberId}__/management}">Member Management</a>
         </li>
       </ul>
     </div>
