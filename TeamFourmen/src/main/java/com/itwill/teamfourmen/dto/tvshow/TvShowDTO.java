@@ -1,6 +1,7 @@
 package com.itwill.teamfourmen.dto.tvshow;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.itwill.teamfourmen.dto.TmdbWorkDetailsDto;
 
 import lombok.Data;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TvShowDTO {
+public class TvShowDTO extends TmdbWorkDetailsDto {
 
     private boolean adult;
     private String backdrop_path;

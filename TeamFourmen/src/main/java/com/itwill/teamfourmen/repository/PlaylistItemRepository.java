@@ -8,6 +8,7 @@ import com.itwill.teamfourmen.domain.PlaylistItem;
 
 public interface PlaylistItemRepository extends JpaRepository<PlaylistItem, Long> {
 	
-	List<PlaylistItem> findAllByPlaylistPlaylistId(Long playlistId);
+	List<PlaylistItem> findAllByPlaylistPlaylistIdOrderByNthInPlaylist(Long playlistId);
 	
+	Long countByPlaylistPlaylistId(Long playlistId);
 }

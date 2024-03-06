@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 	let userEmail = '';
 
     let loggedInUser = '';
+    
     async function checkCurrentUser() {
         try {
             const response = await axios.get('/api/user/current-user');
@@ -42,9 +43,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     const browsersTitle = document.querySelector('title');
     const editProfile = document.querySelector('.edit-profile');
     const followButton = document.querySelector('.follow-button');
-
+	
     let userProfileImg = document.querySelector('.mypage-details-profile-img img');
-
+	
     const likedListTitle = document.querySelector('.category-like-list');
 
     console.log('마이페이지 유저 = ' + memberId);
@@ -89,7 +90,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const reviewsLink = document.querySelector('.nav-item:nth-child(2) .nav-link');
             reviewsLink.href = `/mypage/details/${memberId}/reviews`;
-
+			
+			const playlistLink = document.querySelector('.nav-item:nth-child(3) .nav-link');
+			playlistLink.href = `/mypage/details/${memberId}/playlist`;
+			
             const likedMovieLink = document.querySelector('.nav-item:nth-child(4) .nav-link');
             likedMovieLink.href = `/mypage/details/${memberId}/movie`
 
@@ -100,7 +104,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             likedPersonLink.href = `/mypage/details/${memberId}/person`
             
             const myeditLink =document.querySelector('a#myedit');
-            myeditLink.href = `/mypage/details/${memberId}/edit`;
+            if (myeditLink) {
+				myeditLink.href = `/mypage/details/${memberId}/edit`;	
+			}
+            
 
         });
 
@@ -217,12 +224,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
  if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management' 
  && location.pathname.split('/')[4] != 'admindetail' && location.pathname.split('/')[4] != 'search' && location.pathname.split('/')[4] != 'edit'){
-        likedListTitle.textContent = category + ' Liked List';
+        // likedListTitle.textContent = category + ' Liked List';
     }
 
     // 로그인 유저와 마이페이지의 유저가 다르면 프로필 편집 불가
     if(userEmail !== await checkCurrentUser()) {
-        editProfile.classList.add('d-none');
+        // editProfile.classList.add('d-none');
     }
 
     // 로그인 유저와 마이페이지 유저가 같다면 팔로우 불가
@@ -230,8 +237,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 		console.log(`userEmail=${userEmail}`);
         followButton.classList.add('d-none');
     }
-
-
-
+    
+	
 
 });

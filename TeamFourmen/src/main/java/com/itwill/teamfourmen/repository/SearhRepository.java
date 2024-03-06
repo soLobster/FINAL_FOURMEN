@@ -1,5 +1,5 @@
-package com.itwill.teamfourmen.repository;
-
-public interface SearhRepository {
-    SearchResults search(String query);
-}
+//package com.itwill.teamfourmen.repository;
+//
+//public interface SearhRepository {
+//    SearchResults search(String query);
+//}
