@@ -11,6 +11,7 @@
     <link th:href="@{/css/review/review-star.css}" rel="stylesheet">
 	<link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-detail.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user.css}">
 
     <style>
         .movie-review {
@@ -394,7 +395,7 @@
                 <button class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="movie-whole-cards-container">
                     <div class="div-each-card" th:each="movieInCollection : ${movieCollectionList}">
-                        <a class="movie-collection-card-link" th:href="@{/movie/details(id = ${movieInCollection.id})}">
+                        <a class="movie-collection-card-link" th:href="@{/movie/details/{id}(id = ${movieInCollection.id})}">
                             <div class="movie-card-image-container movie-poster-card">
                                 <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${movieInCollection.posterPath})}"
                                     alt="무비 컬랙션 포스터" class="img-movie-cast img-movie-collection-card">
@@ -476,7 +477,7 @@
                 <button class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="movie-whole-cards-container">
                     <div class="div-each-card" th:each="recommended : ${recommendedList}">
-                        <a class="movie-collection-card-link" th:href="@{/movie/details(id = ${recommended.id})}">
+                        <a class="movie-collection-card-link" th:href="@{/movie/details/{id}(id = ${recommended.id})}">
                             <div class="movie-card-image-container movie-poster-card">
                                 <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${recommended.posterPath})}"
                                     alt="추천 작품 포스터" class="img-movie-cast img-movie-collection-card">

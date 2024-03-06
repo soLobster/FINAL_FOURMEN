@@ -13,6 +13,7 @@
     <link rel="stylesheet" th:href="@{/css/theme.css}">
     <link rel="stylesheet" th:href="@{/css/person/popular_people_lists.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/user.css}">
 </head>
 <body>
     <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
@@ -56,38 +57,38 @@
             </div>
 
             <!-- 인물 리스트 페이지네이션 -->
-            <div>
+            <div class="peopleList-pagination-div">
                 <nav aria-label="Page Navigation">
                     <ul class="pagination justify-content-center">
                         <!-- 왼쪽 꺽쇠 두 개. 누르면 가장 첫 번째 리스트 페이지(1)로 이동. 시작 페이지 번호가 1일 때 왼쪽 꺽쇠 안 보임. -->
                         <li class="page-item"
                             th:if="${paging.getStartPage() > 1}">
                             <a class="page-link"
-                               th:href="@{/person/list(page=${1}, language=${param.language})}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span> <!-- 특수 문자 &lsaquo; (왼쪽 꺾쇠 두 개) -->
+                               th:href="@{/person/list(page=${1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span> <!-- 특수 문자 &laquo; (왼쪽 꺾쇠 두 개) -->
                             </a>
                         </li>
                         <!-- 왼쪽 꺽쇠 하나. 누르면 현재 페이징의 첫 번째 페이지에서 - 1. 시작 페이지 번호가 1일 때 왼쪽 꺽쇠 안 보임. -->
                         <li class="page-item"
                             th:if="${paging.getStartPage() > 1}">
                             <a class="page-link"
-                               th:href="@{/person/list(page=${paging.getStartPage() - 1}, language=${param.language})}" aria-label="Previous">
+                               th:href="@{/person/list(page=${paging.getStartPage() - 1})}" aria-label="Previous">
                                 <span aria-hidden="true">&lsaquo;</span> <!-- 특수 문자 &laquo; (왼쪽 꺾쇠 한 개) -->
                             </a>
                         </li>
                         <!-- 페이지 번호. 필요한 만큼만 페이지 번호 보여줌. 여기서는 10개씩 보이도록 함. -->
                         <li class="page-item" th:each="pageNo : ${#numbers.sequence(paging.getStartPage(), paging.getEndPage())}" th:classappend="${pageNo == pageInfoKoKR} ? 'active'">
-                            <a class="page-link" th:href="@{/person/list(page=${pageNo}, language=${param.language})}" th:text="${pageNo}">1</a>
+                            <a class="page-link" th:href="@{/person/list(page=${pageNo})}" th:text="${pageNo}">1</a>
                         </li>
                         <!-- 오른쪽 꺽쇠 하나. 누르면 현재 페이징의 마지막 페이지에서 + 1. 마지막 페이지 번호가 500일 때 오른쪽 꺽쇠 안 보임. -->
                         <li class="page-item" th:if="${paging.getEndPage() < 500}">
-                            <a class="page-link" th:href="@{/person/list(page=${paging.getEndPage() + 1}, language=${param.language})}" aria-label="Next">
+                            <a class="page-link" th:href="@{/person/list(page=${paging.getEndPage() + 1})}" aria-label="Next">
                                 <span aria-hidden="true">&rsaquo;</span> <!-- 특수 문자 &rsaquo; (오른쪽 꺾쇠 한 개) -->
                             </a>
                         </li>
                         <!-- 오른쪽 꺽쇠 두 개. 누르면 맨 마지막 리스트 페이지(500)로 이동. 마지막 페이지 번호가 500일 때 오른쪽 꺽쇠 안 보임. -->
                         <li class="page-item" th:if="${paging.getEndPage() < 500}">
-                            <a class="page-link" th:href="@{/person/list(page=${500}, language=${param.language})}" aria-label="Next">
+                            <a class="page-link" th:href="@{/person/list(page=${500})}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span> <!-- 특수 문자 &raquo; (오른쪽 꺾쇠 두 개) -->
                             </a>
                         </li>
