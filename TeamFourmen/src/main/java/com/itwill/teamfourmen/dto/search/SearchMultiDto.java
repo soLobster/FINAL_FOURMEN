@@ -26,5 +26,9 @@ public class SearchMultiDto {
     private String profilePath; // 인물의 프로필 이미지
     @JsonProperty("known_for")
     private String knownFor; // 인물의 대표작 3개
+    @JsonProperty("total_pages")
+    private String totalPages; // 총 검색 결과 페이지
+    @JsonProperty("total_results")
+    private String totalResults; // 총 검색 결과 수
 
 }

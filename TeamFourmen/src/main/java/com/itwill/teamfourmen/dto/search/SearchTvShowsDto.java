@@ -16,5 +16,9 @@ public class SearchTvShowsDto {
     private String firstAirDate; // tv의 첫 번째 방영일
     @JsonProperty("name")
     private String tvName; // tv의 제목
+    @JsonProperty("total_pages")
+    private String totalPages; // 총 검색 결과 페이지
+    @JsonProperty("total_results")
+    private String totalResults; // 총 검색 결과 수
 
 }

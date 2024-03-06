@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.dto.search.SearchMultiDto;
 import com.itwill.teamfourmen.service.PersonService;
 import com.itwill.teamfourmen.service.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -94,5 +97,25 @@ public class SearchController {
         }
         return viewName; // 조건에 따라 결정된 뷰 이름 리턴
     }
+
+    @GetMapping("/search-multi")
+    public String searchMulti(
+            @RequestParam(name = "query", required = true, defaultValue = "") String query,
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            Model model) {
+
+        // 서치 서비스 메서드 호출
+        List<SearchMultiDto> searchMultiDtoList = searchService.getSearchMultiList(query, page);
+
+        return null;
+
+    }
+
+
+//    @GetMapping("/search-contents")
+//    @GetMapping("/search-people")
+//    @GetMapping("/search-users")
+
+
 
 }
