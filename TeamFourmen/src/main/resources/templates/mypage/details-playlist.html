@@ -10,6 +10,7 @@
     <link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/theme.css}" rel="stylesheet">
     <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
+    <link th:href="@{/css/mypage/playlist.css}" rel="stylesheet">
     <link th:href="@{/css/footer.css}" rel="stylesheet">
     
 </head>
@@ -18,13 +19,48 @@
         <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
     </header>    
 	<section th:replace="~{layout/MyPageBasic :: sectionFragment}"></section>
-
-    <div th:each="eachPlaylist : ${playlistDtoList}" th:text="${eachPlaylist}"></div>
+    <h3 id="mypage-subject-title"></h3>
+    <div class="mypage-playlist-container">
+        <ul class="ul-mypage-playlist">
+            <li class="li-each-playlist" th:each="eachPlaylist : ${playlistDtoList}">
+                <a th:href="@{/mypage/details/{memberId}/playlist/{playlistId} (memberId=${eachPlaylist.member.memberId}, playlistId=${eachPlaylist.playlistId})}">
+                    <div class="playlist-posters-container" th:if="${!#lists.isEmpty(eachPlaylist.playlistItemDtoList)}">
+                        <div class="div-poster-in-playlist" th:each="index : ${#numbers.sequence(0, 3)}">
+                            <img class="img-poster-in-playlist" th:if="${index < #lists.size(eachPlaylist.playlistItemDtoList)}"
+                             th:src="@{https://image.tmdb.org/t/p/w92/{posterPath}(posterPath=${eachPlaylist.playlistItemDtoList[index].workDetails.posterPath})}">
+                            <img class="img-poster-in-playlist" th:if="${index >= #lists.size(eachPlaylist)}" th:src="@{/image/default_playlist_image.png}">
+                        </div>
+                    </div>
+                </a>
+                <div class="no-playlist-item-posters-container" th:if="${eachPlaylist.playlistItemDtoList == null or #lists.isEmpty(eachPlaylist.playlistItemDtoList)}">
+                    <img class="img-when-no-playlist-item" th:src="@{/image/playlist_default.svg}">
+                </div>
+                <div class="div-playlist-name-container">
+                    <div></div>
+                    <div class="div-playlist-name">
+                        <a class="a-playlist-name" th:href="@{/mypage/details/{memberId}/playlist/{playlistId} (memberId=${eachPlaylist.member.memberId}, playlistId=${eachPlaylist.playlistId})}" th:text="${eachPlaylist.playlistName}"></a>
+                    </div>
+                    <div class="div-playlist-btn-container">
+                        <button class="btn-playlist btn-playlist-like" th:playlistId="${eachPlaylist.playlistId}"
+                             th:classappend="${member != null && #lists.contains(eachPlaylist.playlistLikeList.![member.email], member.email)} ? 'playlist-already-liked'">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                        </button>                        
+                        <button class="btn-playlist btn-playlist-delete" th:playlistId="${eachPlaylist.playlistId}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>                
+            </li>
+        </ul>
+    </div>
     
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 	 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 	<script th:src="@{/js/navbar.js}"></script>
     <script th:src="@{/js/Mypage/mypage-feature.js}"></script>
+    <script th:src="@{/js/Mypage/details-playlist.js}"></script>
+    
+    
 </body>
 </html>

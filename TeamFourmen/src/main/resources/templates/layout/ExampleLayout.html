@@ -88,7 +88,7 @@
                     <!-- 유저 프로필 이미지 -->
                     <!-- 사용자의 프로필 이미지 URL(usersaveprofile)이 HTTP로 시작하는지 여부에 따라 다른 img 태그 사용. -->
                     <div class="div-profile-image" id="profile-picture" th:nickname="${member.nickname}"
-                        th:email="${member.email}">
+                        th:email="${member.email}" th:memberId="${member.memberId}">
                         <!-- 첫 번째 img 태그는 URL이 HTTP로 시작하는 경우 외부 소스에서 이미지를 로드. -->
                         <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
                             th:src="${member.usersaveprofile}" id="profile_s_img" class="profile-image"

@@ -5,6 +5,7 @@ import java.util.List;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.Playlist;
 import com.itwill.teamfourmen.domain.PlaylistItem;
+import com.itwill.teamfourmen.domain.PlaylistLike;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,8 +34,8 @@ public class PlaylistDto {
 	
 	private String isPrivate;
 	
-	private List<PlaylistItem> playlistItemList;
-	
+	private List<PlaylistItemDto> playlistItemDtoList;
+	private List<PlaylistLike> playlistLikeList;
 	
 	public static PlaylistDto fromEntity(Playlist playlist) {
 		

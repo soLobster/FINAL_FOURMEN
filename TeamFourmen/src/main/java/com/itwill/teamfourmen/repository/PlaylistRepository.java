@@ -10,6 +10,6 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 	
 	List<Playlist> findAllByMemberEmail(String email);
 	
-	List<Playlist> findAllByMemberMemberId(Long memberId);
+	List<Playlist> findAllByMemberMemberIdOrderByPlaylistId(Long memberId);
 	
 }
