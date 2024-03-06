@@ -11,14 +11,163 @@ document.addEventListener('DOMContentLoaded', function() {
     const divDidLikeAlready = document.querySelector('.div-like');
     const divDidReviewedAlready = document.querySelector('.div-review');
     const btnTvReview =  document.querySelector('.btn-tv-review');
-
+	
     const btnReviewAddLike = document.querySelectorAll('.btn-review-add-like');
-
+	
+	// 플레이리스트 관련
+    const btnPlaylist = document.querySelector('.btn-playlist');	// 플레이리스트 모달켜는 버튼
+    const btnCreateNewPlaylist = document.querySelector('.btn-create-new-playlist'); // 플레이리스트 모달 내 새 playlist만들기버튼
+    const divPlaylistContainer = document.querySelector('.div-playlist-container');
+    const btnAddPlaylist = document.querySelector('.btn-add-playlist');
+	
     const pathName = location.pathname;	// 컨텍스트 루트 제외한 주소 가져옴
     const category = pathName.split('/')[1];
     const tmdbId = pathName.split('/')[3];
     console.log(`divDidReviewAlready = ${divDidReviewedAlready}`);
-
+	
+	
+	// 플레이리스트 refresh함수(axios로 리스트 가져오지는 않고, 리스트를 html로 시현해주는 함수)
+    const refreshPlaylist = function(playlist) {
+		const divPlaylistContainer = document.querySelector('.div-playlist-container');
+		
+		let playlistContainerHtml = '';
+		for (let playlistItem of playlist) {
+			playlistContainerHtml += `
+				<div>
+					${playlistItem.playlistName}
+				</div>
+			`;
+		}
+		
+		divPlaylistContainer.innerHTML = playlistContainerHtml;		
+	}
+	
+	// 아규먼트로 받은 id에 해당하는 playlist의 모든 items들을 가져와서 리턴
+	const checkIfItemInPlaylist = async function(playlistId) {
+		
+		let itemsListInPlaylist;
+		
+		await axios.get('/feature/playlist/get-items', {params: {playlistId: playlistId}})
+			.then((response) => {
+				console.log(`성공 리스트 = ${response.data}`);
+				itemsListInPlaylist = response.data;
+			})
+			.catch((error) => {
+				console.log(`에러 발생!!! ${error}`);
+			});
+		
+		return itemsListInPlaylist;
+	}
+	
+	
+	// 플레이리스트 추가 함수	
+	const addPlaylist = async function() {
+		
+		const btnClosePlaylistModal = document.querySelector('.btn-close-playlist-modal');
+		const checkedPlaylist = document.querySelector('.div-each-playlist-container .checkbox-each-playlist:checked');
+		// 유저가 선택한 플레이리스트에 포함된 영상물 리스트를 가져옴
+		const itemsListInPlaylist = await checkIfItemInPlaylist(checkedPlaylist.value);
+		console.log(`다른함수에서 받아온 리스트 = ${itemsListInPlaylist}`);
+		
+		// 해당 영화/시리즈가 플레이리스트에 이미 추가돼 있는지 확인
+		const isAlreadyInList = itemsListInPlaylist.some(item => {
+			return item.category == category && item.tmdbId == tmdbId;
+		});
+		
+		if(isAlreadyInList) {
+			alert('이미 해당 리스트에 추가된 영화/시리즈 입니다.');
+			return;
+		}
+		
+		
+		data = {
+			playlist: {
+				playlistId: checkedPlaylist.value
+			},
+			category: category,
+			tmdbId: tmdbId
+		}
+		
+		axios.post('/feature/playlist/add', data)
+			.then((response) => {
+				alert('플레이리스트에 추가하였습니다.');
+				
+				checkedPlaylist.checked = false;	// 모달에 플레이리스트 체크 해제
+				btnClosePlaylistModal.click();	// 모달 창 닫기
+				return;
+			})
+			.catch((error) => {
+				console.log(`에러 발생!! ${error}`)
+			})
+		
+	}
+	
+	
+	
+    // 플레이리스트 모달버튼 누를 때
+    btnPlaylist.addEventListener('click', function() {
+		
+		if (!signedInUser) {
+			alert('로그인한 유저만 플레이리스트 추가할 수 있습니다.');
+			return;
+		}
+		
+	});
+	
+	
+	// 새 플레이리스트 생성 버튼 이벤트리스너
+	if (btnCreateNewPlaylist) {
+		
+		btnCreateNewPlaylist.addEventListener('click', function(){
+			
+			const inputPlaylistName = document.querySelector('.input-playlist-name');
+			const inputIsPrivate = document.querySelector('.input-is-private');
+			
+			// 두번째 모달에서 첫번째 모달로 이동하는 버튼
+			const btnToFirstModal = document.querySelector('.btn-to-first-modal');
+			
+			const data = {
+				playlistName: inputPlaylistName.value,
+				isPrivate: `${inputIsPrivate.checked ? 'Y' : 'N'}`,
+				member: {
+					email: signedInUser.getAttribute('email')
+				}
+			}
+			
+			axios.post('/feature/playlist/create', data)
+				.then((response) => {
+					
+					alert('새 플레이리스트를 생성하였습니다.');
+					
+					// 새 플레이리스트 생성하였으면 영상물 플레이리스트에 추가 모달부분 가기
+					axios.get('/feature/playlist', {params: {email: signedInUser.getAttribute('email')}})
+						.then((response) => {
+							console.log(response.data);
+							refreshPlaylist(response.data);
+							btnToFirstModal.click();
+						})
+						.catch((error) => {
+							
+						});
+					
+					
+					
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`);	
+				})
+			
+		});
+		
+	}
+    
+    
+    // 플레이리스트에 추가 버튼 누를 때
+    if (btnAddPlaylist) {
+		btnAddPlaylist.addEventListener('click', addPlaylist);
+	}
+	
+	
     // 리뷰버튼 로그인 안했으면 못 누르게하는 이벤트 리스너
     btnTvReview.addEventListener('click', function() {
 

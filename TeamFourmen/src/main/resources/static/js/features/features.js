@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const category = pathName.split('/')[1];
     const tmdbId = pathName.split('/')[3];
     console.log(`divDidReviewAlready = ${divDidReviewedAlready}`);
+	
     
     const refreshPlaylist = function(playlist) {
 		const divPlaylistContainer = document.querySelector('.div-playlist-container');
@@ -59,7 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		return itemsListInPlaylist;
 	}
 	
+	// 플레이리스트 추가 함수
 	const addPlaylist = async function() {
+		
+		let isAlreadyInList = null;
 		
 		const btnClosePlaylistModal = document.querySelector('.btn-close-playlist-modal');
 		const checkedPlaylist = document.querySelector('.div-each-playlist-container .checkbox-each-playlist:checked');
@@ -68,9 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		console.log(`다른함수에서 받아온 리스트 = ${itemsListInPlaylist}`);
 		
 		// 해당 영화/시리즈가 플레이리스트에 이미 추가돼 있는지 확인
-		const isAlreadyInList = itemsListInPlaylist.some(item => {
-			return item.category == category && item.tmdbId == tmdbId;
-		});
+		if (itemsListInPlaylist) {			
+			isAlreadyInList = itemsListInPlaylist.some(item => {
+				return item.category == category && item.tmdbId == tmdbId;
+			});
+		}
 		
 		if(isAlreadyInList) {
 			alert('이미 해당 리스트에 추가된 영화/시리즈 입니다.');
@@ -109,12 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			return;
 		}
 		
-		
-					
-		
-		
 	});
 	
+	
+	
+	// 새 플레이리스트 생성 버튼 이벤트리스너
 	if (btnCreateNewPlaylist) {
 		
 		btnCreateNewPlaylist.addEventListener('click', function(){

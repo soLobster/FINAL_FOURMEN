@@ -63,6 +63,10 @@ public class MemberService implements UserDetailsService {
         return data;
     };
     
+    public Member getMemberByMemberId(Long memberId) {
+    	return memberDao.findByMemberId(memberId).orElse(null);
+    }
+    
     public Member getmemberdetail(String email) {
     	Optional<Member> opt = memberDao.findByEmail(email);
     	Member member = opt.get();

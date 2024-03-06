@@ -184,26 +184,35 @@
     display: inline;    
 }
 
-
 /* 검색 부분 */
 .navbar-search-container {
     flex-grow: 2;
-   
 }
 
 .navbar-search-inner-container {
     position: relative;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;    
 }
 
 .navbar-search-input-container {
     border-radius: 8px;
     overflow: hidden;
+    width: 100%;
+}
+
+.navbar-search-label {
+    width: 100%;
 }
 
 .navbar-search-input {
-    width: 80%;
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 35px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+    height: 30px;
 }
 
 .navbar-search-button {
@@ -213,7 +222,8 @@
     background-color: transparent;
     border: none;
     transform: translateY(-50%);
-    color: #66666e;
+    /*color: #66666e;*/
+    color: #8f8f8c;
 }
 
 /* 유저관련(로그인, 로그아웃, 등등) */

@@ -14,7 +14,9 @@
     <link rel="stylesheet" th:href="@{/css/theme.css}">
     <link rel="stylesheet" th:href="@{/css/person/person_details.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
-	<link th:href="@{/css/footer.css}" rel="stylesheet">
+	  <link th:href="@{/css/footer.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user.css}">
+
 </head>
 <body>
     <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
@@ -36,7 +38,7 @@
                                                      alt="profile_img">
                                                 <img class="profile_img"
                                                      th:unless="${detailsPersonEnUS.profilePath ne null and detailsPersonEnUS.profilePath ne 'null' and detailsPersonEnUS.profilePath ne ''}"
-                                                     th:src="@{/image/person_default_image03.png}" width="300" height="450"
+                                                     th:src="@{/image/NOIMAGE03.webp}" width="300" height="450"
                                                      alt="profile_img">
                                             </div>
                                         </div>
@@ -195,7 +197,7 @@
                                                                     <!-- 포스터 이미지가 없는 경우 디폴트 이미지 출력 -->
                                                                     <img class="poster_img"
                                                                          th:unless="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and !uCastList.posterPath.isEmpty()}"
-                                                                         th:src="@{/image/default-w600.png}"
+                                                                         th:src="@{/image/NOIMAGE03.webp}"
                                                                          alt="poster_img">
                                                                     <!-- 포스터 이미지 위에 마우스 오버(hover) 시 영화 제목(title)과 미디어 타입 출력 -->
                                                                     <div class="div-movie-card-overlay">
@@ -224,7 +226,7 @@
                                                                     <!-- 포스터 이미지가 없는 경우 디폴트 이미지 출력 -->
                                                                     <img class="poster_img"
                                                                          th:unless="${uCastList.posterPath ne null and uCastList.posterPath ne 'null' and uCastList.posterPath ne ''}"
-                                                                         th:src="@{/image/default-w600.png}"
+                                                                         th:src="@{/image/NOIMAGE03.webp}"
                                                                          alt="poster_img">
                                                                     <!-- 포스터 이미지 위에 마우스 오버(hover) 시 tv 이름(name)과 미디어 타입 출력 -->
                                                                     <div class="div-tv-card-overlay">
@@ -256,7 +258,7 @@
                                                                          alt="poster_img">
                                                                     <img class="poster_img"
                                                                          th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                         th:src="@{/image/default-w600.png}"
+                                                                         th:src="@{/image/NOIMAGE03.webp}"
                                                                          alt="poster_img">
                                                                     <!-- 포스터 이미지 위에 마우스 오버(hover) 시 영화 제목(title)과 미디어 타입 출력 -->
                                                                     <div class="div-movie-card-overlay">
@@ -283,7 +285,7 @@
                                                                          alt="poster_img">
                                                                     <img class="poster_img"
                                                                          th:unless="${uCrewList.posterPath ne null and uCrewList.posterPath ne 'null' and uCrewList.posterPath ne ''}"
-                                                                         th:src="@{/image/default-w600.png}"
+                                                                         th:src="@{/image/NOIMAGE03.webp}"
                                                                          alt="poster_img">
                                                                     <!-- 포스터 이미지 위에 마우스 오버(hover) 시 tv 이름(name)과 미디어 타입 출력 -->
                                                                     <div class="div-tv-card-overlay">

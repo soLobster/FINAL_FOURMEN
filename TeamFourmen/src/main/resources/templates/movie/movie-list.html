@@ -14,11 +14,13 @@
     <link th:href="@{/css/accordion/accordion.css}" rel="stylesheet">
 	<link th:href="@{/css/navbar.css}" rel="stylesheet">
 	<link th:href="@{/css/footer.css}" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/user.css}">
 </head>
 <body>
     <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
     <h1 class="movietitle">MOVIE LiST</h1>
 	
+
     <div class="content-container">
         <!-- search-container는 필터와 검색을 위한 div -->
         <aside class="search-container">
@@ -200,7 +202,10 @@
                 <div class="movie-item-container" th:each="movie : ${listDto.results}">
                     <div class="movie-item-image-container">
                         <a th:href="@{/movie/details/{id} (id=${movie.id})}">
-                            <img th:src="@{https://image.tmdb.org/t/p/w220_and_h330_face/{posterPath} (posterPath=${movie.posterPath})}">
+                            <img th:if="${movie.posterPath != null && movie.posterPath != 'null' && movie.posterPath != ''}"
+                                th:src="@{https://image.tmdb.org/t/p/w220_and_h330_face/{posterPath} (posterPath=${movie.posterPath})}">
+                            <img th:unless="${movie.posterPath != null && movie.posterPath != 'null' && movie.posterPath != ''}"
+                                th:src="@{/image/no_image_default.webp}">
                         </a>                    
                     </div>
                     <div class="movie-description-container">

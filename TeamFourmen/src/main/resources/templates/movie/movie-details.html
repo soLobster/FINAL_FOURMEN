@@ -10,9 +10,11 @@
 	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
     <link th:href="@{/css/review/review-star.css}" rel="stylesheet">
-	<link th:href="@{/css/navbar.css}" rel="stylesheet">
+	  <link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-detail.css}" rel="stylesheet">
     <link th:href="@{/css/footer.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user.css}">
+
 
     <style>
         .movie-review {
@@ -104,9 +106,13 @@
 	<header id="movie-details-header">
         <div id="movie-background-color-div">
             <div class="movie-poster-provider-container">
-                <div class="movie-details-poster-container">
-                    <img class="detail_poster"
-                        th:src="@{~/api/image/proxy(url='https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${movieDetailsDto.posterPath})}" alt="포스터">
+                <div class="movie-details-poster-container">                    
+                    <img th:if="${movieDetailsDto.posterPath != null && movieDetailsDto.posterPath != 'null' && movieDetailsDto.posterPath != ''}"
+                        class="detail_poster"
+                        th:src="@{~/api/image/proxy(url='https://image.tmdb.org/t/p/w600_and_h900_bestv2' + ${movieDetailsDto.posterPath})}" alt="포스터">                      
+                    <img th:unless="${movieDetailsDto.posterPath != null && movieDetailsDto.posterPath != 'null' && movieDetailsDto.posterPath != ''}"
+                        class="detail_poster"
+                        th:src="@{/image/no_image_default.webp}">
                 </div>
             </div>
             <section class="movie-details-description-container">
@@ -374,9 +380,12 @@
                 <button class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="movie-whole-cards-container">                    
                     <div th:each="cast : ${castList}" class="div-each-card">                                                         
-                        <div class="movie-card-image-container">
-                            <img th:src="@{https://media.themoviedb.org/t/p/w138_and_h175_face{profilePath} (profilePath = ${cast.profilePath})}"
-                             alt="출연진 사진" class="img-movie-card">
+                        <div class="movie-card-image-container">                            
+                            <img th:if="${cast.profilePath != null && cast.profilePath != '' && cast.profilePath != 'null'}"
+                                 th:src="@{https://media.themoviedb.org/t/p/w138_and_h175_face{profilePath} (profilePath = ${cast.profilePath})}"
+                                 alt="출연진 사진" class="img-movie-card">
+                             <img th:unless="${cast.profilePath != null && cast.profilePath != '' && cast.profilePath != 'null'}"
+                                th:src="@{/image/person_default_image01.png}"  alt="출연진 사진" class="img-movie-card">
                              <a class="movie-a-movie-card-overlay" th:href="@{/person/details/{personId} (personId=${cast.id})}">
                                 <div class="div-movie-card-overlay">
                                     <p th:text="${cast.name}" class="movie-card-name"></p>
@@ -396,7 +405,7 @@
                 <button class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="movie-whole-cards-container">
                     <div class="div-each-card" th:each="movieInCollection : ${movieCollectionList}">
-                        <a class="movie-collection-card-link" th:href="@{/movie/details(id = ${movieInCollection.id})}">
+                        <a class="movie-collection-card-link" th:href="@{/movie/details/{id}(id = ${movieInCollection.id})}">
                             <div class="movie-card-image-container movie-poster-card">
                                 <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${movieInCollection.posterPath})}"
                                     alt="무비 컬랙션 포스터" class="img-movie-cast img-movie-collection-card">
@@ -416,22 +425,22 @@
 
             <div class = "movie-review">
                 <th:block th:if="${movieReviewList.size() ne 0}">
-                <section style="display: flex">
-                    <h3>리뷰</h3>
-                    <a class = "movieAllReview" th:href="@{/reviews/{category}/{id}(category = 'movie', id = ${movieDetailsDto.getId()})}">
-                        <span>전체 리뷰 보러가기</span>
-                    </a>
-                </section>
+                    <section style="display: flex">
+                        <h3>리뷰</h3>
+                        <a class = "movieAllReview" th:href="@{/reviews/{category}/{id}(category = 'movie', id = ${movieDetailsDto.getId()})}">
+                            <span>전체 리뷰 보러가기</span>
+                        </a>
+                    </section>
 
-                <section class="popular-review-section">
+                    <section class="popular-review-section">
 
-                    <div class = "review-item" th:each=" review : ${movieReviewList}"
-                     style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
-                        <input class = "d-none" th:email="${review.getMember().getEmail()}">
-                        <div class = "review-item-body" style="display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
-                                <section class = "review-item-user-profile-img">
-                                    <img th:src="@{${review.getMember().getUsersaveprofile()}}">
+                        <div class = "review-item" th:each=" review : ${movieReviewList}"
+                                style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
+                            <input class = "d-none" th:email="${review.getMember().getEmail()}">
+                            <div class = "review-item-body" style="display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
+                                <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
+                                    <section class = "review-item-user-profile-img">
+                                        <img th:src="@{${review.getMember().getUsersaveprofile()}}">
                                 </section>
                             </a>
                             <section class= "review-item-content">
@@ -439,7 +448,7 @@
                                     <section>
                                         <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px;">Review By</span>
                                     </section>
-                                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                    <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
                                         <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
                                     </a>
                                     <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
@@ -447,7 +456,7 @@
                                 <div class = "review-item-content-article">
                                     <a th:href="@{/reviews/{reviewId}(reviewId = ${review.getReviewId()})}">
                                         <article class = "content-article"
-                                                 th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
+                                                th:if="${review.getIsSpoiler().equalsIgnoreCase('n')}"
                                                     th:text="${review.getContent()}"></article>
                                         <article class = "content-article" th:if="${review.getIsSpoiler().equalsIgnoreCase('y')}">
                                             스포일러가 포함된 리뷰 입니다. <br> 상세페이지에서 확인 하세요.
@@ -458,12 +467,13 @@
                                     <i class="me-2 fa-solid fa-thumbs-up"></i><span th:text="${numOfReviewLiked.get(review.getReviewId())} + ' ' "></span> Likes
                                     <i class="ms-3 me-2 fa-solid fa-comment"></i><span th:text="${numOfReviewComment.get(review.getReviewId()) + ' ' }"></span>Comments
                                 </div>
-                            </section>
+                            </section>                                   
                         </div>
-                    </div>
+        
+                    </section>
 
-                </section>
                 </th:block>
+                
                 <th:block th:unless="${movieReviewList.size() ne 0}">
                     <h3 class="my-3">남겨진 리뷰가 없습니다</h3>
                 </th:block>
@@ -478,9 +488,13 @@
                 <button class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="movie-whole-cards-container">
                     <div class="div-each-card" th:each="recommended : ${recommendedList}">
-                        <a class="movie-collection-card-link" th:href="@{/movie/details(id = ${recommended.id})}">
+                        <a class="movie-collection-card-link" th:href="@{/movie/details/{id}(id = ${recommended.id})}">
                             <div class="movie-card-image-container movie-poster-card">
-                                <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${recommended.posterPath})}"
+                                <img th:if="${recommended.posterPath != null && recommended.posterPath != 'null' && recommended.posterPath != ''}"
+                                    th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${recommended.posterPath})}"
+                                    alt="추천 작품 포스터" class="img-movie-cast img-movie-collection-card">
+                                <img th:unless="${recommended.posterPath != null && recommended.posterPath != 'null' && recommended.posterPath != ''}"
+                                    th:src="@{/image/no_image_default.webp}"
                                     alt="추천 작품 포스터" class="img-movie-cast img-movie-collection-card">
                                 <div class="div-movie-card-overlay">
                                     <p class="movie-card-name" th:text="${recommended.title}"></p>

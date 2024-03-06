@@ -6,7 +6,8 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class WebClientConfig {
+public class
+WebClientConfig {
 
     @Bean
     // 기존 코드

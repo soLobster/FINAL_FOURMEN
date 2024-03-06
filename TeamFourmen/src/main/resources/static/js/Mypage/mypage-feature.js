@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 	let userEmail = '';
 
     let loggedInUser = '';
+    
     async function checkCurrentUser() {
         try {
             const response = await axios.get('/api/user/current-user');
@@ -42,9 +43,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     const browsersTitle = document.querySelector('title');
     const editProfile = document.querySelector('.edit-profile');
     const followButton = document.querySelector('.follow-button');
-
+	
     let userProfileImg = document.querySelector('.mypage-details-profile-img img');
-
+	
     const likedListTitle = document.querySelector('.category-like-list');
 
     console.log('마이페이지 유저 = ' + memberId);
@@ -81,7 +82,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             
             userEmail = email;
             
-            console.log('쑤셔넣은 이메일임 = ' +userEmail);
+            console.log('보이는 페이지의 유저 이메일 = ' +userEmail);
+
+            const profileEmail = document.querySelector('#user-nick-name').setAttribute('current-page-user-email', userEmail);
 
             // 유저 대시보드 공통 네비게이션에 링크를 걸어준다.
             const profileLink = document.querySelector('.nav-item:nth-child(1) .nav-link');
@@ -89,7 +92,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const reviewsLink = document.querySelector('.nav-item:nth-child(2) .nav-link');
             reviewsLink.href = `/mypage/details/${memberId}/reviews`;
-
+			
+			const playlistLink = document.querySelector('.nav-item:nth-child(3) .nav-link');
+			playlistLink.href = `/mypage/details/${memberId}/playlist`;
+			
             const likedMovieLink = document.querySelector('.nav-item:nth-child(4) .nav-link');
             likedMovieLink.href = `/mypage/details/${memberId}/movie`
 
@@ -100,8 +106,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             likedPersonLink.href = `/mypage/details/${memberId}/person`
             
             const myeditLink =document.querySelector('a#myedit');
-            myeditLink.href = `/mypage/details/${memberId}/edit`;
-
+            if (myeditLink) {
+				        myeditLink.href = `/mypage/details/${memberId}/edit`;	
+			      } 
         });
 
     // 팔로우 체크
@@ -146,8 +153,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log(`불러온 팔로워 수 =  ${followersCount}`);
             console.log(`불러온 팔로잉 수 =  ${followingsCount}`);
 
+            const followersLinkElement = document.querySelector('.followers a');
+            followersLinkElement.href = `/mypage/details/${memberId}/followers`
+
             const followersElement = document.querySelector('.followers .value');
             followersElement.textContent = followersCount;
+
+            const followingsLinkElement = document.querySelector('.followings a');
+            followingsLinkElement.href = `/mypage/details/${memberId}/followings`
 
             const followingsElement = document.querySelector('.followings .value');
             followingsElement.textContent = followingsCount;
@@ -215,14 +228,23 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log(category);
 
 
- if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management' 
- && location.pathname.split('/')[4] != 'admindetail' && location.pathname.split('/')[4] != 'search' && location.pathname.split('/')[4] != 'edit'){
-        likedListTitle.textContent = category + ' Liked List';
-    }
+     if(location.pathname.split('/')[4] != 'profile' && location.pathname.split('/')[4] != 'reviews' && location.pathname.split('/')[4] != 'management'
+     && location.pathname.split('/')[4] != 'admindetail' && location.pathname.split('/')[4] != 'search' && location.pathname.split('/')[4] != 'edit'){
+
+            // likedListTitle.textContent = category + ' Liked List';
+
+     } else if(location.pathname.split('/')[4] == 'followers' || location.pathname.split('/')[4] == 'followings') {
+
+         if(category == 'FOLLOWERS'){
+             likedListTitle.textContent = '팔로워';
+         } else {
+             likedListTitle.textContent = '팔로잉';
+         }
+     }
 
     // 로그인 유저와 마이페이지의 유저가 다르면 프로필 편집 불가
     if(userEmail !== await checkCurrentUser()) {
-        editProfile.classList.add('d-none');
+        // editProfile.classList.add('d-none');
     }
 
     // 로그인 유저와 마이페이지 유저가 같다면 팔로우 불가
@@ -230,8 +252,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 		console.log(`userEmail=${userEmail}`);
         followButton.classList.add('d-none');
     }
-
-
-
+    
+	
 
 });

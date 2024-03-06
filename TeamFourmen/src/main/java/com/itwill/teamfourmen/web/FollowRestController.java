@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.domain.Follow;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.dto.follow.MemberDTO;
 import com.itwill.teamfourmen.service.FollowService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -64,4 +66,14 @@ public class FollowRestController {
 
         return ResponseEntity.ok(getSocialMap);
     }
+
+    // 전체 팔로우 테이블 데이터 가져오기
+    @GetMapping("/all")
+    public ResponseEntity<List<Follow>> getAllFollowData() {
+
+        List<Follow> allFollowData = followService.getAllFollowList();
+
+        return ResponseEntity.ok(allFollowData);
+    }
+
 }
