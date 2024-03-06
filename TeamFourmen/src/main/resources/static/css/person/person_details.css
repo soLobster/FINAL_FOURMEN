@@ -23,6 +23,7 @@ body {
     font-weight: 700;
     font-size: 1.95rem;
     padding-bottom: 3px;
+    color: #fbc500;
 }
 /* C에서 인물 약력 부분 스타일링 */
 .c_history {

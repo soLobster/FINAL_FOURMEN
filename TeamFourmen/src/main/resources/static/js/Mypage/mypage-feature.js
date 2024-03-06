@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 userProfileImg.setAttribute('src',  '/image/userimage.png')
             }
 
-            browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
+//            browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
             
             userEmail = email;
             

@@ -109,7 +109,7 @@ public class MyPageController {
 		memberservice.update(dto, sDirectory);
 		
 		   // 세션에서 adminuser 가져오기
-        String adminUserFromSession = myname.getMember().getEmail();
+        long adminUserFromSession = myname.getMember().getMemberId();
 
         // 리다이렉트할 URL을 생성
         String redirectUrl = "/mypage/details/" + adminUserFromSession + "/edit";

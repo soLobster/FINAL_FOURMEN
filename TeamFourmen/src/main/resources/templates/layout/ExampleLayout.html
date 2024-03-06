@@ -212,7 +212,7 @@
             <div class="navbar-detailed-mypage-menu">
                 <div class="navbar-detailed-x-container">
                     <div class="navbar-detailed-x-div-mypage">
-                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">
+                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">
                             <div class="profile-picture mypage-profile">
                                 <div class="div-profile-image">
                                     <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
@@ -235,17 +235,21 @@
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
                             <div class="navbar-detailed-menu-list-mypage">
-                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Page</a></div>
-                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Follower</a></div>
-                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Following</a></div>
+
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Page</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My follower</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My following</a></div>
+
                             </div>
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
                         <div class="navbar-detailed-menu-list-mypage">
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/management(id = ${member.email})}">Member Management</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Page</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Follower</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Following</a></div>
+
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/management(id = ${member.memberId})}">Member management</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Page</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My follower</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My following</a></div>
+
                         </div> <!--여기서 잘림-->
                     </div>
                 </div>
@@ -258,9 +262,9 @@
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
                         <div class="navbar-detailed-menu-list-mypage">
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/reviews(id = ${member.email})}">My Review</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Playlist</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Forum</a></div>                        
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/reviews(id = ${member.memberId})}">My Review</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Playlist</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Forum</a></div>                        
                         </div>
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
@@ -279,9 +283,9 @@
                     </div>
                     <div class="navbar-detailed-menu-items-mypage">
                         <div class="navbar-detailed-menu-list-mypage">
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/movie(id = ${member.email})}">Movie likes</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/tv(id = ${member.email})}">Tv show likes</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/person(id = ${member.email})}">Actor likes</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/movie(id = ${member.memberId})}">Movie likes</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/tv(id = ${member.memberId})}">Tv show likes</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/person(id = ${member.memberId})}">Actor likes</a></div>
                         </div>
                     </div>
                 </div>     

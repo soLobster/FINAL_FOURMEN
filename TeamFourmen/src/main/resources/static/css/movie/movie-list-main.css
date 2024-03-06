@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
+.movietitle{
+	color: #fbc500;
+	padding-left: 80px;
+	font-weight: bolder;
+	font-size:32px;
+}
 .list-container {
     padding: 0 8px 0 8px;
     display: grid;
@@ -10,7 +16,14 @@
 
 .movie-item-container {
     width: 100%;
-    margin-bottom: 24px;    
+    margin-bottom: 24px;
+   
+}
+.movie-item-container:hover{
+		z-index: 99;
+	border: 3px solid #fbc500;;
+	box-shadow: inset 0 0 1px 1px rgba(20, 24, 28, .125);
+	border-radius: .25rem;
 }
 
 
@@ -33,10 +46,13 @@
     height: 100%;
 
 }
+.movie-description-container{
+	padding:10px 20px 15px 20px;
+}
 
 .movie-description-container a {
     text-decoration: none;
-    color: rgb(196, 195, 202);       
+      
 }
 
 
@@ -46,7 +62,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     font-size: 1.2em;
-    font-weight: 700;
+	color:white;
+}
+.releasedatetext{
+	color: rgb(196, 195, 202);
 }
 
 
