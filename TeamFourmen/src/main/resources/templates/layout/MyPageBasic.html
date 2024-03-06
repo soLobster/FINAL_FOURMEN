@@ -31,13 +31,13 @@
           </a>
         </h4>
         <h4 class="border-start border-end followers">
-          <a th:href="@{''}">
+          <a>
             <span class = "value">0</span>
             <span class = "definition">팔로워</span>
           </a>
         </h4>
         <h4 class="followings">
-          <a th:href="@{''}">
+          <a>
             <span class = "value">0</span>
             <span class = "definition">팔로잉</span>
           </a>
@@ -74,5 +74,36 @@
     </div>
   </nav>
 </section>
+
+<div class="modal fade" id="social-user-modal" tabindex="-1" aria-labelledby="social-user-modal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content bg-dark">
+      <div class="border-0 modal-header">
+        <h5 class="modal-title text-white" id="followerModal">팔로워</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class = "follower-list" style="width: 100%; color: white">
+
+        <div class = "followers">
+          <a th:href="@{''}" >
+            <div class = "follower-profile-img-div">
+              <img class = "follower-profile-img" th:src="@{data:image/jpeg;base64,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}" />
+<!--              <img class = "follower-profile-img" th:unless="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}" />-->
+            </div>
+            <div class = "ms-3 follower-profile-overview-div">
+              <span class = "fs-5 follower-profile-nickname">팔로워 닉네임</span>
+              <span class ="follower-reviews">리뷰 리뷰</span>
+            </div>
+          </a>
+          <th:block sec:authorize="isAuthenticated()">
+            <button class ="mb-2 btn btn-success notFollowed">팔로우</button>
+          </th:block>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 
 </html>

@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.web;
 
+import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
@@ -51,6 +52,7 @@ public class MyPageController {
     private final PersonService personService;
     private final MemberService memberservice;
     private final NicknameInterceptor myname;
+    private final FollowService followService;
     
     @GetMapping("/")
     public void mypage() {
@@ -317,11 +319,12 @@ public class MyPageController {
 
                     myPageLikedList.add(mypageDTO);
 
+                    continue;
+
                 default:
                     log.info("없어요!!!");
                     break;
             }
-
         }
 
         log.info("LIKED LIST = {}", myPageLikedList);
@@ -329,9 +332,28 @@ public class MyPageController {
 
         return "mypage/details-liked-list";
     }
-    
-    
-    
-    
+
+    @GetMapping("/details/{memberId}/followers")
+    public String followerPage(Model model, @PathVariable(name = "memberId") Long memberId, @RequestParam(name = "page", required = false, defaultValue = "0") int page){
+        log.info("get Follwers Page Member Id = {}", memberId);
+
+        Page<Follow> followPage = followService.getFollowPage(memberId, page);
+
+        model.addAttribute("followers", followPage);
+
+        return "mypage/details-social-list";
+    }
+
+    @GetMapping("/details/{memberId}/followings")
+    public String followingsPage(Model model, @PathVariable(name = "memberId") Long memberId, @RequestParam(name = "page", required = false, defaultValue = "0") int page){
+        log.info("get Follwers Page Member Id = {}", memberId);
+
+        Page<Follow> followingPage = followService.getFollowingPage(memberId ,page);
+
+        model.addAttribute("followings", followingPage);
+
+        return "mypage/details-social-list";
+    }
+
 
 }
