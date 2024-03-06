@@ -33,7 +33,7 @@ public class PlaylistItem {
 	
 	private String category;
 
-	private Long tmdbId;
+	private int tmdbId;
 
 	private Long nthInPlaylist;
 
