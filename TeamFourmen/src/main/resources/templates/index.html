@@ -393,7 +393,7 @@ padding-bottom: 5px;
            <li class="border-0 card ott_item_card" th:each="moviecombined, iterStat : ${moviecombineList.subList(0,15)}" th:object="${moviecombined}">
     <span class="text_num"  th:text="${iterStat.count}"></span>
     <a th:href="@{/movie/details/{id}(id = ${moviecombined.movielistitemdto.id} )}" class="text-decoration-none">
-    <div class="ott-item-wrapper border-0 card" style="overflow: hidden;">
+    <div class="ott-item-wrapper border-0 card" th:id="${moviecombined.key}" style="overflow: hidden;">
         <img class="ott_img"
              th:if="${moviecombined.movielistitemdto.backdropPath != null}"
              th:src="@{'https://image.tmdb.org/t/p/w1280' + ${moviecombined.movielistitemdto.backdropPath}}"
@@ -402,9 +402,9 @@ padding-bottom: 5px;
              th:unless="${moviecombined.movielistitemdto.backdropPath != null}"
              th:src="@{'/image/default-w600.png'}" width="auto" height="auto" />
             <section class="card-img-overlay">
-                <div class="videobox" th:if="${moviecombined.key != null}">
-                    <iframe style="width: 600px; height: 400px; object-fit: cover;"
-                            th:src="'https://www.youtube.com/embed/'+${moviecombined.key}+'?autoplay=1&mute=1&controls=0&loop=1&playlist='+${moviecombined.key}"></iframe>
+                <div class="videobox" th:if="${moviecombined.key != null}" >
+                    <iframe class="youtube-video" style="width: 600px; height: 400px; object-fit: cover;"
+                            src=""></iframe>
                             
                 </div>
             </section>
@@ -436,7 +436,7 @@ padding-bottom: 5px;
            <li class="border-0 card ott_item_card" th:each="combined, iterStat : ${combineList.subList(0,15)}" th:object="${combined}">
        <span class="text_num"  th:text="${iterStat.count}"></span>
     <a th:href="@{/tv/details/{id}(id = ${combined.tvShowDto.id} )}" class="text-decoration-none">
-    <div class="ott-item-wrapper border-0 card" style="overflow: hidden;">
+    <div class="ott-item-wrapper border-0 card" th:id="${combined.key}" style="overflow: hidden;">
         <img class="ott_img"
              th:if="${combined.tvShowDto.backdrop_path != null}"
              th:src="@{'https://image.tmdb.org/t/p/w1280' + ${combined.tvShowDto.backdrop_path}}"
@@ -445,10 +445,10 @@ padding-bottom: 5px;
              th:unless="${combined.tvShowDto.backdrop_path != null}"
              th:src="@{'/image/default-w600.png'}" width="auto" height="auto" />
       
-            <section class="card-img-overlay">
-                <div class="videobox" th:if="${combined.key != null}">
-                    <iframe style="width: 600px; height: 400px; object-fit: cover;"
-                            th:src="'https://www.youtube.com/embed/'+${combined.key}+'?autoplay=1&mute=1&controls=0&loop=1&playlist='+${combined.key}"></iframe>
+            <section class="card-img-overlay video-container">
+                <div class="videobox" th:if="${combined.key != null}" >
+                    <iframe class="youtube-video" style="width: 600px; height: 400px; object-fit: cover;"
+                            src=""></iframe>
                             
                 </div>
             </section>
@@ -765,7 +765,32 @@ padding-bottom: 5px;
 
 	
  <footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>
-	
+
+<script type="text/javascript">
+    // Get all elements with class 'ott-wrapper'
+    var ottWrappers = document.querySelectorAll('.ott-item-wrapper');
+
+    // Add mouseover event listener to each ott-wrapper
+    ottWrappers.forEach(function(wrapper) {
+        wrapper.addEventListener('mouseover', function(event) {
+            // Get the iframe inside the current ott-wrapper
+            var iframe = wrapper.querySelector('iframe.youtube-video');
+            // Get the id of the current wrapper
+            var videoId = wrapper.id;
+            console.log(videoId);
+            // Set the src attribute of the iframe to load the YouTube video with autoplay
+            iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + videoId;
+        });
+
+        // Add mouseout event listener to each ott-wrapper
+        wrapper.addEventListener('mouseout', function(event) {
+            // Get the iframe inside the current ott-wrapper
+            var iframe = wrapper.querySelector('iframe.youtube-video');
+            // Reset the src attribute of the iframe to stop the YouTube video
+            iframe.src = '';
+        });
+    });
+</script>
 
 
 <script>
