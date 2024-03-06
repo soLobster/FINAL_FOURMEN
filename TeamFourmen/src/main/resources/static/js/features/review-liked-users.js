@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (isFollowed) {
                 button.classList.replace('notFollowed', 'isFollowed');
                 button.classList.replace('btn-success', 'btn-danger');
-                button.innerText = '언팔로우';
+                button.innerText = '팔로우 취소';
             }
         });
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 console.log(button.getAttribute('id') + ' 팔로우 클릭됨');
             } else if (button.classList.contains('isFollowed')) {
                 await unFollowUser(userEmail, button);
-                console.log(button.getAttribute('id') + ' 언팔로우 클릭됨');
+                console.log(button.getAttribute('id') + ' 팔로우 취소 클릭됨');
             }
         });
     }
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             button.classList.replace('btn-success', 'btn-danger');
             button.classList.replace('notFollowed', "isFollowed");
-            button.innerText = '언팔로우';
+            button.innerText = '팔로우 취소';
 
             alert('팔로우 되었습니다.');
         } catch (error) {

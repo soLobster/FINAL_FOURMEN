@@ -196,33 +196,56 @@
 
         const socialList = document.querySelectorAll('.each-user');
         const section = document.querySelector('.social-list').getAttribute('section');
+        const currentPageUserEmail = document.querySelector('#user-nick-name').getAttribute('current-page-user-email');
 
         for(let user of socialList){
+
             const button = user.querySelector('button');
             const socialUser = user.querySelector('button').getAttribute('email');
 
             // SECTION이 팔로워, 팔로잉일때로 나눈다.
-            if(section === 'followings') { // 팔로잉 일때
-                checkCurrentUser().then(currentUser => {
-                    if (socialUser === currentUser) {
+            if(section === 'followings') { // 팔로잉 페이지 일때
+
+                // 팔로잉 유저 중에서 '본인'이 있다면 버튼 제거
+                checkLogInUser().then(logInUser => {
+                    if (socialUser === logInUser) {
                         button.classList.add('d-none');
                     }
                 });
 
+                // 팔로잉 유저 중에서 '본인'이 팔로우 중인 유저가 아니라면 '팔로우' 버튼으로 변환
+                checkFollowUser(socialUser).then(user => {
+                   if(user === false){
+                       button.classList.replace('btn-danger', 'btn-primary');
+                       button.innerText = '팔로우';
+                   }
+                });
 
-
-            } else { // 팔로워 일때
-                checkCurrentUser().then(currentUser => {
-                    if (socialUser === currentUser) {
-                        button.innerText = '팔로우 취소';
-                        button.classList.replace('btn-primary', 'btn-danger');
-                    }
-                })
+            } else { // 팔로워 페이지 일때
+                checkFollowUser(socialUser).then(user => {
+                   if(user === true){
+                       button.classList.replace('btn-primary', 'btn-danger');
+                       if(currentPageUserEmail === checkLogInUser){
+                           button.innerText = '삭제';
+                       } else {
+                           button.innerText = '팔로우 취소';
+                       }
+                   }
+                });
             }
+
+            // 팔로우 추가 , 삭제 버튼
+            button.addEventListener('click', async function (){
+                if(button.innerText == '삭제' || button.innerText == '팔로우 취소'){
+                    await unFollowUser(socialUser, button);
+                } else {
+                    await followUser(socialUser, button);
+                }
+            });
 
         }
 
-        async function checkCurrentUser() {
+        async function checkLogInUser() {
             try {
                 const response = await axios.get('/api/user/current-user');
 
@@ -240,11 +263,48 @@
             try {
                 const response = await axios.get(`/api/follow/${socialUser}`);
                 console.log(`${socialUser} 팔로우 여부  = ` + response.data);
-
                 return response.data;
             } catch (error) {
                 console.log('팔로우 체크 오류', error);
                 return undefined;
+            }
+        }
+
+        async function followUser(socialUser, button) {
+            try{
+                const response = await axios.post(`/api/follow/${socialUser}`);
+                console.log(response.data);
+
+                button.classList.replace('btn-primary', 'btn-danger');
+                button.innerText = '팔로우 취소';
+
+                alert('팔로우 되었습니다.');
+
+                location.reload();
+
+            } catch (error) {
+                console.log('팔로우 오류', error);
+            }
+        }
+
+
+        async function unFollowUser(userEmail , button) {
+            const result = confirm('정말 언팔로우 하시겠습니까??');
+
+            if(!result) {
+                return;
+            }
+
+            try {
+                const response = await axios.delete(`/api/follow/${userEmail}`);
+                console.log(response.data);
+
+                alert('팔로우 취소 되었습니다.');
+
+                location.reload();
+
+            } catch (error) {
+                console.log('팔로우 삭제 오류', error);
             }
         }
 

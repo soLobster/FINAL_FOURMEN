@@ -81,7 +81,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             
             userEmail = email;
             
-            console.log('쑤셔넣은 이메일임 = ' +userEmail);
+            console.log('보이는 페이지의 유저 이메일 = ' +userEmail);
+
+            const profileEmail = document.querySelector('#user-nick-name').setAttribute('current-page-user-email', userEmail);
 
             // 유저 대시보드 공통 네비게이션에 링크를 걸어준다.
             const profileLink = document.querySelector('.nav-item:nth-child(1) .nav-link');

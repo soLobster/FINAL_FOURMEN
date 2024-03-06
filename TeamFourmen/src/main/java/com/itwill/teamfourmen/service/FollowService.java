@@ -149,4 +149,13 @@ public class FollowService {
         return followingPage;
     }
 
+    public List<Follow> getAllFollowList() {
+
+        List<Follow> allFollowList = followRepository.findAll();
+
+        log.info("ALL FOLLOW LIST = {}", allFollowList);
+
+        return allFollowList;
+    }
+
 }

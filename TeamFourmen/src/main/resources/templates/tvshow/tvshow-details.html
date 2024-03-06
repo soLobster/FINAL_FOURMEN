@@ -965,7 +965,7 @@
 							 style="height: auto; padding: 0; margin-left: 30px; margin-right: 30px">
 							<input class = "d-none" th:email = "${review.getMember().getEmail()}">
 							<div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-								<a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+								<a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
 									<section class = "review-item-user-profile-img" >
 										<img th:src="@{${review.getMember().getUsersaveprofile()}}"
 											style="width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(256, 256, 256, 0.7); object-fit: cover">
@@ -976,7 +976,7 @@
 										<section>
 											<span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
 										</section>
-										<a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+										<a th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
 											<span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
 										</a>
 										<span id = "view-star-rating" th:rating="${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
