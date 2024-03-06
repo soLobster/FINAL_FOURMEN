@@ -107,7 +107,7 @@
                     <!-- 유저 프로필 이미지 -->
                     <!-- 사용자의 프로필 이미지 URL(usersaveprofile)이 HTTP로 시작하는지 여부에 따라 다른 img 태그 사용. -->
                     <div class="div-profile-image" id="profile-picture" th:nickname="${member.nickname}"
-                        th:email="${member.email}">
+                        th:email="${member.email}" th:memberId="${member.memberId}">
                         <!-- 첫 번째 img 태그는 URL이 HTTP로 시작하는 경우 외부 소스에서 이미지를 로드. -->
                         <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
                             th:src="${member.usersaveprofile}" id="profile_s_img" class="profile-image"
@@ -117,7 +117,7 @@
                             th:src="@{/image/userimage.png}" class="profile-image">
                         <!-- 세 번째 img 태그는 사용자의 프로필 이미지가 외부 URL이 아니고, 기본 이미지도 아닌 다른 이미지인 경우, 서버에 저장된 해당 이미지를 표시 -->
                         <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}"
-                            th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="profile_s_imgg"
+                            th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="profile_s_img"
                             class="profile-image" alt="User Profile">
                     </div>
                 </th:block>
@@ -206,15 +206,13 @@
             </div>
         </div>
 
-
-
         <th:block sec:authorize="isAuthenticated()">
             <div class="navbar-mypage-background"></div>
 
             <div class="navbar-detailed-mypage-menu">
                 <div class="navbar-detailed-x-container">
                     <div class="navbar-detailed-x-div-mypage">
-                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">
+                        <a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">
                             <div class="profile-picture mypage-profile">
                                 <div class="div-profile-image">
                                     <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}" th:src="${member.usersaveprofile}"  id="profile_s_img" class="profile-image" alt="User Profile">
@@ -237,17 +235,21 @@
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
                             <div class="navbar-detailed-menu-list-mypage">
-                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Page</a></div>
-                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Follower</a></div>
-                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Following</a></div>
+
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Page</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My follower</a></div>
+                                <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My following</a></div>
+
                             </div>
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
                         <div class="navbar-detailed-menu-list-mypage">
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/management(id = ${member.email})}">Member Management</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Page</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Follower</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Following</a></div>
+
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/management(id = ${member.memberId})}">Member management</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Page</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My follower</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My following</a></div>
+
                         </div> <!--여기서 잘림-->
                     </div>
                 </div>
@@ -260,9 +262,9 @@
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('USER')">
                         <div class="navbar-detailed-menu-list-mypage">
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/reviews(id = ${member.email})}">My Review</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Playlist</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.email})}">My Forum</a></div>                        
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/reviews(id = ${member.memberId})}">My Review</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Playlist</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/profile(id = ${member.memberId})}">My Forum</a></div>                        
                         </div>
                     </div>
                     <div class="navbar-detailed-menu-items-mypage" sec:authorize="hasRole('ADMIN')">
@@ -281,9 +283,9 @@
                     </div>
                     <div class="navbar-detailed-menu-items-mypage">
                         <div class="navbar-detailed-menu-list-mypage">
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/movie(id = ${member.email})}">Movie likes</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/tv(id = ${member.email})}">Tv show likes</a></div>
-                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/person(id = ${member.email})}">Actor likes</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/movie(id = ${member.memberId})}">Movie likes</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/tv(id = ${member.memberId})}">Tv show likes</a></div>
+                            <div class="navbar-each-menu-item-mypage"><a th:href="@{/mypage/details/{id}/person(id = ${member.memberId})}">Actor likes</a></div>
                         </div>
                     </div>
                 </div>     

@@ -11,8 +11,9 @@
           crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
     <link th:href="@{/css/navbar.css}" rel="stylesheet">
-
+	<link th:href="@{/css/footer.css}" rel="stylesheet">
     <style>
 
         @font-face {
@@ -573,11 +574,11 @@
         <section class = "center-works-review-and-comments-section">
             <div class = "works-review-div">
                 <div class = "works-review-header">
-                    <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                    <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
                         <img class ="works-review-users-profile-img" th:src="${review.getMember().getUsersaveprofile()}" />
                     </a>
                     <span>Review By</span>
-                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                    <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
                         <h4 class = "works-review-users-name" th:text="${review.getMember().getName()}"></h4>
                     </a>
                 </div>
@@ -617,7 +618,7 @@
                         <p>좋아요한 사람들</p>
                     </a>
                     <div class = "users-horizontal">
-                        <a th:each=" user : ${likedUser}" th:href="@{/mypage/details/{id}/profile(id = ${user.getMember().getEmail()})}">
+                        <a th:each=" user : ${likedUser}" th:href="@{/mypage/details/{memberId}/profile(memberId = ${user.getMember().getMemberId()})}">
                             <img class ="works-review-users-profile-img" th:if ="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{${user.getMember().getUsersaveprofile()}}"/>
                             <img class ="works-review-users-profile-img" th:unless = "${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}"/>
                         </a>
@@ -636,14 +637,14 @@
                             <li class = "works-comment" th:each=" comment : ${reviewComments}" th:commentId = "${comment.getCommentId()}">
                                     <div class = "comment-body">
                                         <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
-                                            <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
+                                            <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${comment.getMember().getMemberId()})}">
                                                 <div>
                                                     <img th:if="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
                                                     <img th:unless="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{/image/userimage.png}" />
                                                 </div>
                                             </a>
                                             <div class = "user-name-created-date">
-                                                <a th:href="@{/mypage/details/{id}/profile(id = ${comment.getMember().getEmail()})}">
+                                                <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${comment.getMember().getMemberId()})}">
                                                     <span class = "comment-username" th:text="${comment.getMember().getNickname()}"></span>
                                                 </a>
                                                 <span class = "comment-register-date" th:text="${comment.getCreatedDate().toLocalDate()}"></span>
@@ -728,7 +729,7 @@
             <div class = "liked-user-list" style="width: 100%; color: white">
 
                 <div class = "liked-user" th:each=" user : ${likedUser}" th:email = "${user.getMember().getEmail()}">
-                    <a th:href="@{/mypage/details/{id}/profile(id = ${user.getMember().getEmail()})}" >
+                    <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${user.getMember().getMemberId()})}" >
                         <div class = "liked-user-profile-img-div">
                             <img class = "liked-user-profile-img" th:if="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{ ${user.getMember().getUsersaveprofile()} }" />
                             <img class = "liked-user-profile-img" th:unless="${user.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}" />
@@ -753,7 +754,10 @@
 </div>
 
 
+<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
 
+
+    <script th:src="@{/js/footer.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>

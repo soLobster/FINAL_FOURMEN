@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.Reviewmain;
 
 public interface ReviewDao extends JpaRepository<Review, Long> {
 	
@@ -23,5 +25,7 @@ public interface ReviewDao extends JpaRepository<Review, Long> {
 	
 	
 	Review findByReviewId(long reviewId);
+	
+
 
 }

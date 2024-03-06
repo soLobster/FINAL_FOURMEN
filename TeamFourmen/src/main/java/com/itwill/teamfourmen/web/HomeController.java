@@ -31,10 +31,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.itwill.teamfourmen.domain.Comment;
 import com.itwill.teamfourmen.domain.EmailProvider;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
 import com.itwill.teamfourmen.domain.PhonemessageProvider;
+import com.itwill.teamfourmen.domain.Post;
+import com.itwill.teamfourmen.domain.Postmain;
+import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.ReviewComments;
+import com.itwill.teamfourmen.domain.Reviewmain;
 import com.itwill.teamfourmen.dto.MemberCreateDto;
 import com.itwill.teamfourmen.dto.MemberCreateNaverDto;
 import com.itwill.teamfourmen.dto.MemberModifyDto;
@@ -57,6 +63,8 @@ import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowListDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowVideoDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowVideoListDTO;
+import com.itwill.teamfourmen.repository.PostRepository;
+import com.itwill.teamfourmen.repository.ReviewDao;
 import com.itwill.teamfourmen.service.HomeService;
 import com.itwill.teamfourmen.service.ImdbRatingUtil;
 import com.itwill.teamfourmen.service.MemberService;
@@ -89,7 +97,8 @@ public class HomeController {
 	private final MemberCreateNaverDto membercreatenaverdto;
 	private final PasswordEncoder passwordEncoder;
 	private final NicknameInterceptor interceptor;
-	
+	private final ReviewDao reviewdao;
+	private final PostRepository postdao;
 	private final MovieApiUtil movieapiUtil;
 	private final TvShowApiUtil apiUtil;
 
@@ -301,6 +310,55 @@ public class HomeController {
 				uniqueCastListPosterKoKRx.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
 				//log.info("listdfsfd={}",uniqueCastListPosterKoKRx);
 				model.addAttribute("randomactorx",uniqueCastListPosterKoKRx);
+				
+				// 리뷰를 저장할 리스트
+				List<Review> allReviews = reviewdao.findAll();
+
+				List<Reviewmain> reviewmainlist  = new ArrayList<>();
+				
+				
+				for (Review review : allReviews) {
+					Reviewmain reviewmain = new Reviewmain();
+					String content = review.getContent();
+					long reviewid = review.getReviewId();
+					String category = review.getCategory();
+				    List<ReviewComments> comments = review.getReviewComments();
+				    int size = comments.size();
+				    reviewmain.setContent(content);
+				    reviewmain.setReviewid(reviewid);
+				    reviewmain.setCategory(category);			    reviewmain.setSize(size);
+		    		reviewmainlist.add(reviewmain);
+				
+				}
+				
+				reviewmainlist.sort(Comparator.comparingInt(Reviewmain::getSize).reversed());
+				model.addAttribute("reviewmainlist",reviewmainlist);
+				
+				
+				// 리뷰를 저장할 리스트
+				List<Post> allposts = postdao.findAll();
+
+				List<Postmain> postmainlist  = new ArrayList<>();
+				
+				
+				for (Post post : allposts) {
+					Postmain postmain = new Postmain();
+					long postid = post.getPostId();
+					String postcontent = post.getTitle();
+					String postcategory = post.getCategory();
+				    List<Comment> postcomment = post.getComment();
+				    int postsize = postcomment.size();
+				    postmain.setPostid(postid);
+				    postmain.setContent(postcontent);
+				    postmain.setCategory(postcategory);
+				    postmain.setSize(postsize);
+		    		postmainlist.add(postmain);
+				
+				}
+				
+				postmainlist.sort(Comparator.comparingInt(Postmain::getSize).reversed());
+				model.addAttribute("postmainlist",postmainlist);
+				
 				
 		return "index";
 	}

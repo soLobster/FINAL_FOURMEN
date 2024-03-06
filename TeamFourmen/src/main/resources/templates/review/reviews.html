@@ -10,8 +10,9 @@
           crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
     <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
     <link th:href="@{/css/navbar.css}" rel="stylesheet">
-
+	<link th:href="@{/css/footer.css}" rel="stylesheet">
     <style>
 
         @font-face {
@@ -228,17 +229,16 @@
                     <div class = "review-item" th:each=" review : ${worksReviewList}">
 
                         <div class = "review-item-body" style=" display: flex; margin: 0 20px 0 20px; padding: 20px 0 0 0;">
-                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                            <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
                                 <section class = "review-item-user-profile-img">
-                                        <img th:src="@{${review.getMember().getUsersaveprofile()}}"
-                                             style="">
+                                        <img th:src="@{${review.getMember().getUsersaveprofile()}}"/>
                                 </section>
                             </a>
                             <section class = "review-item-content">
                                 <div class = "review-item-content-header">
                                     <span style="color: #c4c3ca; font-weight: lighter; font-size: 12px">Review By</span>
                                     <div class = "review-item-content-nickname-rating">
-                                    <a th:href="@{/mypage/details/{id}/profile(id = ${review.getMember().getEmail()})}">
+                                    <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
                                         <span class = "reviewer-nickname" th:text="${review.getMember().getNickname()}"></span>
                                     </a>
                                     <span id = "view-star-rating" th:rating = "${review.getRating()}" style="font-size: 15px; color: #33ff33"></span>
@@ -281,6 +281,10 @@
         </section>
 
     </main>
+    <footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
+
+
+    <script th:src="@{/js/footer.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>

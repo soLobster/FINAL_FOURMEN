@@ -2,22 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<title>Fourmen</title>
+	<title>MOVIE LIST</title>
 	
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
     <link th:href="@{/css/theme.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-search.css}" rel="stylesheet">
     <link th:href="@{/css/movie/movie-list-main.css}" rel="stylesheet">
     <link th:href="@{/css/accordion/accordion.css}" rel="stylesheet">
 	<link th:href="@{/css/navbar.css}" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/user.css}">
+	<link th:href="@{/css/footer.css}" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/user.css}">
 </head>
 <body>
     <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
-    <h1>영화 리스트</h1>
+    <h1 class="movietitle">MOVIE LiST</h1>
 	
+
     <div class="content-container">
         <!-- search-container는 필터와 검색을 위한 div -->
         <aside class="search-container">
@@ -171,7 +174,7 @@
             <!-- 검색 form -->
             <form action="../movie/search">
                 <div class="custom-card accordion-container">
-                    <div class="custom-card-header accordion-header">
+                    <div class="custom-card-footer accordion-header">
                         <span class="filter-title">검색</span>
                         <i class="fa-solid fa-caret-down accordion-symbol-down"></i>
                         <i class="fa-solid fa-caret-up accordion-symbol-up"></i>
@@ -199,14 +202,17 @@
                 <div class="movie-item-container" th:each="movie : ${listDto.results}">
                     <div class="movie-item-image-container">
                         <a th:href="@{/movie/details/{id} (id=${movie.id})}">
-                            <img th:src="@{https://image.tmdb.org/t/p/w220_and_h330_face/{posterPath} (posterPath=${movie.posterPath})}">
+                            <img th:if="${movie.posterPath != null && movie.posterPath != 'null' && movie.posterPath != ''}"
+                                th:src="@{https://image.tmdb.org/t/p/w220_and_h330_face/{posterPath} (posterPath=${movie.posterPath})}">
+                            <img th:unless="${movie.posterPath != null && movie.posterPath != 'null' && movie.posterPath != ''}"
+                                th:src="@{/image/no_image_default.webp}">
                         </a>                    
                     </div>
                     <div class="movie-description-container">
                         <a th:href="@{/movie/details/{id} (id=${movie.id})}">
                             <div th:text="${movie.title}" class="movie-title"></div>
                         </a>
-                        <div th:text="${movie.releaseDate}"></div>
+                        <div class="releasedatetext" th:text="${movie.releaseDate}"></div>
                     </div>                
                 </div>
                 <div th:if="${#lists.isEmpty(listDto.results)}">
@@ -226,7 +232,11 @@
             </div>
         </a>
     </div>
+	
+	<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
 
+
+    <script th:src="@{/js/footer.js}"></script>
 	
 	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

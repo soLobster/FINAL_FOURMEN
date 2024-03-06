@@ -19,9 +19,22 @@
     border: none;
     border-radius: 8px;
     padding: 8px;
-    background-color: #43aa8b;
+    background-color: #fbc500;
+    color:white;	
 }
-
+.btn-board-create:hover{
+    background-color: #102770;
+    color: #fbc500;	
+}
+.page-link{
+	background-color:#fbc500;	
+    color: #102770;
+    border:none;
+}
+.active>.page-link, .page-link.active {
+		background-color: #102770;
+    color: #fbc500;
+}
 /* 리스트 테이블 관련 */
 .table-board-list {
     width: 100%;
@@ -39,7 +52,10 @@
     margin-bottom: 1rem;
     
 }
-
+.board-title{
+	 color: #fbc500;
+	 text-align: left;
+}
 .th-board-title {
     width: 50%;
     text-align: left;

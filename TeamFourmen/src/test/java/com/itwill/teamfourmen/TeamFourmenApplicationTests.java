@@ -1,9 +1,17 @@
 package com.itwill.teamfourmen;
 
+import com.itwill.teamfourmen.domain.Review;
+import com.itwill.teamfourmen.domain.ReviewComments;
 import com.itwill.teamfourmen.dto.person.CombinedCreditsCastDto;
 import com.itwill.teamfourmen.dto.person.CombinedCreditsDto;
+import com.itwill.teamfourmen.repository.ReviewDao;
 import com.itwill.teamfourmen.service.PersonService;
 import com.itwill.teamfourmen.web.PersonController;
+import com.itwill.teamfourmen.web.ReviewController;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +27,27 @@ import java.util.List;
 @Slf4j
 class TeamFourmenApplicationTests {
 
+//	PersonService personService;
+//	PersonController personController;
+//	ReviewController reviewController;
+	
 	@Autowired
-	PersonService personService;
-	PersonController personController;
-
+	ReviewDao reviewDao;
+	
+	@Test
+	void loadReviewComment() {
+				 
+		Review targetReview = reviewDao.findByReviewId(6L);
+		
+		log.info("TARGET REVIEW = {}",targetReview);
+	
+		List<ReviewComments> cl = targetReview.getReviewComments();
+		 
+		for(ReviewComments comments : cl) {
+			log.info("댓글 아이디 = {}" ,comments.getCommentId());
+		}
+	}
+	
 //	@Test
 //	void contextLoads() {
 ////		CombinedCreditsDto allList = personService.getCombinedCredits(2416);

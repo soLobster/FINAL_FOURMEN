@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>TEAM FOURMEN</title>
+    <title>FOURMEN PEDIA</title>
         <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
     <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -209,7 +209,7 @@
     height: auto; /* 이미지의 세로 비율을 유지하면서 자동으로 크기 조정 */
     border-radius: 50%; /* 이미지를 원형으로 만듭니다 */
     position: absolute; /* 이미지의 위치를 조정하기 위해 절대 위치로 설정합니다 */
-    top: 60%; /* 부모 요소의 상단을 기준으로 이미지를 세로 중앙에 배치합니다 */
+    top: 50%; /* 부모 요소의 상단을 기준으로 이미지를 세로 중앙에 배치합니다 */
     left: 50%; /* 부모 요소의 왼쪽을 기준으로 이미지를 가로 중앙에 배치합니다 */
     transform: translate(-50%, -50%);
     }
@@ -340,7 +340,7 @@ padding-bottom: 5px;
     left: 20px;
     position: relative;
     top: -4px;
-    color:#7a7e96;
+    color:#7a7e96;;
 }
 .ulno{
     list-style: none;
@@ -393,7 +393,7 @@ padding-bottom: 5px;
            <li class="border-0 card ott_item_card" th:each="moviecombined, iterStat : ${moviecombineList.subList(0,15)}" th:object="${moviecombined}">
     <span class="text_num"  th:text="${iterStat.count}"></span>
     <a th:href="@{/movie/details/{id}(id = ${moviecombined.movielistitemdto.id} )}" class="text-decoration-none">
-    <div class="ott-item-wrapper border-0 card" style="overflow: hidden;">
+    <div class="ott-item-wrapper border-0 card" th:id="${moviecombined.key}" style="overflow: hidden;">
         <img class="ott_img"
              th:if="${moviecombined.movielistitemdto.backdropPath != null}"
              th:src="@{'https://image.tmdb.org/t/p/w1280' + ${moviecombined.movielistitemdto.backdropPath}}"
@@ -402,9 +402,9 @@ padding-bottom: 5px;
              th:unless="${moviecombined.movielistitemdto.backdropPath != null}"
              th:src="@{'/image/default-w600.png'}" width="auto" height="auto" />
             <section class="card-img-overlay">
-                <div class="videobox" th:if="${moviecombined.key != null}">
-                    <iframe style="width: 600px; height: 400px; object-fit: cover;"
-                            th:src="'https://www.youtube.com/embed/'+${moviecombined.key}+'?autoplay=1&mute=1&controls=0&loop=1&playlist='+${moviecombined.key}"></iframe>
+                <div class="videobox" th:if="${moviecombined.key != null}" >
+                    <iframe class="youtube-video" style="width: 600px; height: 400px; object-fit: cover;"
+                            src=""></iframe>
                             
                 </div>
             </section>
@@ -436,7 +436,7 @@ padding-bottom: 5px;
            <li class="border-0 card ott_item_card" th:each="combined, iterStat : ${combineList.subList(0,15)}" th:object="${combined}">
        <span class="text_num"  th:text="${iterStat.count}"></span>
     <a th:href="@{/tv/details/{id}(id = ${combined.tvShowDto.id} )}" class="text-decoration-none">
-    <div class="ott-item-wrapper border-0 card" style="overflow: hidden;">
+    <div class="ott-item-wrapper border-0 card" th:id="${combined.key}" style="overflow: hidden;">
         <img class="ott_img"
              th:if="${combined.tvShowDto.backdrop_path != null}"
              th:src="@{'https://image.tmdb.org/t/p/w1280' + ${combined.tvShowDto.backdrop_path}}"
@@ -445,10 +445,10 @@ padding-bottom: 5px;
              th:unless="${combined.tvShowDto.backdrop_path != null}"
              th:src="@{'/image/default-w600.png'}" width="auto" height="auto" />
       
-            <section class="card-img-overlay">
-                <div class="videobox" th:if="${combined.key != null}">
-                    <iframe style="width: 600px; height: 400px; object-fit: cover;"
-                            th:src="'https://www.youtube.com/embed/'+${combined.key}+'?autoplay=1&mute=1&controls=0&loop=1&playlist='+${combined.key}"></iframe>
+            <section class="card-img-overlay video-container">
+                <div class="videobox" th:if="${combined.key != null}" >
+                    <iframe class="youtube-video" style="width: 600px; height: 400px; object-fit: cover;"
+                            src=""></iframe>
                             
                 </div>
             </section>
@@ -583,11 +583,12 @@ padding-bottom: 5px;
 	<ul class="ulno">
 		<li class="page1 active">
 				<ul class="list_unit list_unit0">
-					<li class="has_rankB" th:each="posts, iterStat : ${toptvShowDto.subList(0,7)}" th:object="${posts}">
+					
+					<li class="has_rankB" th:each="reviewmain, iterStat : ${reviewmainlist.subList(0, reviewmainlist.size() lt 7 ? reviewmainlist.size() : 7)}" th:object="${reviewmain}">
 				<div class="list_rank_wrap box_rank rank1"><span class="list_rank text_en"  th:text="${iterStat.count}"></span></div>				<div class="list_main_wrap clearfix">
 			<span class="list_main">
-												<a class="title_link" href="/movietalk/91980364"  th:text="${posts.overview}"></a>
-				<a class="cmt_num updated" href="/movietalk/91980364#comment">5</a>							</span><span class="list_info"></span>
+												<a class="title_link" th:href="@{/reviews/{id}(id=${reviewmain.reviewid})}"  th:text="${reviewmain.content}"></a>
+				<a class="cmt_num updated" th:href="@{/reviews/{id}(id=${reviewmain.reviewid})}" th:text="${reviewmain.size}"></a>							</span><span class="list_info"></span>
 		</div>
 	</li>
 
@@ -609,11 +610,12 @@ padding-bottom: 5px;
 	<ul class="ulno">
 		<li class="page1 active">
 				<ul class="list_unit list_unit1">
-						<li class="has_rankB" th:each="post, iterStat : ${topmovielist.subList(0,7)}" th:object="${post}">
+						
+						<li class="has_rankB" th:each="postmain, iterStat : ${postmainlist.subList(0, postmainlist.size() lt 7 ? postmainlist.size() : 7)}" th:object="${postmain}">
 				<div class="list_rank_wrap box_rank rank1"><span class="list_rank text_en"  th:text="${iterStat.count}"></span></div>				<div class="list_main_wrap clearfix">
 			<span class="list_main">
-												<a class="title_link" href="/movietalk/91980364"  th:text="${post.overview}"></a>
-				<a class="cmt_num updated" href="/movietalk/91980364#comment">125</a>							</span><span class="list_info"></span>
+												<a class="title_link" th:href="@{'/' + ${postmain.category} + '/board/details?id=' + ${postmain.postid}}" th:text="${postmain.content}"></a>
+				<a class="cmt_num updated" th:href="@{'/' + ${postmain.category} + '/board/details?id=' + ${postmain.postid}}" th:text="${postmain.size}"></a>							</span><span class="list_info"></span>
 		</div>
 	</li>
 			</ul>
@@ -763,7 +765,32 @@ padding-bottom: 5px;
 
 	
  <footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>
-	
+
+<script type="text/javascript">
+    // Get all elements with class 'ott-wrapper'
+    var ottWrappers = document.querySelectorAll('.ott-item-wrapper');
+
+    // Add mouseover event listener to each ott-wrapper
+    ottWrappers.forEach(function(wrapper) {
+        wrapper.addEventListener('mouseover', function(event) {
+            // Get the iframe inside the current ott-wrapper
+            var iframe = wrapper.querySelector('iframe.youtube-video');
+            // Get the id of the current wrapper
+            var videoId = wrapper.id;
+            console.log(videoId);
+            // Set the src attribute of the iframe to load the YouTube video with autoplay
+            iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + videoId;
+        });
+
+        // Add mouseout event listener to each ott-wrapper
+        wrapper.addEventListener('mouseout', function(event) {
+            // Get the iframe inside the current ott-wrapper
+            var iframe = wrapper.querySelector('iframe.youtube-video');
+            // Reset the src attribute of the iframe to stop the YouTube video
+            iframe.src = '';
+        });
+    });
+</script>
 
 
 <script>
