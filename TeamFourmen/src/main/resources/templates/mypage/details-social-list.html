@@ -214,6 +214,7 @@
                 });
 
                 // 팔로잉 유저 중에서 '본인'이 팔로우 중인 유저가 아니라면 '팔로우' 버튼으로 변환
+                // 기본 버튼이 팔로우 취소 버튼입니다.
                 checkFollowUser(socialUser).then(user => {
                    if(user === false){
                        button.classList.replace('btn-danger', 'btn-primary');
@@ -222,15 +223,37 @@
                 });
 
             } else { // 팔로워 페이지 일때
-                checkFollowUser(socialUser).then(user => {
-                   if(user === true){
-                       button.classList.replace('btn-primary', 'btn-danger');
-                       if(currentPageUserEmail === checkLogInUser){
-                           button.innerText = '삭제';
-                       } else {
-                           button.innerText = '팔로우 취소';
-                       }
+                checkLogInUser().then(logInUser => {
+                   if(socialUser === logInUser) {
+                       button.classList.add('d-none');
                    }
+                });
+
+                checkFollowUser(socialUser).then(socialUser => {
+                    // 한명의 유저를 가져와서 그 사람을 팔로우 중이라면 트루를 리턴함.
+                    console.log("소셜 유저 = " + socialUser)
+                    if(socialUser === true) { // 이 사람을 팔로우 중임
+                        // 왜냐하면 기본 버튼이 팔로우임. 파란색 버튼임.
+                        if(currentPageUserEmail === checkLogInUser()) { // 현재 페이지의 유저와 로그인 유저가 같다면
+                            console.log("@@@@@@@@@@@ 1 @@@@@@@@@@@");
+                            console.log("현재 페이지 유저 " + currentPageUserEmail);
+                            console.log("로그인 유저 " + checkLogInUser());
+                            button.innerText = '삭제';
+                            button.classList.replace('btn-primary', 'btn-danger');
+                        } else { // 현재 페이지와 로그인 한 유저가 다르다면
+                            console.log("@@@@@@@@@@@  2 @@@@@@@@@@@@@");
+                            console.log("현재 페이지 유저 " + currentPageUserEmail);
+                            console.log("로그인 유저 " + checkLogInUser);
+                            button.innerText = '팔로우 취소';
+                            button.classList.replace('btn-primary', 'btn-danger');
+                        }
+                    } else { // 이 사람을 팔로우 하고 있지 않음.
+                          if(currentPageUserEmail !== checkLogInUser) {
+                              console.log("@@@@@@@@@@@@@@ 3 @@@@@@@@@@@");
+                              button.innerText = '팔로우 취소';
+                              button.classList.replace('btn-primary', 'btn-danger');
+                          }
+                    }
                 });
             }
 
@@ -251,7 +274,7 @@
 
                 console.log(response.data);
 
-                return response.data;
+                return response.data; // 이메일 스트링
 
             } catch (error) {
                 console.log('사용자 상태 확인 오류', error);
