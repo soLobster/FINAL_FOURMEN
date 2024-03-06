@@ -12,4 +12,5 @@ public interface PlaylistLikeRepository extends JpaRepository<PlaylistLike, Long
 	
 	void deleteByMemberEmailAndPlaylistPlaylistId(String email, Long playlistId);
 	
+	List<PlaylistLike> findAllByMemberMemberIdOrderByPlaylistLikeId(Long memberId);
 }

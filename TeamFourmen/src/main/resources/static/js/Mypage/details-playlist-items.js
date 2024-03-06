@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	const myPageUserMemberId = location.pathname.split('/')[3];
 	const signedInUser = document.querySelector('.div-profile-image');
 	
+	const btnSetPrivate = document.querySelector('.btn-set-playlist-private');
+	const btnSetPublic = document.querySelector('.btn-set-playlist-public');
+	
 	const playlistId = location.pathname.split('/')[5];	
 	
 	const ulPlaylistItem  = document.querySelector('.ul-playlist-items');
@@ -131,8 +134,30 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 			
 		});
+			
+	}
+	
+	
+	// 플레이리스트 private설정 버튼 이벤트리스너
+	if (btnSetPrivate) {
+		
+		btnSetPrivate.addEventListener('click', function() {
+			
+		});
+		
+	}
+	
+	// 플레이리스트 public설정 버튼 이벤트리스너
+	if (btnSetPublic) {
+		
+		btnSetPublic.addEventListener('click', function() {
+			
+		});
 		
 		
 	}
+	
+	
+	
 	
 });

@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -295,6 +296,7 @@ public class FeatureService {
 		List<Playlist> playlist = playlistDao.findAllByMemberMemberIdOrderByPlaylistId(memberId);
 		List<PlaylistDto> playlistDto = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
 		playlistDto.forEach((dto) -> {
+			// getItemsInPlaylist 메서드 사용해서 해당 플레이리스트에 있는 아이템들을 매핑
 			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
 			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
 			dto.setPlaylistLikeList(playlistLikeList);
@@ -303,6 +305,33 @@ public class FeatureService {
 		
 		
 		return playlistDto;
+	}
+	
+	public List<PlaylistDto> getLikedPlaylist(Long memberId) {
+		log.info("getLikedPlaylist(memberId={})", memberId);
+		
+		List<PlaylistLike> likedPlaylist = playlistLikeDao.findAllByMemberMemberIdOrderByPlaylistLikeId(memberId);
+		
+		// 해당 유저가 좋아요 누른 플레이리스트 항목들을 리스트로 매핑시킴
+		List<Playlist> likedPlaylistList = new ArrayList<>();
+		likedPlaylist.forEach((eachLike) -> {
+			Long eachPlaylistId = eachLike.getPlaylist().getPlaylistId();
+			Playlist eachPlaylist = playlistDao.findById(eachPlaylistId).orElse(null);
+			
+			if (eachPlaylist != null) {
+				likedPlaylistList.add(eachPlaylist);
+			}
+		});
+		
+		// 플레이리스트의 리스트를 Dto로 매핑시켜서 각 playlist에 대한 추가정보들을 매핑
+		List<PlaylistDto> likedPlaylistDtoList = likedPlaylistList.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		likedPlaylistDtoList.forEach((dto) -> {
+			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
+			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
+			dto.setPlaylistLikeList(playlistLikeList);
+		});
+		
+		return likedPlaylistDtoList;
 	}
 	
 	/**

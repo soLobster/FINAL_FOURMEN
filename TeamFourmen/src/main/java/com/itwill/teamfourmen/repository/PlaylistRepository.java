@@ -12,4 +12,5 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 	
 	List<Playlist> findAllByMemberMemberIdOrderByPlaylistId(Long memberId);
 	
+	
 }

@@ -407,8 +407,11 @@
                     <div class="div-each-card" th:each="movieInCollection : ${movieCollectionList}">
                         <a class="movie-collection-card-link" th:href="@{/movie/details/{id}(id = ${movieInCollection.id})}">
                             <div class="movie-card-image-container movie-poster-card">
-                                <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${movieInCollection.posterPath})}"
+                                <img th:if="${movieInCollection.posterPath != null && movieInCollection.posterPath != '' && movieInCollection.posterPath != 'null'}"
+                                    th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${movieInCollection.posterPath})}"
                                     alt="무비 컬랙션 포스터" class="img-movie-cast img-movie-collection-card">
+                                <img th:if="${movieInCollection.posterPath != null && movieInCollection.posterPath != '' && movieInCollection.posterPath != 'null'}"
+                                    th:src="@{/image/no_image_default.webp}">
                                 <div class="div-movie-card-overlay">
                                     <p class="movie-card-name" th:text="${movieInCollection.title}"></p>
                                 </div>
