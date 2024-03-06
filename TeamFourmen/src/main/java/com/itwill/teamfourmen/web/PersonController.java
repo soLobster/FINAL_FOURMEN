@@ -151,9 +151,29 @@ public class PersonController {
 				.filter(cast -> uniqueCastPosterPath.add(cast.getPosterPath()))
 				.limit(10) // 10개만 가져오도록 함.
 				.collect(Collectors.toList());
-		// 필터링한 Cast 를 voteCount 기준 내림차순 정렬.
-		uniqueCastListPosterEnUS.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
-		uniqueCastListPosterKoKR.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getVoteCount).reversed());
+		// 필터링한 Cast 를 Popularity 기준 내림차순 정렬.
+		uniqueCastListPosterEnUS.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getPopularity).reversed());
+		uniqueCastListPosterKoKR.sort(Comparator.comparingDouble(CombinedCreditsCastDto::getPopularity).reversed());
+
+		///// 위 코드를 수정해본 것... 근데 톰크루즈 유명 분야에서 런닝맨 나옴 ㅋㅋㅋㅋㅋㅋ //////////////////////////////////////////////
+//		Set<String> uniqueCastPosterPath = new HashSet<>();
+//		List<CombinedCreditsCastDto> uniqueCastListPosterEnUS = castListEnUS.stream()
+//				.filter(cast -> uniqueCastPosterPath.add(cast.getPosterPath())) // 포스터 경로가 고유한지 확인하며 필터링
+//				.filter(cast -> cast.getVoteCount () >= 20) // voteCount가 n 이상인 객체만 추가로 필터링
+//				.sorted(Comparator.comparingDouble(CombinedCreditsCastDto::getPopularity).reversed()) // getPopularity를 기준으로 내림차순 정렬
+//				.limit(10) // 최대 10개의 객체만 가져오도록 함
+//				.collect(Collectors.toList());
+//
+//		// 포스터 경로 중복을 체크하는 Set을 재사용하기 전에 초기화
+//		uniqueCastPosterPath.clear();
+//
+//		List<CombinedCreditsCastDto> uniqueCastListPosterKoKR = castListKoKR.stream()
+//				.filter(cast -> uniqueCastPosterPath.add(cast.getPosterPath())) // 포스터 경로가 고유한지 확인하며 필터링
+//				.filter(cast -> cast.getVoteCount() >= 20) // voteCount가 n 이상인 객체만 추가로 필터링
+//				.sorted(Comparator.comparingDouble(CombinedCreditsCastDto::getPopularity).reversed()) // getPopularity를 기준으로 내림차순 정렬
+//				.limit(10) // 최대 10개의 객체만 가져오도록 함
+//				.collect(Collectors.toList());
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		/*
 		 * 중복 요소를 허용하지 않는 컬렉션(HashSet)을 사용하여, 중복을 제거한 Crew 리스트 생성.
