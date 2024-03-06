@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             // 유저 운영자인지 아닌지 판단.
             memberRole = roles;
 
+            console.log('회원 등급 = ' + memberRole);
+
             console.log('불러온 이미지 = ' + usersaveprofile);
 
             if(type !== 'web'){
@@ -260,8 +262,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         followButton.classList.add('d-none');
     }
 
-    if(memberRole !== 'ADMIN'){
+    console.log('@@@@@@@@@@@@@@@@@@ 회원 등급 = ' + memberRole);
+    console.log('@@@@@@@@@@@@@@@@@@ 불러온 회원 등급 타입 = ' + memberRole.toString())
+
+    if(memberRole.toString() !== 'ADMIN'){
         isAdmin.classList.add('d-none');
+        const adminMenu = document.querySelector('#admin-menu');
+        adminMenu.classList.add('d-none');
     }
 
 });
