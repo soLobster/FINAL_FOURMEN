@@ -3,6 +3,7 @@ package com.itwill.teamfourmen.web;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
 import com.itwill.teamfourmen.domain.NicknameInterceptor;
+import com.itwill.teamfourmen.domain.Playlist;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.TmdbLike;
 import com.itwill.teamfourmen.dto.MemberModifyDto;
@@ -10,6 +11,8 @@ import com.itwill.teamfourmen.dto.MemberSearchDto;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.mypage.MypageDTO;
 import com.itwill.teamfourmen.dto.person.DetailsPersonDto;
+import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
+import com.itwill.teamfourmen.dto.playlist.PlaylistItemDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.service.*;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -144,7 +148,7 @@ public class MyPageController {
         return "redirect:" + redirectUrl;
     }
     
-
+    
     @GetMapping("/delete")
     public String delete(@RequestParam(name = "email") String email) {
        
@@ -232,7 +236,43 @@ public class MyPageController {
 
         return "mypage/details-review-list";
     }
-
+	    
+	/**
+	 * memberId에 해당하는 유저의 playlist 상세페이지로 가는 컨트롤러 메서드    
+	 * @param memberId
+	 * @param model
+	 * @return
+	 */
+    @GetMapping("/details/{memberId}/playlist")
+    public String getPlaylists(@PathVariable(name = "memberId") Long memberId, Model model) {
+    	log.info("getPlaylists(memberId={})", memberId);
+    	
+    	List<PlaylistDto> playlistDtoList = featureService.getPlaylist(memberId);
+    	    	
+    	model.addAttribute("playlistDtoList", playlistDtoList);
+    	
+    	return "mypage/details-playlist";
+    }
+	    
+    @GetMapping("/details/{memberId}/playlist/{playlistId}")
+    public String getPlaylistDetails(@PathVariable(name = "memberId") Long memberId, @PathVariable(name = "playlistId") Long playlistId, Model model) {
+    	log.info("getPlaylistsDetails(memberId={}, playlistId={})", memberId, playlistId);
+    	
+    	// 플레이리스트 가져옴
+    	Playlist playlist = featureService.getPlaylistByPlaylistId(playlistId);
+    	// 플레이리스트에 속한 아이템들 가져옴
+    	List<PlaylistItemDto> playlistItemDtoList = featureService.getItemsInPlaylist(playlistId);
+    	
+    	// 마이페이지 주인 가져옴
+    	Member myPageUser = memberservice.getMemberByMemberId(memberId);
+    	
+    	model.addAttribute("myPageUser", myPageUser);
+    	model.addAttribute("playlist", playlist);
+    	model.addAttribute("playlistItemDtoList", playlistItemDtoList);
+    	
+    	return "mypage/details-playlist-items";
+    }
+    
     @GetMapping("/details/{memberId}/{category}")
     public String getLikedList(Model model, @PathVariable(name = "memberId") Long memberId, @PathVariable(name = "category") String category){
         log.info("GET LIKED LIST - MEMBERID = {}, CATEGORY = {}", memberId, category);

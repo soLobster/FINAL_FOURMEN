@@ -11,15 +11,21 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.itwill.teamfourmen.dto.TmdbWorkDetailsDto;
+import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-public class MovieDetailsDto {
+public class MovieDetailsDto extends TmdbWorkDetailsDto {
 	
 	private boolean adult;
 	private String backdropPath;
@@ -53,5 +59,18 @@ public class MovieDetailsDto {
 	private int voteCount;
 	
 	private String mediaType;	// 컬랙션 리스트에 포함돼 있는 필드값
+	
+	
+	public static MovieDetailsDto fromTvShowDto(TvShowDTO tvShowDto) {
+		
+		return MovieDetailsDto.builder()
+							.backdropPath(tvShowDto.getBackdrop_path())
+							.id(tvShowDto.getId())
+							.originalLanguage(tvShowDto.getOriginal_language())
+							.posterPath(tvShowDto.getPoster_path())
+							.title(tvShowDto.getName())
+							.build();
+		
+	}
 	
 }

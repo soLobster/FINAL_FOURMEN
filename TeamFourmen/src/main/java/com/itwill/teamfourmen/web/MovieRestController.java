@@ -27,7 +27,7 @@ public class MovieRestController {
 	
 	@GetMapping("/list")
 	public ResponseEntity<MovieListDto> getAdditionalList(@ModelAttribute MovieQueryParamDto paramDto) throws JsonMappingException, JsonProcessingException {
-		log.info("getAdditionalList(param={})", paramDto);
+		// log.info("getAdditionalList(param={})", paramDto);
 		
 		MovieListDto listDto = util.getMovieList(paramDto);
 		// log.info("listDto={}", listDto);

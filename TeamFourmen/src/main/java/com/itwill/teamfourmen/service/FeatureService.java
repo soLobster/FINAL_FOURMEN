@@ -5,7 +5,11 @@ import java.util.Optional;
 
 import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
+import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
+import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
+import com.itwill.teamfourmen.dto.playlist.PlaylistItemDto;
 import com.itwill.teamfourmen.repository.PlaylistItemRepository;
+import com.itwill.teamfourmen.repository.PlaylistLikeRepository;
 import com.itwill.teamfourmen.repository.PlaylistRepository;
 import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
 import org.springframework.data.domain.Page;
@@ -30,13 +34,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class FeatureService {
-
+	
+	private final MovieApiUtil movieApiUtil;
+	private final TvShowApiUtil tvShowApiUtil;
 	private final ReviewDao reviewDao;
 	private final TmdbLikeDao tmdbLikeDao;
 	private final ReviewLikeRepository reviewLikeDao;
 	private final ReviewCommentsRepository commentDao;
 	private final PlaylistRepository playlistDao;
 	private final PlaylistItemRepository playlistItemDao;
+	private final PlaylistLikeRepository playlistLikeDao;	
 	private final MemberRepository memberDao;
 	
 	public void postReview(Review review) {
@@ -265,7 +272,7 @@ public class FeatureService {
 	
 	/**
 	 * 유저의 아이디(email)을 아규먼트로 받아, 해당 유저의 플레이리스트들을 리턴함.
-	 * 플레이리스트가 없을 경우 빈 문자열을 리턴
+	 * 플레이리스트가 없을 경우 빈 리스트를 리턴
 	 * @param email
 	 * @return
 	 */
@@ -277,13 +284,84 @@ public class FeatureService {
 		return playlist;
 	}
 	
-	public List<PlaylistItem> getItemsInPlaylist(Long playlistItem) {		
-		log.info("getItemsInPlaylist(playlistId={})", playlistItem);
+	/**
+	 * 유저의 회원번호를 아규먼트로 받아, 해당유저의 플레이리스트Dto리스트 리턴함
+	 * @param memberId
+	 * @return
+	 */
+	public List<PlaylistDto> getPlaylist(Long memberId) {
+		log.info("getPlaylist(memberId={})", memberId);
 		
-		List<PlaylistItem> playlistItemsList = playlistItemDao.findAllByPlaylistPlaylistId(playlistItem);
-		log.info("playlist={}", playlistItemsList);
+		List<Playlist> playlist = playlistDao.findAllByMemberMemberIdOrderByPlaylistId(memberId);
+		List<PlaylistDto> playlistDto = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		playlistDto.forEach((dto) -> {
+			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
+			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
+			dto.setPlaylistLikeList(playlistLikeList);
+		});
 		
-		return playlistItemsList;
+		
+		
+		return playlistDto;
+	}
+	
+	/**
+	 * playlist id에 해당하는 playlist를 반환하는 서비스메서드
+	 * @param playlistId
+	 * @return
+	 */
+	public Playlist getPlaylistByPlaylistId(Long playlistId) {
+		return playlistDao.findById(playlistId).orElse(null);
+	}
+	
+	/**
+	 * PlaylistLike타입의 객체를 아규먼트로 받아 해당 정보와 일치하는 playlist like열을 삭제
+	 * @param playlistLike
+	 */
+	@Transactional
+	public void deletePlaylistLike(PlaylistLike playlistLike) {
+		log.info("deletePlaylistLike(playlistLike={})", playlistLike);
+		
+		playlistLikeDao.deleteByMemberEmailAndPlaylistPlaylistId(playlistLike.getMember().getEmail(), playlistLike.getPlaylist().getPlaylistId());
+	}
+	
+	
+	/**
+	 * playlistId를 아규먼트로 받아 해당 playlist를 삭제하는 서비스 메서드 
+	 * @param playlistId
+	 */
+	public void deletePlaylist(Long playlistId) {
+		log.info("deletePlaylist(playlistId={})", playlistId);
+		
+		playlistDao.deleteById(playlistId);
+	}
+	
+	/**
+	 * playlistId아규먼트로 받아 playlistItem타입을 객체로 받아,
+	 * 해당 playlist에 포함된 playlist items들의 리스트를 리턴
+	 * @param playlistItem
+	 * @return
+	 */
+	public List<PlaylistItemDto> getItemsInPlaylist(Long playlistId) {		
+		log.info("getItemsInPlaylist(playlistId={})", playlistId);
+		
+		List<PlaylistItem> playlistItemsList = playlistItemDao.findAllByPlaylistPlaylistIdOrderByNthInPlaylist(playlistId);
+		List<PlaylistItemDto> playlistItemDtoList = playlistItemsList.stream().map(item -> PlaylistItemDto.fromEntity(item)).toList();
+		
+		// playlistItemDto에 poster 정보 가져옴
+		for (PlaylistItemDto playlistItemDto : playlistItemDtoList) {
+			setPoster(playlistItemDto);
+		}
+		
+		return playlistItemDtoList;
+	}
+	
+	
+	@Transactional
+	public void deletePlaylistItem(Long playlistItemId) {
+		log.info("deletePlaylistItem(playlistItemId={})", playlistItemId);
+		
+		playlistItemDao.deleteById(playlistItemId);		
 	}
 	
 	
@@ -300,16 +378,57 @@ public class FeatureService {
 				
 	}
 	
+	/**
+	 * playlistItem을 받아, 해당 playlistItem이 저장될 playlist의 몇번째 아이템인지 매핑 후 db에 저장
+	 * @param playlistItem
+	 * @return
+	 */
 	@Transactional
 	public PlaylistItem addItemToPlaylist(PlaylistItem playlistItem) {
 		log.info("playlistItem={}", playlistItem);
 		
+		Long nthInPlaylist = playlistItemDao.countByPlaylistPlaylistId(playlistItem.getPlaylist().getPlaylistId());
+		log.info("추가할 플레이리스트 내 현재 작품 수(추가전) = {}", nthInPlaylist);
+		playlistItem.setNthInPlaylist(nthInPlaylist + 1);
 		PlaylistItem savedPlaylistItem = playlistItemDao.save(playlistItem);
 		
 		return savedPlaylistItem;
 	}
 	
-
+	/**
+	 * 플레이리스트 좋아요 누르면 추가해주는 서비스 메서드
+	 * @param playlistLike
+	 * @return
+	 */
+	@Transactional
+	public PlaylistLike addPlaylistLike(PlaylistLike playlistLike) {
+		log.info("addPlaylistLike(playlistLike={})", playlistLike);
+		
+		PlaylistLike savedPlaylistLike = playlistLikeDao.save(playlistLike);
+		log.info("저장된 playlistLike={}", savedPlaylistLike);
+		
+		return savedPlaylistLike;
+	}
+	
+	
+	/**
+	 * 유저가 바꾼 순서를 업데이트하는 메서드
+	 * @param playlistItemList
+	 */
+	@Transactional
+	public void reorderPlaylist(List<PlaylistItem> playlistItemList) {
+		
+		for (PlaylistItem playlistItem : playlistItemList) {
+			PlaylistItem retrievedPlaylistItem = playlistItemDao.findById(playlistItem.getPlaylistItemId()).orElse(null);
+			
+			retrievedPlaylistItem.setNthInPlaylist(playlistItem.getNthInPlaylist());
+			
+			playlistItemDao.save(retrievedPlaylistItem);
+		}
+		
+	}
+	
+	
 	public Page<ReviewLike> getUserWhoLikedReview(Long reviewId, int page){
 
 		Review review = Review.builder().reviewId(reviewId).build();
@@ -319,6 +438,37 @@ public class FeatureService {
 		Page<ReviewLike> likedUser = reviewLikeDao.findByReview(review, pageable);
 
 		return likedUser;
+	}
+	
+	
+	
+	// 보조 메서드
+	/**
+	 * PlaylistItemDto를 아규먼트로 받아, 해당 해당 작품에 대한 디테일 정보 가져옴
+	 * @return
+	 */
+	private PlaylistItemDto setPoster(PlaylistItemDto playlistItemDto) {
+		log.info("setPoster(playlistItemDto={})", playlistItemDto);
+		
+		switch (playlistItemDto.getCategory()) {
+		
+		case "movie":
+			playlistItemDto.setWorkDetails(movieApiUtil.getMovieDetails(playlistItemDto.getTmdbId()));
+			break;
+			
+		case "tv":
+			// 변수명이 달라서 그냥 MovieDetailsDto로 타입 통일시킴.
+			playlistItemDto.setWorkDetails(MovieDetailsDto.fromTvShowDto(tvShowApiUtil.getTvShowDetails(playlistItemDto.getTmdbId())));
+			break;
+			
+			
+		default:
+			log.info("poster매핑실패");	
+		}
+		
+		log.info("매핑 후 playlistItemDto={}", playlistItemDto);
+		
+		return playlistItemDto;
 	}
 
 }

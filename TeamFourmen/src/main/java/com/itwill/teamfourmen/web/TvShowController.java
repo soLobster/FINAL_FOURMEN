@@ -50,7 +50,7 @@ public class TvShowController {
 	private final FeatureService featureService;
 	private final CommentService commentService;
 	private final BoardService boardService;
-	
+	private final NicknameInterceptor nicknameIntercepter;
 	private String category = "tv";
 	
 
@@ -157,9 +157,10 @@ public class TvShowController {
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id) {
 		log.info("Get Tv Show Details = {}", id);
 //		log.info("API KEY = {}", API_KEY);
-
+		List<Playlist> userPlaylist = null;
+		
 		RestTemplate restTemplate = new RestTemplate();
-
+		
 		int seriesId = id;
 
 		String apiUri = "https://api.themoviedb.org/3/tv";
@@ -322,16 +323,26 @@ public class TvShowController {
 			log.info("TV SHOW TRAILER IS EMPTY");
 			model.addAttribute("trailer", null);
 		}
-
-		// TV SHOW 좋아요 가져오기
-
+		
+		// 로그인한 유저의 플레이리스트 가져오기
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String email = authentication.getName();
+				
+		if (!email.equals("anonymousUser")) {
+			userPlaylist = featureService.getPlaylist(email);
+			log.info("userPlaylist={}", userPlaylist);
+		}
+		
+		model.addAttribute("userPlaylist", userPlaylist);
+		
+		// TV SHOW 좋아요 가져오기
+
+
 		Member signedInUser = Member.builder().email(email).build();
 		TmdbLike tmdbLike = featureService.didLikeTmdb(signedInUser, "tv", id);
 
 		model.addAttribute("tmdbLike", tmdbLike);	// 좋아요 눌렀는지 확인하기 위해
-
+				
 		// Tv Show 별 리뷰 가져오기
 		List<Review> tvShowReviewList = featureService.getReviews("tv", id);
 
@@ -353,7 +364,7 @@ public class TvShowController {
 
 			reviewComment.put(reviewId, numOfComment);
 			reviewLiked.put(reviewId,numOfLiked);
-		}
+		}				
 
 		model.addAttribute("numOfReviewLiked", reviewLiked);
 		model.addAttribute("numOfReviewComment", reviewComment);
