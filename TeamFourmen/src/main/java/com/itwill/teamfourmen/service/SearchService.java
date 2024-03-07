@@ -1,9 +1,12 @@
 package com.itwill.teamfourmen.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.itwill.teamfourmen.dto.search.*;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import com.itwill.teamfourmen.dto.search.SearchResult;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -21,55 +26,12 @@ public class SearchService {
 
     @Value("${tmdb.api.key}")
     private String apiKey;
-    private static final String SEARCH = "search";
     private static final String apiUrl = "https://api.themoviedb.org/3";
     private final WebClient webClient;
 
     @Autowired
     public SearchService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl(apiUrl).build();
-    }
-
-    // 영화 검색
-    public Mono<String> searchMovies(String query) {
-        return search("/search/movie", query);
-    }
-
-    // TV 프로그램 검색
-    public Mono<String> searchTvShows(String query) {
-        return search("/search/tv", query);
-    }
-
-    // 멀티 카테고리 검색 (영화, TV 프로그램, 인물)
-    public Mono<String> searchMulti(String query) {
-        return search("/search/multi", query);
-    }
-
-    // 컬렉션 검색
-    public Mono<String> searchCollections(String query) {
-        return search("/search/collections", query);
-    }
-
-    // 인물 검색
-    public Mono<String> searchPeople(String query) {
-        return search("/search/person", query);
-    }
-
-    // 범용 검색 메소드
-    private Mono<String> search(String path, String query) {
-        return this.webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(path)
-                        .queryParam("api_key", apiKey)
-                        .queryParam("query", query)
-                        .queryParam("include_adult", "false")
-                        .queryParam("language", "ko-KR")
-                        .queryParam("page", "1")
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnError(error -> log.error("Error fetching data from TMDB: ", error))
-                .doOnSuccess(response -> log.info("Successfully fetched data for path " + path + " and query " + query));
     }
 
     // 결국 DTO 사용... ㅠㅠ
@@ -81,31 +43,37 @@ public class SearchService {
      * 파라미터는 검색어 String query -> 유저가 검색창에 입력한 값 / int page
      * @return JSON 데이터를 매핑한 searchMultiList 리스트 객체.
      */
-    public List<SearchMultiDto> getSearchMultiList(String query, int page) {
-
-        // API 요청 주소 생성
-        String uri = String.format(apiUrl + "/search/multi" + "?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d", query, page);
-
-        SearchMultiDto searchMultiDto;
-        JsonNode node = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
-
-        JsonNode castNode = node.get("cast");
-
-        ObjectMapper mapper = new ObjectMapper();
+    public SearchResult<MediaItem> getSearchMultiList(String query, int page) {
+        String uri = String.format(apiUrl + "/search/multi?api_key=%s&query=%s&language=ko-KR&include_adult=false&page=%d",
+                apiKey, query, page);
 
         try {
-            SearchMultiDto[] castArray = mapper.treeToValue(castNode, SearchMultiDto[].class);
-            List<SearchMultiDto> searchMultiList = Arrays.asList(castArray);
-            return searchMultiList;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
+            JsonNode node = webClient.get()
+                    .uri(uri)
+                    .retrieve()
+                    .bodyToMono(JsonNode.class)
+                    .block();
 
+            JsonNode resultsNode = node.get("results"); // "results" 키에 접근
+
+            if (resultsNode != null) {
+                ObjectMapper mapper = new ObjectMapper()
+                        .registerModule(new JavaTimeModule()) // Java 8 날짜/시간 모듈 등록
+                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 알려지지 않은 속성이 있어도 실패하지 않도록 설정
+
+                // 역직렬화 대상 타입을 MediaItem[].class로 변경
+                MediaItem[] mediaItems = mapper.treeToValue(resultsNode, MediaItem[].class);
+                SearchResult<MediaItem> searchMultiResult = new SearchResult<>();
+                searchMultiResult.setResults(Arrays.asList(mediaItems));
+                return searchMultiResult;
+
+            }
+        } catch (JsonProcessingException e) {
+            log.error("JSON processing exception: ", e);
+        } catch (Exception e) {
+            log.error("Error retrieving search results: ", e);
+        }
+        return null; // 예외 발생시 null 반환
     }
 
     /**
@@ -117,30 +85,36 @@ public class SearchService {
      * @return JSON 데이터를 매핑한 searchPeopleList 리스트 객체.
      */
     public List<SearchPeopleDto> getSearchPeopleList(String query, int page) {
-
-        // API 요청 주소 생성
-        String uri = String.format(apiUrl + "/search/person" + "?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d", query, page);
-
-        SearchPeopleDto searchPeopleDto;
-        JsonNode node = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
-
-        JsonNode castNode = node.get("cast");
-
-        ObjectMapper mapper = new ObjectMapper();
+        // API 요청 URL 생성
+        String uri = String.format(apiUrl + "/search/person?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d",
+                apiKey, query, page);
 
         try {
-            SearchPeopleDto[] castArray = mapper.treeToValue(castNode, SearchPeopleDto[].class);
-            List<SearchPeopleDto> searchPeopleList = Arrays.asList(castArray);
-            return searchPeopleList;
+            JsonNode node = webClient.get()
+                    .uri(uri)
+                    .retrieve()
+                    .bodyToMono(JsonNode.class)
+                    .block();
+
+            if (node != null) {
+                JsonNode resultsNode = node.get("results"); // API 응답에서 "results" 노드에 접근
+                if (resultsNode != null) {
+                    ObjectMapper mapper = new ObjectMapper()
+                            .registerModule(new JavaTimeModule()) // Java 8 날짜/시간 모듈 등록
+                            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 알려지지 않은 속성이 있어도 실패하지 않도록 설정
+
+                    // resultsNode를 SearchPeopleDto 배열로 변환하고 리스트로 변환하여 반환
+                    List<SearchPeopleDto> searchPeopleList = Arrays.asList(mapper.treeToValue(resultsNode, SearchPeopleDto[].class));
+                    return searchPeopleList;
+                }
+            }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            log.error("JSON processing exception: ", e);
+        } catch (Exception e) {
+            log.error("Error retrieving search results: ", e);
         }
 
+        return Collections.emptyList(); // 예외 발생 시 빈 리스트 반환
     }
 
     /**
@@ -154,28 +128,35 @@ public class SearchService {
     public List<SearchMoviesDto> getSearchMoviesList(String query, int page) {
 
         // API 요청 주소 생성
-        String uri = String.format(apiUrl + "/search/movie" + "?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d", query, page);
-
-        SearchMoviesDto searchMoviesDto;
-        JsonNode node = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
-
-        JsonNode castNode = node.get("cast");
-
-        ObjectMapper mapper = new ObjectMapper();
+        String uri = String.format(apiUrl + "/search/movie?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d",
+                apiKey, query, page);
 
         try {
-            SearchMoviesDto[] castArray = mapper.treeToValue(castNode, SearchMoviesDto[].class);
-            List<SearchMoviesDto> searchMoviesList = Arrays.asList(castArray);
-            return searchMoviesList;
+            JsonNode node = webClient.get()
+                    .uri(uri)
+                    .retrieve()
+                    .bodyToMono(JsonNode.class)
+                    .block();
+
+            if (node != null) {
+                JsonNode resultsNode = node.get("results"); // API 응답에서 "results" 노드에 접근
+                if (resultsNode != null) {
+                    ObjectMapper mapper = new ObjectMapper()
+                            .registerModule(new JavaTimeModule()) // Java 8 날짜/시간 모듈 등록
+                            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 알려지지 않은 속성이 있어도 실패하지 않도록 설정
+
+                    // resultsNode를 SearchMoviesDto 배열로 변환하고 리스트로 변환하여 반환
+                    List<SearchMoviesDto> searchMoviesList = Arrays.asList(mapper.treeToValue(resultsNode, SearchMoviesDto[].class));
+                    return searchMoviesList;
+                }
+            }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            log.error("JSON processing exception: ", e);
+        } catch (Exception e) {
+            log.error("Error retrieving search results: ", e);
         }
 
+        return Collections.emptyList(); // 예외 발생 시 빈 리스트 반환
     }
 
     /**
@@ -186,31 +167,50 @@ public class SearchService {
      * 파라미터는 검색어 String query -> 유저가 검색창에 입력한 값 / int page
      * @return JSON 데이터를 매핑한 searchTvShowsList 리스트 객체.
      */
-    public List<SearchTvShowsDto> getSearchTvsList(String query, int page) {
+    @SneakyThrows
+    public SearchResult<SearchTvShowsDto> getSearchTvsList(String query, int page) {
 
         // API 요청 주소 생성
-        String uri = String.format(apiUrl + "/search/tv" + "?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d", query, page);
+        String uri = String.format(apiUrl + "/search/tv?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d",
+                apiKey, query, page);
 
-        SearchTvShowsDto searchTvShowsDto;
-        JsonNode node = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
-
-        JsonNode castNode = node.get("cast");
-
-        ObjectMapper mapper = new ObjectMapper();
+        SearchResult<SearchTvShowsDto> searchResult = new SearchResult<>();
 
         try {
-            SearchTvShowsDto[] castArray = mapper.treeToValue(castNode, SearchTvShowsDto[].class);
-            List<SearchTvShowsDto> searchTvShowsList = Arrays.asList(castArray);
-            return searchTvShowsList;
+            JsonNode node = webClient.get()
+                    .uri(uri)
+                    .retrieve()
+                    .bodyToMono(JsonNode.class)
+                    .block();
+
+            if (node != null) {
+//                JsonNode resultsNode = node.get("results"); // API 응답에서 "results" 노드에 접근
+//                if (resultsNode != null) {
+                    ObjectMapper mapper = new ObjectMapper()
+                            .registerModule(new JavaTimeModule()) // Java 8 날짜/시간 모듈 등록
+                            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 알려지지 않은 속성이 있어도 실패하지 않도록 설정
+
+//                    // resultsNode를 SearchTvShowsDto 배열로 변환하고 리스트로 변환하여 반환
+//                    List<SearchTvShowsDto> searchTvShowsList = Arrays.asList(mapper.treeToValue(resultsNode, SearchTvShowsDto[].class));
+//                    return searchTvShowsList;
+
+                // 'results' 배열을 SearchTvShowsDto 리스트로 변환
+                List<SearchTvShowsDto> results = Arrays.asList(mapper.treeToValue(node.get("results"), SearchTvShowsDto[].class));
+
+                // 'page', 'total_results', 'total_pages' 값을 포함하는 SearchResult 객체 생성
+                searchResult.setPage(node.get("page").asInt());
+                searchResult.setTotalResults(node.get("total_results").asInt());
+                searchResult.setTotalPages(node.get("total_pages").asInt());
+                searchResult.setResults(results);
+
+                }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            log.error("JSON processing exception: ", e);
+        } catch (Exception e) {
+            log.error("Error retrieving search results: ", e);
         }
 
+        return null;
     }
 
 }

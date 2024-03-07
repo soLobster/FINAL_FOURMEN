@@ -2,33 +2,24 @@ package com.itwill.teamfourmen.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SearchMultiDto {
+public class SearchMultiDto extends MediaItem {
 
-    @JsonProperty("media_type")
-    private String mediaType; // "movie", "tv", "person" 중 하나.
-    @JsonProperty("backdrop_path")
-    private String backdropPath; // movie, tv의 뒷배경
-    @JsonProperty("poster_path")
-    private String posterPath; // movie, tv의 포스터 이미지
-    @JsonProperty("first_air_date")
-    private String firstAirDate; // tv의 첫 번째 방영일
-    @JsonProperty("name")
-    private String tvName; // tv의 제목
-    @JsonProperty("title")
-    private String movieTitle; // movie 의 제목
-    @JsonProperty("release_date")
-    private String releaseDate; // movie 의 개봉일(출시일)
-    @JsonProperty("name")
-    private String personName; // 인물의 이름
-    @JsonProperty("profile_path")
-    private String profilePath; // 인물의 프로필 이미지
-    @JsonProperty("known_for")
-    private String knownFor; // 인물의 대표작 3개
+    @JsonProperty("page")
+    private int page;
+
+    @JsonProperty("results")
+    private List<MediaItem> multiResults;
+
     @JsonProperty("total_pages")
-    private String totalPages; // 총 검색 결과 페이지
+    private int totalPages; // 총 검색 결과 페이지
+
     @JsonProperty("total_results")
-    private String totalResults; // 총 검색 결과 수
+    private int totalResults; // 총 검색 결과 수
 
 }

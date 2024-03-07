@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
 
 @Data
@@ -31,10 +34,17 @@ public class KnownForDto {
     @JsonProperty("genre_ids")
     private List<Integer> genreIds;
     private double popularity;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("first_air_date")
     private LocalDate firstAirDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("release_date")
     private LocalDate releaseDate;
+
     @JsonProperty("video")
     private boolean video;
     @JsonProperty("vote_average")
