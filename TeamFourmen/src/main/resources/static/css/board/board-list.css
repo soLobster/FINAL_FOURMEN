@@ -1,5 +1,7 @@
 @charset "UTF-8";
-
+.active>.page-link, .page-link.active {
+    z-index: 1;
+}
 .board-main-container {
     width: 85%;
     margin: 0 auto;

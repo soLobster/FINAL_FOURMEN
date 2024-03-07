@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.itwill.teamfourmen.config.S3Config;
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
 import com.itwill.teamfourmen.domain.MemberRole;
@@ -40,6 +42,10 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberDao;
     private final MemberCreateDto MemberCreateDto;
     private final MemberCreateNaverDto MemberCreatenaverDto;
+    private final S3Config s3Config;
+    
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
     
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -187,23 +193,34 @@ public class MemberService implements UserDetailsService {
         log.info("update(dto={})", dto);
         List<MultipartFile> files = dto.getUpload_photo();
 		log.debug("files={}", files);
+		log.info("sDirectory={}", sDirectory);
+		log.info("버킷 이름={}", bucketName);
+		
 		for(MultipartFile file : files) {
-		if(!file.isEmpty()) {
-		String originalFileName = file.getOriginalFilename();
-		
-		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-		
-		String savedFileName = UUID.randomUUID().toString() + extension;
-		
-		String absolutePath = sDirectory + File.separator + savedFileName;
-		log.info("absolutPath={}",absolutePath);
-		file.transferTo(new File(absolutePath));
-		
-		dto.setUsersaveprofile(savedFileName);
-		
-		
-		
-		}
+			if(!file.isEmpty()) {
+				String originalFileName = file.getOriginalFilename();
+				
+				String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+				
+				String savedFileName = UUID.randomUUID().toString() + extension;
+				
+				String absolutePath = sDirectory + savedFileName;
+				
+				log.info("absolutPath={}",absolutePath);
+
+				file.transferTo(new File(absolutePath));
+				
+				
+				File fileToSave = new File(absolutePath);
+				
+				s3Config.amazonS3Client().putObject(bucketName, "images/profile/" + savedFileName, fileToSave);
+				String s3Url = s3Config.amazonS3Client().getUrl(bucketName, "images/profile/" + savedFileName).toString();
+				log.info("s3Url={}", s3Url);
+				
+				fileToSave.delete();
+			dto.setUsersaveprofile(s3Url);
+			
+			}
 		}
 		 Member entity = memberDao.findByEmail(dto.getEmail()).orElseThrow();
 	        //-> DB에서 저장되어 있는 업데이트 전의 엔터티
@@ -212,7 +229,7 @@ public class MemberService implements UserDetailsService {
 		    }
 		  if (dto.getUsersaveprofile() == null) {
 			  entity.updatewithout(dto.getEmail(), dto.getName() ,dto.getNickname(), dto.getPhone());
-		  }
+	  }
 	       
 	        //-> DB에서 검색한 엔터티의 속성(필드)들의 값을 변경.
 	        //-> PostRepository.save 메서드를 호출하지 않음.
