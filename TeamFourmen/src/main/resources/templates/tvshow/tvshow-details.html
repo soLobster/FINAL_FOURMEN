@@ -153,6 +153,92 @@
 			/* background: aquamarine; */
 		}
 
+
+
+          /* 플레이리스트 관련 모달 */
+        .playlist-modal {
+            max-height: 500px;
+            overflow-y: auto;
+        }    
+            
+        .div-movie-add-playlist {
+            margin-bottom: 1rem;
+        }
+        
+        
+                /* 각각의 플레이리스트에 대해 */
+        .div-each-playlist-container {
+            display: flex;
+            border-bottom: 0.1px #fff solid;
+        }       
+        
+        .div-playlist-image-container {
+            width: 50px;
+            
+            overflow: hidden;
+            position: relative;
+            margin-right: 1rem;
+        }
+        
+        .div-playlist-image-container div {
+            width: 100%;
+            height: 0;
+            
+            padding-top: 150%;    
+        }
+        
+        .img-each-playlist-poster {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            min-width: 100%;
+            min-height: 100%;
+            
+            object-fit: cover;
+        }
+        
+        .div-each-playlist-container:last-child {
+            border-bottom: none;
+        }
+        
+        .div-playlist-name-selection-container{
+            flex-grow: 1;
+        }
+        
+        .label-each-playlist {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 16px;
+            cursor: pointer;
+        }
+        
+        .label-each-playlist:hover {
+            background-color: #03045e;
+        }
+        
+        .checkbox-each-playlist:checked + .label-each-playlist {
+            background-color: #023e8a;
+        }
+                
+        .btn-add-new-playlist {
+            width: 100%;
+            border: none;
+            background-color: #3a86ff;
+            font: 1.1rem;
+            color: #fff;
+            padding: 4px 0;
+            font-weight: 700;
+        }
+        
+        .div-playlist-private {
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+
+
 		.btn-add-like {
 			background-color:  transparent;
 			border: none;
@@ -1125,8 +1211,20 @@
                 </div>
                 <div class="div-playlist-container">
                     <div class="div-each-playlist-container" th:if="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}" th:each="eachPlaylist : ${userPlaylist}">
-                        <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
-                        <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                        <div class="div-playlist-image-container">
+                            <div>
+                                <img class="img-each-playlist-poster" 
+                                    th:if="${eachPlaylist.playlistItemDtoList != null && !#lists.isEmpty(eachPlaylist.playlistItemDtoList)}"
+                                    th:src="@{https://image.tmdb.org/t/p/w92/{posterPath} (posterPath = ${eachPlaylist.playlistItemDtoList[0].workDetails.posterPath})}">
+                                <img class="img-each-playlist-poster"
+                                    th:unless="${eachPlaylist.playlistItemDtoList != null && !#lists.isEmpty(eachPlaylist.playlistItemDtoList)}"
+                                    th:src="@{/image/playlist_default.svg}">
+                            </div>
+                        </div>
+                        <div class="div-playlist-name-selection-container">
+                            <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
+                            <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                        </div>
                     </div>
                     <div th:unless="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}">
                         플레이리스트가 존재하지 않습니다.
@@ -1151,7 +1249,7 @@
             </div>
             <div class="modal-body">
                 <h5>새 플레이리스트 이름</h5>
-                <input type="text" class="form-control input-playlist-name">
+                <input type="text" class="form-control input-playlist-name" maxlength="30" required>
                 <div class="div-playlist-private">
                     <label for="playlist-private">나만 보기</label>
                     <input id="playlist-private" class="input-is-private" type="checkbox" name="isPrivate" value="Y">

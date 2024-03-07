@@ -277,12 +277,23 @@ public class FeatureService {
 	 * @param email
 	 * @return
 	 */
-	public List<Playlist> getPlaylist(String email) {
+	public List<PlaylistDto> getPlaylist(String email) {
 		log.info("getPlaylist(email={})", email);
 		
-		List<Playlist> playlist = playlistDao.findAllByMemberEmail(email);
+		List<Playlist> playlist = playlistDao.findAllByMemberEmailOrderByPlaylistId(email);
 		
-		return playlist;
+		List<PlaylistDto> playlistDtoList = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		
+		playlistDtoList.forEach((dto) -> {
+			// getItemsInPlaylist 메서드 사용해서 해당 플레이리스트에 있는 아이템들을 매핑
+			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
+			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
+			dto.setPlaylistLikeList(playlistLikeList);
+		});
+		
+		log.info("playlistDtoList = {}", playlistDtoList);
+		
+		return playlistDtoList;
 	}
 	
 	/**
@@ -294,19 +305,24 @@ public class FeatureService {
 		log.info("getPlaylist(memberId={})", memberId);
 		
 		List<Playlist> playlist = playlistDao.findAllByMemberMemberIdOrderByPlaylistId(memberId);
-		List<PlaylistDto> playlistDto = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
-		playlistDto.forEach((dto) -> {
+		List<PlaylistDto> playlistDtoList = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		playlistDtoList.forEach((dto) -> {
 			// getItemsInPlaylist 메서드 사용해서 해당 플레이리스트에 있는 아이템들을 매핑
 			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
 			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
 			dto.setPlaylistLikeList(playlistLikeList);
 		});
 		
+		log.info("playlistDtoList = {}", playlistDtoList);
 		
-		
-		return playlistDto;
+		return playlistDtoList;
 	}
 	
+	/**
+	 * memberId에 해당하는 마이페이지유저가 좋아요를 누른 플레이리스트의 리스트를 가져옴
+	 * @param memberId
+	 * @return
+	 */
 	public List<PlaylistDto> getLikedPlaylist(Long memberId) {
 		log.info("getLikedPlaylist(memberId={})", memberId);
 		
@@ -341,6 +357,23 @@ public class FeatureService {
 	 */
 	public Playlist getPlaylistByPlaylistId(Long playlistId) {
 		return playlistDao.findById(playlistId).orElse(null);
+	}
+	
+	/**
+	 * playlistId를 아규먼트로 받아 privacy를 업데이트시켜주는 서비스 메서드.
+	 * isPrivate는 playlistId에 해당하는 playlist의 isPrivate칼럼에 업데이트 될 값임
+	 * 예를 들어, 아규먼트 isPrivate이 'Y'일 경우 isPrivate는 'Y'로 업데이트되고, 'N'일 경우 'N'으로 업데이트 됨.
+	 * @param playlistId
+	 * @param isPrivate
+	 */
+	@Transactional
+	public void setPlaylistPrivacy(Long playlistId, String isPrivate) {
+		log.info("setPlaylistPrivacy(playlistId={}, isPrivate={})", playlistId, isPrivate);
+		
+		Playlist playlistToUpdate = playlistDao.findById(playlistId).orElse(null);
+		
+		playlistToUpdate.setIsPrivate(isPrivate);
+		
 	}
 	
 	/**
@@ -385,7 +418,10 @@ public class FeatureService {
 		return playlistItemDtoList;
 	}
 	
-	
+	/**
+	 * 특정 플레이리스트 아이템을 삭제하는 서비스 메서드
+	 * @param playlistItemId
+	 */
 	@Transactional
 	public void deletePlaylistItem(Long playlistItemId) {
 		log.info("deletePlaylistItem(playlistItemId={})", playlistItemId);
@@ -458,6 +494,7 @@ public class FeatureService {
 	}
 	
 	
+	
 	public Page<ReviewLike> getUserWhoLikedReview(Long reviewId, int page){
 
 		Review review = Review.builder().reviewId(reviewId).build();
@@ -495,7 +532,7 @@ public class FeatureService {
 			log.info("poster매핑실패");	
 		}
 		
-		log.info("매핑 후 playlistItemDto={}", playlistItemDto);
+		// log.info("매핑 후 playlistItemDto={}", playlistItemDto);
 		
 		return playlistItemDto;
 	}

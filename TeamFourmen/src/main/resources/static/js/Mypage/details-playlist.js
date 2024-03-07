@@ -8,15 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	const btnPlaylistLike = document.querySelectorAll('.btn-playlist-like');
 	const btnPlaylistDelete = document.querySelectorAll('.btn-playlist-delete');
-		
-	
-	
-	
-	if (!signedInUser || signedInUser.getAttribute('memberId') != myPageUserMemberId) {	// 로그인하지 않았거나 로그인한 유저의 mypage가 아닌경우 삭게버튼 숨김
-		btnPlaylistDelete.forEach((btnDelete) => btnDelete.classList.add('d-none'));
-	} else {	// 로그인한 유저의 마이페이지일 경우 좋아요버튼 숨김
-		btnPlaylistLike.forEach((btnLike) => btnLike.classList.add('d-none'));
-	}
 	
 	
 	// 플레이리스트 좋아요 axios함수
@@ -134,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				} else {					
 					await addLikePlaylist(playlistId);					
 				}
-
 				
 			});
 			

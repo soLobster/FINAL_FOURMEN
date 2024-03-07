@@ -18,6 +18,7 @@ import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.service.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -301,6 +302,27 @@ public class MyPageController {
     	// 마이페이지 주인 가져옴
     	Member myPageUser = memberservice.getMemberByMemberId(memberId);
     	
+    	// 로그인한 사람 가져옴 없을 경우 null임
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = null;
+    	
+		if (!email.equals("anonymousUser")) {
+			signedInUser = memberservice.getmemberdetail(email);			
+		}
+		
+		
+		if(playlist.getIsPrivate().equals("Y")) {	//만약 private 플레이리스트일 경우
+			// private 플레이리스트이고, 로그인을 안했거나, 로그인한 유저가 my page의 주인이 아니라면
+			if (signedInUser == null || (signedInUser != null && !signedInUser.getEmail().equals(myPageUser.getEmail()))) {
+				
+				model.addAttribute("message", "비밀 플레이리스트입니다. 마이페이지 주인만 접근 가능 합니다.");
+				return "alert";
+			}
+		}
+			
+		
+		
     	model.addAttribute("myPageUser", myPageUser);
     	model.addAttribute("playlist", playlist);
     	model.addAttribute("playlistItemDtoList", playlistItemDtoList);

@@ -129,8 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					.catch((error) => {
 						console.log(`에러 발생!!! ${error}`);
 					})
-				
-				
+								
 			});
 			
 		});
@@ -143,7 +142,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		btnSetPrivate.addEventListener('click', function() {
 			
-		});
+			const data = {
+				playlistId: playlistId,
+				isPrivate: 'Y'
+			};
+			
+			axios.post('/api/mypage/playlist/set/privacy', data)
+				.then(() => {
+					alert('플레이리스트를 전체 공개로 설정하였습니다.');
+					location.reload();
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`);
+				})
+		})
 		
 	}
 	
@@ -151,6 +163,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (btnSetPublic) {
 		
 		btnSetPublic.addEventListener('click', function() {
+
+			const data = {
+				playlistId: playlistId,
+				isPrivate: 'N'
+			};
+			
+			axios.post('/api/mypage/playlist/set/privacy', data)
+				.then(() => {
+					alert('플레이리스트를 나만보기로 설정하였습니다.');
+					location.reload();
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`);
+				})
+				
 			
 		});
 		

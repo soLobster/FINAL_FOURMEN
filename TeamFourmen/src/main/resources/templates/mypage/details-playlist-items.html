@@ -58,7 +58,8 @@
                             </div>
                         </div>
                         <div class="each-playlist-item-btn-delete-container">
-                            <button class="btn btn-danger btn-delete-playlist-item" th:if="${member != null && member.email == myPageUser.email}">삭제</button>
+                            <button class="btn btn-danger btn-delete-playlist-item"
+                                th:if="${member != null && playlist.member.email == member.email}">삭제</button>
                         </div>
                     </div>
                 </div>

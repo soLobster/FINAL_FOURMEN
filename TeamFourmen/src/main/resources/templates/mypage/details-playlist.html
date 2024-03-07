@@ -54,11 +54,13 @@
                         <a class="a-playlist-name" th:href="@{/mypage/details/{memberId}/playlist/{playlistId} (memberId=${eachPlaylist.member.memberId}, playlistId=${eachPlaylist.playlistId})}" th:text="${eachPlaylist.playlistName}"></a>
                     </div>
                     <div class="div-playlist-btn-container">
-                        <button class="btn-playlist btn-playlist-like" th:playlistId="${eachPlaylist.playlistId}"
+                        <button th:unless="${member != null && eachPlaylist.member.memberId == member.memberId}" 
+                             class="btn-playlist btn-playlist-like" th:playlistId="${eachPlaylist.playlistId}"
                              th:classappend="${member != null && #lists.contains(eachPlaylist.playlistLikeList.![member.email], member.email)} ? 'playlist-already-liked'">
                             <i class="fa-solid fa-thumbs-up"></i>
                         </button>                        
-                        <button class="btn-playlist btn-playlist-delete" th:playlistId="${eachPlaylist.playlistId}">
+                        <button th:if="${member != null && eachPlaylist.member.memberId == member.memberId}"
+                            class="btn-playlist btn-playlist-delete" th:playlistId="${eachPlaylist.playlistId}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
