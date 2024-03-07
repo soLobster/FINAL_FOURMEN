@@ -227,9 +227,9 @@ public class FeatureService {
 		
 		List<Review> myAllReview = reviewDao.findAllByMemberMemberId(memberId);
 		
-		for(Review review : myAllReview) {
-			log.info("My review = {}", review);
-		}
+//		for(Review review : myAllReview) {
+//			log.info("My review = {}", review);
+//		}
 		
 		return myAllReview;
 	}
@@ -469,6 +469,12 @@ public class FeatureService {
 		log.info("매핑 후 playlistItemDto={}", playlistItemDto);
 		
 		return playlistItemDto;
+	}
+
+	public List<Review> recentReview(Long memberId){
+		List<Review> recentReview = reviewDao.findByMemberMemberIdOrderByCreatedDateDesc(memberId);
+
+		return recentReview;
 	}
 
 }

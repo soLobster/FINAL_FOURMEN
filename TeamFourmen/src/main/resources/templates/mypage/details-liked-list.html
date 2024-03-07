@@ -27,7 +27,7 @@
             display: inline-block;
             overflow: hidden;
             margin-right: 15px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .liked_img {
@@ -73,7 +73,7 @@
 <div class="mypage-details-liked"  style="margin-bottom:50px;">
     <section class = "Liked-item-section">
 
-        <h3 class = "category-like-list"></h3>
+        <h3 class = "category-like-list" th:text="${category.toUpperCase() + ' Liked Page'}"></h3>
 
         <ul>
 

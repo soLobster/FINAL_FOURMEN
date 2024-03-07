@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 	let userEmail = '';
 
+    let memberRole = '';
+
     let loggedInUser = '';
     
     async function checkCurrentUser() {
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const browsersTitle = document.querySelector('title');
     const editProfile = document.querySelector('.edit-profile');
+    const isAdmin = document.querySelector('.admin');
     const followButton = document.querySelector('.follow-button');
 	
     let userProfileImg = document.querySelector('.mypage-details-profile-img img');
@@ -60,15 +63,21 @@ document.addEventListener('DOMContentLoaded', async function () {
                 name,
                 nickname,
                 usersaveprofile,
-                type
+                type,
+                roles
             } = response.data;
             console.log('불러온 유저 정보');
-            console.log('MEMBER ID = ' + memberId +'EMAIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile , 'TYPE = ' + type);
+            console.log('MEMBER ID = ' + memberId +'EMAIL = ' + email + ',이름 = ' + name + ',닉네임 = ' + nickname + ',PROFILE IMG = ' + usersaveprofile , 'TYPE = ' + type, 'ROLES = ' + roles);
 
             // 유저의 닉네임을 표기
             const userNickname = nickname;
             const nicknameElement = document.querySelector('#user-nick-name');
             nicknameElement.textContent = userNickname;
+
+            // 유저 운영자인지 아닌지 판단.
+            memberRole = roles;
+
+            console.log('회원 등급 = ' + memberRole);
 
             console.log('불러온 이미지 = ' + usersaveprofile);
 
@@ -105,10 +114,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             const likedPersonLink = document.querySelector('.nav-item:nth-child(6) .nav-link');
             likedPersonLink.href = `/mypage/details/${memberId}/person`
             
-            const myeditLink =document.querySelector('a#myedit');
+            const myeditLink = document.querySelector('a#myedit');
             if (myeditLink) {
-				        myeditLink.href = `/mypage/details/${memberId}/edit`;	
-			      } 
+                myeditLink.href = `/mypage/details/${memberId}/edit`;
+            }
         });
 
     // 팔로우 체크
@@ -244,7 +253,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // 로그인 유저와 마이페이지의 유저가 다르면 프로필 편집 불가
     if(userEmail !== await checkCurrentUser()) {
-        // editProfile.classList.add('d-none');
+        editProfile.classList.add('d-none');
     }
 
     // 로그인 유저와 마이페이지 유저가 같다면 팔로우 불가
@@ -252,7 +261,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 		console.log(`userEmail=${userEmail}`);
         followButton.classList.add('d-none');
     }
-    
-	
+
+    console.log('@@@@@@@@@@@@@@@@@@ 회원 등급 = ' + memberRole);
+    console.log('@@@@@@@@@@@@@@@@@@ 불러온 회원 등급 타입 = ' + memberRole.toString())
+
+    if(memberRole.toString() !== 'ADMIN'){
+        isAdmin.classList.add('d-none');
+        const adminMenu = document.querySelector('#admin-menu');
+        adminMenu.classList.add('d-none');
+    }
 
 });

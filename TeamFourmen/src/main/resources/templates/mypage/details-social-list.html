@@ -123,21 +123,18 @@
                         </div>
                     </a>
                     <div class = "user-overview">
-                        <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${follower.getFromUser().getMemberId()})}">
-                            <div class = "user-nickname" th:text="${follower.getFromUser().getNickname()}"></div>
-                        </a>
+                            <div style="display: flex; gap: 10px">
+                                <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${follower.getFromUser().getMemberId()})}">
+                                    <div class = "user-nickname" th:text="${follower.getFromUser().getNickname()}"></div>
+                                </a>
+                                <span th:if="${follower.getFromUser().getRolesTargetUser().equalsIgnoreCase('ADMIN')}" style="color: #fbc500; font-weight: bolder; margin-top: 4px">FMDB 운영자</span>
+                            </div>
                         <div class = "user-overview-bottom">
                             <div class = "user-reviews" th:text="${ '리뷰   ' + follower.getFromUser().getReviews().size()}"></div>
                             <div class = "user-followers" th:text="${ '팔로워   ' + follower.getFromUser().getFollowers().size()}"></div>
                         </div>
                     </div>
                 </div>
-
-                <th:block sec:authorize="isAuthenticated()">
-                    <div class = "follow-btn">
-                        <button class = "btn btn-primary" th:email = "${follower.getFromUser().getEmail()}">팔로우</button>
-                    </div>
-                </th:block>
 
             </div>
         </section>
@@ -155,21 +152,18 @@
                         </div>
                     </a>
                     <div class = "user-overview">
-                        <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${following.getToUser().getMemberId()})}">
-                            <div class = "user-nickname" th:text="${following.getToUser().getNickname()}"></div>
-                        </a>
+                        <div style="display: flex; gap: 10px">
+                            <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${following.getToUser().getMemberId()})}">
+                                <div class = "user-nickname" th:text="${following.getToUser().getNickname()}"></div>
+                            </a>
+                            <span th:if="${following.getToUser().getRolesTargetUser().equalsIgnoreCase('ADMIN')}" style="color: #fbc500; font-weight: bolder; margin-top: 4px">FMDB 운영자</span>
+                        </div>
                         <div class = "user-overview-bottom">
                             <div class = "user-reviews" th:text="${ '리뷰   ' + following.getToUser().getReviews().size()}"></div>
                             <div class = "user-followers" th:text="${ '팔로워   ' + following.getToUser().getFollowers().size()}"></div>
                         </div>
                     </div>
                 </div>
-
-                <th:block sec:authorize="isAuthenticated()">
-                    <div class = "follow-btn">
-                        <button class ="btn btn-danger" th:email = "${following.getToUser().getEmail()}">팔로우 취소</button>
-                    </div>
-                </th:block>
 
             </div>
         </section>
@@ -189,151 +183,6 @@
 
 <script th:src="@{/js/navbar.js}"></script>
 <script th:src="@{/js/Mypage/mypage-feature.js}"></script>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', async function (){
-
-        const socialList = document.querySelectorAll('.each-user');
-        const section = document.querySelector('.social-list').getAttribute('section');
-        const currentPageUserEmail = document.querySelector('#user-nick-name').getAttribute('current-page-user-email');
-
-        for(let user of socialList){
-
-            const button = user.querySelector('button');
-            const socialUser = user.querySelector('button').getAttribute('email');
-
-            // SECTION이 팔로워, 팔로잉일때로 나눈다.
-            if(section === 'followings') { // 팔로잉 페이지 일때
-
-                // 팔로잉 유저 중에서 '본인'이 있다면 버튼 제거
-                checkLogInUser().then(logInUser => {
-                    if (socialUser === logInUser) {
-                        button.classList.add('d-none');
-                    }
-                });
-
-                // 팔로잉 유저 중에서 '본인'이 팔로우 중인 유저가 아니라면 '팔로우' 버튼으로 변환
-                // 기본 버튼이 팔로우 취소 버튼입니다.
-                checkFollowUser(socialUser).then(user => {
-                   if(user === false){
-                       button.classList.replace('btn-danger', 'btn-primary');
-                       button.innerText = '팔로우';
-                   }
-                });
-
-            } else { // 팔로워 페이지 일때
-                checkLogInUser().then(logInUser => {
-                   if(socialUser === logInUser) {
-                       button.classList.add('d-none');
-                   }
-                });
-
-                checkFollowUser(socialUser).then(socialUser => {
-                    // 한명의 유저를 가져와서 그 사람을 팔로우 중이라면 트루를 리턴함.
-                    console.log("소셜 유저 = " + socialUser)
-                    if(socialUser === true) { // 이 사람을 팔로우 중임
-                        // 왜냐하면 기본 버튼이 팔로우임. 파란색 버튼임.
-                        if(currentPageUserEmail === checkLogInUser()) { // 현재 페이지의 유저와 로그인 유저가 같다면
-                            console.log("@@@@@@@@@@@ 1 @@@@@@@@@@@");
-                            console.log("현재 페이지 유저 " + currentPageUserEmail);
-                            console.log("로그인 유저 " + checkLogInUser());
-                            button.innerText = '삭제';
-                            button.classList.replace('btn-primary', 'btn-danger');
-                        } else { // 현재 페이지와 로그인 한 유저가 다르다면
-                            console.log("@@@@@@@@@@@  2 @@@@@@@@@@@@@");
-                            console.log("현재 페이지 유저 " + currentPageUserEmail);
-                            console.log("로그인 유저 " + checkLogInUser);
-                            button.innerText = '팔로우 취소';
-                            button.classList.replace('btn-primary', 'btn-danger');
-                        }
-                    } else { // 이 사람을 팔로우 하고 있지 않음.
-                          if(currentPageUserEmail !== checkLogInUser) {
-                              console.log("@@@@@@@@@@@@@@ 3 @@@@@@@@@@@");
-                              button.innerText = '팔로우 취소';
-                              button.classList.replace('btn-primary', 'btn-danger');
-                          }
-                    }
-                });
-            }
-
-            // 팔로우 추가 , 삭제 버튼
-            button.addEventListener('click', async function (){
-                if(button.innerText == '삭제' || button.innerText == '팔로우 취소'){
-                    await unFollowUser(socialUser, button);
-                } else {
-                    await followUser(socialUser, button);
-                }
-            });
-
-        }
-
-        async function checkLogInUser() {
-            try {
-                const response = await axios.get('/api/user/current-user');
-
-                console.log(response.data);
-
-                return response.data; // 이메일 스트링
-
-            } catch (error) {
-                console.log('사용자 상태 확인 오류', error);
-                return false;
-            }
-        }
-
-        async function checkFollowUser(socialUser) {
-            try {
-                const response = await axios.get(`/api/follow/${socialUser}`);
-                console.log(`${socialUser} 팔로우 여부  = ` + response.data);
-                return response.data;
-            } catch (error) {
-                console.log('팔로우 체크 오류', error);
-                return undefined;
-            }
-        }
-
-        async function followUser(socialUser, button) {
-            try{
-                const response = await axios.post(`/api/follow/${socialUser}`);
-                console.log(response.data);
-
-                button.classList.replace('btn-primary', 'btn-danger');
-                button.innerText = '팔로우 취소';
-
-                alert('팔로우 되었습니다.');
-
-                location.reload();
-
-            } catch (error) {
-                console.log('팔로우 오류', error);
-            }
-        }
-
-
-        async function unFollowUser(userEmail , button) {
-            const result = confirm('정말 언팔로우 하시겠습니까??');
-
-            if(!result) {
-                return;
-            }
-
-            try {
-                const response = await axios.delete(`/api/follow/${userEmail}`);
-                console.log(response.data);
-
-                alert('팔로우 취소 되었습니다.');
-
-                location.reload();
-
-            } catch (error) {
-                console.log('팔로우 삭제 오류', error);
-            }
-        }
-
-    });
-
-</script>
 
 </body>
 
