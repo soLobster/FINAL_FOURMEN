@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	const myPageUserMemberId = location.pathname.split('/')[3];
 	const signedInUser = document.querySelector('.div-profile-image');
 	
+	const btnSetPrivate = document.querySelector('.btn-set-playlist-private');
+	const btnSetPublic = document.querySelector('.btn-set-playlist-public');
+	
 	const playlistId = location.pathname.split('/')[5];	
 	
 	const ulPlaylistItem  = document.querySelector('.ul-playlist-items');
@@ -126,13 +129,62 @@ document.addEventListener('DOMContentLoaded', function() {
 					.catch((error) => {
 						console.log(`에러 발생!!! ${error}`);
 					})
-				
-				
+								
 			});
+			
+		});
+			
+	}
+	
+	
+	// 플레이리스트 private설정 버튼 이벤트리스너
+	if (btnSetPrivate) {
+		
+		btnSetPrivate.addEventListener('click', function() {
+			
+			const data = {
+				playlistId: playlistId,
+				isPrivate: 'Y'
+			};
+			
+			axios.post('/api/mypage/playlist/set/privacy', data)
+				.then(() => {
+					alert('플레이리스트를 전체 공개로 설정하였습니다.');
+					location.reload();
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`);
+				})
+		})
+		
+	}
+	
+	// 플레이리스트 public설정 버튼 이벤트리스너
+	if (btnSetPublic) {
+		
+		btnSetPublic.addEventListener('click', function() {
+
+			const data = {
+				playlistId: playlistId,
+				isPrivate: 'N'
+			};
+			
+			axios.post('/api/mypage/playlist/set/privacy', data)
+				.then(() => {
+					alert('플레이리스트를 나만보기로 설정하였습니다.');
+					location.reload();
+				})
+				.catch((error) => {
+					console.log(`에러 발생!!! ${error}`);
+				})
+				
 			
 		});
 		
 		
 	}
+	
+	
+	
 	
 });

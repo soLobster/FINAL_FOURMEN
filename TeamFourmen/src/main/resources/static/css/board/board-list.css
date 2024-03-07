@@ -97,3 +97,65 @@
     font-weight: 600;
     text-decoration: none;
 }
+
+/* 검색 관련 */
+.section-board-search {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+
+
+.form-board-search {
+    display: flex;
+    align-items: center;
+}
+
+.search-category{
+    border-radius: 8px;
+    margin-right: 4px;
+    height: 100%;
+}
+
+    /* input text와 버튼을 감싸고 있는 컨테이너 */
+.div-board-input-btn-container {
+    display: flex;
+    width: 210px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    
+    display: flex;
+}
+
+.div-board-content-search {
+    width: 184px;
+    border-radius: 0;
+    background-color: #fff;
+}
+
+.input-board-content-search {
+    border: none;
+    width: 100%;
+    background-color: transparent; 
+}
+
+.input-board-content-search:focus {
+    outline-width: 0;
+}
+
+.div-board-search-btn {
+    flex-grow: 1;
+}
+
+.btn-board-search {
+    background-color: #fff;
+    border: none;
+    width: 16px;
+    color: #000;
+}
+

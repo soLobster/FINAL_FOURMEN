@@ -2,6 +2,7 @@ package com.itwill.teamfourmen.web;
 
 import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.MemberRepository;
+import com.itwill.teamfourmen.domain.Playlist;
 import com.itwill.teamfourmen.domain.PlaylistItem;
 import com.itwill.teamfourmen.domain.PlaylistLike;
 import com.itwill.teamfourmen.domain.Review;
@@ -111,5 +112,16 @@ public class MyPageRestController {
     	
     	featureService.deletePlaylistItem(playlistItemId);
     }
+    
+    
+    @PostMapping("/playlist/set/privacy")
+    public void setPlaylistPrivate(@RequestBody Playlist playlistToUpdate) {
+    	log.info("setPlaylistPrivate(playlistToUpdate={})", playlistToUpdate);
+    	
+    	// Playlist타입의 객체의 playlistId와 isPrivate을 서비스 메서드에 아규먼트로 넘겨줌
+    	featureService.setPlaylistPrivacy(playlistToUpdate.getPlaylistId(), playlistToUpdate.getIsPrivate());
+    	
+    }
+    
     
 }

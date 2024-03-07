@@ -9,6 +9,7 @@ import com.itwill.teamfourmen.domain.*;
 import com.itwill.teamfourmen.dto.board.CommentDto;
 import com.itwill.teamfourmen.dto.board.PostDto;
 import com.itwill.teamfourmen.dto.person.PageAndListDto;
+import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.post.PostCreateDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.*;
@@ -157,7 +158,7 @@ public class TvShowController {
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id) {
 		log.info("Get Tv Show Details = {}", id);
 //		log.info("API KEY = {}", API_KEY);
-		List<Playlist> userPlaylist = null;
+		List<PlaylistDto> userPlaylist = null;
 		
 		RestTemplate restTemplate = new RestTemplate();
 		

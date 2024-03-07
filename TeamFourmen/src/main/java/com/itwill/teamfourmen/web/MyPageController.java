@@ -354,7 +354,7 @@ public class MyPageController {
     }
 	    
 	/**
-	 * memberId에 해당하는 유저의 playlist 상세페이지로 가는 컨트롤러 메서드    
+	 * memberId에 해당하는 유저의 playlist로 가는 컨트롤러 메서드    
 	 * @param memberId
 	 * @param model
 	 * @return
@@ -364,12 +364,45 @@ public class MyPageController {
     	log.info("getPlaylists(memberId={})", memberId);
     	
     	List<PlaylistDto> playlistDtoList = featureService.getPlaylist(memberId);
-    	    	
+    	
+    	
+    	// 로그인한 유저
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();		
+		Member signedInUser = memberservice.getmemberdetail(email);
+		
+		Member myPageUser = memberservice.getMemberByMemberId(memberId);
+				
+		model.addAttribute("myPageUser", myPageUser);
+    	model.addAttribute("signedInUser", signedInUser);
     	model.addAttribute("playlistDtoList", playlistDtoList);
     	
     	return "mypage/details-playlist";
     }
-	    
+	
+    
+    @GetMapping("/details/{memberId}/playlist/like-list")
+    public String getLikedPlaylists(@PathVariable(name = "memberId") Long memberId, Model model) {
+    	log.info("getLikedPlaylists(memberId={})", memberId);
+    	
+    	List<PlaylistDto> likedPlaylistDtoList = featureService.getLikedPlaylist(memberId);
+    	Member myPageUser = memberservice.getMemberByMemberId(memberId);
+    	
+		model.addAttribute("myPageUser", myPageUser);    	
+    	model.addAttribute("playlistDtoList", likedPlaylistDtoList);
+    	model.addAttribute("likedPlaylistPage", "likedPlaylistPage");
+    	
+    	return "mypage/details-playlist";
+    }
+    
+    
+    /**
+     * playlistId에 해당하는 플레이리스트의 디테일 페이지
+     * @param memberId
+     * @param playlistId
+     * @param model
+     * @return
+     */
     @GetMapping("/details/{memberId}/playlist/{playlistId}")
     public String getPlaylistDetails(@PathVariable(name = "memberId") Long memberId, @PathVariable(name = "playlistId") Long playlistId, Model model) {
     	log.info("getPlaylistsDetails(memberId={}, playlistId={})", memberId, playlistId);
@@ -382,6 +415,27 @@ public class MyPageController {
     	// 마이페이지 주인 가져옴
     	Member myPageUser = memberservice.getMemberByMemberId(memberId);
     	
+    	// 로그인한 사람 가져옴 없을 경우 null임
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = null;
+    	
+		if (!email.equals("anonymousUser")) {
+			signedInUser = memberservice.getmemberdetail(email);			
+		}
+		
+		
+		if(playlist.getIsPrivate().equals("Y")) {	//만약 private 플레이리스트일 경우
+			// private 플레이리스트이고, 로그인을 안했거나, 로그인한 유저가 my page의 주인이 아니라면
+			if (signedInUser == null || (signedInUser != null && !signedInUser.getEmail().equals(myPageUser.getEmail()))) {
+				
+				model.addAttribute("message", "비밀 플레이리스트입니다. 마이페이지 주인만 접근 가능 합니다.");
+				return "alert";
+			}
+		}
+			
+		
+		
     	model.addAttribute("myPageUser", myPageUser);
     	model.addAttribute("playlist", playlist);
     	model.addAttribute("playlistItemDtoList", playlistItemDtoList);

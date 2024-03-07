@@ -202,8 +202,20 @@
                                     </div>
                                     <div class="div-playlist-container">
                                         <div class="div-each-playlist-container" th:if="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}" th:each="eachPlaylist : ${userPlaylist}">
-                                            <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
-                                            <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                                            <div class="div-playlist-image-container">
+                                                <div>
+                                                    <img class="img-each-playlist-poster" 
+                                                        th:if="${eachPlaylist.playlistItemDtoList != null && !#lists.isEmpty(eachPlaylist.playlistItemDtoList)}"
+                                                        th:src="@{https://image.tmdb.org/t/p/w92/{posterPath} (posterPath = ${eachPlaylist.playlistItemDtoList[0].workDetails.posterPath})}">
+                                                    <img class="img-each-playlist-poster"
+                                                        th:unless="${eachPlaylist.playlistItemDtoList != null && !#lists.isEmpty(eachPlaylist.playlistItemDtoList)}"
+                                                        th:src="@{/image/playlist_default.svg}">
+                                                </div>
+                                            </div>
+                                            <div class="div-playlist-name-selection-container">
+                                                <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
+                                                <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                                            </div>
                                         </div>
                                         <div th:unless="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}">
                                             플레이리스트가 존재하지 않습니다.
@@ -228,7 +240,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <h5>새 플레이리스트 이름</h5>
-                                    <input type="text" class="form-control input-playlist-name">
+                                    <input type="text" class="form-control input-playlist-name" maxlength="30" required>
                                     <div class="div-playlist-private">
                                         <label for="playlist-private">나만 보기</label>
                                         <input id="playlist-private" class="input-is-private" type="checkbox" name="isPrivate" value="Y">
@@ -407,8 +419,11 @@
                     <div class="div-each-card" th:each="movieInCollection : ${movieCollectionList}">
                         <a class="movie-collection-card-link" th:href="@{/movie/details/{id}(id = ${movieInCollection.id})}">
                             <div class="movie-card-image-container movie-poster-card">
-                                <img th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${movieInCollection.posterPath})}"
+                                <img th:if="${movieInCollection.posterPath != null && movieInCollection.posterPath != '' && movieInCollection.posterPath != 'null'}"
+                                    th:src="@{https://image.tmdb.org/t/p/w300{posterPath} (posterPath = ${movieInCollection.posterPath})}"
                                     alt="무비 컬랙션 포스터" class="img-movie-cast img-movie-collection-card">
+                                <img th:if="${movieInCollection.posterPath != null && movieInCollection.posterPath != '' && movieInCollection.posterPath != 'null'}"
+                                    th:src="@{/image/no_image_default.webp}">
                                 <div class="div-movie-card-overlay">
                                     <p class="movie-card-name" th:text="${movieInCollection.title}"></p>
                                 </div>
@@ -421,8 +436,6 @@
             
             <div class="div-horizontal-line"></div>
             
-            <!-- TODO: 한줄평 작성 구현하기 -->
-
             <div class = "movie-review">
                 <th:block th:if="${movieReviewList.size() ne 0}">
                     <section style="display: flex">

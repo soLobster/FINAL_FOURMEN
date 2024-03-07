@@ -1,8 +1,12 @@
 @charset "UTF-8";
 
-.h-playlist-name {
+
+.title-private-btn-container {
     width: 1000px;
-    margin: 2rem auto 1rem auto;
+    margin: 2rem auto 2rem auto;
+    
+    display: flex;
+    justify-content: space-between;
 }
 
 .playlist-items-container {

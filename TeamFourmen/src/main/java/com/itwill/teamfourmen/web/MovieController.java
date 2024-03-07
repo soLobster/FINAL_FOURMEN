@@ -48,6 +48,7 @@ import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
 import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
 import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
 import com.itwill.teamfourmen.dto.person.PageAndListDto;
+import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.post.PostCreateDto;
 import com.itwill.teamfourmen.service.BoardService;
 import com.itwill.teamfourmen.service.FeatureService;
@@ -194,7 +195,7 @@ public class MovieController {
 		log.info("movieDetails(id={})", id);
 		
 		Review myReview = null;
-		List<Playlist> userPlaylist = null;
+		List<PlaylistDto> userPlaylist = null;
 		
 		
 		// 영화 디테일 정보 가져오기
@@ -319,6 +320,7 @@ public class MovieController {
 		} else {
 			log.info("IMDB RATINGS IS NULL");
 		}
+		
 		// 객체로 넘어감. 원하는 값은 imdbRatings -> getter를 통해서
 		// IMDB 아이콘은 static/icons/imdb-icon.svg 파일...!
 		model.addAttribute("imdbRatings", imdbRatings);
@@ -437,6 +439,33 @@ public class MovieController {
 		boardService.updatePost(post);
 		
 		return "redirect:/movie/board/details?id=" + post.getPostId();
+	}
+	
+	
+	/**
+	 * 검색 카테고리와 검색어를 기반으로 검색결과를 가져다주는 컨트롤러 메서드
+	 * @return
+	 */
+	@GetMapping("/board/search")
+	public String searchMovieBoard(Model model, @RequestParam(name = "searchCategory") String searchCategory
+			, @RequestParam(name = "searchContent") String searchContent, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		log.info("searchMovieBoard(searchCategory={}, searchContent={})", searchCategory, searchContent);
+		
+		Page<PostDto> searchedPostDtoList = boardService.searchPost(searchCategory, searchContent, "movie", page);
+		
+		searchedPostDtoList.forEach((post) -> {
+			Long likes = boardService.countLikes(post.getPostId());
+			post.setLikes(likes);
+		});
+		
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) searchedPostDtoList.getTotalElements(), searchedPostDtoList.getTotalPages(), 5, 5);
+		
+		model.addAttribute("category", "movie");
+		model.addAttribute("postDtoList", searchedPostDtoList);
+		model.addAttribute("pagingDto", pagingDto);
+		
+		
+		return "board/list";
 	}
 	
 	// 이 아래로는 일반 메서드 모음

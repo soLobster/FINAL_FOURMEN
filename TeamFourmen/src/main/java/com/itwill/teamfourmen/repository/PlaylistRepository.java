@@ -8,8 +8,9 @@ import com.itwill.teamfourmen.domain.Playlist;
 
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 	
-	List<Playlist> findAllByMemberEmail(String email);
+	List<Playlist> findAllByMemberEmailOrderByPlaylistId(String email);
 	
 	List<Playlist> findAllByMemberMemberIdOrderByPlaylistId(Long memberId);
+	
 	
 }

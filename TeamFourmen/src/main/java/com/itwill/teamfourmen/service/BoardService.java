@@ -70,6 +70,10 @@ public class BoardService {
 		postDao.deleteById(postId);
 	}
 	
+	/**
+	 * 게시글을 업데이트하는 서비스 메서드
+	 * @param post
+	 */
 	@Transactional
 	public void updatePost(Post post) {
 		log.info("updatePost(post={})", post);
@@ -106,6 +110,50 @@ public class BoardService {
 		
 		return postDtoList;
 	}
+	
+	
+	/**
+	 * 검색 카테고리(제목, 제목 + 내용, 글쓴이)와 검색어를 바탕으로 Page<PostDto>타입의 검색결과를 리턴해주는 서비스 메서드
+	 * @param searchCategory
+	 * @param searchContent
+	 * @param page
+	 * @return
+	 */
+	public Page<PostDto> searchPost(String searchCategory, String searchContent, String boardCategory, int page) {
+		log.info("searchPost(searchCategory={}, searchContent={}, boardCategory={})", searchCategory, searchContent, boardCategory);
+		
+		Page<Post> searchResultList = null;
+		
+		Pageable pageable = PageRequest.of(page, postsPerPage, Sort.by("postId").descending());
+
+		switch(searchCategory) {
+		case "title":
+			 searchResultList = postDao.findAllByTitleOrderByPostIdDesc(searchContent, pageable);
+			 log.info("검색결과={}", searchResultList);
+			break;
+		case "titleContent":
+			searchResultList = postDao.findAllByTitleOrContentOrderByPostIdDesc(searchContent, pageable);
+			break;
+		case "author":
+			searchResultList = postDao.findAllByMemberNicknameOrderByPostIdDesc(searchContent, pageable);
+			break;
+		default:
+			log.info("잘못된 카테고리를 가져옴");
+		}
+		
+		
+		Page<PostDto> searchResultDtoList = searchResultList.map((post) -> PostDto.fromEntity(post));
+		
+		searchResultDtoList.forEach((postDto) -> {
+			postDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(postDto.getCreatedTime()));
+			log.info("time difference={}", postDto.getTimeDifferenceInMinute());
+		});
+		
+		log.info("searchResultDtoList={}", searchResultDtoList);
+		
+		return searchResultDtoList;
+	}
+	
 	
 	/**
 	 * id를 아규먼트로 받아, 해당 postId의 게시물을 Post 타입으로 반환함

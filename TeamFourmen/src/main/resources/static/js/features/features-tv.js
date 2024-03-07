@@ -27,19 +27,59 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	
 	// 플레이리스트 refresh함수(axios로 리스트 가져오지는 않고, 리스트를 html로 시현해주는 함수)
-    const refreshPlaylist = function(playlist) {
+    const refreshPlaylist = async function() {
+		
+		let playlist = null;
+		
+		// 새 플레이리스트 생성하였으면 영상물 플레이리스트에 추가 모달부분 가기
+		await axios.get('/feature/playlist', {params: {email: signedInUser.getAttribute('email')}})
+			.then((response) => {
+				playlist = response.data
+				// console.log(response.data);
+				btnToFirstModal.click();
+			})
+			.catch((error) => {
+				
+			});
+		
+		console.log(`playlist`);
+		console.log(playlist);
+		
 		const divPlaylistContainer = document.querySelector('.div-playlist-container');
 		
 		let playlistContainerHtml = '';
+		
 		for (let playlistItem of playlist) {
-			playlistContainerHtml += `
-				<div>
-					${playlistItem.playlistName}
-				</div>
+			playlistContainerHtml += `	         
+	                    <div class="div-each-playlist-container">
+	                        <div class="div-playlist-image-container">
+	                            <div>
+            `;
+            
+            if (playlistItem.playlistItemDtoList != null && playlistItem.playlistItemDtoList.length > 0) {
+				playlistContainerHtml += `
+	                                <img class="img-each-playlist-poster" 
+	                                    src=https://image.tmdb.org/t/p/w92/${playlistItem.playlistItemDtoList[0].workDetails.poster_path}">
+                `;						
+			} else {
+				playlistContainerHtml += `
+	                                <img class="img-each-playlist-poster"
+	                                    src="/image/playlist_default.svg">				
+				`;
+			}
+			
+            playlistContainerHtml += `
+	                            </div>
+	                        </div>
+	                        <div class="div-playlist-name-selection-container">
+	                            <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" value="${playlistItem.playlistId}" id="playlist${playlistItem.playlistId}">
+	                            <label class="label-each-playlist" for="playlist${playlistItem.playlistId}">${playlistItem.playlistName}</label>
+	                        </div>
+	                    </div>
 			`;
 		}
 		
-		divPlaylistContainer.innerHTML = playlistContainerHtml;		
+		divPlaylistContainer.innerHTML = playlistContainerHtml;
 	}
 	
 	// 아규먼트로 받은 id에 해당하는 playlist의 모든 items들을 가져와서 리턴
@@ -60,19 +100,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	
-	// 플레이리스트 추가 함수	
+	// 플레이리스트 추가 함수
 	const addPlaylist = async function() {
+		
+		let isAlreadyInList = null;
 		
 		const btnClosePlaylistModal = document.querySelector('.btn-close-playlist-modal');
 		const checkedPlaylist = document.querySelector('.div-each-playlist-container .checkbox-each-playlist:checked');
+		
+		if (!checkedPlaylist) {
+			alert('해당 영화/Tv 시리즈를 추가할 플레이리스트를 선택해 주세요.');
+			return;
+		}
+		
 		// 유저가 선택한 플레이리스트에 포함된 영상물 리스트를 가져옴
 		const itemsListInPlaylist = await checkIfItemInPlaylist(checkedPlaylist.value);
 		console.log(`다른함수에서 받아온 리스트 = ${itemsListInPlaylist}`);
 		
 		// 해당 영화/시리즈가 플레이리스트에 이미 추가돼 있는지 확인
-		const isAlreadyInList = itemsListInPlaylist.some(item => {
-			return item.category == category && item.tmdbId == tmdbId;
-		});
+		if (itemsListInPlaylist) {			
+			isAlreadyInList = itemsListInPlaylist.some(item => {
+				return item.category == category && item.tmdbId == tmdbId;
+			});
+		}
 		
 		if(isAlreadyInList) {
 			alert('이미 해당 리스트에 추가된 영화/시리즈 입니다.');
@@ -92,8 +142,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			.then((response) => {
 				alert('플레이리스트에 추가하였습니다.');
 				
-				checkedPlaylist.checked = false;	// 모달에 플레이리스트 체크 해제
+				checkedPlaylist.checked = false;	// 모달에 플레이리스트 체크 해제	
+				refreshPlaylist();			
 				btnClosePlaylistModal.click();	// 모달 창 닫기
+				
 				return;
 			})
 			.catch((error) => {
@@ -138,20 +190,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				.then((response) => {
 					
 					alert('새 플레이리스트를 생성하였습니다.');
-					
-					// 새 플레이리스트 생성하였으면 영상물 플레이리스트에 추가 모달부분 가기
-					axios.get('/feature/playlist', {params: {email: signedInUser.getAttribute('email')}})
-						.then((response) => {
-							console.log(response.data);
-							refreshPlaylist(response.data);
-							btnToFirstModal.click();
-						})
-						.catch((error) => {
-							
-						});
-					
-					
-					
+					refreshPlaylist();
+					btnToFirstModal.click();
 				})
 				.catch((error) => {
 					console.log(`에러 발생!!! ${error}`);	

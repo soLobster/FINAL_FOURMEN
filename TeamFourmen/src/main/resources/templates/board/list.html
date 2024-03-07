@@ -19,9 +19,6 @@
 	
     <main class="board-main-container">
         <h1 class="board-title">FREE BOARD</h1>
-        <div class="div-board-create-button">
-            <button class="btn-board-create" sec:authorize="isAuthenticated()">글 작성</button>
-        </div>
         <table class="table-board-list">
             <thead class="thead-board-list-title">
                 <th class="th-board-title">제목</th>
@@ -37,12 +34,15 @@
                     <!-- 시간관련 하루이내 작성된 글이면 시간 또는 분 경과시간으로 보여주기 -->
                     <td th:if="${postDto.timeDifferenceInMinute != null && postDto.timeDifferenceInMinute lt 60}" th:text="|${postDto.timeDifferenceInMinute}분 전|" class="td-board-created-time boarder-content-text-center">
                     <td th:if="${postDto.timeDifferenceInMinute != null && postDto.timeDifferenceInMinute >= 60}" th:text="|${postDto.timeDifferenceInMinute / 60}시간 전|" class="td-board-created-time boarder-content-text-center">
-                    <td th:if="${postDto.timeDifferenceInMinute == null}" th:text="${#temporals.format(postDto.createdTime, 'yyyy-MM-dd HH:mm')}" class="td-board-created-time boarder-content-text-center">                    
+                    <td th:if="${postDto.timeDifferenceInMinute == null}" th:text="${#temporals.format(postDto.createdTime, 'yyyy-MM-dd')}" class="td-board-created-time boarder-content-text-center">                    
                     <td class="td-board-views boarder-content-text-center" th:text="${postDto.views}"></td>
                     <td class="td-board-likes boarder-content-text-center" th:text="${postDto.likes}"></td>
                 </tr>
             </tbody>
         </table>
+        <div class="div-board-create-button">
+            <button class="btn-board-create" sec:authorize="isAuthenticated()">글 작성</button>
+        </div>
     </main>
     
     <nav aria-label="Page navigation">
@@ -72,6 +72,26 @@
             </li>
         </ul>
     </nav>
+    
+    <section class="section-board-search">
+        <form class="form-board-search" th:action="@{/{category}/board/search(category=${category})}" method="get">
+            <select class="search-category" name="searchCategory">
+                <option value="title" selected="selected">제목</option>
+                <option value="titleContent">제목 + 내용</option>
+                <option value="author">글쓴이</option>
+            </select>
+            <div class="div-board-input-btn-container">
+                <div class="div-board-content-search">
+                    <input type="text" class="input-board-content-search" maxlength="20" name="searchContent" required>
+                </div>
+                <div class="div-board-search-btn">
+                    <button type="input" class="btn-board-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
     <footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
 
 

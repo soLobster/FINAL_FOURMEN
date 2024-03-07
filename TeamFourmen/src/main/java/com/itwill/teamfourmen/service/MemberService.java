@@ -75,7 +75,7 @@ public class MemberService implements UserDetailsService {
     
     public Member getmemberdetail(String email) {
     	Optional<Member> opt = memberDao.findByEmail(email);
-    	Member member = opt.get();
+    	Member member = opt.orElse(null);
     	
     	return member;
     };
