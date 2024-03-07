@@ -30,7 +30,7 @@
       border-top: 1px solid #eeeeee;
       border-bottom: 1px solid #eeeeee;
       padding: 20px 20px 20px 20px;
-      margin-bottom: 30px;
+      margin-bottom: 15px;
     }
 
     .review-item-body {
@@ -149,21 +149,15 @@
 
 <div class="mypage-details-body" style="margin-bottom:50px;">
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link " th:href="@{''}">Movie</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" th:href="@{''}">Tv Show</a>
-    </li>
-  </ul>
-
   <div class = "mypage-details-body-reviews">
+
+    <h3>Review Page</h3>
 
     <div class = "review-item" th:each=" review : ${myAllReview}">
       <input class = "d-none" th:category = "${review.getCategory()}">
       <!--  카테고리 "movie" or "tv"  -->
       <div class="review-item-body" th:each=" works : ${combineInfoList}">
+
         <th:block th:if = "${review.getTmdbId() eq works.getId()}">
         <section class="review-item-poster">
           <a th:href="@{/{category}/details/{id}(category = ${review.getCategory()}, id = ${works.getId()})}">
@@ -203,6 +197,7 @@
           </article>
         </section>
         </th:block>
+
       </div>
     </div>
 

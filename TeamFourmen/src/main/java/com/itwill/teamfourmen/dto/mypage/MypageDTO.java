@@ -9,5 +9,6 @@ public class MypageDTO {
     private String name;
     private String imagePath;
     private String category;
-
+    private String backdropPath;
+    
 }

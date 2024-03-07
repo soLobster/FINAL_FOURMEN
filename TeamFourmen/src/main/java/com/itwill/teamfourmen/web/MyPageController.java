@@ -66,6 +66,112 @@ public class MyPageController {
         
         model.addAttribute("profile", profile);
 
+        int endIndex = 0;
+
+        List<TmdbLike> getMovieLikeList = featureService.getLikedList(profile, "movie");
+
+        endIndex = Math.min(4, getMovieLikeList.size());
+
+        getMovieLikeList = getMovieLikeList.subList(0, endIndex);
+
+        List<MypageDTO> movieLikedList = new ArrayList<>();
+
+        for(TmdbLike movie : getMovieLikeList){
+            MypageDTO mypageDTO = new MypageDTO();
+            MovieDetailsDto movieDetailsDto = movieApiUtil.getMovieDetails(movie.getTmdbId());
+            mypageDTO.setImagePath(movieDetailsDto.getPosterPath());
+            mypageDTO.setName(movieDetailsDto.getTitle());
+            mypageDTO.setId(movieDetailsDto.getId());
+
+            movieLikedList.add(mypageDTO);
+        }
+
+        model.addAttribute("favMovies" , movieLikedList);
+
+        List<TmdbLike> getTvLikedList = featureService.getLikedList(profile, "tv");
+
+        endIndex = Math.min(4, getTvLikedList.size());
+
+        getTvLikedList = getTvLikedList.subList(0, endIndex);
+
+        List<MypageDTO> tvLikedList = new ArrayList<>();
+
+        for(TmdbLike tv : getTvLikedList) {
+            MypageDTO mypageDTO = new MypageDTO();
+            TvShowDTO tvShowDTO = tvShowApiUtil.getTvShowDetails(tv.getTmdbId());
+            mypageDTO.setImagePath(tvShowDTO.getPoster_path());
+            mypageDTO.setName(tvShowDTO.getName());
+            mypageDTO.setId(tvShowDTO.getId());
+
+            tvLikedList.add(mypageDTO);
+        }
+
+        model.addAttribute("favTv", tvLikedList);
+
+        List<TmdbLike> getPersonLikedList = featureService.getLikedList(profile, "person");
+
+        endIndex = Math.min(4, getPersonLikedList.size());
+
+        getPersonLikedList = getPersonLikedList.subList(0, endIndex);
+
+        List<MypageDTO> personLikedList = new ArrayList<>();
+
+        for(TmdbLike person : getPersonLikedList) {
+            MypageDTO mypageDTO = new MypageDTO();
+            DetailsPersonDto detailsPersonDto = personService.getPersonDetailsEnUS(person.getTmdbId());
+            mypageDTO.setImagePath(detailsPersonDto.getProfilePath());
+            mypageDTO.setName(detailsPersonDto.getName());
+            mypageDTO.setId(detailsPersonDto.getId());
+
+            personLikedList.add(mypageDTO);
+        }
+
+        model.addAttribute("favPerson" , personLikedList);
+
+        List<Review> targetUserReviewList = featureService.getAllMyReview(memberId);
+
+        double sumRating = 0;
+
+        for(Review userReview : targetUserReviewList) {
+            log.info(" 타겟 유저의 리뷰 평점 = {}" ,userReview.getRating());
+            sumRating += userReview.getRating();
+        }
+
+        double averageRating = sumRating/targetUserReviewList.size();
+
+        model.addAttribute("reviewList",targetUserReviewList);
+
+        model.addAttribute("averageRating" , averageRating);
+
+        List<Review> getRecentlyReview = featureService.recentReview(memberId);
+
+        Review recentReview = getRecentlyReview.get(0);
+
+        MypageDTO mypageDTO = new MypageDTO();
+
+        switch (recentReview.getCategory()) {
+            case "movie" :
+                MovieDetailsDto movieDetailsDto = movieApiUtil.getMovieDetails(recentReview.getTmdbId());
+                mypageDTO.setName(movieDetailsDto.getTitle());
+                mypageDTO.setBackdropPath(movieDetailsDto.getBackdropPath());
+                mypageDTO.setCategory(recentReview.getCategory());
+                mypageDTO.setId(movieDetailsDto.getId());
+                break;
+            case "tv":
+                TvShowDTO tvShowDTO = tvShowApiUtil.getTvShowDetails(recentReview.getTmdbId());
+                mypageDTO.setName(tvShowDTO.getName());
+                mypageDTO.setBackdropPath(tvShowDTO.getBackdrop_path());
+                mypageDTO.setCategory(recentReview.getCategory());
+                mypageDTO.setId(tvShowDTO.getId());
+                break;
+            default:
+                log.error("없어요!!");
+                break;
+        }
+
+        model.addAttribute("recentReviewInfo", mypageDTO);
+        model.addAttribute("recentReview" , getRecentlyReview.get(0));
+
         return "mypage/details-profile";
     }
     
@@ -328,6 +434,7 @@ public class MyPageController {
         }
 
         log.info("LIKED LIST = {}", myPageLikedList);
+        model.addAttribute("category" , category);
         model.addAttribute("likedList", myPageLikedList);
 
         return "mypage/details-liked-list";

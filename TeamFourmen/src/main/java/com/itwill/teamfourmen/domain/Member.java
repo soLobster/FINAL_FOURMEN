@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -136,4 +137,9 @@ public class Member {
 		@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
 		@JsonIgnore
 		private List<Review> reviews;
+
+		public String getRolesTargetUser() {
+			return roles.stream().map(MemberRole::name).collect(Collectors.joining(", "));
+		}
+
 }
