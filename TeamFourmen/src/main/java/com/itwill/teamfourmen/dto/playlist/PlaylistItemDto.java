@@ -40,7 +40,7 @@ public class PlaylistItemDto {
 							.playlistItemId(playlistItem.getPlaylistItemId())
 							.playlist(playlistItem.getPlaylist())
 							.category(playlistItem.getCategory())
-							.tmdbId(playlistItem.getTmdbId())
+							.tmdbId(Math.toIntExact(playlistItem.getTmdbId()))
 							.nthInPlaylist(playlistItem.getNthInPlaylist())
 							.build();
 							

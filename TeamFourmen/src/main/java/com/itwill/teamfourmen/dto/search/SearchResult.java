@@ -6,18 +6,18 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SearchMoviesDto {
+public class SearchResult<T> {
 
     @JsonProperty("page")
     private int page;
 
     @JsonProperty("results")
-    private List<MovieDto> movieResults;
+    private List<T> results;
 
     @JsonProperty("total_pages")
-    private String totalPages; // 총 검색 결과 페이지
+    private int totalPages;
 
     @JsonProperty("total_results")
-    private String totalResults; // 총 검색 결과 수
+    private int totalResults;
 
 }

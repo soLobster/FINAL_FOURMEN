@@ -58,7 +58,6 @@ public class PersonController {
 
 		model.addAttribute("pageInfoEnUS", pageAndListDtoEnUS.getPage());
 		model.addAttribute("pageInfoKoKR", pageAndListDtoKoKR.getPage());
-//		pageAndListDtoKoKR.getPage();
 		model.addAttribute("personListEnUS", pageAndListDtoEnUS.getResults());
 		model.addAttribute("personListKoKR", pageAndListDtoKoKR.getResults());
 		model.addAttribute("paging", pagingDto);
