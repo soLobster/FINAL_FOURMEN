@@ -18,6 +18,7 @@ import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
 import com.itwill.teamfourmen.service.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,12 +102,17 @@ public class MyPageController {
     };
     
     @PostMapping("/myedit/update")
-    public String updateUser(@ModelAttribute MemberModifyDto dto, HttpSession session) throws IllegalStateException, IOException {
-
+    public String updateUser(@ModelAttribute MemberModifyDto dto, HttpSession session, HttpServletRequest request) throws IllegalStateException, IOException {
         // 여기서 비밀번호를 비교하고 처리하면 됩니다.		 		
-		String rootDirectory = File.listRoots()[0].getAbsolutePath();
-		String sDirectory = rootDirectory + "ojng" + File.separator + "image";
-		memberservice.update(dto, sDirectory);
+//		String rootDirectory = File.listRoots()[0].getAbsolutePath();
+//		log.info("rootDirectory = {}", rootDirectory);
+//		String sDirectory = rootDirectory + "ojng" + File.separator + "image";
+		
+    	String sDirectory = request.getServletContext().getRealPath("");
+    	
+    	
+    	
+    	memberservice.update(dto, sDirectory);
 		
 		   // 세션에서 adminuser 가져오기
         long adminUserFromSession = myname.getMember().getMemberId();
@@ -119,10 +125,12 @@ public class MyPageController {
     }
     
     @PostMapping("/detail/update")
-    public String updateadmin(@ModelAttribute MemberModifyDto dto, HttpSession session) throws IllegalStateException, IOException {
-        // 여기서 비밀번호를 비교하고 처리하면 됩니다.
-        String sDirectory = "C:/image";
-        memberservice.update(dto, sDirectory);
+    public String updateadmin(@ModelAttribute MemberModifyDto dto, HttpSession session, HttpServletRequest request) throws IllegalStateException, IOException {
+    	String sDirectory = request.getServletContext().getRealPath("");
+    	
+    	
+    	
+    	memberservice.update(dto, sDirectory);
         
         // 세션에서 adminuser 가져오기
         String adminUserFromSession = (String) session.getAttribute("adminuser");

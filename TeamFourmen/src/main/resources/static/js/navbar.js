@@ -30,13 +30,13 @@ window.addEventListener('DOMContentLoaded', function() {
             if (doesContain) {    // 만약 open class 있을 때               
                 detailedMenu.classList.remove('navbar-detailed-menu-open'); 
                 navbarBackground.classList.remove('body-detailed-menu-open');
-                detailedmypageMenu.style.display='block';                
+                               
                 body.classList.remove('body-element-navbar');
                                
             } else {    // open class없을 때               
                 detailedMenu.classList.add('navbar-detailed-menu-open');
                 navbarBackground.classList.add('body-detailed-menu-open');
-                detailedmypageMenu.style.display='none';
+                
                 body.classList.add('body-element-navbar');
          
             }
@@ -231,6 +231,16 @@ if (profilepicture) {
 	        navbarmypagebackground.style.opacity = '1';
 	    }, 10); // 약간의 지연 추가
 	});	
+}
+if(navbarmypagebackground){
+	navbarmypagebackground.addEventListener('click', () => {
+		  navbarmypagebackground.style.opacity = '0';
+	    setTimeout(() => {
+	        navbarmypagebackground.classList.remove('body-detailed-menu-open-mypage');
+	        detailedmypageMenu.classList.remove('navbar-detailed-menu-mypage-open');
+	        detailedmypageMenu.style.right = '-280px'; // 다시 메뉴를 숨김
+	    },80); // 이동 애니메이션이 끝난 후에 클래스를 제거하고 위치를 변경하도록 함 (0.5초)
+		});
 }
 
 if (closemypage) {
