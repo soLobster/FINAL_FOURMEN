@@ -1,17 +1,129 @@
 @charset "UTF-8";
+/* 토글버튼 메뉴 아이템들 */
+
+ @font-face {
+      font-family: 'Pretendard-Regular';
+      src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+ }
+
+    body{
+    
+      font-family: 'Pretendard-Regular';
+	overflow-x: hidden;
+}
+.navbar-detailed-menu-items-mypage {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.navbar-detailed-menu-list-mypage {
+    list-style-type: none;
+    padding-left: 1.1rem;
+    font-size: 1.1rem;
+    padding-top: 2rem;
+}
+
+.navbar-each-menu-item-mypage {
+    margin-bottom: 1rem;
+}
+
+.navbar-each-menu-item-mypage:hover a {
+    text-decoration: underline;
+}
+
+.navbar-detailed-menu-items-mypage a {
+    text-decoration: none;
+    color: inherit;
+    
+}
+
+.body-detailed-menu-open-mypage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(250, 250, 250, 0.8);
+    width: 100vw;
+    height: 100vh; 
+    z-index: 2;
+    transition: opacity 0.5s ease-in-out; /* 투명도 변화에 대한 transition 추가 */
+    opacity: 0; /* 초기에는 투명하게 설정 */
+}
+.navbar-detailed-menu-title-mypage {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    margin-left: 10px;
+}
+
+.navbar-detailed-menu-title-mypage span {
+    color: #fbc500;
+    width: 24px;
+    font-size: 1.3rem;
+    display: inline-block;    
+}
+.navbar-detailed-menu-section-container-mypage {
+    margin-left: 1rem;
+    margin-top: 1rem;
+    display: flex;
+}
+.navbar-detailed-x-div-mypage {
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-height: 3.5rem;
+}
+.navbar-detailed-x-mypage {
+    position: absolute;
+    cursor: pointer;
+    right: 1rem;
+}
+.navbar-detailed-menu-mypage-open {
+    transform: translateX(0);
+    height: 100vh;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: transform 0.8s ease-in-out; /* 이동에 대한 transition 추가 */
+}
+
+.navbar-detailed-mypage-menu {
+    display: block;
+    width: 280px;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    right: -280px; /* 오른쪽에 숨겨진 상태로 초기 설정 */
+    background-color: rgb(31, 32, 41);
+    overflow-x: hidden;
+    z-index: 5;
+    transition: right 0.8s ease-in-out; /* 이동에 대한 transition 추가 */
+}
+.profile-picture{
+	cursor: pointer;
+}
+.mypage-profile{
+	margin-top: 20px;
+	margin-left: 15px;
+	margin-right:10px;
+}
+    
+.body-element-mypage-navbar{
+    position: fixed;
+}
 
 #navbar-container {
     max-width: 100%;
     min-width: 100%;
-    /*background-color: #001f54;*/
+    background-color: rgb(31, 32, 41);
     font-weight: 600;
     padding: 8px 0;
     position: relative;
     margin-bottom: 2rem;
 }
 
-#navbar-inner-container {
-    width: 85%;
+.navbar-inner-container {
+    width: 100%;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -19,6 +131,7 @@
     flex-wrap: nowrap;
     font-size: 1rem;
     gap: 1.5%;
+     border-bottom: 1px solid rgb(196, 195, 202);
 }
 
 /* 텍스트 포함한 부분들 넓이 설정 */
@@ -34,13 +147,14 @@
 }
 
 /* 로고 이미지 관련 */
-#navbar-logo-container {
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
+.navbar-logo-container {
+    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
     margin-left: auto;
     margin-right: 0.5rem;
     flex-grow: 1;
+    margin-left: 15px;
 }
 
 .navbar-logo-image {
@@ -48,7 +162,7 @@
 }
 
 /* 메뉴 버튼 관련 */
-#navbar-menu-outer-container {
+.navbar-menu-outer-container {
     margin: 0 0.5rem;
     flex-grow: 1;
 }
@@ -70,26 +184,35 @@
     display: inline;    
 }
 
-
 /* 검색 부분 */
 .navbar-search-container {
-    flex-grow: 4;
-    margin: 0 8px;    
+    flex-grow: 2;
 }
 
 .navbar-search-inner-container {
     position: relative;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;    
 }
 
 .navbar-search-input-container {
     border-radius: 8px;
-    overflow: hidden;    
+    overflow: hidden;
+    width: 100%;
+}
+
+.navbar-search-label {
+    width: 100%;
 }
 
 .navbar-search-input {
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 35px;
+    margin: 0;
     width: 100%;
+    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+    height: 30px;
 }
 
 .navbar-search-button {
@@ -99,29 +222,53 @@
     background-color: transparent;
     border: none;
     transform: translateY(-50%);
-    color: #66666e;
+    /*color: #66666e;*/
+    color: #8f8f8c;
 }
-
 
 /* 유저관련(로그인, 로그아웃, 등등) */
 .navbar-user-div {
     padding: 0 1rem;
-    flex: 1;
+    flex: 2;
+    display: flex;
+    gap: 32px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: end;
+    margin-right: 20px;
 }
 
+.div-profile-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.div-profile-image img {
+    width: 100%;
+    object-fit: cover;
+    min-width: 100%;
+    min-height: 100%;
+}
 
 /* 메뉴 버튼 토글 관련, 디테일 메뉴(누르면 디테일 메뉴 보여줌) */
-#navbar-detailed-menu {
+.navbar-detailed-menu {
     display: flex;
     justify-content: space-between;
     max-width: 1024px;
-    width: 0;
     margin: 0 auto;
+    width: 85%;
     height: 0;
-    opacity: 0;
+    /*opacity: 0;*/
     overflow: hidden;
-    
-    transition: height 0.6s ease-in-out;
+        
+    /*transition: height 0.6s ease-in-out;*/
+    transition: none;
+}
+
+.navbar-detailed-x-div {
+    display: none;
 }
 
 .navbar-detailed-menu-title {
@@ -130,16 +277,26 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .navbar-detailed-menu-title span {
     color: #fbc500;
-    width: 24px;
+    /*width: 24px;*/
     font-size: 1.3rem;
     display: inline-block;    
 }
 
-	/* 토글버튼 메뉴 아이템들 */
+.navbar-chevron-down {
+    display: none;
+}
+
+.navbar-chevron-up {
+    display: none;
+}
+
+/* 토글버튼 메뉴 아이템들 */
 .navbar-detailed-menu-items {
     font-size: 1rem;
     font-weight: 400;
@@ -147,12 +304,13 @@
 
 .navbar-detailed-menu-list {
     list-style-type: none;
-    line-height: 2.5rem;
     padding-left: 2.6rem;
     font-size: 1.1rem;
 }
 
-
+.navbar-each-menu-item {
+    margin-bottom: 1rem;
+}
 
 .navbar-each-menu-item:hover a {
     text-decoration: underline;
@@ -163,4 +321,200 @@
     color: inherit;
 }
 
+/* 영화, tv, 인물 i 태그 (아이콘) 스타일링
+   아이콘에 오른쪽 마진을 주어 텍스트를 정렬하기 위함
+   왼쪽 사이드바 */
+/* 영화 아이콘 */
+.fa-solid.fa-film {
+    margin-right: 6px;
+    font-size: 20px;
+}
+/* tv, 인물 아이콘 */
+.fa-solid.fa-tv, .fa-solid.fa-user-group {
+    margin-right: 6px;
+}
 
+@media(max-width: 1024px) {
+    
+    .navbar-detailed-menu {
+        display: block;
+        
+        width: 280px;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        
+        background-color: rgb(31, 32, 41);
+                
+        overflow-y: auto;
+        
+        border: 2px solid #e9ecef;        
+        border-radius: 8px; 
+        height: 100vh;
+        
+        z-index: 5;
+        
+        /*transition: transform 0.5s ease-in-out;*/
+        transition: none;
+    }
+    
+    .navbar-detailed-menu-open {
+        transform: translateX(0);
+        height: 100vh;
+        border: 2px solid #e9ecef;        
+        border-radius: 8px; 
+    }
+    
+    
+    .body-element-navbar {
+        position: fixed;
+    }
+    
+    .body-detailed-menu-open {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(250, 250, 250, 0.8);
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        z-index: 2;
+    }
+        
+    .navbar-detailed-x-container {
+        /*border-bottom: 1px solid #e9ecef;        */
+    }
+    
+    .navbar-detailed-x-div {
+        display: flex;
+        align-items: center;        
+        position: relative;        
+        min-height: 3.5rem;                     
+    }
+    
+    .navbar-detailed-x {
+        position: absolute;
+        cursor: pointer;
+        right: 1rem;
+    }
+    
+    .navbar-detailed-menu-list {
+        height: 0;
+        transition: height 0.5s ease-in-out;
+    }
+    
+    .navbar-detailed-menu-list-open {
+        
+    }
+    
+    /* 제목관련 */
+    .navbar-detailed-menu-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+    }
+
+    .navbar-detailed-menu-title span {
+        color: #fbc500;
+        /*width: 24px;*/
+        font-size: 1rem;
+        display: inline-block;
+    }
+    
+    .navbar-chevron-div {
+        display: flex;
+        justify-content: end;
+        flex-grow: 1;
+    }
+    
+    .navbar-chevron-down {
+        display: block;
+        margin-right: 1rem;
+    }
+    
+    .navbar-detailed-menu-items {   /* 아코디언을 위해 숨김 */
+        height: 0;
+        transition: all 0.5s ease-in-out;
+        overflow: hidden;        
+    }
+    
+    .navbar-detailed-menu-items-open { /* 아코디언 열때있는 클래스 */
+        
+    }    
+    
+    .navbar-detailed-menu-list {
+        font-size: 1rem;
+        display: block 
+    }
+    
+    .navbar-each-menu-item {
+        margin-bottom: 0.8rem;
+        display: block;
+    }
+    
+    .navbar-detailed-menu-section-container {
+        margin-left: 1rem;
+        margin-top: 1rem;
+    }
+    
+}
+
+@media (max-width: 1048px) {
+    .navbar-search-container {
+        flex-grow: 8;
+        margin: 0;
+    }
+}
+
+@media (max-width: 880px) {
+
+    .navbar-inner-container {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5%;
+    }
+    
+    .navbar-inner-container {
+        font-size: 0.8rem;
+    }
+    
+    .navbar-search-inner-container {
+        width: 100%;
+    }
+    
+    /* 로고 이미지 관련 */
+    /*.navbar-logo-container {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+        margin-left: auto;
+        margin-right: 0.5rem;
+        flex-grow: 1;
+    }*/
+
+    /* 메뉴 버튼 관련 */
+    .navbar-menu-outer-container {
+        margin: 0;
+        flex-grow: 0.5;
+        
+    }
+    
+    /* 검색 부분 */
+    .navbar-search-container {
+        flex-grow: 8;
+        margin: 0 0.5rem;
+        margin: 0    
+    }
+    
+    /* 유저관련(로그인, 로그아웃, 등등) */
+    .navbar-user-div {
+        padding: 0 1rem;
+        flex: 1;
+    }
+    
+}

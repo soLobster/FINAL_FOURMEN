@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<meta charset="UTF-8">
+<title>LOG IN / SIGN UP</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="/css/login.css">
+<link rel="stylesheet" href="/css/forgetpassword.css">
+
+
+</head>
+
+	
+<body class="mainbody">
+	<a  href="http://localhost:8081" class="logo" target="_blank">
+    <img th:src="@{image/logogood.png}" alt="">
+  </a>
+
+  <div class="sectionbig">
+    <div class="container">
+      <div class="row full-height justify-content-center">
+        <div class="col-12 text-center align-self-center py-5">
+          <div class="section pb-5 pt-5 pt-sm-2 text-center">
+            <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                  <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+                  <label for="reg-log"></label>
+            <div class="card-3d-wrap mx-auto">
+              <div class="card-3d-wrapper">
+                <div class="card-front">
+                  <div class="center-wrap">
+                    <div class="section text-center loginscroll">
+                      <div class="mb-2 pb-2 logintitle">Log In</div>
+                      <form action="/login" method="post">
+                      <div class="form-group">
+                        <input type="email" name="username" class="form-style" placeholder="Your Email" id="mail" autocomplete="off">
+                        <i class="input-icon uil uil-at"></i>
+                      </div>  
+                      <div class="form-group mt-2">
+                        <input type="password" name="password" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+                        <i class="input-icon uil uil-lock-alt"></i>
+                      </div>
+                        <div class="faillogin" th:if="${param.error}">
+                		Check your email and password
+            			</div>
+
+                       <button type="submit" id="loginbtn" class="btnlogin mt-4">l  o  g  i  n</button>
+                       
+                        <div class="loginsocial">
+						<div id="naver_id_login"></div>  
+						<a id="kakaologin"></a>
+						</div>	
+                       
+
+                      </form>
+               			
+               			
+                                    <p class="mb-0 mt-2 text-center"><a data-bs-toggle="modal" data-bs-target="#staticBackdrop"class="link">Forgot your password?</a></p>
+                   
+                                    
+                        </div>
+                      </div>
+                    </div>
+                <div class="card-back">
+                  <div class="center-wrap signupscroll">
+                    <div class="section text-center">
+                      <div class="mb-4 pb-3 logintitle">Sign Up</div>
+ 
+                      <form action="/signup" method="post">
+                      <div class="form-group mt-2" id="insertemailbox">
+                        <input type="email" name="email" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
+                        <i class="input-icon uil uil-at"></i>
+                          <a class="btnemail" id="emailinsert">send</a>
+                      </div>
+                      
+                      <div id="checkIdResult"></div>
+                      
+                      <div id="warningmodal" class="warningmodal">
+                      <div class="xbutton"><span id="modal-close" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Invalid email format</p></div>
+						</div>
+						
+					<div id="numberwarningmodal" class="warningmodal">
+    				<div class="xbutton"><span id="numbermodal-close" class="modal-close">&times;</span></div>
+    					<div class="warnbox"><p class="warninginfo">Number was wrong</p></div>
+						</div>
+                      
+                      <div id="emailnot">
+                        <div class="form-group mt-2" id="checkemailbox">
+                        <input type="text" class="form-style" placeholder="Verification Number" id="checkmail" autocomplete="off">
+                        <a class="btnemail" id="emailcheckbtn">Check</a>
+                        <i class="input-icon uil uil-at"></i>
+                      </div>
+                      <p id="countdown">Please enter the verification number within 180 seconds</p> 
+                       </div>
+                       <p id="success">Authentication completed</p>
+                        
+           
+                        
+                         
+                      <div class="form-group mt-2">
+                        <input type="password" name="password" class="form-style" placeholder="Your Password" id="passwordinput" autocomplete="off">
+                        <i class="input-icon uil uil-lock-alt"></i>
+                      </div>
+                       <p id="passwordcondition">Password should include at least 10 characters, 1 uppercase, 1 special character(!,@, etc..)</p> 
+                       <p id="passwordgood">Good Password</p>
+                      
+                       <div class="form-group mt-2">
+                        <input type="password" class="form-style" placeholder="Check Password" id="passwordcheck" autocomplete="off">
+                        <i class="input-icon uil uil-lock-alt"></i>
+                      </div>
+                      <p id="passwordcorrect">Passwords match</p> 
+                      <p id="passwordwrong">Passwords do not match</p>
+                      
+                        <div class="form-group mt-2">
+                        <input type="text" name="name" class="form-style" placeholder="Your Full Name" id="name" autocomplete="off">
+                        <i class="input-icon uil uil-user"></i>
+                      </div> 
+                      
+                        <div class="form-group mt-2">
+                        <input type="text" name="nickname" class="form-style" placeholder="Your Nick Name" id="nickname" autocomplete="off">
+                        <i class="input-icon uil uil-user"></i>
+                      </div> 
+                      
+                      <div id="checkNicknameResult"></div>
+                                          
+                         <div class="form-group mt-2" id="insertemailbox">
+                        <input type="text" name="phone" class="form-style" placeholder="Your Phone" id="phone" autocomplete="off">
+                        <i class="input-icon uil uil-at"></i>
+                          <a class="btnemail" id="phoneinsert">send</a>
+                      </div>
+                      
+                      <div id="checkphoneResult"></div>
+                      
+                      <div id="phonewarningmodal" class="warningmodal">
+                      <div class="xbutton"><span id="phonemodal-close" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Wrong phone number</p></div>
+						</div>
+						
+					<div id="phonenumberwarningmodal" class="warningmodal">
+    				<div class="xbutton"><span id="phonenumbermodal-close" class="modal-close">&times;</span></div>
+    					<div class="warnbox"><p class="warninginfo">Number was wrong</p></div>
+						</div>
+                      
+                      <div id="phonenot">
+                        <div class="form-group mt-2" id="checkemailbox">
+                        <input type="text" class="form-style" placeholder="Verification Number" id="phonecheck" autocomplete="off">
+                        <a class="btnemail" id="phonecheckbtn">Check</a>
+                        <i class="input-icon uil uil-at"></i>
+                      </div>
+                      <p id="phonecountdown">Please enter the verification number within 180 seconds</p> 
+                       </div>
+                       <p id="phonesuccess">Authentication completed</p>
+                   
+                      <button type="submit" id="signupbtn" class="btnlogin mt-4 mb-4 cannot">s  i  g  n  u  p</button>
+                      </form>
+                      
+                       
+                      
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content modalbigbox">
+   
+      
+      <div class="modal-body body">
+      
+  <!-- Choose Form -->
+
+    <section class="form-container">
+
+      <button id="arrowClick" class="form-container__arrow"><i class="fa fa-arrow-circle-left" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5"/>
+</svg></i></button>
+<div class="overlay"></div>
+      <div class="overlay1"></div>
+      <div class="choose-form">
+      <div class="forgetclosebox">
+      	<button type="button" class="btn-close forgetclose" id="forgetbigclose" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="title">
+           <img class="navbar-logo-image" th:src="@{image/logogood.png}">
+        </div>
+        <div class="buttons">
+          <a id="signUp" class="buttons__signup letgo" href="#">Find Email</a>
+          <a id="login" class="buttons__signup buttons__signup--login letgo" href="#">Find Password</a>  
+        </div>
+      </div> 
+
+  <!-- Login Form -->
+
+      <div class="login-form">
+
+        <div class="form-wrapper">
+      <div>
+            <label class="form-wrapper__label" for="signup-username">Fullname</label>
+            <input id="forgetpwfullname" class="form-style" type="text" placeholder="Your name" required />
+            </div>
+            <div>
+            <label class="form-wrapper__label" for="signup-email">Email</label>
+            <input id="forgetpwemail" class="form-style" type="text" placeholder="Your Email" required />
+			<a class="btnemail" id="forgetemailinsert">send</a>
+            </div>
+            
+            <div id="forgetcheckemailbox" class="forgetcheckemailbox">
+            <label class="form-wrapper__label" for="signup-password">Check your email's number</label>
+            <div id='insertemailbox'>        
+            <input id="forgetemailcheck" class="form-style" type="text" placeholder="Authentication number" required />
+             <a class="btnemail" id="forgetemailcheckbtn">check</a>
+             </div>   
+            <p id="forgetemailcountdown">Please enter the verification number within 180 seconds</p> 
+      
+            </div>
+               
+             		<div id="forgetemailwarningmodal" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgetemailnumberwrongclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Invalid email format</p></div>
+						</div>
+						
+					<div id="forgetemailnumberwarningmodal" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgetemailnumberwarningmodalclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Number was wrong</p></div>
+						</div>	
+						
+					<div id="forgetemailnamewarningmodal" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgetemailnamewarningmodalclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Insert full name</p></div>
+						</div>		
+						
+					<div id="finallyfindpassword" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="finallyfindpasswordclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo" id="finallyfindpasswordinfo">New Password</p>
+    					<div class="newpasswordbox">
+    					<p class="newpasswordwarninfo" id="newpasswordwarninfo">Password should include at least 10 characters, 1 uppercase, 1 special character(!,@, etc..)</p>
+    					<p class="newpasswordwarngoodinfo" id="newpasswordwarngoodinfo">Good password</p>
+    					<p class="newpasswordmatchno" id="newpasswordmatchno">Passwords do not match</p>
+    					<p class="newpasswordmatchgood" id="newpasswordmatchgood">Passwords match</p>
+    					<input id="newpassword" type="password" placeholder="New password" required />
+    					<input id="newpasswordcheck" type="password" placeholder="Check password" required />
+    					</div>
+    					 <a class="btnemail newpasswordchange" id="newpasswordchange">Change</a>
+    					</div>
+						</div>	
+						<div id="kakaonaver" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="kakaonaverclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">If you signed up for Kakao or Naver, please use it below</p></div>
+						</div>	
+						
+					<div id="failfinallyfindpassword" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="failfinallyfindpasswordclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Invalid Client</p></div>
+						</div>	
+						
+					<div id="forgetemailhavetoinput" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgetemailhavetoinputclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">You inserted wrong information</p></div>
+						</div>					
+						
+      		<p id="forgetemailsuccess">Authentication completed</p>
+            <button class="btnlogin mt-3" id="findpasswordbutton">Find Password</button>
+
+  <!-- Social-Media -->
+
+          <div class="social-media">
+            <h6 class="title__h2">Or connect with</h6>
+            <a class="buttons__signup buttons__signup--social" id="navergogo" href="https://nid.naver.com/user2/help/pwInquiry?lang=ko_KR"><i class="fab fa naver-f" aria-hidden="true"></i>&nbsp;NAVER</a>
+            <a class="buttons__signup buttons__signup--social" id="kakaogogo" href="https://accounts.kakao.com/weblogin/find_password?lang=ko&continue=%2Flogin%3Fcontinue%3Dhttps%253A%252F%252Fmy.kakao.com%252F"><i class="fab fa-google" aria-hidden="true"></i>&nbsp;KAKAO</a>
+          </div>
+        </div>
+      </div>
+
+  <!-- Register Form -->
+
+      <div class="login-form login-form--register">
+        <div class="form-wrapper">
+          
+          <div>
+            <label class="form-wrapper__label" for="signup-username">Fullname</label>
+            <input id="forgetfullname" class="form-style" type="text" placeholder="Your name" required />
+            </div>
+            <div>
+            <label class="form-wrapper__label" for="signup-password">Phone</label>
+            <input id="forgetphone" class="form-style" type="text" placeholder="Your Phone" required />
+			<a class="btnemail" id="forgetphoneinsert">send</a>
+            </div>
+            <div id="forgetcheckphonebox" class="forgetcheckphonebox">
+            <label class="form-wrapper__label" for="signup-password">Check your phone's number</label>
+            <div id='insertemailbox'>        
+            <input id="forgetphonecheck" class="form-style" type="text" placeholder="Authentication number" required />
+             <a class="btnemail" id="forgetphonecheckbtn">check</a>
+             </div>   
+            <p id="forgetphonecountdown">Please enter the verification number within 180 seconds</p> 
+      
+            </div>
+               
+             		<div id="forgetphonewarningmodal" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgetphonenumberwrongclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Wrong phone number</p></div>
+						</div>
+					<div id="forgetphonenumberwarningmodal" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgetphonenumberwarningmodalclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Wrong phone number</p></div>
+						</div>	
+					<div id="forgetfullnamewarningmodal" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgetfullnamewarningmodalclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Insert full name</p></div>
+						</div>		
+						
+					<div id="finallyfindemail" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="finallyfindemailclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo" id="finallyfindemailinfo"></p></div>
+						</div>	
+						
+					<div id="failfinallyfindemail" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="failfinallyfindemailclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Invalid Client<br>
+    					If you signed up for Kakao or Naver, please use it below</p></div>
+						</div>	
+						
+					<div id="forgethavetoinput" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="forgethavetoinputclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">You inserted wrong information</p></div>
+						</div>					
+						
+      		<p id="forgetphonesuccess">Authentication completed</p>
+            <button class="btnlogin mt-3" id="findemailbutton">Find Email</button>
+          
+
+  <!-- Social-Media -->
+
+          <div class="social-media">
+            <h2 class="title__h2">Or connect with</h2>
+            <a class="buttons__signup buttons__signup--social" id="navergogo" href="https://nid.naver.com/user2/help/idInquiry?lang=ko_KR"><i class="fab fa-naver-f" aria-hidden="true"></i>&nbsp;NAVER</a>
+            <a class="buttons__signup buttons__signup--social" id="kakaogogo" href="https://accounts.kakao.com/weblogin/find_account?lang=ko&continue=%2Flogin%3Fcontinue%3Dhttps%253A%252F%252Fmy.kakao.com%252F"><i class="fab fa-google" aria-hidden="true"></i>&nbsp;KAKAO</a>
+          </div>
+        </div>
+      </div>
+    </section>  
+     
+  
+      </div>
+   
+       
+ 
+    </div>
+  </div>
+</div>
+ <form id="loginForm" action="/login" method="post">
+  <!-- 다른 폼 필드를 필요에 따라 포함 -->
+
+  <!-- 네이버 로그인 정보를 담을 숨겨진 입력 필드 -->
+  <input  name="username" id="naverEmail">
+   <input  name="password" id="naverpassword" value="naverpassword" >
+  <button type="submit" id="hibbenbutton" class="btnlogin mt-4">login</button>
+
+   </form> 
+  
+
+
+ 
+ 
+
+
+</body>
+	
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+	crossorigin="anonymous"></script>
+		
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+<script src="/js/login.js"></script>
+<script src="/js/forgetpassword.js"></script>
+  <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+ <script type="text/javascript">
+ var naver_id_login = new naver_id_login("NccKFQR4sIZ2_ExxYtlu", "http://localhost:8081/login");
+ var state = naver_id_login.getUniqState();
+
+ naver_id_login.setButton("green", 2,35);
+ naver_id_login.setDomain("http://localhost");
+ naver_id_login.setState(state);
+
+ naver_id_login.init_naver_id_login();
+
+
+ // 네이버 사용자 프로필 조회
+ 
+ naver_id_login.get_naver_userprofile("naverSignInCallback()");
+ // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
+ function naverSignInCallback() {
+	 
+	 const email =naver_id_login.getProfileData('email');
+	 document.getElementById('naverEmail').value = email;
+
+	 
+	 
+	 const checkuri = `login/checkemail/${email}`;
+		console.log(checkuri);
+		
+		
+		axios.get(checkuri)
+				.then((response) => {
+					if(response.data ==='N'){ 
+						   const email =naver_id_login.getProfileData('email');
+						   const nicknamechange=naver_id_login.getProfileData('email');
+						   const name = naver_id_login.getProfileData('name');
+						   const usersaveprofile =naver_id_login.getProfileData('profile_image');
+						   const password= 'naverpassword';
+						   const phone = 'naverphone';
+						   const type ='naver';
+						   console.log(email);
+						   const nickname = nicknamechange.replace(".com", "");
+						   console.log(nickname);
+						   const data = {
+								   email,
+								   name,
+								   password,
+								   nickname,
+								   phone,
+								   usersaveprofile,
+								   type
+								 };
+						   
+						   
+						   axios.post('login/naver', data)
+						   .then((response) => {
+						     console.log(response.data);
+							  var hibbenButton = document.getElementById('hibbenbutton');
+							  hibbenButton.click();
+
+
+						    
+						   })
+						   .catch((error) => {
+						     console.log(error);
+							  var hibbenButton = document.getElementById('hibbenbutton');
+							  hibbenButton.click();	
+						   });
+						
+					  
+					console.log(response.data);}
+					if(response.data ==='Y'){ 
+	 
+	 
+   const email =naver_id_login.getProfileData('email');
+   const nicknamechange=naver_id_login.getProfileData('email');
+   const name = naver_id_login.getProfileData('name');
+   const usersaveprofile =naver_id_login.getProfileData('profile_image');
+   const password= 'naverpassword';
+   const phone = 'naverphone';
+   const type ='naver';
+   console.log(email);
+   const nickname = nicknamechange.replace(".com", "");
+   console.log(nickname);
+   const data = {
+		   email,
+		   name,
+		   password,
+		   nickname,
+		   phone,
+		   usersaveprofile,
+		   type
+		 };
+   
+   
+   axios.post('login/naver', data)
+   .then((response) => {
+     console.log(response.data);
+	  var hibbenButton = document.getElementById('hibbenbutton');
+	  hibbenButton.click();
+
+
+    
+   })
+   .catch((error) => {
+     console.log(error);
+	  var hibbenButton = document.getElementById('hibbenbutton');
+	  hibbenButton.click();	
+   });
+					} 
+					  var hibbenButton = document.getElementById('hibbenbutton');
+					  hibbenButton.click();	
+					
+				     
+				})
+				.catch((error) => {
+					console.log(error);
+					  var hibbenButton = document.getElementById('hibbenbutton');
+					  hibbenButton.click();	
+				});
+                    
+ }  
+
+ 
+ var accessToken = naver_id_login.oauthParams.access_token; 
+ 
+	if(accessToken){
+	axios.get(`https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=NccKFQR4sIZ2_ExxYtlu&client_secret=QGmzlYj6eb&access_token=${accessToken}&service_provider=NAVER`, {
+   	mode: 'no-cors',
+  })
+   .then(response => {
+   	console.log('success');
+       // 요청이 성공적으로 완료된 경우 페이지 변경
+   //   window.location.href = 'http://localhost:8081/';
+   })
+   .catch(error => {
+   	console.error('Error:', error);
+ //window.location.href = 'http://localhost:8081/';
+   });
+	}
+
+ 
+ 
+   
+  			
+  			
+  </script>
+
+</html>

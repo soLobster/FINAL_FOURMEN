@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY PAGE EDIT</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+	crossorigin="anonymous">
+	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
+	 <script src="https://kit.fontawesome.com/5b5cfeea7f.js" crossorigin="anonymous"></script>     
+	<link rel="stylesheet" href="/css/mypage.css">
+	   <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+</head>
+<body>
+
+
+	 
+
+ <header>
+       <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<section th:replace="~{/layout/MyPageBasic :: sectionFragment}"></section>
+
+<div class = "mypage-details-body" style="padding-bottom:20px; margin-bottom:50px;">
+
+  <form th:action="@{/mypage/myedit/update}" method="post" id="myForm" enctype="multipart/form-data">
+    <div class="search">
+        <div class="forum-top-area">
+            <div class="forum-search-area card">
+       
+            	<div class="oneinfo">
+                <div class="forum-search-select-area">
+                <div class="forum-select-box">EMAIL</div>
+                </div>
+                <div></div>
+                <div class="forum-search-form-area">
+                    <input class="forum-search-nochange" type="text" name="email" id="userid" th:value="${member.email}" readonly />
+                </div>	
+          		</div>
+          		<div class="oneinfo">
+				 <div class="forum-search-select-area">
+                <div class="forum-select-box">NAME</div>
+                </div>
+                <div></div>
+                <div class="forum-search-form-area">
+                    <input class="forum-search-nochange"  type="text" name="name" id="name" th:value="${member.name}" readonly>
+                </div>
+                </div>
+
+                <div class="oneinfo">
+                <div class="forum-search-select-area">
+                <div class="forum-select-box">LOGIN TYPE</div>
+                </div>
+                <div></div>
+                <div class="forum-search-form-area">
+                    <input class="forum-search-nochange" type="text" id="type" th:value="${member.type}" readonly />
+                </div>	
+          		</div>
+                <div class="oneinfo">	
+                 <div class="forum-search-select-area">
+                <div class="forum-select-box">NICKNAME</div>
+                </div>
+                <div></div>
+                <div class="forum-search-form-area">
+                    <input class="forum-search-input"  type="text" name="nickname" id="nickname" th:value="${member.nickname}">
+               
+                </div>
+                <div id="checkNicknameResult"></div>	
+                </div>
+                <div class="oneinfo">
+                 <div class="forum-search-select-area">
+                <div class="forum-select-box">PHONE</div>
+                </div>
+                <div></div>
+                <div class="forum-search-form-area">
+                    <input class="forum-search-input"  type="text" name="phone" id="phone" th:value="${member.phone}"> <a class="btn btn-dark" id="userphone">send</a>
+                </div>
+                <div id="checkphoneResult"></div>
+                </div>
+                <div class="oneinfo">	
+ 
+                <div></div>
+                
+                <div id="ifphoneinsert">
+                <div class="forum-search-form-area">
+                    <input class="forum-search-input"  type="text" id="phonecheck" value=""><a class="btn btn-dark" id="userphonecheck">send</a>
+                </div>
+               	<div class="phonetime" id="phonetime">
+            	Please enter the verification number within 180 seconds
+                </div>
+                </div>
+                 <div class="phonenumberwrong" id="phonenumberwrong">
+            	Number was wrong
+                </div>
+                 <div class="phonenumbercorrect" id="phonenumbercorrect">
+            	Authentication completed
+                </div>
+                
+                </div>
+               
+                <div class="oneinfo">	
+      
+                <div></div>
+            
+                </div>
+       
+                 
+			
+            </div>
+            <div id="directbye" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="directbyeclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Membership Withdrawal</p>
+    					<p>Please enter your Password</p>
+    					<div class="newpasswordbox">
+    					<input class="newpassword" id="lastcheck" type="password" placeholder="password" required />
+    					 
+    					 </div>
+					
+    					 <a class="deletebye" id="deletedirectbye" th:href="@{/mypage/details/__${member.email}__/edit}">delete</a>
+
+    					</div>
+						</div>	
+            
+            
+            
+            <div id="finallyfindpassword" class="forgetwarningmodal">
+                      <div class="xbutton"><span id="finallyfindpasswordclose" class="modal-close">&times;</span></div>
+    				
+    					<div class="warnbox"><p class="warninginfo">Membership Withdrawal</p>
+    					<p>Send your authentication number to the email</p>
+    					<div class="newpasswordbox">
+    					<p class="newpasswordmatchgood" th:text="${member.email}"></p><a id="emailinsert" class="btnchange">send</a>
+    					</div>
+    					<div class="ifclick" id="ifemailinsert">
+    					<div class="newpasswordbox">
+    					<input class="newpassword" id="checkemail" type="text" placeholder="verification number" required />
+    					 <a class="btnchange" id="emailcheckbtn">check</a>
+    					 </div>
+    					 <p id="emailcountdown">Please enter the verification number within 180 seconds</p>
+    					 </div>
+    					  <p id="emailchecksuccess">Authentication completed</p>
+    					 <a class="deletebye" id="deleteemailbye" th:href="@{/mypage/details/__${member.email}__/edit}">delete</a>
+    					</div>
+						</div>	
+            
+            <div class="card img-card imgbox"> 
+
+            <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
+                            th:src="${member.usersaveprofile}" 
+         					id="previewImage" 
+         					class="card-img" 
+         					alt="...">              
+               <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile == 'userimage.png'}"
+                            th:src="@{/image/userimage.png}" 
+         					id="previewImage" 
+         					class="card-img" 
+         					alt="...">
+			<img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}"
+                            th:src="@{'/image?photo=' + ${member.usersaveprofile}}"
+        			 id="previewImage" 
+         				class="card-img" 
+         				alt="..."> 
+            	<!--<img  th:src="@{'/image?photo=' + ${member.usersaveprofile}}" id="previewImage" class="card-img" alt="...">  -->
+            	<input type="file" id="fileInput" name="upload_photo" class="files">
+            </div>
+            
+        </div>
+           
+    </div>
+    
+   	</form>
+   			
+   		 <div class="detailbutton">
+            <button class="btn btn-dark" id="btndelete">탈퇴</button>
+            <button class="btn btn-outline-secondary" id="btnupdate">회원수정</button>
+         </div>	
+   
+    
+
+</div>
+
+
+<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
+
+</body>
+    <script th:src="@{/js/footer.js}"></script>
+<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/mypage.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/Mypage/mypage-feature.js}"></script>
+    	
+</html>

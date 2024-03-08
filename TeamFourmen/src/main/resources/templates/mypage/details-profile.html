@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+    <link th:href="@{/css/user.css}" rel="stylesheet">
+    <link th:href="@{/css/mypage/details.css}" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+           <link th:href="@{/css/footer.css}" rel="stylesheet">
+
+    <style>
+
+        ul {
+            margin-bottom: 0;
+        }
+
+        h5{
+            margin-bottom: 0;
+            padding-bottom: 3px;
+            border-bottom: 1px solid #bfbfbf;
+        }
+
+        .mypage-details-body{
+            padding: 10px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .favorite-section {
+            max-width: 630px;
+            min-width: 630px;
+        }
+
+        .review-section {
+            width: 310px;
+            max-width: 310px;
+            min-width: 310px;
+            /*background-color: #155d27;*/
+            padding: 10px 5px 10px 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .favorite {
+            max-width: 629px;
+            margin-top: 10px;
+        }
+
+        .favorite a{
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .favorite a:hover {
+            color: #8dabfb;
+        }
+
+        li.liked_card {
+            display: inline-block;
+            overflow: hidden;
+            margin-right: 6px;
+            margin-top: 15px;
+        }
+
+
+        .liked_img {
+            max-width: 100%;
+        }
+
+        .card-img-overlay{
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            align-items: start;
+        }
+
+        .card:hover .card-img-overlay {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .card-title{
+            white-space: normal;
+        }
+
+        .recently-review {
+            padding: 4px;
+        }
+
+        .recently-review img{
+            border-radius: .5rem;
+            border: 2px solid transparent;
+        }
+
+        .recently-review img:hover {
+            border-color: #fbc500;
+        }
+
+        .star-ratings {
+            display: flex;
+            color: #33ff33;
+            font-size: 20px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<header>
+    <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+</header>
+
+<section th:replace="~{/layout/MyPageBasic :: sectionFragment}"></section>
+
+<div class = "mypage-details-body">
+
+    <section class ="favorite-section">
+        <section class = "favorite movie">
+            <ul>
+                <a th:href="@{movie}">
+                    <h5>좋아하는 영화</h5>
+                </a>
+
+                <th:block th:if = "${favMovies.size() != 0}">
+                    <li class="border-0 card liked_card" th:each=" movie : ${favMovies}">
+                        <img class = "liked_img"
+                             th:if="${movie.getImagePath() ne null and movie.getImagePath() ne '' and movie.getImagePath() ne 'null'}"
+                             th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.getImagePath()}}" width="140" height="210">
+                        <img class = "liked_img"
+                             th:unless="${movie.getImagePath() ne null and movie.getImagePath() ne '' and movie.getImagePath() ne 'null'}"
+                             th:src = "@{'/image/userimage.png'}" width="140" height="210"/>
+                        <a th:href="@{/movie/details/{id}(id = ${movie.getId()})}" class="text-decoration-none" target="_blank">
+                            <section class = "card-img-overlay">
+                                <p class = "card-title text-white" th:text="${movie.getName()}"></p>
+                            </section>
+                        </a>
+                    </li>
+                </th:block>
+                <th:block th:unless="${favMovies.size() !=0}">
+                    <h3 class ="my-3">좋아요를 누른 영화가 없습니다.</h3>
+                </th:block>
+
+            </ul>
+        </section>
+        <section class = "favorite tvshow">
+            <ul>
+                <a th:href="@{tv}">
+                    <h5>좋아하는 TV 프로그램</h5>
+                </a>
+
+                <th:block th:if="${favTv.size() != 0}">
+                    <li class="border-0 card liked_card" th:each=" tv : ${favTv}">
+                        <img class = "liked_img"
+                             th:if="${tv.getImagePath() ne null and tv.getImagePath() ne '' and tv.getImagePath() ne 'null'}"
+                             th:src="@{'https://image.tmdb.org/t/p/w500' + ${tv.getImagePath()}}" width="140" height="210">
+                        <img class = "liked_img"
+                             th:unless="${tv.getImagePath() ne null and tv.getImagePath() ne '' and tv.getImagePath() ne 'null'}"
+                             th:src = "@{'/image/userimage.png'}" width="140" height="210"/>
+                        <a th:href="@{/tv/details/{id}(id = ${tv.getId()})}" class="text-decoration-none" target="_blank">
+                            <section class = "card-img-overlay">
+                                <p class = "card-title text-white" th:text="${tv.getName()}"></p>
+                            </section>
+                        </a>
+                    </li>
+                </th:block>
+
+                <th:block th:unless="${favTv.size() !=0}">
+                    <h3 class ="my-3">좋아요를 누른 TV 프로그램이 없습니다.</h3>
+                </th:block>
+            </ul>
+        </section>
+        <section class ="favorite playlist">
+            <ul>
+                <a th:href="@{person}">
+                    <h5>좋아하는 인물</h5>
+                </a>
+
+                <th:block th:if="${favPerson.size() !=0}">
+                    <li class="border-0 card liked_card" th:each=" person : ${favPerson}">
+                        <img class = "liked_img"
+                             th:if="${person.getImagePath() ne null and person.getImagePath() ne '' and person.getImagePath() ne 'null'}"
+                             th:src="@{'https://image.tmdb.org/t/p/w500' + ${person.getImagePath()}}" width="140" height="210">
+                        <img class = "liked_img"
+                             th:unless="${person.getImagePath() ne null and person.getImagePath() ne '' and person.getImagePath() ne 'null'}"
+                             th:src = "@{'/image/userimage.png'}" width="140" height="210"/>
+                        <a th:href="@{/person/details/{id}(id = ${person.getId()})}" class="text-decoration-none" target="_blank">
+                            <section class = "card-img-overlay">
+                                <p class = "card-title text-white" th:text="${person.getName()}"></p>
+                            </section>
+                        </a>
+                    </li>
+                </th:block>
+
+                <th:block th:unless="${favPerson.size() != 0}">
+                    <h3 class ="my-3">좋아요를 누른 인물이 없습니다.</h3>
+                </th:block>
+
+            </ul>
+        </section>
+    </section>
+
+    <section class= "review-section">
+
+        <h5>활동</h5>
+        <div th:text="${ '평균 평점 : ' + #numbers.formatDecimal(averageRating, 1, 2)}" style="font-size: 30px"></div>
+
+
+        <h5>최근 남긴 리뷰</h5>
+        <div class = "recently-review">
+            <a th:href="@{/{category}/details/{id}(category = ${recentReviewInfo.getCategory()}, id = ${recentReviewInfo.getId()})}">
+                <img th:src="@{'https:/image.tmdb.org/t/p/w1280' + ${recentReviewInfo.getBackdropPath()}}" width="290" height="165"/>
+            </a>
+            <div class = "recently-review-info">
+                <div th:text="${recentReviewInfo.getName()}" style="font-size: 30px"></div>
+                <span class = "star-ratings" th:rating="${recentReview.getRating()}"></span>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>
+    <script th:src="@{/js/footer.js}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+
+<script th:src="@{/js/navbar.js}"></script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const starRatingElements = document.querySelector('.star-ratings');
+
+        const rating = parseFloat(starRatingElements.getAttribute('rating'));
+
+        const integerPart = Math.floor(rating);
+        const decimalPart = rating - integerPart;
+
+        // 별표로 변환하는 함수
+        function convertToStars(numStars) {
+            let stars = '';
+            for (let i = 0; i < numStars; i++) {
+                stars += '<i class="fa-solid fa-star"></i>';
+            }
+            return stars;
+        }
+
+        starRatingElements.innerHTML = convertToStars(integerPart);
+
+        // 소수 부분이 .5인 경우 '½' 이모지 추가
+        if (decimalPart === 0.5) {
+            starRatingElements.innerHTML += '<i class="halfScore">½</i>';
+        }
+
+    });
+
+</script>
+
+
+<script th:src="@{/js/Mypage/mypage-feature.js}" defer></script>
+</body>
+</html>

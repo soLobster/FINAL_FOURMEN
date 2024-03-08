@@ -1,0 +1,110 @@
+@charset "UTF-8";
+
+
+.title-private-btn-container {
+    width: 1000px;
+    margin: 2rem auto 2rem auto;
+    
+    display: flex;
+    justify-content: space-between;
+}
+
+    /* private설정 토글버튼 부분 */
+.toggle-set-privacy-container {
+    display: flex;
+    flex-nowrap;
+}
+
+.div-is-private-label {
+    margin-right: 8px;
+    
+}
+
+.playlist-items-container {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.ul-playlist-items {
+    padding: 0;
+}
+
+.li-playlist-item {
+    list-style: none;
+    padding: 16px 0;
+    border-bottom: 1px #495057 solid;
+}
+
+.li-playlist-item:last-child {
+    border-bottom: none;
+}
+
+.li-playlist-item.dragging :where(.each-playlist-container, i) {
+    opacity: 30;
+}
+
+.each-playlist-container {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.each-playlist-item-image-container {
+    width: 100px;
+    height: 150px;  
+}
+
+.img-each-playlist {
+    width: 100%;
+    height: 100%;
+    
+    min-width: 100%;
+    min-height: 100%;
+    
+    object-fit: cover;
+}
+
+	/* 영화제목 등 설명부분 */
+    /* 영화제목 순서변경 등 있는 컨테이너 */
+.each-playlist-item-description-container {
+    margin-left: 32px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;    
+    flex-grow: 1;
+}
+
+.each-playlist-item-description-container > div{
+    flex-grow: 1;
+}
+
+.each-playlist-item-title-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.a-each-playlist-title {
+    font-size: 1.5rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.a-each-playlist-title:hover {
+    text-decoration: underline;
+}
+
+.btn-switch-position {
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    background-color: transparent;
+}
+
+
+.each-playlist-item-btn-delete-container {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}

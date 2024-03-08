@@ -55,12 +55,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     innerHtml += `
                         <div class="movie-item-container">
                             <div class="movie-item-image-container">
-                                <a href='${originPath}/movie/details?id=${movie.id}'>
-                                    <img src='https://image.tmdb.org/t/p/original/${movie.poster_path}'>
+                                <a href='${originPath}/movie/details/${movie.id}'>
+                                    <img src=${movie.poster_path != null && movie.poster_path != 'null' && movie.poster_path != '' ?
+                                    	'https://image.tmdb.org/t/p/w220_and_h330_face/' + movie.poster_path :
+                                    	'/image/no_image_default.webp'}>
                                 </a>
                             </div>
                             <div class="movie-description-container">
-                                <a href='${originPath}/movie/details?id=${movie.id}'>
+                                <a href='${originPath}/movie/details/${movie.id}'>
                                     <div class="movie-title">${movie.title}</div>
                                 </a>
                                 <div>${movie.release_date}</div>

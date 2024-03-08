@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title th:text="${tvShowDto.getName() + ' - ' + seasonDto.getName()}"></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous">
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+  <script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+  <link th:href="@{/css/footer.css}" rel="stylesheet">
+  <style>
+
+  @font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  /* 폰트 적용 */
+  body {
+    font-family: 'Pretendard-Regular';
+    background-color: black;
+  }
+
+  main{
+    color: white;
+  }
+
+  .flex_header_container {
+    position: relative;
+    width: 100vw;
+    height: 600px;
+
+    /*display: flex;*/
+  }
+
+  img.backdropImg {
+    width: 100vw;
+    height: 600px;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: brightness(0.6);
+    z-index: -1;
+  }
+
+  div.season_details{
+    margin-left: 10rem;
+    margin-right: 5rem;
+    width: fit-content;
+    z-index: 1;
+    display: flex;
+  }
+
+  section.poster {
+    width: 330px;
+    min-width: 330px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+  }
+
+  section.over-view {
+    margin-top: 100px;
+    margin-left: 50px;
+    margin-bottom: 50px;
+    width: 70%;
+    min-width: 400px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    overflow: auto;
+  }
+
+  div.poster_img{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 330px;
+  }
+
+  #poster_img{
+    position: relative;
+    width: 330px;
+    height: 500px;
+  }
+
+  #poster_img_none{
+    position: relative;
+    width: 330px;
+    height: 500px;
+  }
+
+  .btn-slide-image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background-color: transparent;
+    font-size: 40px;
+    top: 45%;
+    width: 50px;
+    height: 50px;
+    padding: 0 10px 0 10px;
+    border: none;
+    color: #e9ecef;
+    opacity: 0.8;
+    z-index: 2;
+  }
+
+  .btn-prev{
+    left: -50px;
+    /*display: none;*/
+  }
+
+  .btn-next{
+    right: -50px;
+  }
+
+  .season_casting-list {
+    position: relative;
+    display: block;
+  }
+
+  .casting {
+    margin-top: 20px;
+    margin-left: 0;
+    padding: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+  }
+
+  ol.people_scroller {
+    padding-left: 0;
+  }
+
+  li.people_card {
+    display: inline-block;
+    overflow: hidden;
+    margin-right: 10px;
+  }
+
+  .people_img{
+    max-width: 100%;
+  }
+
+  .card-img-overlay{
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+  }
+
+  .card:hover .card-img-overlay {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .card-title, .card-text {
+    white-space: normal;
+  }
+
+  div.episode-list-container {
+    margin-top: 50px;
+    padding-left: 10rem;
+    padding-right: 10rem;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: auto;
+  }
+
+  div.episode-list{
+    /*background-color: lightgray;*/
+  }
+
+  .back_to_top{
+    width: 10px;
+    height: 10px;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    text-decoration: none;
+    transition: 0.2s ease-out;
+    z-index: 999;
+  }
+
+  .back_to_top span {
+    color: white;
+    font-size: 3rem;
+    transition: 0.2s ease-out;
+  }
+
+  .back_to_top i {
+    color: darkgray;
+    opacity: 0.7;
+  }
+
+  .back_to_top i:hover {
+    color: lightgray;
+  }
+  .back_to_top:hover span {
+    transform: translateY(-4px);
+  }
+
+  .casting::-webkit-scrollbar{
+    width: 5px;
+    height: 6px;
+  }
+
+  .casting::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 6px;
+  }
+
+  .casting::-webkit-scrollbar-track {
+    background-color: black;
+  }
+
+  </style>
+  <link th:href="@{/css/navbar.css}" rel="stylesheet">
+  <link th:href="@{/css/theme.css}" rel="stylesheet">
+
+</head>
+<body>
+<header>
+  <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+  <!--  <h1 th:text="${tvShowDto.getOriginal_name() + ' - Season  ' + seasonDto.getSeason_number()}"></h1>-->
+<!--  <input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">-->
+</header>
+
+<main>
+<div class = "flex_header_container">
+  <img class = "backdropImg"
+       th:if="${episodeDTO.getStill_path() ne null and episodeDTO.getStill_path() ne 'null' and episodeDTO.getStill_path() ne ''}"
+       th:src=" 'https:/image.tmdb.org/t/p/original' + ${episodeDTO.getStill_path()}" />
+  <img class = "backdropImg"
+       th:unless="${episodeDTO.getStill_path() ne null and episodeDTO.getStill_path() ne 'null' and episodeDTO.getStill_path() ne ''}"
+       th:src = "@{'/image/default-black-background.jpg'}"/>
+
+  <div class = "season_details">
+
+    <section class= "poster">
+      <div class = "poster_img">
+        <img id = "poster_img" class = "rounded detail_poster"
+             th:if = "${seasonDto.getPoster_path() ne null and seasonDto.getPoster_path() ne 'null' and seasonDto.getPoster_path() ne ''}"
+             th:src=" 'https:/image.tmdb.org/t/p/original' + ${seasonDto.getPoster_path()}" />
+        <img id = "poster_img_none" class = "rounded detail_poster"
+             th:unless= "${seasonDto.getPoster_path() ne null and seasonDto.getPoster_path() ne 'null' and seasonDto.getPoster_path() ne ''}"
+             th:src="@{'/image/default.png'}" />
+      </div>
+    </section>
+
+    <section class = "over-view">
+      <div>
+        <h1 th:text="${tvShowDto.getName() + ' - Season ' + seasonDto.getSeason_number() + ' (' + releaseYear + ') ' }"></h1>
+      </div>
+
+      <div>
+        <p class = "fs-5 fw-bold mt-5 mb-0">OVERVIEW</p>
+        <p class = "mt-0" th:text="${seasonDto.getOverview()}"></p>
+        <p class = "fs-5 fw-bold mt-5 mb-0" th:text="${ 'Episode Number  : ' + seasonDto.getEpisodes().size()}"></p>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+<div class = "episode-list-container">
+  <div class = "d-flex mb-2 episode-direction justify-content-center" th:unless = "${tvShowDto.getNumber_of_seasons() == 1}">
+
+    <a th:unless = "${seasonDto.getSeason_number() == 1 }"
+       class="p-2 btn btn btn-outline-light btn-sm me-auto forward_season_button"
+       th:href = "@{ '../season/' + ${seasonDto.getSeason_number() - 1} }">Previous Season</a>
+
+
+    <a th:href = "@{'/tv/details/' + ${tvShowDto.getId()}}" class = "p-2  btn btn-outline-light btn-sm" th:text="${'Back to ' +tvShowDto.getOriginal_name()  + ' Main'}"></a>
+
+
+    <a th:unless = "${ seasonDto.getSeason_number() == tvShowDto.getNumber_of_seasons()}"
+       class="ms-auto p-2 btn btn-outline-light btn-sm backward_season_button"
+       th:href = "@{'../season/' + ${seasonDto.getSeason_number() + 1} }">Next Season</a>
+
+  </div>
+
+  <div class = "my-4 season_casting-list">
+    <h3>시즌 캐스팅</h3>
+    <button th:if="${castingList.size() > 6}" class="btn-slide-image btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
+    <section class = "casting List-scroller">
+      <ol class = "px-3 mb-1 people_scroller">
+        <li class = "border-0 card people_card" th:each=" people : ${castingList}">
+          <img class = "people_img" th:if="${people.getProfile_path() ne null and people.getProfile_path() ne 'null'}" th:src=" 'https:/image.tmdb.org/t/p/h632' + ${people.getProfile_path()}" width="180" height="273" />
+          <img class = "people_img" th:unless="${people.profile_path ne null and people.profile_path ne 'null'}" th:src=" @{'/image/default.png'}" width="180" height="273" />
+          <a th:href="@{/person/details/{id}(id = ${people.getId()})}" class="text-decoration-none" target="_blank">
+            <section class = "card-img-overlay">
+              <p class = "card-title text-white fs-4 fw-bolder" th:text="${people.getName()}"></p>
+              <p class = "card-text text-white fst-italic" th:text="${people.getCharacter()}"></p>
+            </section>
+          </a>
+        </li>
+      </ol>
+    </section>
+    <button th:if=" ${castingList.size() > 6}" class="btn-slide-image btn-next"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+
+  <div class = "mt-5 episode-list">
+      <div class = "card bg-dark my-4 bordered-0 episode-card" th:each=" e : ${seasonDto.getEpisodes()}" th:object="${e}">
+          <div class = "row g-1">
+            <div class="col-md-4">
+              <img class = "bd-placeholder-img img-fluid object-fit-cover rounded bordered-0"
+                   th:if = "${e.getStill_path() ne null and e.getStill_path() ne 'null' and e.getStill_path() ne ''}"
+                   th:src=" 'https:/image.tmdb.org/t/p/original' + ${e.getStill_path()} " style="max-width: 100%; height: 300px;"/>
+              <img class = "bd-placeholder-img img-fluid object-fit-cover rounded bordered-0"
+                   th:unless = "${e.getStill_path() ne null and e.getStill_path() ne 'null' and e.getStill_path() ne ''}"
+                   th:src=" @{'/image/default-w600.png'} " style="max-width: 100%; height: 300px;"/>
+
+            </div>
+            <div class = "col-md-8 mt-1 p-2">
+              <div class="card-body text-white bordered-0 mx-4">
+                <h3 class = "card-title fw-bolder" th:text="${ 'Episode ' + e.getEpisode_number() + '. ' + e.getName()}"></h3>
+                <p class = "card-text fst-italic" th:text="${e.getOverview()}"></p>
+                <p class = "card-text" th:if = "${e.getAir_date() ne null and e.getAir_date() ne 'null' and e.getAir_date() ne ''}"
+                   th:text="${'Air Date : ' + e.getAir_date()}"></p>
+                <p class = "mb-0 card-text" th:text="${ 'Runtime : ' + e.getRuntime() +'분'}"></p>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- back to top button -->
+  <a href="javascript:void(0)" class="back_to_top" onclick="scrollToTop()">
+    <span><i class="fa-solid fa-circle-up"></i></span>
+  </a>
+
+</div>
+
+
+
+</main>
+
+<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
+
+
+    <script th:src="@{/js/footer.js}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+</script>
+<script>
+
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const scrollDistance = 300; // 스크롤 거리
+    const scrollDuration = 300; // 스크롤 지속 시간
+    const container = document.querySelector('.casting');
+
+    // 좌측 버튼 클릭 시 스크롤
+    document.querySelector('.btn-prev').addEventListener('click', function() {
+      container.scrollBy({
+        left: -scrollDistance,
+        behavior: 'smooth'
+      });
+    });
+
+    // 우측 버튼 클릭 시 스크롤
+    document.querySelector('.btn-next').addEventListener('click', function() {
+      container.scrollBy({
+        left: scrollDistance,
+        behavior: 'smooth'
+      });
+    });
+  });
+
+</script>
+<script th:src="@{/js/navbar.js}"></script>
+
+</body>
+</html>

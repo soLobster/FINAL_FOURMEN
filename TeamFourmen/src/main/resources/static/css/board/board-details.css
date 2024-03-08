@@ -1,0 +1,386 @@
+@charset "UTF-8";
+
+.post-whole-container {
+    width: 85%;
+    margin: 1rem auto;
+}
+.boardtitle{
+	width: 85%;
+	margin: 0 auto;
+	
+}
+
+.boardtitle a {
+    color:#fbc500;
+    text-decoration: none;
+}
+
+.boardtitle a:hover {
+    text-decoration: underline;
+}
+
+/* 게시글 제목, 작성날짜, 조회수 등 포함한 헤더부분 */
+.post-head-container {
+    margin: 1.5rem 0;
+}
+
+.post-title-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    
+    background-color: #495057;
+    
+    padding: 1rem 0.5rem;
+    border-radius: 8px;
+    color:white;
+}
+
+.post-created-time-modified-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+}
+
+.post-author-other-info-container {
+    border-bottom: 2px solid #495057;
+    padding: 0.5rem;
+}
+
+.post-author-other-info-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-views-likes-container {
+    display: flex;
+    flex-wrap: nowrap;    
+    gap: 1.5rem;
+}
+
+.post-views-likes-container i {
+    font-size: 0.8rem;
+}
+
+    	/* 이미지 관련 */
+figure.image {
+    margin: 0 auto;
+}
+
+        /* 이미지 크기 관련 */
+.image_resized img {
+    width: 100%;
+    height: auto;
+}                
+
+	/* 게시글 본문 컨테이너 */
+.post-content-container {
+    padding: 0.5rem;
+}
+
+
+.post-btn-container {
+    
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0 1rem 0;    
+}
+    /* 좋아요 버튼 관련 */
+.like-btn-container {
+    display: flex;
+    align-items: center;
+}
+    
+.btn-like-post {
+    padding: 0.8rem;
+    background-color: transparent;
+    border: 4px solid #0197f6;
+    border-radius: 8px;
+    
+    font-size: 1rem;
+    font-weight: 700;
+    color: inherit;
+}
+
+.btn-like-post:hover {
+    background-color: #0197f6;
+    color: black;
+}
+
+.liked-already {
+    background-color: #ef233c;
+    
+    border: none;
+}
+
+.liked-already:hover {
+    background-color: #ef233c;
+    transform: scale(1.1);
+    color: inherit;    
+}
+
+    /* 수정, 삭제 버튼 관련 */
+.delete-edit-btn-container {
+    display: flex;
+    align-items: center;
+}    
+
+.btn-delete-post {
+    background-color: transparent;
+    border: 2px solid red;
+    border-radius: 4px;
+    padding: 2px 8px;
+    color: inherit;
+    margin-right: 16px;
+}
+
+.btn-edit-post {
+    background-color: transparent;
+    border: 2px solid #5bba6f;
+    border-radius: 4px;
+    padding: 2px 8px;
+    color: inherit;
+    
+}
+
+
+/* 줄 구분 div */
+.div-divider {
+    width: 100%;
+    height: 2px;
+    border: 1px solid #495057;
+}
+
+/* 댓글 관련 */
+.post-comment-each-container {
+    padding: 1rem 0;
+    border-bottom: 1px solid #495057;
+}
+
+/*
+.post-comment-each-container:last-child {
+    border-bottom: none;
+}
+*/
+    /* 댓글 헤더 */
+.comment-header-container {
+    padding: 0.5rem 0;
+    display:flex;
+    justify-content: space-between;
+}
+
+.post-comment-each-profile-container {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+    min-width: 48px;
+    min-height: 48px;
+    
+}
+
+.post-comment-each-profile {
+    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;  
+}
+
+
+
+.div-num-comments {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+
+.post-textarea-container {
+    width: 100%;
+    height: 80px;
+    margin: 0.5rem auto;
+    
+    display: flex;
+}
+
+.textarea-post-comment {
+    width: 80%;
+    flex-grow: 1;
+    height: 100%;
+    resize: none;
+    border-radius: 8px;
+    background-color: lightgray;
+    
+    
+}
+
+.btn-add-post-comment {
+    
+    white-space: nowrap;
+    height: 100%;
+    border-radius: 8px;
+    background-color: #102770;
+    color: #fbc500;
+}
+.btn-post-comment-refresh{
+    background-color: rgb(31, 32, 41);
+    color: white;
+    border-radius: 8px;	
+}
+.btn-post-comment-refresh:hover{
+	color:lightgray;
+}
+
+    /* 각 댓글 관련 */
+.post-comment-each-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
+    
+    margin: 0 1rem 0.5rem 0;
+    
+}
+
+.post-comment-text-vertical-center {
+    margin: auto 0;
+}
+
+.post-comment-author-create-date-container {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;    
+}
+
+.post-comment-each-profile-container {
+    margin-right: 12px;
+}
+
+            /* 포스트 글 쓴 사람의 댓글의 경우 글쓴이 표시 */
+.post-comment-by-post-author {
+    background-color: #bfc540;
+    padding: 2px 4px;
+    color: #000;
+    border-radius: 8px;
+    margin-left: 4px;
+}
+
+.post-comment-each-author {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+    /* 댓글 몸체 */
+.post-comment-body-container {
+    margin-top: 16px;
+    padding: 0.5 
+}
+
+
+    /* 각 댓글 좋아요, 신고 부분 */
+.post-comment-each-like-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+.post-comment-like-container:hover {
+    cursor: pointer;
+}
+
+.post-comment-already-liked {
+    color: #33ff33;
+}
+
+
+.post-comment-each-like-report-icon-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+}
+
+    	/* 각 댓글의 답근달기 버튼 */
+.post-comment-reply-container {
+    margin-top: 16px;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: end;
+}
+
+.btn-post-comment-reply {
+    background-color: #926c15;
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+}
+
+.span-post-comment-replied-author {
+    cursor: pointer;
+}
+
+        /* 답장받은 댓글, 대댓글을 하이라이트 하기 위한 css */
+.post-comment-replied {
+    background-color: #1a659e!important;
+    transition: all 1s ease-in;
+}
+
+        /* 본인작성 댓글일 때 삭제버튼 */
+.btn-post-comment-delete {
+    border: none;
+    background-color: transparent;
+    color: inherit;
+}
+
+
+	/* 댓글 답장관련 */
+.post-comment-add-reply-container {
+    display: flex;
+    height: 80px;
+    margin-top: 16px;
+}
+
+.textarea-post-comment-reply {
+    width: 80%;
+    flex-grow: 1;
+    height: 100%;
+    resize: none;
+    border-radius: 8px;
+    background-color: lightgray;
+    
+}
+
+.btn-post-comment-add-reply {
+    white-space: nowrap;
+    height: 100%;
+    background-color: #102770;
+    color: #fbc500;
+    border-radius: 8px;
+}
+
+    	/* 대댓글 부분 컨테이너 */
+.post-comment-each-reply-container {
+    background-color: #333533;
+}
+    	
+.post-comment-reply-author-create-date-container {
+    display: flex;
+    justify-content: start;
+    margin-left: 28px;
+}
+
+.post-comment-reply-l-icon-container {
+    margin-right: 12px;
+}
+
+.post-comment-reply-body-container {
+    margin-left: 48px;
+}
+
+            /* 답변받는 글쓴이 */
+.span-post-comment-replied-author {
+    color: #5c6b73;
+    font-style: italic;
+}

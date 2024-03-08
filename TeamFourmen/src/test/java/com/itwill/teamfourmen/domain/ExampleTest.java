@@ -1,147 +1,82 @@
 package com.itwill.teamfourmen.domain;
 
-import java.time.LocalDate;
+import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.itwill.teamfourmen.dto.movie.MovieCreditDto;
-import com.itwill.teamfourmen.dto.movie.MovieCrewDto;
-import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
-import com.itwill.teamfourmen.dto.movie.MovieExternalIdDto;
-import com.itwill.teamfourmen.dto.movie.MovieQueryParamDto;
-import com.itwill.teamfourmen.dto.movie.MovieReleaseDateItemDto;
-import com.itwill.teamfourmen.dto.movie.MovieGenreDto;
-import com.itwill.teamfourmen.dto.movie.MovieListDto;
-import com.itwill.teamfourmen.dto.movie.MovieProviderDto;
-import com.itwill.teamfourmen.dto.movie.MovieProviderItemDto;
-import com.itwill.teamfourmen.dto.movie.MovieVideoDto;
-import com.itwill.teamfourmen.service.MovieApiUtil;
-import com.itwill.teamfourmen.service.MovieDetailService;
+import com.itwill.teamfourmen.dto.chat.ChatRoomDto;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 @SpringBootTest
 public class ExampleTest {
+	
+	// @Test
+	public void test() {
+        Integer[] array = {1, 2, 3};
+        List<Object> list = Arrays.asList(array);
+		
+        log.info(list.toString());
+        
+		
+	}
+	
+	
+//	@Test
+	public void mapTest() {
+		
+		Map<String, ChatRoomDto> chatRooms = new ConcurrentHashMap<>();
+		
+		ChatRoomDto roomDto = ChatRoomDto.builder().category("movie").roomId(111).build();
+		
+		chatRooms.put("movie_111", roomDto);
+		
+		log.info(chatRooms.get("movie_111").toString());
+		
+		log.info("이거 null? = {}", chatRooms.get("12313"));
+		
+		
+		Set<String> users = new HashSet<>();
+		
+		users.add("111");
+		
+		users.add("222");
+		
+		log.info("유저 삭제 전 = {}", users);
+		
+		users.remove("111");
+		
+		log.info("users 삭제후 = {}", users);
+		
+	}
 
-	@Autowired
-	private MovieApiUtil movieUtil;
-	@Autowired
-	private MovieDetailService movieDetailService;
-	
-	//@Test
-	public void test() throws JsonMappingException, JsonProcessingException {
-		
-		List<MovieGenreDto> genreList = movieUtil.getMovieGenreList();
-		
-		Assertions.assertNotNull(genreList);
-		log.info("genreList={}", genreList);
-		
-		
-	}
-	
-	// @Test
-	public void movieDetailsTest() {
-		
-		MovieDetailsDto detailsDto = movieUtil.getMovieDetails(609681);
-		
-		Assertions.assertNotNull(detailsDto);
-		log.info("detailsDto={}", detailsDto);
-		
-	}
-	
-	// @Test
-	public void movieCreditTest() {
-		
-		MovieCreditDto creditDto = movieUtil.getMovieCredit(609681);
-		
-		Assertions.assertNotNull(creditDto);
-		log.info("creditDto={}", creditDto);
-		
-		log.info("castDto list={}", creditDto.getCast());
-		log.info("crewDto list={}", creditDto.getCrew());
-		
-		List<MovieCrewDto> directorList = creditDto.getCrew().stream().filter((x) -> x.getJob().equals("Director")).toList();
-		log.info("director lists = {}", directorList);
-		
-	}
-	
-	
-	// @Test
-	public void movieVideoTest() throws JsonMappingException, JsonProcessingException {
-		
-		List<MovieVideoDto> videoList = movieUtil.getMovieVideoList(609681);
-		
-		Assertions.assertNotNull(videoList);
-		log.info("movie video list = {}", videoList);
-		
-		List<MovieVideoDto> trailerList = videoList.stream().filter((x) -> x.getType().equals("Trailer")).toList();
-		
-		log.info("movie trailer list = {}", trailerList);
-	}
-	
-	// @Test
-	public void movieProviderTest() throws JsonMappingException, JsonProcessingException {
-		
-		MovieProviderDto providerDto = movieUtil.getMovieProviderList(893723);
-		List<MovieProviderItemDto> providerList = movieDetailService.getOrganizedMovieProvider(providerDto);
-		
-		Assertions.assertNotNull(providerDto);
-		log.info("providerDto={}", providerDto);
-		
-		Assertions.assertNotNull(providerList);
-		log.info("provider list = {}", providerList);
-		
-	}
-	
-	// @Test
-	public void movieCollectionList() {
-		
-		List<MovieDetailsDto> collectionList = movieUtil.getMovieCollectionList(623911);
-		
-		Assertions.assertNotNull(collectionList);
-		log.info("collectionLIst={}", collectionList);
-		
-	}
-	
-	
-	// @Test
-	public void externalIdTest() {
-		MovieExternalIdDto dto = movieUtil.getMovieExternalId(609681);
-		
-		Assertions.assertNotNull(dto);
-		log.info("external ids = {}", dto);
-	}
-	
-	// @Test
-	public void recommendedMovieTest() {
-		List<MovieDetailsDto> list = movieUtil.getRecommendedMovie(609681);
-		
-		Assertions.assertNotNull(list);
-		log.info("list={}", list);
-	}
-	
-	
-	
-	
-	@Test
-	public void movieReleaseDateTest() {
-		
-		List<MovieReleaseDateItemDto> list = movieUtil.getMovieReleaseDateInfo(792307, "US");
-		MovieReleaseDateItemDto releaseDto = movieDetailService.getType3MovieReleaseDateItem(list);
-		
-		Assertions.assertNotNull(list);
-		
-		log.info("개봉정보, 연령제한 포함={}", list);
-		log.info("타입3={}", releaseDto);
-		
-	}
-	
+//	@Test
+//	public void fileTest() {
+//		String rootDr = File.listRoots()[1].getAbsolutePath();
+//		log.info("rootDr = {}", rootDr);
+//
+//		log.info("root = {}", File.listRoots());
+//
+//	}
+//
+//	@Test
+//	public void fileTest() {
+//		String rootDirectory = File.listRoots()[0].getAbsolutePath();
+//		log.info("rootDirectory={}", rootDirectory);
+//
+//
+//
+//	}
 	
 }

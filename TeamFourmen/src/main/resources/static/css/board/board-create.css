@@ -1,0 +1,74 @@
+@charset "UTF-8";
+.boardtitle{
+    width: 85%;
+    margin: 0 auto;
+	color:#fbc500;
+}
+
+
+.board-create-form-container {
+    width: 85%;
+    margin: 1rem auto;
+}
+
+.board-create-label {
+    margin-top: 1rem;
+}
+
+/* ckeditor관련 */
+.ck-editor__editable_inline {
+    /* min-height: 400px;
+    max-height: 400px; */
+    height: 60vh;
+    color: black;
+}
+
+.ck-content .image.image_resized {
+	display: block;
+	box-sizing: border-box;
+}
+
+.ck-content .image.image_resized img {
+	width: 100%;
+}
+
+.ck-content .image.image_resized > figcaption {
+	display: block;
+}
+
+/* 버튼 관련 */
+.div-btn-board-form {
+    width: 100%;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;    
+}
+
+.btn-board-craete-cancel {
+    padding: 0.8rem 1rem;
+    background-color: transparent;
+    border: 1px solid #ecece7;
+    color: inherit;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
+.btn-board-craete-cancel:hover {
+    background-color: #8f8f8c;
+    color: black;
+}
+
+.btn-board-create {
+    padding: 0.8rem 1rem;
+    background-color: #fbc500;
+    color: #102770;
+    font-weight: 700;
+
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-board-create:hover {
+	background-color: #102770;
+    color: #fbc500;
+}

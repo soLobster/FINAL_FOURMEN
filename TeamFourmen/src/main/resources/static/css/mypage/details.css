@@ -1,0 +1,174 @@
+/**
+MyPage Details의 기본 토대가 된다.
+ */
+
+@font-face {
+    font-family: 'Pretendard';
+    font-weight: 400;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix') format('embedded-opentype'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf') format("truetype");
+    font-display: swap;
+}
+
+body {
+    font-family: 'Pretendard';
+    background-color: rgb(31, 32, 41) ;
+}
+
+.main-section {
+    width: 1000px;
+    min-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    /*background-color: #888888*/
+}
+
+.mypage-details-header {
+    display: flex;
+    width: 1000px;
+    height: 220px;
+    margin: 0 auto;
+    background-color: #2D3A4A;
+    border-radius: .5rem .5rem 0 0;
+}
+
+.mypage-details-navbar {
+    width: 1000px;
+    margin: 0 auto;
+    background-color: #495057;
+}
+
+.mypage-details-profile-img{
+    width: 150px;
+    min-width: 150px;
+    margin: 30px 0px 30px 30px;
+}
+
+.mypage-details-profile-img > img{
+    object-fit: cover;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid white
+}
+
+.mypage-details-overview{
+    width: 850px;
+    /*background-color: #8dabfb;*/
+    margin-left: 30px;
+    margin-right: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mypage-details-overview > div {
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.overview-nickname-and-button {
+    display: flex;
+    font-size: 30px;
+}
+
+.nav-item > a{
+    color: white;
+}
+
+.edit-profile {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    background-color: darkgray;
+    border-radius: 2rem;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 2px 4px 5px 6px;
+    margin-top: 13px;
+}
+
+.edit-profile-text {
+    position: absolute;
+    font-weight: bolder;
+    left: 50%;
+    top:0%;
+    transform: translateX(-50%);
+    background-color: #495057;
+    color: white;
+    white-space: nowrap;
+    padding: 10px 15px;
+    border-radius: .5rem;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.edit-profile-text:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 80%;
+    transform: translateX(-50%);
+    border: 15px solid;
+    border-color: #495057 #0000 #0000 #0000;
+}
+
+div.edit-profile:hover {
+    .edit-profile-text {
+        visibility: visible;
+        top: -200%;
+        opacity: 1;
+    }
+}
+
+.overview-review-network {
+    display: flex;
+}
+
+.overview-review-network > h4 {
+    display: flex;
+    flex-direction: column;
+    font-size: 17px;
+    padding: 0px 5px 5px 5px;
+    text-align: center;
+}
+
+.overview-review-network > h4 > a {
+    text-decoration: none;
+    color: #eeeeee;
+}
+
+.overview-review-network > h4 > a > span {
+    display: block;
+    padding: 0px 10px 0px 10px;
+}
+
+.value{
+    font-size: 25px;
+}
+
+.definition:hover {
+    color: #8dabfb;
+}
+
+.mypage-details-body {
+    background-color: #2D3A4A;
+    width: 1000px;
+    margin: 0 auto;
+}
+
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+}
+
+.nav-link:hover {
+    color: #888888;
+}
+

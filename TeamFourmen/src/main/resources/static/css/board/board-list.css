@@ -1,0 +1,215 @@
+@charset "UTF-8";
+.active>.page-link, .page-link.active {
+    z-index: 1;
+}
+.board-main-container {
+    width: 85%;
+    margin: 0 auto;
+}
+
+.board-title {
+    text-align: center;
+}
+
+/* 글작성 버튼 */
+.div-board-create-button {
+    display: flex;
+    justify-content: end;
+}
+
+.btn-board-create {
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #fbc500;
+    color:white;	
+}
+.btn-board-create:hover{
+    background-color: #102770;
+    color: #fbc500;	
+}
+.page-link{
+	background-color:#fbc500;	
+    color: #102770;
+    border:none;
+}
+.active>.page-link, .page-link.active {
+		background-color: #102770;
+    color: #fbc500;
+}
+/* 리스트 테이블 관련 */
+.table-board-list {
+    width: 100%;
+    margin: 2rem 0;
+}
+
+.thead-board-list-title {
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.thead-board-list-title::after {
+    content: "";
+    display: block;
+    margin-bottom: 1rem;
+    
+}
+.board-title{
+	 color: #fbc500;
+	 text-align: left;
+}
+.th-board-title {
+    width: 50%;
+    text-align: left;
+}
+
+.th-board-author {
+    width: 10%;
+}
+
+.th-board-created-time {
+    width: 20%;
+}
+
+.th-board-views {
+    width: 10%;
+}
+
+.th-board-likes {
+    width: 10%;
+}
+
+.boarder-content-text-center {
+    text-align: center;   
+}
+
+    /* 게시물 각 행관련 */
+.board-list-text-control {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+        
+}
+
+.table-row-each-post {
+    border-top: 1px solid gray;
+    height: 3rem;
+}
+
+
+
+	/* 제목링크관련 */
+.td-board-title a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* 검색 관련 */
+.section-board-search {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+
+
+.form-board-search {
+    display: flex;
+    align-items: center;
+}
+
+.search-category{
+    border-radius: 8px;
+    margin-right: 4px;
+    height: 100%;
+}
+
+    /* input text와 버튼을 감싸고 있는 컨테이너 */
+.div-board-input-btn-container {
+    display: flex;
+    width: 210px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    
+    display: flex;
+}
+
+.div-board-content-search {
+    width: 184px;
+    border-radius: 0;
+    background-color: #fff;
+}
+
+.input-board-content-search {
+    border: none;
+    width: 100%;
+    background-color: transparent; 
+}
+
+.input-board-content-search:focus {
+    outline-width: 0;
+}
+
+.div-board-search-btn {
+    flex-grow: 1;
+}
+
+.btn-board-search {
+    background-color: #fff;
+    border: none;
+    width: 16px;
+    color: #000;
+}
+
+@media (max-width: 848px) {
+    
+    /* 화면 작아지면 작성일, 좋아요, 조회수 등 숨기기 */
+    .th-board-created-time {
+        display: none;
+    }
+    
+    .th-board-views {
+        display: none;
+    }
+    
+    .th-board-likes {
+        display: none;
+    }
+    
+    .td-board-created-time {
+        display: none;
+    }
+    
+    .td-board-views {
+        display: none;
+    }
+    
+    .td-board-likes {
+        display: none;
+    }
+    
+    .thead-board-list-title {
+        font-size: 16px;
+    }
+    
+    /* thead랑 tbody랑 간격 좁히기 */
+    .thead-board-list-title::after {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* 게시판 각 게시물 행당 간격 줄이기 */
+    .table-row-each-post {
+    
+        height: 2rem ;
+    }
+    
+    .table-row-each-post {
+        font-size: 12px;
+    }
+    
+}

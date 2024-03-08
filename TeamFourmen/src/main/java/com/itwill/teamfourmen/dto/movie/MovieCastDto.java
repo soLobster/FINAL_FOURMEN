@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class MovieCastDto {
 	
 	private boolean adult;
+	private int id;
 	private int gender;
 	private String knownForDepartment;
 	private String name;

@@ -1,0 +1,162 @@
+@charset "UTF-8";
+@import "reset.css";
+/* person-lists.html 에 포함 */
+
+ @font-face {
+      font-family: 'Pretendard-Regular';
+      src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+ }
+.active>.page-link, .page-link.active {
+    z-index: 1;
+}
+    body{
+    
+      font-family: 'Pretendard-Regular';
+    /*background-color: inherit;*/
+}
+.titlepic{
+	color:#fbc500;
+}
+.title{
+	color:#fbc500;
+}
+.container-fluid {
+    display: flex;
+    justify-content: center;
+}
+
+.inner_block {
+
+    margin: 0 12.5rem 50px 12.5rem;
+
+}
+
+.inner_block .inner_content .content {
+    padding: 0 100px;
+}
+
+.fifty_square {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 5px;
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+/* 상단 제목(인기 인물) 스타일링 */
+.inner_block .inner_content .content h2 {
+    font-weight: 700;
+    font-size: 30px;
+    margin-bottom: 2.5rem;
+    /*color: white;*/
+}
+
+/* 4(열)x5(행) 그리드 생성 */
+.results_profile_card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4개의 열 생성 */
+    grid-template-rows: repeat(5, 1fr); /* 5개의 행 생성 */
+    gap: 16px; /* 격자 간격 설정 */
+    width: 100%; /* 컨테이너의 너비를 100%로 설정 */
+    margin: auto; /* 컨테이너를 중앙 정렬 */
+    align-items: start; /* 그리드 아이템의 높이가 다를 경우를 대비 */
+}
+
+/* 카드 스타일링 */
+.item_profile_card {
+    background: rgb(31, 32, 41);;
+    border:none;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1); /* 그림자 효과 */
+    align-items: stretch; /* 모든 그리드 아이템을 컨테이너 높이에 맞춤 */
+    min-height: 200px; /* 최소 높이 설정 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
+    /*overflow: auto; !* 내용이 넘치면 스크로바 표시 *!*/
+}
+
+/* 카드 내 인물 이미지 스타일링 */
+.item_profile_card img {
+    width: 100%; /* 이미지 너비를 컨테이너에 맞춤 */
+    height: auto; /* 높이를 자동으로 설정하여 비율 유지 */
+    object-fit: cover; /* 이미지가 컨테이너를 꽉 채우도록 설정 */
+}
+.person_img:hover{
+	border: 4px solid #fbc500;
+}
+/* 카드 내 디폴트 이미지 스타일링 */
+.default_person_img {
+    width: 470px; /* 너비를 210px로 고정 */
+    height: 470px; /* 높이를 210px로 고정 */
+    object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+}
+
+/* 카드 내 글(인물 이름) 스타일링 */
+
+.meta .name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    width: 200px;
+    white-space: nowrap; /* 텍스트를 한 줄에 표시 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘칠 때 ...로 표시 */
+    
+}
+.meta p a {
+    text-decoration-line: none;
+    	color:white;
+}
+
+/* 페이지네이션 스타일링 */
+.pagination .page-link {
+	background-color: #fbc500;
+    color: #102770;
+    border:none;
+}
+.pagination .page-link:hover {
+    color: #495057; /* 호버 시 텍스트 색상을 더 어두운 회색으로 변경 */
+    background-color: #dee2e6; /* 호버 시 배경 색상을 더 진한 회색으로 변경 */
+    border-color: #ced4da; /* 호버 시 테두리 색상을 조정 */
+}
+.pagination .page-item.active .page-link {
+	background-color: #102770;
+    color: #fbc500;
+}
+.peopleList-pagination-div {
+    margin-bottom: 50px;
+}
+
+/* 반응형 스타일링 */
+/* 화면 크기가 1024px 미만일 때 */
+@media (max-width: 1024px) {
+    .results_profile_card {
+        grid-template-columns: repeat(3, 1fr); /* 3개의 열로 변경 */
+        grid-template-rows: repeat(5, 1fr); /* 필요에 따라 행 수 조정 */
+    }
+    .item_profile_card {
+        width: 100%; /* 열의 너비를 조정하여 카드가 컨테이너를 꽉 채우도록 함 */
+    }
+}
+
+/* 화면 크기가 768px 미만일 때 */
+@media (max-width: 768px) {
+    .results_profile_card {
+        grid-template-columns: repeat(2, 1fr); /* 2개의 열로 변경 */
+        grid-template-rows: repeat(5, 1fr); /* 필요에 따라 행 수 조정 */
+    }
+}
+
+/* 화면 크기가 480px 미만일 때 */
+@media (max-width: 480px) {
+    .results_profile_card {
+        grid-template-columns: 1fr; /* 1개의 열로 변경 */
+        grid-template-rows: repeat(5, 1fr); /* 필요에 따라 행 수 조정 */
+    }
+}

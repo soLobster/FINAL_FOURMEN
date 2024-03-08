@@ -1,0 +1,366 @@
+@charset "UTF-8";
+@import "reset.css";
+
+/* person-details.html 에 포함 */
+
+body {
+/*    background-color: white;*/
+}
+
+/* a와 b를 묶는 클래스((A)인물 대표 사진, (B)소셜 링크/인물 정보 묶음) */
+.aAndBWrapper {
+    margin-left: 300px;
+}
+
+/* 인물 이름, 약력, CAST or CREW 포스터, 연기 목록들을 감싸는 div */
+/* C: 인물의 정보를 자세히 출력하는 메인 부분 스타일링 */
+.c {
+    padding-left: 30px;
+    width: calc(100vw - 900px);
+}
+/* C에서 인물 이름 스타일링 */
+.c_person_name {
+    font-weight: 700;
+    font-size: 1.95rem;
+    padding-bottom: 3px;
+    color: #fbc500;
+}
+/* C에서 인물 약력 부분 스타일링 */
+.c_history {
+    font-weight: 700;
+    font-size: 1.15rem;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+/* C에서 인물 유명 분야 부분(포스터 이미지들) 스타일링 */
+.c_famous_field {
+    font-weight: 700;
+    font-size: 1.15rem;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+/* C에서 인물 약력(biography: 인물을 설명하는 글) 스타일링 */
+.c_person_biography {
+    text-align: justify; /* 텍스트를 양쪽 정렬 */
+    word-break: keep-all; /* 텍스트가 단어 경계에서만 줄바꿈되도록 함(단어의 중간에서 줄바꿈되지 않도록) */
+    line-height: 1.2; /* 줄 간격을 글자 크기의 1.2배로 설정 */
+}
+/* C에서 인물 약력 상세 정보 부분(출연작, 역할) 스타일링 */
+.c_titles, .c_makesAndSupports {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+/* div 가로로 배치하기 */
+.content_wrapper {
+    display: flex;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+p {
+    /*color: black;*/
+}
+
+span {
+    color: #bfbfbf;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 700;
+    color: #BDBDBD;
+}
+
+/* social links 스타일링 */
+.social_links {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.social_links span a {
+    text-decoration: none;
+    margin-right: 10px;
+    /*color: black;*/
+    /*color: white;*/
+}
+.social_links a i {
+    font-size: 1.75rem;
+}
+
+/* 인물 사진 스타일링 */
+.profile_img {
+    border-radius: 5px;
+    width: 300px;
+    min-width: 300px;
+    height: 450px;
+    object-fit: cover;
+}
+
+/* 인물 정보 제목 스타일링 */
+.person_info_mainTitle {
+    font-weight: 700;
+    font-size: 1.15rem;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+/* 인물 정보 내용 전체 스타일링 */
+.person_info_details p {
+    /*color: #888888;*/
+}
+/* 인물 정보 내용 상세 부분의 제목들 스타일링 */
+.person_info_details {
+    font-size: 15px;
+
+}
+/* 인물 정보 내용 상세 부분의 제목들 스타일링 */
+.person_info_details_titles {
+    font-weight: 600;
+    color: #bfbfbf;
+    padding-bottom: 2px;
+}
+/* 인물 정보 내용 상세 부분의 내용들 스타일링 */
+.person_info_details_contents {
+    display: inline-block; /* span 태그는 인라인 요소이므로 display 속성을 따로 설정해줘야 함 */
+    color: #888888;
+    padding-bottom: 10px;
+}
+
+/* 인물 유명 분야의 포스터 출력 부분 스타일링 */
+.scroll-container {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+.horizontal-scroll {
+    overflow-x: auto; /* 가로 방향으로 스크롤바를 표시 */
+    overflow-y: hidden; /* 세로 방향 스크롤 숨김 */
+    white-space: nowrap; /* 내용을 한 줄로 표시 */
+    display: flex; /* flexbox 를 사용하여 아이템들을 가로로 배치 */
+    gap: 10px; /* 아이템 사이의 간격 조정 */
+    max-width: 100%; /* 최대 가로 크기 설정 */
+    align-items: center; /* 아이템들을 세로 중앙에 정렬 */
+}
+.horizontal-scroll li {
+    display: inline-block; /* 각 아이템을 인라인 블록으로 표시 */
+    flex: 0 0 auto; /* 각 아이템의 크기가 내용에 따라 조절되도록 설정 */
+    margin-right: 12px; /* 오른쪽 마진으로 간격 추가 */
+}
+/* 마지막 li 요소에는 오른쪽 마진을 주지 않음 */
+.horizontal-scroll li:last-child {
+    margin-right: 0;
+}
+.horizontal-scroll li img {
+    margin-bottom: 10px; /* 포스터 이미지 하단의 마진으로 간격 추가 */
+}
+
+/* 포스터 이미지 스타일링 */
+.poster_img {
+    border-radius: 5px;
+    width: 130px;
+    height: 195px;
+    object-fit: cover;
+}
+
+/* 스크롤바 전체를 대상으로 함 */
+.horizontal-scroll::-webkit-scrollbar {
+    width: 10px; /* 스크롤바의 너비 */
+    height: 10px; /* 수평 스크롤바의 높이 */
+}
+/* 스크롤바 트랙(배경) */
+.horizontal-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1); /* 트랙의 배경을 투명하게 설정 */
+    border-radius: 10px; /* 트랙의 모서리를 둥글게 */
+}
+/* 스크롤바 썸(드래그하는 부분) */
+.horizontal-scroll::-webkit-scrollbar-thumb {
+    background: rgba(200, 200, 200, 0.5); /* 썸의 배경을 반투명하게 설정 */
+    border-radius: 10px; /* 썸의 모서리를 둥글게 */
+}
+/* 스크롤바 썸:hover(마우스 오버 시) */
+.horizontal-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 100, 100, 0.7); /* 마우스 오버 시 썸의 배경을 더 불투명하게 설정 */
+    color: inherit;
+}
+
+/* 포스터 이미지 위에 마우스를 오버하면 div 로 작성한 포스터 정보가 출력되도록 하는 코드 */
+.movie-poster-container, .tv-poster-container {
+    position: relative;
+    display: inline-block;
+    width: 130px;
+    height: 195px;
+    border-radius: 10px;
+}
+.div-movie-card-overlay, .div-tv-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(150, 150, 150, 0.8); /* 투명한 회색 배경 */
+    /*color: black; !* 텍스트 색상 *!*/
+    opacity: 0; /* 초기에는 안 보이도록 설정 */
+    transition: opacity 0.3s ease; /* 페이드 인/아웃 효과를 위한 transition */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    flex-direction: column; /* 자식 요소들을 세로로 정렬 */
+    border-radius: 5px;
+}
+.movie-poster-container:hover .div-movie-card-overlay,
+.tv-poster-container:hover .div-tv-card-overlay {
+    opacity: 1; /* 마우스를 오버했을 때 투명도 1로 변경하여 나타나도록 함 */
+}
+.movie-title, .tv-name {
+    word-break: keep-all; /* 텍스트가 단어 경계에서만 줄바꿈되도록 함(단어의 중간에서 줄바꿈되지 않도록) */
+    font-weight: 700; /* 볼드체 적용 */
+    font-size: 1.05rem;
+    padding-bottom: 10px;
+    color: black;
+}
+.movie-title, .tv-name, .movie-mediaType, .tv-mediaType, .poster-info {
+    width: 90%; /* 포스터 이미지의 너비에 맞게 조정하되, 양쪽에 여백을 주기 위해 100%보다 조금 작게 설정 */
+    text-align: center; /* 텍스트를 중앙 정렬 */
+    overflow-wrap: break-word; /* 긴 단어가 요소의 너비를 넘어갈 경우 줄바꿈 */
+    white-space: normal; /* 공백 문자의 처리 방식을 정의. 기본값인 normal은 공백과 줄바꿈을 합쳐서 텍스트를 자동으로 줄바꿈함 */
+    color: black;
+}
+.movie-mediaType, .tv-mediaType {
+    font-size: 0.9rem;
+}
+
+/* 인물의 knownForDepartment 부분 */
+.c table {
+    width: 100%; /* 테이블의 너비를 .c의 너비로 설정 */
+    border-collapse: collapse; /* 테이블 셀 사이의 border 간격 제거 */
+}
+
+/* 인물의 약력(출연작들이 테이블로 출력되는 div) */
+.history_famous_field_div {
+}
+
+/* 인물의 약력(history) 부분의 제목, 출시연도, 역할 */
+.history_tr {
+    border-top: 1px solid #888888; /* 너비, 스타일, 색상 */
+    border-bottom: 1px solid #888888;
+}
+
+.history_td_year {
+    text-align: center;
+}
+
+.history_td_character, .history_td_titleOrName, .history_td_year {
+    padding: 15px 15px;
+    vertical-align: middle;
+    font-size: 15px;
+}
+
+/* 각 컬럼의 너비 설정 */
+.history_td_year {
+    width: 10%;
+}
+.history_td_titleOrName {
+    width: 58%;
+}
+.history_td_character {
+    width: 32%;
+}
+
+/* 마우스 오버(hover) 시 밑줄 나오게 하기 */
+.history_td_titleOrName:hover {
+    text-decoration: underline;
+    /*text-underline-position:under; !* 밑줄이 너무 붙어있을 경우 추가 *!*/
+    text-underline-color: #8f8f8c;
+}
+a:hover {
+    text-decoration: underline;
+    text-underline-color: #8f8f8c;
+}
+
+/* 좋아요 버튼(따봉 버튼) 관련 스타일링 */
+.thumbs_up_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 버튼과 hr을 중앙 정렬 */
+}
+.thumbs_up_btn {
+    display: flex;
+    align-items: center; /* 이미지와 텍스트를 수직 중앙 정렬 */
+    padding: 5px; /* 필요에 따라 조정 */
+    border: none; /* 테두리 제거 */
+    background-color: transparent; /* 버튼 배경색 투명 */
+    cursor: pointer;
+}
+.thumbs_up_img {
+    width: 20px; /* 이미지 크기 조정 */
+    height: auto; /* 이미지 비율 유지 */
+    margin-right: 5px; /* 텍스트와의 간격 조정 */
+    color: #adb5bd;
+}
+.thumbs_up_span {
+    font-size: 13px; /* 텍스트 크기 조정 */
+    color: #adb5bd;
+}
+
+.hr_top_line, .hr_bottom_line {
+    width: 100%; /* hr의 너비를 부모 요소에 맞춤 */
+    border: 1px solid #ccc; /* 필요에 따라 스타일 조정 */
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* 좋아요를 눌렀을 때 적용할 스타일 */
+.liked .thumbs_up_img {
+    /*filter: grayscale(0%) brightness(1.2);*/
+    /*filter: invert(100%);*/
+}
+.liked .thumbs_up_span {
+    color: #3ba4fa;
+}
+
+/* 반응형 디자인 추가 */
+/* 작은 화면 (모바일) */
+@media screen and (max-width: 600px) {
+    .aAndBWrapper {
+        margin-left: 20px;
+    }
+    .c {
+        width: calc(100vw - 40px);
+        padding-left: 10px;
+    }
+    .profile_img {
+        width: 100px;
+        height: 150px;
+    }
+    .content_wrapper {
+        flex-direction: column;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+/* 태블릿 */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    .aAndBWrapper {
+        margin-left: 50px;
+    }
+    .c {
+        width: calc(100vw - 600px);
+    }
+    .profile_img {
+        width: 200px;
+        height: 300px;
+    }
+}
+
+/* 데스크탑 */
+@media screen and (min-width: 1025px) {
+    .aAndBWrapper {
+        margin-left: 300px;
+    }
+    .c {
+        padding-left: 30px;
+        width: calc(100vw - 900px);
+    }
+}

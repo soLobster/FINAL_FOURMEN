@@ -7,6 +7,7 @@
     display:flex;
     align-items: start;
     height: auto;
+    color: white;
     /*display: grid;
     grid-template-columns: 1fr 4fr;*/
     
@@ -19,6 +20,9 @@
     min-width: 260px;
     height: auto;
     margin-right: 36px;
+}
+.filter-title{
+	font-size:23px;
 }
 
 /* 영화 리스트 보여주는 컨테이너 */
@@ -40,9 +44,11 @@
 }
 
 .custom-card-header {
-    border: 0.5px solid #fff;
-    border-radius: 8px 8px 0 0;
+
+    border-radius: 8px 8px 0px 0px;
     display: flex;
+    background-color: #fbc500;
+    color: #102770;
     justify-content: space-between;
     align-items: center;
     padding: 8px;
@@ -50,6 +56,36 @@
     
 }
 
+.custom-card-header {
+    border-radius:8px;
+    display: flex;
+    background-color: #102770;
+    color: #fbc500;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px;    
+}
+.custom-card-footer {
+    border-radius:8px;
+    display: flex;
+    background-color: #102770;
+    color: #fbc500;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px;    
+}
+.custom-card-header.toggled {
+    background-color: #fbc500;
+    color: #102770;
+    font-weight: bold;
+    border-radius:8px 8px 0px 0px; 
+}
+.custom-card-footer.toggled {
+    background-color: #fbc500;
+    color: #102770;
+    font-weight: bold;
+    border-radius:8px 8px 0px 0px; 
+}
 /* 필터의 각 항목 컨테이너. 카드처럼 border를 줌 */
 .custom-card-body {
     padding: 0;
@@ -71,12 +107,109 @@
 /* 필터의 각 제목 css */
 .card-each-item-title {
     font-size: 1.2rem;
-    font-weight: 700;
+    font-weight: 300;
+    margin-bottom:15px;
+}
+.form-horizontal{
+	border-radius: 8px;
+	margin: 5px;
 }
 
     /* 영화 정렬 select포함한 div */
 .div-movie-sort select {
     width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+    /* 플랫폼 필터 관련 */
+.provider-list {
+    margin: inherit;
+    margin-top: 0.5rem;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    row-gap: 1rem;
+    
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+ .provider-list-item {
+    position: relative;
+ }
+
+.checkbox-provider-label {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+.movie-provider-img {
+    width: 100%;
+}
+
+.div-provider-selected {
+    display: none;
+}
+
+.checkbox-provider:hover + .checkbox-provider-label {
+    cursor: pointer;
+}
+
+.checkbox-provider:checked + .checkbox-provider-label .div-provider-selected {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+
+        /* 플랫폼 말풍선 관련 */
+.movie-provider-speech-bubble {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    text-align: center;
+    color: #003f88;
+    background-color: #fff;
+    padding: 4px;
+    z-index: 2;
+    border-radius: 4px;
+    
+    bottom: 65px;
+    
+    pointer-events: none;
+}
+
+.movie-provider-speech-bubble::before {
+    content: "";
+    
+    position: absolute;
+    background-color: #fff;
+    display: block;
+    width: 15px;
+    height: 15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    bottom: -8px;
+}
+            
+
+.provider-list-item:hover .movie-provider-speech-bubble {
+    display: block;
+    
 }
 
 
@@ -105,32 +238,41 @@
 
     /* 장르 체크박스 스타일 */
 .checkbox-genre-label {
-    border: solid #495057 2px;
-    border-radius: 14px;
-    padding: 6px;
-}
-
-.checkbox-genre-label:hover {
     background-color: #495057;
     font-weight: 500;
     color: #fff;
+    border-radius: 14px;
+    padding: 6px;
+    font-size: 15px;
+}
+
+.checkbox-genre-label:hover {
+    background-color: #fbc500;
+    color: #102770;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 	/*선택된 장르 배경색 진하게 */
 .checkbox-genre:checked  + label {
-    background-color: #495057;
-    font-weight: 700;
-    color: #fff;
+    background-color: #fbc500;
+    color: #102770;
+    font-weight: 800;
+
 }
 
     /* 콤보박스 언어선택 */
 .combobox-language {
     width: 100%;
+    padding: 8px;
+    border-radius: 8px;
 }
 
     /* 런타임 관련 */
 .runtime-range {
     margin-bottom: 16px;
+    border-radius: 8px;
+    padding: 5px;
 }
 
     /* 필터 검색 버튼 꾸미기 */

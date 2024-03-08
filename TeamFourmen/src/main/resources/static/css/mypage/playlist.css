@@ -1,0 +1,162 @@
+@charset "UTF-8";
+
+/* 마이페이지 유저의 플레이리스트 또는 유저가 좋아한 플레이리스트 링크부분 */
+
+.mypage-playlist-whole-container {
+    width: 1000px;
+    background-color: #2d3a4a;
+    margin: 0 auto 0 auto;
+}
+
+.mypage-playlist-category-container {
+    width: 100%;
+    
+    padding: 1.5rem 0 1rem 1rem;
+    display: flex;
+    font-size: 1.1rem;
+    
+}
+
+.mypage-playlist-category-container div {
+    margin-right: 0.5rem;
+}
+
+.mypage-playlist-category-container a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.mypage-playlist-category-container a:hover {
+    text-decoration: underline;
+}
+
+.mypage-playlist-category-container .mypage-playlist-current-page {
+    font-weight: 700;
+    text-decoration: underline;
+    color: #a6a867;
+}
+
+/* 플레이리스트 전체 컨테이너 */
+.mypage-playlist-container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+	/* 플레이리스트 각 리스트 부분 */
+.ul-mypage-playlist {
+    
+    padding: 0 1rem;
+    
+}
+
+
+.li-each-playlist {
+    display: block;
+    list-style: none;
+    
+    padding: 16px 0;
+    border-bottom: 1px solid #495057;
+    
+    display: flex;
+}
+
+
+    /* 플레이리스트 포스터 총 컨테이너 */
+.playlist-posters-container {
+    width: 120px;
+    height: 120px;
+    display: grid;
+    
+    grid-template-columns: 1fr 1fr;
+    
+}
+
+    /* 플레이리스트 각각 포스터 컨테이너 */
+.div-poster-in-playlist {
+    width: 55px;
+    min-width: 55px;
+    height: 55px;
+    min-height: 55px;
+    overflow: hidden;
+}
+
+.img-poster-in-playlist {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+}
+
+.no-playlist-item-posters-container {
+    width: 120px;
+    height: 120px;
+}
+
+.img-when-no-playlist-item {
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
+
+        /* 플레이리스트 이름, 삭제 부분 */
+.div-playlist-name-container {
+    margin-left: 32px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.div-playlist-name {
+
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+}
+    	/* private playlist일 경우 자물쇠 아이콘 */
+.playlist-private-icon {
+    margin-right: 1rem;
+    font-size: 1rem;
+    color: #495057;
+}
+
+        /* 플레이리스트 제목부분 */
+.a-playlist-name {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-playlist-name:hover {
+    text-decoration: underline;
+}
+
+    /* 좋아요 삭제 버튼 */
+.div-playlist-btn-container {
+    display: flex;
+    justify-content: end;
+}
+
+.btn-playlist {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+}
+
+.btn-playlist:hover {
+    color: #33ff33;
+}
+
+.playlist-already-liked {
+    color: #33ff33; 
+}
+
+/* 플레이리스트 아이템이 없을 때 */
+.div-mypage-playlist-empty {
+    width: 1000px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    font-style: italic;
+}
+    
