@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.web;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -222,7 +223,7 @@ public class MovieController {
 		// 영화 provider 리스트 가져오기
 		// 무비 provider, 각각 플랫폼마다 어떤 서비스가 있는지 확인하기 위해 MovieService에서 메서드 사용
 		MovieProviderDto movieProviderDto = apiUtil.getMovieProviderList(id);
-		log.info("movieProviderDto={}", movieProviderDto);
+		// log.info("movieProviderDto={}", movieProviderDto);
 		
 		
 		// releasedate관련 정보 가져옴 (작품 연령제한 포함된 정보)
@@ -237,7 +238,7 @@ public class MovieController {
 		List<MovieProviderItemDto> movieProviderList = null;
 		if (movieProviderDto != null) {
 			movieProviderList = detailService.getOrganizedMovieProvider(movieProviderDto);
-			log.info("movieProviderList={}", movieProviderList);
+			// log.info("movieProviderList={}", movieProviderList);
 		}
 		
 		
@@ -266,10 +267,24 @@ public class MovieController {
 
 		// 관련 리뷰 가져옴
 		List<Review> movieReviewList = featureService.getReviews("movie", id);
-		int endIndex = Math.min(4, movieReviewList.size());
-		movieReviewList = movieReviewList.subList(0, endIndex);
-		model.addAttribute("movieReviewList", movieReviewList);
-
+		
+		double ratingAverageDouble = 0;
+				
+		if (movieReviewList != null && movieReviewList.size() != 0) {
+		    ratingAverageDouble = movieReviewList.stream().mapToDouble((each) -> each.getRating()).average().orElse(0);
+		}
+		
+		DecimalFormat df = new DecimalFormat("#.#");
+		
+		ratingAverageDouble = Math.round(ratingAverageDouble * 10) / 10.0;
+		String ratingAverage = df.format(ratingAverageDouble);
+		
+		
+		
+		// 해당 영화 관련된 4개의 리뷰만 남김.
+		int endIndex = Math.min(4, movieReviewList.size());		
+		movieReviewList = movieReviewList.subList(0, endIndex);				
+		
 		Map<Long, Integer> reviewComment = new HashMap<>();
 		Map<Long, Long> reviewLiked = new HashMap<>();
 
@@ -287,7 +302,7 @@ public class MovieController {
 		// 로그인한 유저의 플레이리스트 가져오기
 		if (!email.equals("anonymousUser")) {
 			userPlaylist = featureService.getPlaylist(email);
-			log.info("userPlaylist={}", userPlaylist);
+			// log.info("userPlaylist={}", userPlaylist);
 		}
 		
 		model.addAttribute("numOfReviewLiked", reviewLiked);
@@ -307,6 +322,8 @@ public class MovieController {
 		model.addAttribute("movieExternalIdDto", movieExternalIdDto);
 		model.addAttribute("recommendedList", recommendedList);
 		model.addAttribute("releaseItemDto", releaseItemDto);
+		model.addAttribute("movieReviewList", movieReviewList);
+		model.addAttribute("ratingAverage", ratingAverage);
 		model.addAttribute("myReview", myReview);
 		model.addAttribute("userPlaylist", userPlaylist);
 		
@@ -344,7 +361,7 @@ public class MovieController {
 		});
 		
 		// TODO: total element 타입 Long으로변경하는거 논의
-		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 5);		
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 20);		
 		log.info("pagingDto={}", pagingDto);
 		
 		model.addAttribute("category", "movie");
@@ -355,7 +372,7 @@ public class MovieController {
 	}
 	
 	@GetMapping("/board/details")
-	public String movieBoardDetails(@RequestParam(name = "id") Long id, Model model) {
+	public String movieBoardDetails(@RequestParam(name = "id") Long id, @RequestParam(name="page", required = false, defaultValue = "1") int page, Model model) {
 		log.info("movieBoardDetails(id={})", id);
 		
 		PostDto postDetails = boardService.getPostDetail(id);
@@ -379,6 +396,8 @@ public class MovieController {
 		
 		int numOfComments = boardService.getNumOfComments(commentDtoList);
 		
+		model.addAttribute("page", page);
+		model.addAttribute("category", "movie");
 		model.addAttribute("postDetails", postDetails);
 		model.addAttribute("numLikes", numLikes);
 		model.addAttribute("haveLiked", haveLiked);
@@ -461,8 +480,11 @@ public class MovieController {
 		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) searchedPostDtoList.getTotalElements(), searchedPostDtoList.getTotalPages(), 5, 5);
 		
 		model.addAttribute("category", "movie");
+		model.addAttribute("isSearch", "검색 결과");
 		model.addAttribute("postDtoList", searchedPostDtoList);
 		model.addAttribute("pagingDto", pagingDto);
+		model.addAttribute("keyword", searchContent);
+		model.addAttribute("searchCategory", searchCategory);
 		
 		
 		return "board/list";

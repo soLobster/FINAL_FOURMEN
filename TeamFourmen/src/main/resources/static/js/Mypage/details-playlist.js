@@ -77,23 +77,29 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			btnDelete.addEventListener('click', async function() {
 				
+				const playlistUserNickname = btnDelete.getAttribute('memberNickname');
 				const playlistId = btnDelete.getAttribute('playlistId');
 				const playlistNameContainer = btnDelete.closest('.div-playlist-name-container');
 				const playlistName = playlistNameContainer.querySelector('.div-playlist-name').innerText;
 				
-				if (!signedInUser || signedInUser.getAttribute('memberId') != myPageUserMemberId) {
+				console.log(`playlistUserNickname=${playlistUserNickname}`);
+				console.log(`signedInUserNickname = ${signedInUser.getAttribute('nickname')}`)
+				
+				
+				if (signedInUser != null && signedInUser.getAttribute('nickname') == playlistUserNickname) {	// 로그인 유저가 플레이리스트 주인일 때
+					const willProceed = confirm(`정말 플레이리스트 ${playlistName}을/를 삭제하겠습니까?`);
+	
+					if (!willProceed) {
+						return;
+					}
+					
+					await deletePlaylist(playlistId);
+								
+				} else {	// 로그인 안했거나, 로그인 유저가 플레이리스트 주인 아닐 때
 					alert('본인의 플레이리스트만 삭제할 수 있습니다.');
 					return;
 				}
-				
-				const willProceed = confirm(`정말 플레이리스트 ${playlistName}을/를 삭제하겠습니까?`);
-				
-				if (!willProceed) {
-					return;
-				}
-				
-				await deletePlaylist(playlistId);
-				
+		
 			});
 			
 		})	
@@ -106,14 +112,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			btnLike.addEventListener('click', async function() {
 				
+				
 				const playlistId = btnLike.getAttribute('playlistId');
+				const playlistMemberNickname = btnLike.getAttribute('memberNickname');
 				
 				if (!signedInUser) {
 					alert('로그인 한 유저만 좋아요를 누를 수 있습니다.');
 					return;
 				}
 				
-				if (signedInUser && signedInUser.getAttribute('memberId') == myPageUserMemberId) {
+				if (signedInUser.getAttribute('nickname') == playlistMemberNickname) {
 					alert('본인의 플레이리스트에는 좋아요를 할 수 없습니다.');
 					return;
 				}

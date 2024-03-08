@@ -1,6 +1,7 @@
 @charset "UTF-8";
 .boardtitle{
-	padding-left: 110px;
+    width: 85%;
+    margin: 0 auto;
 	color:#fbc500;
 }
 

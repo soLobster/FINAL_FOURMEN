@@ -157,7 +157,6 @@
                         <div class="navbar-each-menu-item"><a th:href="@{/movie/now_playing}">현재 상영 영화</a></div>
                         <div class="navbar-each-menu-item"><a th:href="@{/movie/top_rated}">최고 평점 영화</a></div>
                         <div class="navbar-each-menu-item"><a th:href="@{/movie/upcoming}">상영 예정 영화</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/movie/board}">영화 게시판</a></div>
                     </div>
                 </div>
             </div>
@@ -179,7 +178,6 @@
                         <div class="navbar-each-menu-item"><a th:href="@{/tv/top_rated}">TV Show List</a></div>
                         <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/day}">오늘의 인기 Top 200</a></div>
                         <div class="navbar-each-menu-item"><a th:href="@{/tv/trending/week}">이번주 인기 Top 200</a></div>
-                        <div class="navbar-each-menu-item"><a th:href="@{/tv/board}">TV Show 게시판</a></div>
                     </div>
 
                 </div>
@@ -199,11 +197,31 @@
                 <div class="navbar-detailed-menu-items">
                     <div class="navbar-detailed-menu-list">
                         <div class="navbar-each-menu-item"><a th:href="@{/person/list}">인기 인물</a></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 게시판 -->
+            <div class="navbar-detailed-menu-section-container">
+                <div class="navbar-detailed-menu-title">
+                    <div>
+                        <span><i class="fa-solid fa-scroll"></i></span>
+                        <span>Board</span>
+                    </div>
+                    <div class="navbar-chevron-div">
+                        <i class="fa-solid fa-chevron-down navbar-chevron-down"></i>
+                        <i class="fa-solid fa-chevron-up navbar-chevron-up"></i>
+                    </div>
+                </div>
+                <div class="navbar-detailed-menu-items">
+                    <div class="navbar-detailed-menu-list">
+                        <div class="navbar-each-menu-item"><a th:href="@{/popular/board}">인기 게시판</div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/movie/board}">영화 게시판</a></div>
+                        <div class="navbar-each-menu-item"><a th:href="@{/tv/board}">TV Show 게시판</a></div>
                         <div class="navbar-each-menu-item"><a th:href="@{/person/board}">인물 게시판</a></div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>      
 
         <th:block sec:authorize="isAuthenticated()">
             <div class="navbar-mypage-background"></div>

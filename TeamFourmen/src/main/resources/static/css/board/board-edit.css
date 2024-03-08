@@ -2,8 +2,9 @@
 
 @charset "UTF-8";
 .boardtitle{
-	padding-left: 110px;
 	color:#fbc500;
+	width: 85%;
+	margin: 0 auto;
 }
 
 .board-edit-form-container {

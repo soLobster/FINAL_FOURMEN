@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.web;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -354,7 +355,17 @@ public class TvShowController {
 				
 		// Tv Show 별 리뷰 가져오기
 		List<Review> tvShowReviewList = featureService.getReviews("tv", id);
-
+		
+		double ratingAverageDouble = 0; 
+		
+		if (tvShowReviewList != null && tvShowReviewList.size() != 0) {			
+			ratingAverageDouble = tvShowReviewList.stream().mapToDouble((each) -> each.getRating()).average().orElse(0);
+		}
+		
+		ratingAverageDouble = Math.round(ratingAverageDouble * 10) / 10.0;
+		DecimalFormat df = new DecimalFormat("#.#");
+		String ratingAverage = df.format(ratingAverageDouble);
+		
 		int endIndex = Math.min(4, tvShowReviewList.size());
 
 		tvShowReviewList = tvShowReviewList.subList(0, endIndex);
@@ -374,7 +385,8 @@ public class TvShowController {
 			reviewComment.put(reviewId, numOfComment);
 			reviewLiked.put(reviewId,numOfLiked);
 		}				
-
+		
+		model.addAttribute("ratingAverage", ratingAverage);
 		model.addAttribute("numOfReviewLiked", reviewLiked);
 		model.addAttribute("numOfReviewComment", reviewComment);
 
@@ -463,7 +475,7 @@ public class TvShowController {
 		});
 		
 		// TODO: total element 타입 Long으로변경하는거 논의
-		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 5);		
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) postDtoList.getTotalElements(), postDtoList.getTotalPages(), 5, 20);		
 		log.info("pagingDto={}", pagingDto);
 		
 		model.addAttribute("category", "tv");
@@ -474,11 +486,11 @@ public class TvShowController {
 	}
 	
 	@GetMapping("/board/details")
-	public String tvBoardDetails(@RequestParam(name = "id") Long id, Model model) {
-		log.info("movieBoardDetails(id={})", id);
+	public String tvBoardDetails(@RequestParam(name = "id") Long id, @RequestParam(name="page", required = false, defaultValue = "1") int page, Model model) {
+		log.info("tvBoardDetails(id={})", id);
 		
 		PostDto postDetails = boardService.getPostDetail(id);
-		log.info("postDetails={}", postDetails);
+		// log.info("postDetails={}", postDetails);
 		
 		// 조회수 1 추가
 		boardService.addView(id);
@@ -498,10 +510,12 @@ public class TvShowController {
 		
 		int numOfComments = boardService.getNumOfComments(commentDtoList);
 		
+		model.addAttribute("page", page);
+		model.addAttribute("category", "tv");
 		model.addAttribute("postDetails", postDetails);
 		model.addAttribute("numLikes", numLikes);
 		model.addAttribute("haveLiked", haveLiked);
-		model.addAttribute("boardName", "TV게시판");
+		model.addAttribute("boardName", "TV 게시판");
 		model.addAttribute("commentDtoList", commentDtoList);
 		model.addAttribute("numOfComments", numOfComments);
 		
@@ -558,7 +572,41 @@ public class TvShowController {
 		boardService.updatePost(post);
 		
 		return "redirect:/tv/board/details?id=" + post.getPostId();
-	}	
+	}
+	
+	
+	/**
+	 * 검색 카테고리와 검색어를 기반으로 검색결과를 가져다주는 컨트롤러 메서드
+	 * @return
+	 */
+	/**
+	 * 검색 카테고리와 검색어를 기반으로 검색결과를 가져다주는 컨트롤러 메서드
+	 * @return
+	 */
+	@GetMapping("/board/search")
+	public String searchTvBoard(Model model, @RequestParam(name = "searchCategory") String searchCategory
+			, @RequestParam(name = "searchContent") String searchContent, @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		log.info("searchTvBoard(searchCategory={}, searchContent={})", searchCategory, searchContent);
+		
+		Page<PostDto> searchedPostDtoList = boardService.searchPost(searchCategory, searchContent, "tv", page);
+		
+		searchedPostDtoList.forEach((post) -> {
+			Long likes = boardService.countLikes(post.getPostId());
+			post.setLikes(likes);
+		});
+		
+		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) searchedPostDtoList.getTotalElements(), searchedPostDtoList.getTotalPages(), 5, 5);
+		
+		model.addAttribute("category", "tv");
+		model.addAttribute("isSearch", "검색 결과");
+		model.addAttribute("postDtoList", searchedPostDtoList);
+		model.addAttribute("pagingDto", pagingDto);
+		model.addAttribute("keyword", searchContent);
+		model.addAttribute("searchCategory", searchCategory);
+		
+		
+		return "board/list";
+	}
 	
 	
 

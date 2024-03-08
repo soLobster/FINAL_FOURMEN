@@ -15,14 +15,22 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	Page<Post> findAllByCategoryOrderByCreatedTimeDesc(@Param("cateogry")String category, Pageable pageable);
 	
-	@Query("select p from Post p where upper(p.title) like upper('%' || :keyword || '%')")
-	Page<Post> findAllByTitleOrderByPostIdDesc(@Param("keyword") String keyword, Pageable pageable);
-	
-	@Query("select p from Post p where upper(p.title) like upper('%' || :keyword || '%') or upper(p.content) like upper('%' || :keyword ||'%')")
-	Page<Post> findAllByTitleOrContentOrderByPostIdDesc(@Param("keyword")String keyword, Pageable pageable);
-	
 	@Query("select p from Post p where upper(p.member.nickname) like upper('%' || :keyword || '%')")	
 	Page<Post> findAllByMemberNicknameOrderByPostIdDesc(@Param("keyword") String searchContent, Pageable pagealbe);
 
 	List<Post> findByMemberMemberId(Long memberId);
+
+	@Query("select p from Post p where upper(p.title) like upper('%' || :keyword || '%') and category = :boardCategory")
+	Page<Post> getSearchResultByTitle(@Param("keyword") String keyword, @Param("boardCategory") String boardCategory, Pageable pageable);
+	
+	@Query("select p from Post p where upper(p.textContent) like upper('%' || :keyword || '%') and category = :boardCategory")
+	Page<Post> getSearchResultByContent(@Param("keyword") String keyword, @Param("boardCategory")String boardCategory, Pageable pageable);
+	
+	@Query("select p from Post p where (upper(p.title) like upper('%' || :keyword || '%') or upper(p.textContent) like upper('%' || :keyword ||'%')) "
+			+ "and category = :boardCategory")
+	Page<Post> getSearchResultByTitleAndContent(@Param("keyword")String keyword, @Param("boardCategory") String boardCategory, Pageable pageable);
+	
+	@Query("select p from Post p where upper(p.member.nickname) like upper('%' || :keyword || '%') and category = :boardCategory")	
+	Page<Post> getSearchResultByAuthor(@Param("keyword") String searchContent, @Param("boardCategory") String boardCategory, Pageable pagealbe);
+
 }

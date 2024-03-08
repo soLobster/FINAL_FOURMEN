@@ -1,9 +1,17 @@
 @charset "UTF-8";
 
 /* 마이페이지 유저의 플레이리스트 또는 유저가 좋아한 플레이리스트 링크부분 */
-.mypage-playlist-category-container {
+
+.mypage-playlist-whole-container {
     width: 1000px;
-    margin: 2rem auto 1rem auto;
+    background-color: #2d3a4a;
+    margin: 0 auto 0 auto;
+}
+
+.mypage-playlist-category-container {
+    width: 100%;
+    
+    padding: 1.5rem 0 1rem 1rem;
     display: flex;
     font-size: 1.1rem;
     
@@ -30,7 +38,7 @@
 
 /* 플레이리스트 전체 컨테이너 */
 .mypage-playlist-container {
-    width: 1000px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -38,7 +46,7 @@
 	/* 플레이리스트 각 리스트 부분 */
 .ul-mypage-playlist {
     
-    padding: 0;
+    padding: 0 1rem;
     
 }
 
