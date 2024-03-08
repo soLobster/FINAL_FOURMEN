@@ -6,9 +6,8 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SearchMultiDto extends MediaItem {
+public class SearchMultiDto {
 
     @JsonProperty("page")
     private int page;
