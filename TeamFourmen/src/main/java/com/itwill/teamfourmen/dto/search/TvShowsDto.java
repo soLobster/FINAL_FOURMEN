@@ -10,9 +10,8 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class TvShowsDto extends MediaItem {
+public class TvShowsDto {
 
     @JsonProperty("page")
     private int page;

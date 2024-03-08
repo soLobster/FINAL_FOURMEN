@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -17,28 +17,66 @@
 <body>
     <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
 
-    <h1>
-        search-multi
-    </h1>
+    <h1>search-multi</h1>
 
-    <!-- 카테고리: 전체 콘텐츠 인물 컬렉션 유저 -->
-    <div>
-        <ul>
-            <li><a th:href="@{/search(category=multi)}">전체</a></li>
-            <li><a th:href="@{/search(category=contents)}">콘텐츠</a></li>
-            <li><a th:href="@{/search(category=people)}">인물</a></li>
-            <li><a th:href="@{/search(category=collection)}">컬렉션</a></li>
-            <li><a th:href="@{/search(category=users)}">유저</a></li>
+    <section>
+        <ul class="category-list">
+            <li data-action="/search/content">콘텐츠</li>
+            <li data-action="/search/people">인물</li>
+            <li data-action="/search/user">유저</li>
+            <!-- 추가된 항목 -->
+            <li data-action="/search/movies">영화</li>
+            <li data-action="/search/tvShows">TV Shows</li>
         </ul>
-    </div>
+    </section>
 
-    <!-- 검색 결과 데이터를 여기에 표시 -->
-    <div th:if="${searchResults}">
-        <div th:utext="${searchResults}">검색 결과가 여기에 표시됩니다.</div>
-    </div>
+    <section>
+        <header>
+            <h2><span>영화</span></h2>
+        </header>
+        <div>
+            <div>
+                <ul th:if="${searchResults.getMovies() != null}" th:each="movie : ${searchResults.getMovies()}">
+                    <li>
+                        <a>
+                            <div>
+                                <div></div>
+                            </div>
+                            <div>
+                                <div th:text="${movie.title}">Movie Title</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
-    <div th:unless="${searchResults}">
-        <p>검색 결과가 없습니다.</p>
+    <!-- 여기에 검색 결과 출력 -->
+    <div th:if="${searchResults.movies != null}">
+        <h2>Movies</h2>
+        <div th:each="movie : ${searchResults.movies}">
+            <div th:text="${movie.title}"></div>
+        </div>
+    </div>
+    <br>
+    <div th:if="${searchResults.tvShows != null}">
+        <h2>TV Shows</h2>
+        <div th:each="tvShow : ${searchResults.tvShows}">
+            <div th:text="${tvShow.name}"></div>
+        </div>
+    </div>
+    <br>
+    <div th:if="${searchResults.people != null}">
+        <h2>People</h2>
+        <div th:each="person : ${searchResults.people}">
+            <div th:text="${person.gender}"></div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -48,7 +86,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <!-- 네이게이션 바 js -->
     <script th:src="@{/js/navbar.js}"></script>
-    <!-- search js -->
     <script th:src="@{/js/search.js}"></script>
+
 </body>
 </html>
