@@ -340,11 +340,11 @@ public class PersonController {
 	}
 	
 	@GetMapping("/board/details")
-	public String personBoardDetails(@RequestParam(name = "id") Long id, Model model) {
+	public String personBoardDetails(@RequestParam(name = "id") Long id, @RequestParam(name="page", required = false, defaultValue = "1") int page, Model model) {
 		log.info("personBoardDetails(id={})", id);
 		
 		PostDto postDetails = boardService.getPostDetail(id);
-		log.info("postDetails={}", postDetails);
+		// log.info("postDetails={}", postDetails);
 		
 		// 조회수 1 추가
 		boardService.addView(id);
@@ -364,6 +364,8 @@ public class PersonController {
 		
 		int numOfComments = boardService.getNumOfComments(commentDtoList);
 		
+		model.addAttribute("page", page);
+		model.addAttribute("category", "person");
 		model.addAttribute("postDetails", postDetails);
 		model.addAttribute("numLikes", numLikes);
 		model.addAttribute("haveLiked", haveLiked);

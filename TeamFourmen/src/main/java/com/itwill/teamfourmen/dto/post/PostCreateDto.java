@@ -53,6 +53,7 @@ public class PostCreateDto {
 				.member(Member.builder().email(this.email).build())
 				.title(this.title)
 				.content(this.content)
+				.textContent(this.textContent)
 				.category(this.category)
 				.createdTime(this.createdTime)
 				.modifiedTime(this.modifiedTime)

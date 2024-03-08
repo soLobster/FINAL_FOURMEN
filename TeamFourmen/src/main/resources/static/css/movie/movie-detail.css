@@ -38,6 +38,7 @@
 }
 
 .movie-description-inner-container {
+    height: 100%;
     padding-left: 56px;
 }
 

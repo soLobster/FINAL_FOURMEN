@@ -15,10 +15,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	Page<Post> findAllByCategoryOrderByCreatedTimeDesc(@Param("cateogry")String category, Pageable pageable);
 	
+	
+	
 	@Query("select p from Post p where upper(p.title) like upper('%' || :keyword || '%') and category = :boardCategory")
 	Page<Post> getSearchResultByTitle(@Param("keyword") String keyword, @Param("boardCategory") String boardCategory, Pageable pageable);
 	
-	@Query("select p from Post p where (upper(p.title) like upper('%' || :keyword || '%') or upper(p.content) like upper('%' || :keyword ||'%')) "
+	@Query("select p from Post p where upper(p.textContent) like upper('%' || :keyword || '%') and category = :boardCategory")
+	Page<Post> getSearchResultByContent(@Param("keyword") String keyword, @Param("boardCategory")String boardCategory, Pageable pageable);
+	
+	@Query("select p from Post p where (upper(p.title) like upper('%' || :keyword || '%') or upper(p.textContent) like upper('%' || :keyword ||'%')) "
 			+ "and category = :boardCategory")
 	Page<Post> getSearchResultByTitleAndContent(@Param("keyword")String keyword, @Param("boardCategory") String boardCategory, Pageable pageable);
 	

@@ -372,11 +372,37 @@ public class MyPageController {
 		Member signedInUser = memberservice.getmemberdetail(email);
 		
 		Member myPageUser = memberservice.getMemberByMemberId(memberId);
-				
+		
+		// 여기서 public playlist가 없으면 isPlaylistEmpty에 true
+		List<PlaylistDto> publicPlaylistList = playlistDtoList.stream().filter((playlist) -> playlist.getIsPrivate().equals("N")).toList();
+		log.info("플레이리스트 공개 개수 = {}", playlistDtoList.size());
+		
+		// 플레이리스트 공개, 비공개 설정에 따라 보여줄 플레이리스트가 없으면 true, 있으면 false
+		
+		boolean isPlaylistEmpty = false;
+		
+		if (signedInUser != null && myPageUser.getMemberId() == signedInUser.getMemberId()) {	// my page가 로그인한 유저의 마이페이지인 경우
+			
+			if (playlistDtoList.size() == 0) {
+				isPlaylistEmpty = true;
+			}
+			
+		} else {	// 로그인을 안했거나 로그인한 유저의 마이페이직 아닌 경우
+			
+			if (publicPlaylistList.size() == 0) {
+				isPlaylistEmpty = true;
+			}
+			
+		}
+		
+		
+		
+		
 		model.addAttribute("myPageUser", myPageUser);
     	model.addAttribute("signedInUser", signedInUser);
     	model.addAttribute("playlistDtoList", playlistDtoList);
-    	
+    	model.addAttribute("isPlaylistEmpty", isPlaylistEmpty);
+
     	return "mypage/details-playlist";
     }
 	
@@ -388,6 +414,9 @@ public class MyPageController {
     	List<PlaylistDto> likedPlaylistDtoList = featureService.getLikedPlaylist(memberId);
     	Member myPageUser = memberservice.getMemberByMemberId(memberId);
     	
+    	boolean isPlaylistEmpty = likedPlaylistDtoList.isEmpty();
+    	
+    	model.addAttribute("isPlaylistEmpty", isPlaylistEmpty);
 		model.addAttribute("myPageUser", myPageUser);    	
     	model.addAttribute("playlistDtoList", likedPlaylistDtoList);
     	model.addAttribute("likedPlaylistPage", "likedPlaylistPage");
@@ -433,8 +462,6 @@ public class MyPageController {
 				return "alert";
 			}
 		}
-			
-		
 		
     	model.addAttribute("myPageUser", myPageUser);
     	model.addAttribute("playlist", playlist);
