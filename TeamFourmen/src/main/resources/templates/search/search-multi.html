@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -18,6 +18,44 @@
     <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
 
     <h1>search-multi</h1>
+
+    <section>
+        <ul class="category-list">
+            <li data-action="/search/content">콘텐츠</li>
+            <li data-action="/search/people">인물</li>
+            <li data-action="/search/user">유저</li>
+            <!-- 추가된 항목 -->
+            <li data-action="/search/movies">영화</li>
+            <li data-action="/search/tvShows">TV Shows</li>
+        </ul>
+    </section>
+
+    <section>
+        <header>
+            <h2><span>영화</span></h2>
+        </header>
+        <div>
+            <div>
+                <ul th:if="${searchResults.getMovies() != null}" th:each="movie : ${searchResults.getMovies()}">
+                    <li>
+                        <a>
+                            <div>
+                                <div></div>
+                            </div>
+                            <div>
+                                <div th:text="${movie.title}">Movie Title</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
     <!-- 여기에 검색 결과 출력 -->
     <div th:if="${searchResults.movies != null}">
@@ -48,7 +86,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <!-- 네이게이션 바 js -->
     <script th:src="@{/js/navbar.js}"></script>
-    <!-- search js -->
     <script th:src="@{/js/search.js}"></script>
+
 </body>
 </html>
