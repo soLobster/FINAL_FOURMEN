@@ -372,9 +372,6 @@ document.addEventListener('DOMContentLoaded', function() {
 												 commentId="${comment.commentId}" author="${comment.member.nickname}">
 		                                        <i class="fa-solid fa-thumbs-up"></i>
 		                                    </div>
-		                                    <div>
-		                                        <i class="fa-solid fa-flag"></i>
-		                                    </div>
 		                                </div>
                         `;						
 					}
@@ -478,9 +475,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			                                    	 ${user &&replyComment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}"
 			                                    	commentId="${replyComment.commentId}" author="${replyComment.member.nickname}">
 			                                        <i class="fa-solid fa-thumbs-up"></i>
-			                                    </div>
-			                                    <div>
-			                                        <i class="fa-solid fa-flag"></i>
 			                                    </div>
 			                                </div>  
 								`;

@@ -46,7 +46,37 @@ document.addEventListener('DOMContentLoaded', function() {
 	}).then((editor) => {
 		const textareaCkEditor = document.querySelector('#editor');
 		const existingContent = textareaCkEditor.getAttribute('value');
-		editor.setData(existingContent);	
+		editor.setData(existingContent);
+		
+		
+		// 수정버튼 이벤트리스너
+		btnPostEdit.addEventListener('click', function() {
+			
+			const postTitle = document.querySelector('.post-title').value;
+			
+			const postContent = editor.getData();
+			
+			if (!postContent || !postTitle) {
+				alert('제목/내용을 입력해주세요');
+				return;
+			}
+			
+			if (postContent.length > 1300) {
+				alert(`작성 가능한 글자수를 초과하셨습니다. \n${postContent.length} / 1300`);
+				return;				
+			}
+			
+			const willProceed = confirm('수정하시겠습니까?');
+			
+			if(!willProceed) {
+				return;
+			}
+			
+			formBoardEdit.submit();
+			
+		});
+		
+		
 	});
 	
 	// 취소버튼 이벤트리스너
@@ -60,18 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	
 	
-	// 수정버튼 이벤트리스너
-	btnPostEdit.addEventListener('click', function() {
-		
-		const willProceed = confirm('수정하시겠습니까?');
-		
-		if(!willProceed) {
-			return;
-		}
-		
-		formBoardEdit.submit();
-		
-	});
 	
 	
 });

@@ -116,7 +116,35 @@
                 </div>
             </div>
             <section class="movie-details-description-container">
-                <div class="movie-description-inner-container">            
+                <div class="movie-description-inner-container">
+                    <!-- 영화 평점 -->
+                    <div style="display: flex; gap: 40px; margin-bottom: 1rem;">
+                        <th:block th:if="${imdbRatings ne null}">
+                            <section style="display: flex; gap: 20px">
+                                <h2><img th:src = "@{'/icons/imdb-icon.svg'}" width="42" height="42"/></h2>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span th:text="${imdbRatings.getAveragerating() + ' / 10'}"></span>
+                                    <span>
+                                        <i class="fa-solid fa-user"></i>
+                                        <span th:text="${imdbRatings.getNumvotes()}"></span>                                       
+                                    </span>
+                                </div>
+                            </section>
+                        </th:block>
+                        <section style="display: flex; gap: 20px">
+                            <h2 style="padding-top: 4px"><i class="fa-solid fa-users fa-lg"></i></h2>
+                            <div style="display: flex; flex-direction: column">
+                                <span th:if="${ratingAverage != 0}" 
+                                    th:text="${ratingAverage} + ' / 5'"></span>
+                                <span th:unless="${ratingAverage != 0}">- / 5</span>
+                                <span>
+                                    <i class="fa-solid fa-user"></i>
+                                    <span th:if="${movieReviewList != null}" th:text="|${#lists.size(movieReviewList)}|"></span>
+                                    <span th:unless="${movieReviewList != null}">0</span>
+                                </span>
+                            </div>
+                        </section>
+                    </div>    
                     <div class="movie-title-etc">
                         <h2 th:text="|${movieDetailsDto.title} (${movieDetailsDto.releaseDate.year})|" class="movie-title" th:if="${movieDetailsDto.releaseDate != null}"></h2>
                         <h2 th:text="${movieDetailsDto.title}" class="movie-title" th:if="movieDetailsDto.releaseDate == null"></h2>
@@ -187,7 +215,7 @@
                     </div>
                     
                     <!-- 플레이리스트 모달 -->
-                    <div class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModal" aria-hidden="true">
+                    <div th:if="${member != null}" class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModal" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">

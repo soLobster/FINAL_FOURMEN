@@ -9,6 +9,17 @@
     justify-content: space-between;
 }
 
+    /* private설정 토글버튼 부분 */
+.toggle-set-privacy-container {
+    display: flex;
+    flex-nowrap;
+}
+
+.div-is-private-label {
+    margin-right: 8px;
+    
+}
+
 .playlist-items-container {
     width: 1000px;
     margin: 0 auto;

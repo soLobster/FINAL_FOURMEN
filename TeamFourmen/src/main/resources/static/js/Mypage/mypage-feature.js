@@ -268,7 +268,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     if(memberRole.toString() !== 'ADMIN'){
         isAdmin.classList.add('d-none');
         const adminMenu = document.querySelector('#admin-menu');
-        adminMenu.classList.add('d-none');
+        if (adminMenu) {			
+	        adminMenu.classList.add('d-none');
+		}
     }
 
 });

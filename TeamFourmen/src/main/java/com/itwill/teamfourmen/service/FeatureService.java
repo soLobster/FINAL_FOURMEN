@@ -291,7 +291,7 @@ public class FeatureService {
 			dto.setPlaylistLikeList(playlistLikeList);
 		});
 		
-		log.info("playlistDtoList = {}", playlistDtoList);
+		// log.info("playlistDtoList = {}", playlistDtoList);
 		
 		return playlistDtoList;
 	}
@@ -328,9 +328,13 @@ public class FeatureService {
 		
 		List<PlaylistLike> likedPlaylist = playlistLikeDao.findAllByMemberMemberIdOrderByPlaylistLikeId(memberId);
 		
+		// 내가 좋아하는 플레이 리스트 중 private으로 설정 바뀐 리스트 걸르기 위해서..
+		List<PlaylistLike> filteredLikedPlaylist = likedPlaylist.stream().filter((each) -> each.getPlaylist().getIsPrivate().equals("N")).toList();		
+		log.info("private거른후 내가 좋아하는 리스트={}", filteredLikedPlaylist);
+		
 		// 해당 유저가 좋아요 누른 플레이리스트 항목들을 리스트로 매핑시킴
 		List<Playlist> likedPlaylistList = new ArrayList<>();
-		likedPlaylist.forEach((eachLike) -> {
+		filteredLikedPlaylist.forEach((eachLike) -> {
 			Long eachPlaylistId = eachLike.getPlaylist().getPlaylistId();
 			Playlist eachPlaylist = playlistDao.findById(eachPlaylistId).orElse(null);
 			
@@ -412,7 +416,7 @@ public class FeatureService {
 		
 		// playlistItemDto에 poster 정보 가져옴
 		for (PlaylistItemDto playlistItemDto : playlistItemDtoList) {
-			setPoster(playlistItemDto);
+			setWorkDetails(playlistItemDto);
 		}
 		
 		return playlistItemDtoList;
@@ -513,7 +517,7 @@ public class FeatureService {
 	 * PlaylistItemDto를 아규먼트로 받아, 해당 해당 작품에 대한 디테일 정보 가져옴
 	 * @return
 	 */
-	private PlaylistItemDto setPoster(PlaylistItemDto playlistItemDto) {
+	private PlaylistItemDto setWorkDetails(PlaylistItemDto playlistItemDto) {
 		log.info("setPoster(playlistItemDto={})", playlistItemDto);
 		
 		switch (playlistItemDto.getCategory()) {

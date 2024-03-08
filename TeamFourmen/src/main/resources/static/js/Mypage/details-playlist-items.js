@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	const myPageUserMemberId = location.pathname.split('/')[3];
 	const signedInUser = document.querySelector('.div-profile-image');
 	
-	const btnSetPrivate = document.querySelector('.btn-set-playlist-private');
-	const btnSetPublic = document.querySelector('.btn-set-playlist-public');
-	
 	const playlistId = location.pathname.split('/')[5];	
 	
 	const ulPlaylistItem  = document.querySelector('.ul-playlist-items');
@@ -17,11 +14,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	const btnDeletePlaylistItemList = document.querySelectorAll('.btn-delete-playlist-item');
 	
+	const toggleSetPrivacy = document.querySelector('.toggle-set-privacy');
+	
+	
+	// playlist item의 순서를 저장하는 함수
 	const updateListOrder = async function(liPlaylist) {
 		
 		let index = 0;				
 		
 		let dataList = [];
+		
 		
 		liPlaylist.forEach((li) => {
 			const category = li.getAttribute('category');
@@ -67,25 +69,73 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 	
 	
-	liPlaylistItem.forEach((li) => {
-		
-		// 드래그 시작할 때 이벤트 리스너
-		li.addEventListener('dragstart', () => {
-			setTimeout(() => {
-				li.classList.add('dragging');
-			}, 10);
-		});
-		
-		// 드래그 끝나면 dragging클래스 지움
-		li.addEventListener('dragend', () => {
-			li.classList.remove('dragging');
+	// 나만보기 설정하는 함수.
+	const setPlaylistPrivate = function() {
 			
-			if (signedInUser && signedInUser.getAttribute('memberId') == myPageUserMemberId) {
-				updateListOrder(liPlaylistItem);
-			}
-		});
+		const data = {
+			playlistId: playlistId,
+			isPrivate: 'Y'
+		};
 		
-	});
+		axios.post('/api/mypage/playlist/set/privacy', data)
+			.then(() => {
+				setTimeout(() => {
+					alert('플레이리스트를 나만 보기로 설정하였습니다.');	
+				}, 100);
+				
+				location.reload();
+			})
+			.catch((error) => {
+				console.log(`에러 발생!!! ${error}`);
+			})
+	};
+	
+	const setPlaylistPublic = function() {
+
+		const data = {
+			playlistId: playlistId,
+			isPrivate: 'N'
+		};
+		
+		axios.post('/api/mypage/playlist/set/privacy', data)
+			.then(() => {
+				setTimeout(() => {
+					alert('플레이리스트를 전체공개 설정하였습니다.');	
+				}, 100);
+				
+				location.reload();
+			})
+			.catch((error) => {
+				console.log(`에러 발생!!! ${error}`);
+			})
+			
+		
+	}
+	
+	
+	if(liPlaylistItem) {	// 플레이리스트 아이템이 있을 때
+		
+		liPlaylistItem.forEach((li) => {
+			
+			// 드래그 시작할 때 이벤트 리스너
+			li.addEventListener('dragstart', () => {
+				setTimeout(() => {
+					li.classList.add('dragging');
+				}, 10);
+			});
+			
+			// 드래그 끝나면 dragging클래스 지움
+			li.addEventListener('dragend', () => {
+				li.classList.remove('dragging');
+				
+				if (signedInUser && signedInUser.getAttribute('memberId') == myPageUserMemberId) {
+					updateListOrder(liPlaylistItem);
+				}
+			});
+			
+		});		
+	}
+
 	
 	
 	const initSortableList = (e) => {
@@ -104,13 +154,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	}
 	
-	
-	ulPlaylistItem.addEventListener("dragover", function(e) {
+	if (ulPlaylistItem) {
+		
+		ulPlaylistItem.addEventListener("dragover", function(e) {
 
-		if (signedInUser && signedInUser.getAttribute('memberId') == myPageUserMemberId) {
-			initSortableList(e);			
-		}
-	});
+			if (signedInUser && signedInUser.getAttribute('memberId') == myPageUserMemberId) {
+				initSortableList(e);			
+			}
+		});		
+	}
+
 	
 	
 	if(btnDeletePlaylistItemList) {
@@ -135,56 +188,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 			
 	}
-	
-	
-	// 플레이리스트 private설정 버튼 이벤트리스너
-	if (btnSetPrivate) {
-		
-		btnSetPrivate.addEventListener('click', function() {
-			
-			const data = {
-				playlistId: playlistId,
-				isPrivate: 'Y'
-			};
-			
-			axios.post('/api/mypage/playlist/set/privacy', data)
-				.then(() => {
-					alert('플레이리스트를 전체 공개로 설정하였습니다.');
-					location.reload();
-				})
-				.catch((error) => {
-					console.log(`에러 발생!!! ${error}`);
-				})
-		})
-		
-	}
-	
-	// 플레이리스트 public설정 버튼 이벤트리스너
-	if (btnSetPublic) {
-		
-		btnSetPublic.addEventListener('click', function() {
 
-			const data = {
-				playlistId: playlistId,
-				isPrivate: 'N'
-			};
+	// privacy를 설정하기 위한 토글버튼 이벤트리스너	
+	if (toggleSetPrivacy) {
+		
+		toggleSetPrivacy.addEventListener('click', function() {
 			
-			axios.post('/api/mypage/playlist/set/privacy', data)
-				.then(() => {
-					alert('플레이리스트를 나만보기로 설정하였습니다.');
-					location.reload();
-				})
-				.catch((error) => {
-					console.log(`에러 발생!!! ${error}`);
-				})
+			if(toggleSetPrivacy.checked) {				
+		
 				
+				setPlaylistPublic();
+				
+			} else {
+				
+				
+				setPlaylistPrivate();
+			}
 			
 		});
-		
-		
+				
 	}
-	
-	
-	
-	
+
+
+
 });

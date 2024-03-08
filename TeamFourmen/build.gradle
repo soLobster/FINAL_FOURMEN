@@ -57,7 +57,9 @@ dependencies {
 	// WebSocket사용을 위한 의존성 설정.
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-
+	// JSoup
+	implementation group: 'org.jsoup', name: 'jsoup', version: '1.17.2'	
+	
 	// aws위한 의존성
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
