@@ -1,5 +1,6 @@
 package com.itwill.teamfourmen.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,10 +9,7 @@ import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.playlist.PlaylistItemDto;
-import com.itwill.teamfourmen.repository.PlaylistItemRepository;
-import com.itwill.teamfourmen.repository.PlaylistLikeRepository;
-import com.itwill.teamfourmen.repository.PlaylistRepository;
-import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
+import com.itwill.teamfourmen.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +21,6 @@ import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.ReviewLike;
 import com.itwill.teamfourmen.domain.TmdbLike;
-import com.itwill.teamfourmen.repository.ReviewDao;
-import com.itwill.teamfourmen.repository.ReviewLikeRepository;
-import com.itwill.teamfourmen.repository.TmdbLikeDao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +40,7 @@ public class FeatureService {
 	private final PlaylistItemRepository playlistItemDao;
 	private final PlaylistLikeRepository playlistLikeDao;	
 	private final MemberRepository memberDao;
+	private final PostRepository postRepository;
 	
 	public void postReview(Review review) {
 
@@ -227,9 +223,9 @@ public class FeatureService {
 		
 		List<Review> myAllReview = reviewDao.findAllByMemberMemberId(memberId);
 		
-		for(Review review : myAllReview) {
-			log.info("My review = {}", review);
-		}
+//		for(Review review : myAllReview) {
+//			log.info("My review = {}", review);
+//		}
 		
 		return myAllReview;
 	}
@@ -276,12 +272,23 @@ public class FeatureService {
 	 * @param email
 	 * @return
 	 */
-	public List<Playlist> getPlaylist(String email) {
+	public List<PlaylistDto> getPlaylist(String email) {
 		log.info("getPlaylist(email={})", email);
 		
-		List<Playlist> playlist = playlistDao.findAllByMemberEmail(email);
+		List<Playlist> playlist = playlistDao.findAllByMemberEmailOrderByPlaylistId(email);
 		
-		return playlist;
+		List<PlaylistDto> playlistDtoList = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		
+		playlistDtoList.forEach((dto) -> {
+			// getItemsInPlaylist 메서드 사용해서 해당 플레이리스트에 있는 아이템들을 매핑
+			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
+			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
+			dto.setPlaylistLikeList(playlistLikeList);
+		});
+		
+		// log.info("playlistDtoList = {}", playlistDtoList);
+		
+		return playlistDtoList;
 	}
 	
 	/**
@@ -293,16 +300,53 @@ public class FeatureService {
 		log.info("getPlaylist(memberId={})", memberId);
 		
 		List<Playlist> playlist = playlistDao.findAllByMemberMemberIdOrderByPlaylistId(memberId);
-		List<PlaylistDto> playlistDto = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
-		playlistDto.forEach((dto) -> {
+		List<PlaylistDto> playlistDtoList = playlist.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		playlistDtoList.forEach((dto) -> {
+			// getItemsInPlaylist 메서드 사용해서 해당 플레이리스트에 있는 아이템들을 매핑
 			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
 			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
 			dto.setPlaylistLikeList(playlistLikeList);
 		});
 		
+		log.info("playlistDtoList = {}", playlistDtoList);
 		
+		return playlistDtoList;
+	}
+	
+	/**
+	 * memberId에 해당하는 마이페이지유저가 좋아요를 누른 플레이리스트의 리스트를 가져옴
+	 * @param memberId
+	 * @return
+	 */
+	public List<PlaylistDto> getLikedPlaylist(Long memberId) {
+		log.info("getLikedPlaylist(memberId={})", memberId);
 		
-		return playlistDto;
+		List<PlaylistLike> likedPlaylist = playlistLikeDao.findAllByMemberMemberIdOrderByPlaylistLikeId(memberId);
+		
+		// 내가 좋아하는 플레이 리스트 중 private으로 설정 바뀐 리스트 걸르기 위해서..
+		List<PlaylistLike> filteredLikedPlaylist = likedPlaylist.stream().filter((each) -> each.getPlaylist().getIsPrivate().equals("N")).toList();		
+		log.info("private거른후 내가 좋아하는 리스트={}", filteredLikedPlaylist);
+		
+		// 해당 유저가 좋아요 누른 플레이리스트 항목들을 리스트로 매핑시킴
+		List<Playlist> likedPlaylistList = new ArrayList<>();
+		filteredLikedPlaylist.forEach((eachLike) -> {
+			Long eachPlaylistId = eachLike.getPlaylist().getPlaylistId();
+			Playlist eachPlaylist = playlistDao.findById(eachPlaylistId).orElse(null);
+			
+			if (eachPlaylist != null) {
+				likedPlaylistList.add(eachPlaylist);
+			}
+		});
+		
+		// 플레이리스트의 리스트를 Dto로 매핑시켜서 각 playlist에 대한 추가정보들을 매핑
+		List<PlaylistDto> likedPlaylistDtoList = likedPlaylistList.stream().map((eachPlaylist) -> PlaylistDto.fromEntity(eachPlaylist)).toList();
+		likedPlaylistDtoList.forEach((dto) -> {
+			dto.setPlaylistItemDtoList(getItemsInPlaylist(dto.getPlaylistId()));
+			List<PlaylistLike> playlistLikeList = playlistLikeDao.findAllByPlaylistPlaylistId(dto.getPlaylistId());
+			dto.setPlaylistLikeList(playlistLikeList);
+		});
+		
+		return likedPlaylistDtoList;
 	}
 	
 	/**
@@ -312,6 +356,23 @@ public class FeatureService {
 	 */
 	public Playlist getPlaylistByPlaylistId(Long playlistId) {
 		return playlistDao.findById(playlistId).orElse(null);
+	}
+	
+	/**
+	 * playlistId를 아규먼트로 받아 privacy를 업데이트시켜주는 서비스 메서드.
+	 * isPrivate는 playlistId에 해당하는 playlist의 isPrivate칼럼에 업데이트 될 값임
+	 * 예를 들어, 아규먼트 isPrivate이 'Y'일 경우 isPrivate는 'Y'로 업데이트되고, 'N'일 경우 'N'으로 업데이트 됨.
+	 * @param playlistId
+	 * @param isPrivate
+	 */
+	@Transactional
+	public void setPlaylistPrivacy(Long playlistId, String isPrivate) {
+		log.info("setPlaylistPrivacy(playlistId={}, isPrivate={})", playlistId, isPrivate);
+		
+		Playlist playlistToUpdate = playlistDao.findById(playlistId).orElse(null);
+		
+		playlistToUpdate.setIsPrivate(isPrivate);
+		
 	}
 	
 	/**
@@ -350,13 +411,16 @@ public class FeatureService {
 		
 		// playlistItemDto에 poster 정보 가져옴
 		for (PlaylistItemDto playlistItemDto : playlistItemDtoList) {
-			setPoster(playlistItemDto);
+			setWorkDetails(playlistItemDto);
 		}
 		
 		return playlistItemDtoList;
 	}
 	
-	
+	/**
+	 * 특정 플레이리스트 아이템을 삭제하는 서비스 메서드
+	 * @param playlistItemId
+	 */
 	@Transactional
 	public void deletePlaylistItem(Long playlistItemId) {
 		log.info("deletePlaylistItem(playlistItemId={})", playlistItemId);
@@ -429,6 +493,7 @@ public class FeatureService {
 	}
 	
 	
+	
 	public Page<ReviewLike> getUserWhoLikedReview(Long reviewId, int page){
 
 		Review review = Review.builder().reviewId(reviewId).build();
@@ -447,7 +512,7 @@ public class FeatureService {
 	 * PlaylistItemDto를 아규먼트로 받아, 해당 해당 작품에 대한 디테일 정보 가져옴
 	 * @return
 	 */
-	private PlaylistItemDto setPoster(PlaylistItemDto playlistItemDto) {
+	private PlaylistItemDto setWorkDetails(PlaylistItemDto playlistItemDto) {
 		log.info("setPoster(playlistItemDto={})", playlistItemDto);
 		
 		switch (playlistItemDto.getCategory()) {
@@ -466,9 +531,29 @@ public class FeatureService {
 			log.info("poster매핑실패");	
 		}
 		
-		log.info("매핑 후 playlistItemDto={}", playlistItemDto);
+		// log.info("매핑 후 playlistItemDto={}", playlistItemDto);
 		
 		return playlistItemDto;
+	}
+
+	public List<Review> recentReview(Long memberId){
+		List<Review> recentReview = reviewDao.findByMemberMemberIdOrderByCreatedDateDesc(memberId);
+
+		if(recentReview !=null && !recentReview.isEmpty()){
+			return recentReview;
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public int getPostCount(Long memberId){
+		List<Post> getAllPost = postRepository.findByMemberMemberId(memberId);
+
+		if(!getAllPost.isEmpty()){
+			return getAllPost.size();
+		} else {
+			return 0;
+		}
 	}
 
 }

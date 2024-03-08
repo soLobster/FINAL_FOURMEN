@@ -6,6 +6,7 @@
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
 
 import { CKFinderUploadAdapter } from '@ckeditor/ckeditor5-adapter-ckfinder';
+import { Alignment } from '@ckeditor/ckeditor5-alignment';
 import { Autoformat } from '@ckeditor/ckeditor5-autoformat';
 import { Bold, Italic } from '@ckeditor/ckeditor5-basic-styles';
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote';
@@ -14,6 +15,7 @@ import type { EditorConfig } from '@ckeditor/ckeditor5-core';
 import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { Heading } from '@ckeditor/ckeditor5-heading';
 import {
+	AutoImage,
 	Image,
 	ImageCaption,
 	ImageInsert,
@@ -23,7 +25,7 @@ import {
 	ImageUpload
 } from '@ckeditor/ckeditor5-image';
 import { Indent } from '@ckeditor/ckeditor5-indent';
-import { Link } from '@ckeditor/ckeditor5-link';
+import { AutoLink, Link } from '@ckeditor/ckeditor5-link';
 import { List } from '@ckeditor/ckeditor5-list';
 import { MediaEmbed } from '@ckeditor/ckeditor5-media-embed';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
@@ -38,6 +40,9 @@ import { WordCount } from '@ckeditor/ckeditor5-word-count';
 
 class Editor extends ClassicEditor {
 	public static override builtinPlugins = [
+		Alignment,
+		AutoImage,
+		AutoLink,
 		Autoformat,
 		BlockQuote,
 		Bold,

@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		stompClient.subscribe(`/topic/${category}/${roomId}`, onMessageReceived);
 		
 		stompClient.send('/app/chat.addUser', {}, JSON.stringify({type: 'JOIN', member: {email: email, nickname: nickname, usersaveprofile: profileImageUrl}
-		                                                          , category: 'movie', roomId: roomId}));
+		                                                          , category: category, roomId: roomId}));
 	}
 	
 	function onError() {

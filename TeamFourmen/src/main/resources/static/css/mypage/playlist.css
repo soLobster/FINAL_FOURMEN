@@ -1,19 +1,52 @@
 @charset "UTF-8";
 
-#mypage-subject-title {
+/* 마이페이지 유저의 플레이리스트 또는 유저가 좋아한 플레이리스트 링크부분 */
+
+.mypage-playlist-whole-container {
     width: 1000px;
-    margin: 2rem auto 1rem auto;
+    background-color: #2d3a4a;
+    margin: 0 auto 0 auto;
 }
 
+.mypage-playlist-category-container {
+    width: 100%;
+    
+    padding: 1.5rem 0 1rem 1rem;
+    display: flex;
+    font-size: 1.1rem;
+    
+}
+
+.mypage-playlist-category-container div {
+    margin-right: 0.5rem;
+}
+
+.mypage-playlist-category-container a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.mypage-playlist-category-container a:hover {
+    text-decoration: underline;
+}
+
+.mypage-playlist-category-container .mypage-playlist-current-page {
+    font-weight: 700;
+    text-decoration: underline;
+    color: #a6a867;
+}
+
+/* 플레이리스트 전체 컨테이너 */
 .mypage-playlist-container {
-    width: 1000px;
+    width: 100%;
     margin: 0 auto;
 }
 
-/* 플레이리스트 각 리스트 부분 */
+
+	/* 플레이리스트 각 리스트 부분 */
 .ul-mypage-playlist {
     
-    padding: 0;
+    padding: 0 1rem;
     
 }
 
@@ -82,7 +115,14 @@
     align-items: center;
     font-size: 1.5rem;
 }
+    	/* private playlist일 경우 자물쇠 아이콘 */
+.playlist-private-icon {
+    margin-right: 1rem;
+    font-size: 1rem;
+    color: #495057;
+}
 
+        /* 플레이리스트 제목부분 */
 .a-playlist-name {
     text-decoration: none;
     color: inherit;
@@ -110,5 +150,13 @@
 
 .playlist-already-liked {
     color: #33ff33; 
+}
+
+/* 플레이리스트 아이템이 없을 때 */
+.div-mypage-playlist-empty {
+    width: 1000px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    font-style: italic;
 }
     

@@ -153,6 +153,119 @@
 			/* background: aquamarine; */
 		}
 
+
+
+          /* 플레이리스트 관련 모달 */
+        .playlist-modal {
+            max-height: 500px;
+            overflow-y: auto;
+        }    
+            
+        .div-movie-add-playlist {
+            margin-bottom: 1rem;
+        }
+        
+        
+                /* 각각의 플레이리스트에 대해 */
+        .div-each-playlist-container {
+            display: flex;
+            border-bottom: 0.1px #fff solid;
+        }       
+        
+        .div-playlist-image-container {
+            width: 50px;
+            
+            overflow: hidden;
+            position: relative;
+            margin-right: 1rem;
+        }
+        
+        .div-playlist-image-container div {
+            width: 100%;
+            height: 0;
+            
+            padding-top: 150%;    
+        }
+        
+        .img-each-playlist-poster {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            min-width: 100%;
+            min-height: 100%;
+            
+            object-fit: cover;
+        }
+        
+        .div-each-playlist-container:last-child {
+            border-bottom: none;
+        }
+        
+        .div-playlist-name-selection-container{
+            flex-grow: 1;
+        }
+        
+        .label-each-playlist {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 16px;
+            cursor: pointer;
+        }
+        
+        .label-each-playlist:hover {
+            background-color: #03045e;
+        }
+        
+        .checkbox-each-playlist:checked + .label-each-playlist {
+            background-color: #023e8a;
+        }
+                
+        .btn-add-new-playlist {
+            width: 100%;
+            border: none;
+            background-color: #3a86ff;
+            /*font: 1.1rem;*/
+            color: #fff;
+            padding: 4px 0;
+            font-weight: 700;
+        }
+        
+        .div-playlist-private {
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+		.modal-header {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+			width: 100%;
+			padding: 16px 0;
+			font-weight: 700;
+		}
+
+		/* 모달 바디 색 변경 */
+		.modal-body {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+		}
+
+		.modal-footer {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+		}
+
+		.btn-open-chat {
+			background-color: transparent;
+			border: none;
+			width: 46px;
+			height: 46px;
+			position: absolute;
+			top: -32%;
+			left: -107%;
+		}
+
 		.btn-add-like {
 			background-color:  transparent;
 			border: none;
@@ -843,10 +956,16 @@
 						</section>
 					</th:block>
 					<section style="display: flex; gap: 20px">
-						<h2 style="padding-top: 4px"><i class="fa-solid fa-users fa-lg"></i></h2>
+						<h2><img th:src="@{'/icons/FFMLOGO.png'}" width="48" height="48" style="border-radius: .5rem"></h2>
 						<div style="display: flex; flex-direction: column">
-							<span>포맨 평점 / 5</span>
-							<span>포맨 투표수</span>
+                            <span th:if="${ratingAverage != 0}"
+                                th:text="|${ratingAverage} / 5|"></span>
+                            <span th:unless="${ratingAverage != 0}">- / 5</span>
+							<span>
+                                <i class="fa-solid fa-user"></i>
+                                <span th:if="${tvShowReviewList != null}" th:text="${#lists.size(tvShowReviewList)}"></span>
+                                <span th:unless="${tvShowReviewList != null}">0</span>
+                            </span>
 						</div>
 					</section>
 				</div>
@@ -868,16 +987,25 @@
 							<span class = "custom-bar-text">Like</span>
 						</button>
 					</div>
-					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} ne null ? 'user-reviewed-already'" id = "custom-review">
+					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'" id = "custom-review">
 						<button type="button" class = "tool-tip-custom-bar btn-tv-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
 							<i class="fa-solid fa-pen"></i>
 							<span class = "custom-bar-text">리뷰 남기기</span>
 						</button>
 					</div>
+
+					<div class="tool-tip-custom-bar div-chat">
+						<button type="button" class="tool-tip-custom-bar movie-like-button btn-open-chat">
+							<i class="fa-solid fa-comment"></i>
+							<span class="custom-bar-text">오픈 채팅</span>
+						</button>
+					</div>
+
 					<div th:if ="${trailer ne null}" class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
 						<i class="fa-solid fa-play"></i>
 						<span class="custom-bar-text">트레일러</span>
 					</div>
+
 				</div>
 
 				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:if = "${tvShowDto.getTagline() ne ''}" th:text="${tvShowDto.getTagline()}"></p>
@@ -1125,8 +1253,20 @@
                 </div>
                 <div class="div-playlist-container">
                     <div class="div-each-playlist-container" th:if="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}" th:each="eachPlaylist : ${userPlaylist}">
-                        <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
-                        <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                        <div class="div-playlist-image-container">
+                            <div>
+                                <img class="img-each-playlist-poster" 
+                                    th:if="${eachPlaylist.playlistItemDtoList != null && !#lists.isEmpty(eachPlaylist.playlistItemDtoList)}"
+                                    th:src="@{https://image.tmdb.org/t/p/w92/{posterPath} (posterPath = ${eachPlaylist.playlistItemDtoList[0].workDetails.posterPath})}">
+                                <img class="img-each-playlist-poster"
+                                    th:unless="${eachPlaylist.playlistItemDtoList != null && !#lists.isEmpty(eachPlaylist.playlistItemDtoList)}"
+                                    th:src="@{/image/playlist_default.svg}">
+                            </div>
+                        </div>
+                        <div class="div-playlist-name-selection-container">
+                            <input class="checkbox-each-playlist d-none" type="radio" name="playlistId" th:value="${eachPlaylist.playlistId}" th:id="|playlist${eachPlaylist.playlistId}|">
+                            <label class="label-each-playlist" th:for="|playlist${eachPlaylist.playlistId}|" th:text="${eachPlaylist.playlistName}"></label>
+                        </div>
                     </div>
                     <div th:unless="${userPlaylist != null && !#lists.isEmpty(userPlaylist)}">
                         플레이리스트가 존재하지 않습니다.
@@ -1151,7 +1291,7 @@
             </div>
             <div class="modal-body">
                 <h5>새 플레이리스트 이름</h5>
-                <input type="text" class="form-control input-playlist-name">
+                <input type="text" class="form-control input-playlist-name" maxlength="30" required>
                 <div class="div-playlist-private">
                     <label for="playlist-private">나만 보기</label>
                     <input id="playlist-private" class="input-is-private" type="checkbox" name="isPrivate" value="Y">
@@ -1167,7 +1307,7 @@
 
 
 <!-- 리뷰 모달 -->
-<div class="modal fade" id="reviewModal" th:if = "${member ne null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewModal" th:if = "${member != null && myReview == null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content bg-dark">
 			<div class="modal-header">
@@ -1358,7 +1498,9 @@
 </script>
 <script th:src="@{/js/navbar.js}"></script>
 <script th:src="@{/js/image/img-dominant-color-tvshow.js}"></script>
+<script th:src="@{/js/tvshow/tv-detail.js}"></script>
 <script th:src="@{/js/features/features-tv.js}"></script>
+
 
 <script th:src="@{/js/footer.js}"></script>
 

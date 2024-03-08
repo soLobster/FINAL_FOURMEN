@@ -20,7 +20,18 @@
     </header>    
     <section th:replace="~{layout/MyPageBasic :: sectionFragment}"></section>
 	
-    <h3 class="h-playlist-name" th:text="${playlist.playlistName}"></h3>
+    <div class="title-private-btn-container">
+        <h3 class="h-playlist-name" th:text="${playlist.playlistName}"></h3>
+        <div class="toggle-set-privacy-container" th:if="${member != null && member.memberId == myPageUser.memberId}">
+            <div class="div-is-private-label">
+                전체 공개
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input toggle-set-privacy" type="checkbox" role="switch" id="flexSwitchCheckChecked" th:checked="${playlist.isPrivate == 'N'}">
+            </div>
+
+        </div>
+    </div>
     <div class="playlist-items-container">
         <ul th:if="${playlistItemDtoList != null && !#lists.isEmpty(playlistItemDtoList)}" class="ul-playlist-items">
             <li class="li-playlist-item" th:each="eachPlaylistItem : ${playlistItemDtoList}" draggable="true"
@@ -46,7 +57,8 @@
                             </div>
                         </div>
                         <div class="each-playlist-item-btn-delete-container">
-                            <button class="btn btn-danger btn-delete-playlist-item" th:if="${member != null && member.email == myPageUser.email}">삭제</button>
+                            <button class="btn btn-danger btn-delete-playlist-item"
+                                th:if="${member != null && playlist.member.email == member.email}">삭제</button>
                         </div>
                     </div>
                 </div>

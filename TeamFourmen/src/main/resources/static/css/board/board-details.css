@@ -5,9 +5,20 @@
     margin: 1rem auto;
 }
 .boardtitle{
-	padding-left: 110px;
-	color:#fbc500;
+	width: 85%;
+	margin: 0 auto;
+	
 }
+
+.boardtitle a {
+    color:#fbc500;
+    text-decoration: none;
+}
+
+.boardtitle a:hover {
+    text-decoration: underline;
+}
+
 /* 게시글 제목, 작성날짜, 조회수 등 포함한 헤더부분 */
 .post-head-container {
     margin: 1.5rem 0;

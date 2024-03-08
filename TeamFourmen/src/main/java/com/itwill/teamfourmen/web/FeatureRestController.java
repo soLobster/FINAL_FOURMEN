@@ -1,6 +1,7 @@
 package com.itwill.teamfourmen.web;
 
 import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
+import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.playlist.PlaylistItemDto;
 
 import java.util.List;
@@ -100,10 +101,10 @@ public class FeatureRestController {
 	 * @return
 	 */
 	@GetMapping("/playlist")
-	public ResponseEntity<List<Playlist>> getPlaylist(@RequestParam(name="email") String email) {
+	public ResponseEntity<List<PlaylistDto>> getPlaylist(@RequestParam(name="email") String email) {
 		log.info("getPlaylist(email={})", email);
 		
-		List<Playlist> playlist = featureService.getPlaylist(email);
+		List<PlaylistDto> playlist = featureService.getPlaylist(email);
 		
 		return ResponseEntity.ok(playlist);
 	}

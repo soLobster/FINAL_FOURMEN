@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<title>FREEBOARD</title>
+	<title th:text="|${#strings.toUpperCase(category)} 게시글 수정|"></title>
 	
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	 integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -17,11 +17,11 @@
 <body>
 	
 	<nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
-	<h2 class="boardtitle">게시글 수정</h2>
+	<h2 class="boardtitle" th:text="|${#strings.toUpperCase(category)} 게시글 수정|">게시글 수정</h2>
     <section class="board-edit-form-container">
         <form method="post" class="form-board-edit" th:action="@{/{category}/board/do-edit (category=${category})}">
             <label class="board-edit-label">제목</label>
-            <input class="form-control" name="title" placeholder="제목을 작성해주세요." th:value="${post.title}">
+            <input class="form-control post-title" name="title" placeholder="제목을 작성해주세요." th:value="${post.title}" maxlength="50">
             <label class="board-create-label">내용</label>
             <textarea id="editor" name="content" th:value="${post.content}"></textarea>
             <div class="div-btn-board-form">

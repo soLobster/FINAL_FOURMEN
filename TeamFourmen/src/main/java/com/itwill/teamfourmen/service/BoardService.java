@@ -7,10 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.jsoup.Jsoup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +48,7 @@ public class BoardService {
 	private final CommentLikeRepository commentLikeDao;
 	private final MemberRepository memberDao;
 	
-	private int postsPerPage = 5;
+	private int postsPerPage = 20;
 	
 	/**
 	 * postDto를 아규먼트로 받아 게시글 작성하는 메서드
@@ -54,7 +57,10 @@ public class BoardService {
 	public Post post(PostCreateDto postDto) {
 		log.info("post(postDto={})", postDto);
 		
+		String textContent = Jsoup.parse(postDto.getContent()).text();
+		postDto.setTextContent(textContent);
 		Post post = postDto.toEntity();
+		
 		Post savedPost = postDao.save(post);
 		
 		return savedPost;
@@ -70,6 +76,10 @@ public class BoardService {
 		postDao.deleteById(postId);
 	}
 	
+	/**
+	 * 게시글을 업데이트하는 서비스 메서드
+	 * @param post
+	 */
 	@Transactional
 	public void updatePost(Post post) {
 		log.info("updatePost(post={})", post);
@@ -77,8 +87,11 @@ public class BoardService {
 		Optional<Post> postOptional = postDao.findById(post.getPostId());
 		Post postToUpdate = postOptional.orElse(null);
 		
+		String textContent = Jsoup.parse(post.getContent()).text();
+		
 		postToUpdate.setTitle(post.getTitle());
 		postToUpdate.setContent(post.getContent());
+		postToUpdate.setTextContent(textContent);
 		postToUpdate.setModifiedTime(LocalDateTime.now());
 		
 	}
@@ -106,6 +119,64 @@ public class BoardService {
 		
 		return postDtoList;
 	}
+	
+	
+//	public Page<PostDto> getPopularPostList(int page) {
+//		
+//		log.info("getPopularPostList(page={})", page);
+//		
+//		
+//		
+//		
+//		
+//	}
+	
+	
+	/**
+	 * 검색 카테고리(제목, 제목 + 내용, 글쓴이)와 검색어를 바탕으로 Page<PostDto>타입의 검색결과를 리턴해주는 서비스 메서드
+	 * @param searchCategory
+	 * @param searchContent
+	 * @param page
+	 * @return
+	 */
+	public Page<PostDto> searchPost(String searchCategory, String searchContent, String boardCategory, int page) {
+		log.info("searchPost(searchCategory={}, searchContent={}, boardCategory={})", searchCategory, searchContent, boardCategory);
+		
+		Page<Post> searchResultList = null;
+		
+		Pageable pageable = PageRequest.of(page, postsPerPage, Sort.by("postId").descending());
+
+		switch(searchCategory) {
+		case "title":
+			 searchResultList = postDao.getSearchResultByTitle(searchContent, boardCategory, pageable);
+			 log.info("검색결과={}", searchResultList);
+			break;
+		case "content":
+			searchResultList = postDao.getSearchResultByContent(searchContent, boardCategory, pageable);
+			break;
+		case "titleContent":
+			searchResultList = postDao.getSearchResultByTitleAndContent(searchContent, boardCategory, pageable);
+			break;
+		case "author":
+			searchResultList = postDao.getSearchResultByAuthor(searchContent, boardCategory, pageable);
+			break;
+		default:
+			log.info("잘못된 카테고리를 가져옴");
+		}
+		
+		
+		Page<PostDto> searchResultDtoList = searchResultList.map((post) -> PostDto.fromEntity(post));
+		
+		searchResultDtoList.forEach((postDto) -> {
+			postDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(postDto.getCreatedTime()));
+			log.info("time difference={}", postDto.getTimeDifferenceInMinute());
+		});
+		
+		log.info("searchResultDtoList={}", searchResultDtoList);
+		
+		return searchResultDtoList;
+	}
+	
 	
 	/**
 	 * id를 아규먼트로 받아, 해당 postId의 게시물을 Post 타입으로 반환함

@@ -16,8 +16,10 @@ import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.playlist.PlaylistItemDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
+import com.itwill.teamfourmen.repository.PostRepository;
 import com.itwill.teamfourmen.service.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +55,7 @@ public class MyPageController {
     private final MemberService memberservice;
     private final NicknameInterceptor myname;
     private final FollowService followService;
-    
+
     @GetMapping("/")
     public void mypage() {
     }
@@ -65,6 +67,139 @@ public class MyPageController {
         Member profile = myPageService.getMember(memberId);
         
         model.addAttribute("profile", profile);
+
+        int endIndex = 0;
+
+        List<TmdbLike> getMovieLikeList = featureService.getLikedList(profile, "movie");
+
+        endIndex = Math.min(4, getMovieLikeList.size());
+
+        getMovieLikeList = getMovieLikeList.subList(0, endIndex);
+
+        List<MypageDTO> movieLikedList = new ArrayList<>();
+
+        for(TmdbLike movie : getMovieLikeList){
+            MypageDTO mypageDTO = new MypageDTO();
+            MovieDetailsDto movieDetailsDto = movieApiUtil.getMovieDetails(movie.getTmdbId());
+            mypageDTO.setImagePath(movieDetailsDto.getPosterPath());
+            mypageDTO.setName(movieDetailsDto.getTitle());
+            mypageDTO.setId(movieDetailsDto.getId());
+
+            movieLikedList.add(mypageDTO);
+        }
+
+        model.addAttribute("favMovies" , movieLikedList);
+
+        List<TmdbLike> getTvLikedList = featureService.getLikedList(profile, "tv");
+
+        endIndex = Math.min(4, getTvLikedList.size());
+
+        getTvLikedList = getTvLikedList.subList(0, endIndex);
+
+        List<MypageDTO> tvLikedList = new ArrayList<>();
+
+        for(TmdbLike tv : getTvLikedList) {
+            MypageDTO mypageDTO = new MypageDTO();
+            TvShowDTO tvShowDTO = tvShowApiUtil.getTvShowDetails(tv.getTmdbId());
+            mypageDTO.setImagePath(tvShowDTO.getPoster_path());
+            mypageDTO.setName(tvShowDTO.getName());
+            mypageDTO.setId(tvShowDTO.getId());
+
+            tvLikedList.add(mypageDTO);
+        }
+
+        model.addAttribute("favTv", tvLikedList);
+
+        List<TmdbLike> getPersonLikedList = featureService.getLikedList(profile, "person");
+
+        endIndex = Math.min(4, getPersonLikedList.size());
+
+        getPersonLikedList = getPersonLikedList.subList(0, endIndex);
+
+        List<MypageDTO> personLikedList = new ArrayList<>();
+
+        for(TmdbLike person : getPersonLikedList) {
+            MypageDTO mypageDTO = new MypageDTO();
+            DetailsPersonDto detailsPersonDto = personService.getPersonDetailsEnUS(person.getTmdbId());
+            mypageDTO.setImagePath(detailsPersonDto.getProfilePath());
+            mypageDTO.setName(detailsPersonDto.getName());
+            mypageDTO.setId(detailsPersonDto.getId());
+
+            personLikedList.add(mypageDTO);
+        }
+
+        model.addAttribute("favPerson" , personLikedList);
+
+        List<Review> targetUserReviewList = featureService.getAllMyReview(memberId);
+
+        double sumRating = 0;
+
+        for(Review userReview : targetUserReviewList) {
+            log.info(" 타겟 유저의 리뷰 평점 = {}" ,userReview.getRating());
+            sumRating += userReview.getRating();
+        }
+
+        double averageRating = sumRating/targetUserReviewList.size();
+
+        String ratingComment = "";
+
+        if(0D < averageRating && averageRating <= 1D ){
+            ratingComment = "괜찮은 영화가 있긴 한가요..?";
+        } else if (1D < averageRating && averageRating <= 2D ){
+            ratingComment = "굉장히 깐깐하시군요!!";
+        } else if (2D < averageRating && averageRating <= 3D){
+            ratingComment = "신중한 타입..!";
+        } else if (3D < averageRating && averageRating <= 4D ){
+            ratingComment = "영화를 즐기는 자";
+        } else {
+            ratingComment = "모든 영화를 좋아하시는군요 !!!";
+        }
+
+        model.addAttribute("reviewList",targetUserReviewList);
+        model.addAttribute("ratingComment", ratingComment);
+        model.addAttribute("averageRating" , averageRating);
+
+        List<Review> getRecentlyReview = featureService.recentReview(memberId);
+
+        try {
+            Review recentReview = getRecentlyReview.get(0);
+
+            MypageDTO mypageDTO = new MypageDTO();
+
+            switch (recentReview.getCategory()) {
+                case "movie" :
+                    MovieDetailsDto movieDetailsDto = movieApiUtil.getMovieDetails(recentReview.getTmdbId());
+                    mypageDTO.setName(movieDetailsDto.getTitle());
+                    mypageDTO.setBackdropPath(movieDetailsDto.getBackdropPath());
+                    mypageDTO.setCategory(recentReview.getCategory());
+                    mypageDTO.setId(movieDetailsDto.getId());
+                    break;
+                case "tv":
+                    TvShowDTO tvShowDTO = tvShowApiUtil.getTvShowDetails(recentReview.getTmdbId());
+                    mypageDTO.setName(tvShowDTO.getName());
+                    mypageDTO.setBackdropPath(tvShowDTO.getBackdrop_path());
+                    mypageDTO.setCategory(recentReview.getCategory());
+                    mypageDTO.setId(tvShowDTO.getId());
+                    break;
+                default:
+                    log.error("없어요!!");
+                    break;
+            }
+            model.addAttribute("recentReviewInfo", mypageDTO);
+            model.addAttribute("recentReview" , getRecentlyReview.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("recentReviewInfo", null);
+            model.addAttribute("recentReview", null);
+        }
+
+        int postCount = featureService.getPostCount(memberId);
+
+        model.addAttribute("postCount", postCount);
+
+        int playListCount = featureService.getPlaylist(memberId).size();
+
+        model.addAttribute("playListCount", playListCount);
 
         return "mypage/details-profile";
     }
@@ -101,12 +236,17 @@ public class MyPageController {
     };
     
     @PostMapping("/myedit/update")
-    public String updateUser(@ModelAttribute MemberModifyDto dto, HttpSession session) throws IllegalStateException, IOException {
-
+    public String updateUser(@ModelAttribute MemberModifyDto dto, HttpSession session, HttpServletRequest request) throws IllegalStateException, IOException {
         // 여기서 비밀번호를 비교하고 처리하면 됩니다.		 		
-		String rootDirectory = File.listRoots()[0].getAbsolutePath();
-		String sDirectory = rootDirectory + "ojng" + File.separator + "image";
-		memberservice.update(dto, sDirectory);
+//		String rootDirectory = File.listRoots()[0].getAbsolutePath();
+//		log.info("rootDirectory = {}", rootDirectory);
+//		String sDirectory = rootDirectory + "ojng" + File.separator + "image";
+		
+    	String sDirectory = request.getServletContext().getRealPath("");
+    	
+    	
+    	
+    	memberservice.update(dto, sDirectory);
 		
 		   // 세션에서 adminuser 가져오기
         long adminUserFromSession = myname.getMember().getMemberId();
@@ -119,10 +259,12 @@ public class MyPageController {
     }
     
     @PostMapping("/detail/update")
-    public String updateadmin(@ModelAttribute MemberModifyDto dto, HttpSession session) throws IllegalStateException, IOException {
-        // 여기서 비밀번호를 비교하고 처리하면 됩니다.
-        String sDirectory = "C:/image";
-        memberservice.update(dto, sDirectory);
+    public String updateadmin(@ModelAttribute MemberModifyDto dto, HttpSession session, HttpServletRequest request) throws IllegalStateException, IOException {
+    	String sDirectory = request.getServletContext().getRealPath("");
+    	
+    	
+    	
+    	memberservice.update(dto, sDirectory);
         
         // 세션에서 adminuser 가져오기
         String adminUserFromSession = (String) session.getAttribute("adminuser");
@@ -240,7 +382,7 @@ public class MyPageController {
     }
 	    
 	/**
-	 * memberId에 해당하는 유저의 playlist 상세페이지로 가는 컨트롤러 메서드    
+	 * memberId에 해당하는 유저의 playlist로 가는 컨트롤러 메서드    
 	 * @param memberId
 	 * @param model
 	 * @return
@@ -250,12 +392,74 @@ public class MyPageController {
     	log.info("getPlaylists(memberId={})", memberId);
     	
     	List<PlaylistDto> playlistDtoList = featureService.getPlaylist(memberId);
-    	    	
+    	
+    	
+    	// 로그인한 유저
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();		
+		Member signedInUser = memberservice.getmemberdetail(email);
+		
+		Member myPageUser = memberservice.getMemberByMemberId(memberId);
+		
+		// 여기서 public playlist가 없으면 isPlaylistEmpty에 true
+		List<PlaylistDto> publicPlaylistList = playlistDtoList.stream().filter((playlist) -> playlist.getIsPrivate().equals("N")).toList();
+		log.info("플레이리스트 공개 개수 = {}", playlistDtoList.size());
+		
+		// 플레이리스트 공개, 비공개 설정에 따라 보여줄 플레이리스트가 없으면 true, 있으면 false
+		
+		boolean isPlaylistEmpty = false;
+		
+		if (signedInUser != null && myPageUser.getMemberId() == signedInUser.getMemberId()) {	// my page가 로그인한 유저의 마이페이지인 경우
+			
+			if (playlistDtoList.size() == 0) {
+				isPlaylistEmpty = true;
+			}
+			
+		} else {	// 로그인을 안했거나 로그인한 유저의 마이페이직 아닌 경우
+			
+			if (publicPlaylistList.size() == 0) {
+				isPlaylistEmpty = true;
+			}
+			
+		}
+		
+		
+		
+		
+		model.addAttribute("myPageUser", myPageUser);
+    	model.addAttribute("signedInUser", signedInUser);
     	model.addAttribute("playlistDtoList", playlistDtoList);
+    	model.addAttribute("isPlaylistEmpty", isPlaylistEmpty);
+
+    	return "mypage/details-playlist";
+    }
+	
+    
+    @GetMapping("/details/{memberId}/playlist/like-list")
+    public String getLikedPlaylists(@PathVariable(name = "memberId") Long memberId, Model model) {
+    	log.info("getLikedPlaylists(memberId={})", memberId);
+    	
+    	List<PlaylistDto> likedPlaylistDtoList = featureService.getLikedPlaylist(memberId);
+    	Member myPageUser = memberservice.getMemberByMemberId(memberId);
+    	
+    	boolean isPlaylistEmpty = likedPlaylistDtoList.isEmpty();
+    	
+    	model.addAttribute("isPlaylistEmpty", isPlaylistEmpty);
+		model.addAttribute("myPageUser", myPageUser);    	
+    	model.addAttribute("playlistDtoList", likedPlaylistDtoList);
+    	model.addAttribute("likedPlaylistPage", "likedPlaylistPage");
     	
     	return "mypage/details-playlist";
     }
-	    
+    
+    
+    /**
+     * playlistId에 해당하는 플레이리스트의 디테일 페이지
+     * @param memberId
+     * @param playlistId
+     * @param model
+     * @return
+     */
     @GetMapping("/details/{memberId}/playlist/{playlistId}")
     public String getPlaylistDetails(@PathVariable(name = "memberId") Long memberId, @PathVariable(name = "playlistId") Long playlistId, Model model) {
     	log.info("getPlaylistsDetails(memberId={}, playlistId={})", memberId, playlistId);
@@ -268,6 +472,25 @@ public class MyPageController {
     	// 마이페이지 주인 가져옴
     	Member myPageUser = memberservice.getMemberByMemberId(memberId);
     	
+    	// 로그인한 사람 가져옴 없을 경우 null임
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Member signedInUser = null;
+    	
+		if (!email.equals("anonymousUser")) {
+			signedInUser = memberservice.getmemberdetail(email);			
+		}
+		
+		
+		if(playlist.getIsPrivate().equals("Y")) {	//만약 private 플레이리스트일 경우
+			// private 플레이리스트이고, 로그인을 안했거나, 로그인한 유저가 my page의 주인이 아니라면
+			if (signedInUser == null || (signedInUser != null && !signedInUser.getEmail().equals(myPageUser.getEmail()))) {
+				
+				model.addAttribute("message", "비밀 플레이리스트입니다. 마이페이지 주인만 접근 가능 합니다.");
+				return "alert";
+			}
+		}
+		
     	model.addAttribute("myPageUser", myPageUser);
     	model.addAttribute("playlist", playlist);
     	model.addAttribute("playlistItemDtoList", playlistItemDtoList);
@@ -328,6 +551,7 @@ public class MyPageController {
         }
 
         log.info("LIKED LIST = {}", myPageLikedList);
+        model.addAttribute("category" , category);
         model.addAttribute("likedList", myPageLikedList);
 
         return "mypage/details-liked-list";

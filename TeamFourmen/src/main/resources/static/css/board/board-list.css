@@ -1,5 +1,7 @@
 @charset "UTF-8";
-
+.active>.page-link, .page-link.active {
+    z-index: 1;
+}
 .board-main-container {
     width: 85%;
     margin: 0 auto;
@@ -82,6 +84,13 @@
 }
 
     /* 게시물 각 행관련 */
+.board-list-text-control {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+        
+}
+
 .table-row-each-post {
     border-top: 1px solid gray;
     height: 3rem;
@@ -94,4 +103,113 @@
     color: inherit;
     font-weight: 600;
     text-decoration: none;
+}
+
+/* 검색 관련 */
+.section-board-search {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+
+
+.form-board-search {
+    display: flex;
+    align-items: center;
+}
+
+.search-category{
+    border-radius: 8px;
+    margin-right: 4px;
+    height: 100%;
+}
+
+    /* input text와 버튼을 감싸고 있는 컨테이너 */
+.div-board-input-btn-container {
+    display: flex;
+    width: 210px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    
+    display: flex;
+}
+
+.div-board-content-search {
+    width: 184px;
+    border-radius: 0;
+    background-color: #fff;
+}
+
+.input-board-content-search {
+    border: none;
+    width: 100%;
+    background-color: transparent; 
+}
+
+.input-board-content-search:focus {
+    outline-width: 0;
+}
+
+.div-board-search-btn {
+    flex-grow: 1;
+}
+
+.btn-board-search {
+    background-color: #fff;
+    border: none;
+    width: 16px;
+    color: #000;
+}
+
+@media (max-width: 848px) {
+    
+    /* 화면 작아지면 작성일, 좋아요, 조회수 등 숨기기 */
+    .th-board-created-time {
+        display: none;
+    }
+    
+    .th-board-views {
+        display: none;
+    }
+    
+    .th-board-likes {
+        display: none;
+    }
+    
+    .td-board-created-time {
+        display: none;
+    }
+    
+    .td-board-views {
+        display: none;
+    }
+    
+    .td-board-likes {
+        display: none;
+    }
+    
+    .thead-board-list-title {
+        font-size: 16px;
+    }
+    
+    /* thead랑 tbody랑 간격 좁히기 */
+    .thead-board-list-title::after {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* 게시판 각 게시물 행당 간격 줄이기 */
+    .table-row-each-post {
+    
+        height: 2rem ;
+    }
+    
+    .table-row-each-post {
+        font-size: 12px;
+    }
+    
 }

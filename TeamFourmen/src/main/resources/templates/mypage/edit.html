@@ -152,14 +152,20 @@
     					</div>
 						</div>	
             
-            <div class="card img-card imgbox">
-         	 <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
-         					th:src="${member.usersaveprofile}" 
+            <div class="card img-card imgbox"> 
+
+            <img th:if="${member.usersaveprofile.toLowerCase().startsWith('http')}"
+                            th:src="${member.usersaveprofile}" 
+         					id="previewImage" 
+         					class="card-img" 
+         					alt="...">              
+               <img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile == 'userimage.png'}"
+                            th:src="@{/image/userimage.png}" 
          					id="previewImage" 
          					class="card-img" 
          					alt="...">
-    			<img th:unless="${member.usersaveprofile.toLowerCase().startsWith('http')}"
-         			th:src="@{'/image?photo=' + ${member.usersaveprofile}}" 
+			<img th:if="${!member.usersaveprofile.toLowerCase().startsWith('http') && member.usersaveprofile != 'userimage.png'}"
+                            th:src="@{'/image?photo=' + ${member.usersaveprofile}}"
         			 id="previewImage" 
          				class="card-img" 
          				alt="..."> 

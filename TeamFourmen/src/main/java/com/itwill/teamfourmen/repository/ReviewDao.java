@@ -21,11 +21,10 @@ public interface ReviewDao extends JpaRepository<Review, Long> {
 	List<Review> findByMemberEmail(String email);
 	// memberId를 사용하여 모든 reviews를 가져옴
 	List<Review> findAllByMemberMemberId(Long memberId);
-	
-	
-	
+
 	Review findByReviewId(long reviewId);
-	
+
+	List<Review> findByMemberMemberIdOrderByCreatedDateDesc(Long memberId);
 
 
 }
