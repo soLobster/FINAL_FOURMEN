@@ -9,10 +9,7 @@ import com.itwill.teamfourmen.dto.comment.ReviewLikeDTO;
 import com.itwill.teamfourmen.dto.movie.MovieDetailsDto;
 import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.playlist.PlaylistItemDto;
-import com.itwill.teamfourmen.repository.PlaylistItemRepository;
-import com.itwill.teamfourmen.repository.PlaylistLikeRepository;
-import com.itwill.teamfourmen.repository.PlaylistRepository;
-import com.itwill.teamfourmen.repository.ReviewCommentsRepository;
+import com.itwill.teamfourmen.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +21,6 @@ import com.itwill.teamfourmen.domain.Member;
 import com.itwill.teamfourmen.domain.Review;
 import com.itwill.teamfourmen.domain.ReviewLike;
 import com.itwill.teamfourmen.domain.TmdbLike;
-import com.itwill.teamfourmen.repository.ReviewDao;
-import com.itwill.teamfourmen.repository.ReviewLikeRepository;
-import com.itwill.teamfourmen.repository.TmdbLikeDao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +40,7 @@ public class FeatureService {
 	private final PlaylistItemRepository playlistItemDao;
 	private final PlaylistLikeRepository playlistLikeDao;	
 	private final MemberRepository memberDao;
+	private final PostRepository postRepository;
 	
 	public void postReview(Review review) {
 
@@ -540,7 +535,21 @@ public class FeatureService {
 	public List<Review> recentReview(Long memberId){
 		List<Review> recentReview = reviewDao.findByMemberMemberIdOrderByCreatedDateDesc(memberId);
 
-		return recentReview;
+		if(recentReview !=null && !recentReview.isEmpty()){
+			return recentReview;
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public int getPostCount(Long memberId){
+		List<Post> getAllPost = postRepository.findByMemberMemberId(memberId);
+
+		if(!getAllPost.isEmpty()){
+			return getAllPost.size();
+		} else {
+			return 0;
+		}
 	}
 
 }

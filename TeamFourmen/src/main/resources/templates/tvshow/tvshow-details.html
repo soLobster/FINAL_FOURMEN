@@ -226,7 +226,7 @@
             width: 100%;
             border: none;
             background-color: #3a86ff;
-            font: 1.1rem;
+            /*font: 1.1rem;*/
             color: #fff;
             padding: 4px 0;
             font-weight: 700;
@@ -237,7 +237,34 @@
             margin-top: 1rem;
         }
 
+		.modal-header {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+			width: 100%;
+			padding: 16px 0;
+			font-weight: 700;
+		}
 
+		/* 모달 바디 색 변경 */
+		.modal-body {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+		}
+
+		.modal-footer {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+		}
+
+		.btn-open-chat {
+			background-color: transparent;
+			border: none;
+			width: 46px;
+			height: 46px;
+			position: absolute;
+			top: -32%;
+			left: -107%;
+		}
 
 		.btn-add-like {
 			background-color:  transparent;
@@ -929,7 +956,7 @@
 						</section>
 					</th:block>
 					<section style="display: flex; gap: 20px">
-						<h2 style="padding-top: 4px"><i class="fa-solid fa-users fa-lg"></i></h2>
+						<h2><img th:src="@{'/icons/FFMLOGO.png'}" width="48" height="48" style="border-radius: .5rem"></h2>
 						<div style="display: flex; flex-direction: column">
 							<span>포맨 평점 / 5</span>
 							<span>포맨 투표수</span>
@@ -954,16 +981,25 @@
 							<span class = "custom-bar-text">Like</span>
 						</button>
 					</div>
-					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} ne null ? 'user-reviewed-already'" id = "custom-review">
+					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'" id = "custom-review">
 						<button type="button" class = "tool-tip-custom-bar btn-tv-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
 							<i class="fa-solid fa-pen"></i>
 							<span class = "custom-bar-text">리뷰 남기기</span>
 						</button>
 					</div>
+
+					<div class="tool-tip-custom-bar div-chat">
+						<button type="button" class="tool-tip-custom-bar movie-like-button btn-open-chat">
+							<i class="fa-solid fa-comment"></i>
+							<span class="custom-bar-text">오픈 채팅</span>
+						</button>
+					</div>
+
 					<div th:if ="${trailer ne null}" class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
 						<i class="fa-solid fa-play"></i>
 						<span class="custom-bar-text">트레일러</span>
 					</div>
+
 				</div>
 
 				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:if = "${tvShowDto.getTagline() ne ''}" th:text="${tvShowDto.getTagline()}"></p>
@@ -1265,7 +1301,7 @@
 
 
 <!-- 리뷰 모달 -->
-<div class="modal fade" id="reviewModal" th:if = "${member ne null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewModal" th:if = "${member != null && myReview == null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content bg-dark">
 			<div class="modal-header">
@@ -1456,7 +1492,9 @@
 </script>
 <script th:src="@{/js/navbar.js}"></script>
 <script th:src="@{/js/image/img-dominant-color-tvshow.js}"></script>
+<script th:src="@{/js/tvshow/tv-detail.js}"></script>
 <script th:src="@{/js/features/features-tv.js}"></script>
+
 
 <script th:src="@{/js/footer.js}"></script>
 

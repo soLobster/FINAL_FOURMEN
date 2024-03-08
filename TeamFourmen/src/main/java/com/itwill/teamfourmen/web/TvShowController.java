@@ -158,6 +158,7 @@ public class TvShowController {
 	public String getTvShowDetails(Model model, @PathVariable(name = "id") int id) {
 		log.info("Get Tv Show Details = {}", id);
 //		log.info("API KEY = {}", API_KEY);
+		Review myReview = null;
 		List<PlaylistDto> userPlaylist = null;
 		
 		RestTemplate restTemplate = new RestTemplate();
@@ -333,9 +334,16 @@ public class TvShowController {
 			userPlaylist = featureService.getPlaylist(email);
 			log.info("userPlaylist={}", userPlaylist);
 		}
-		
+
+
+		if(!email.equals("anonymousUser")){
+			myReview = featureService.getMyReviewInTmdbWork(email , "tv" ,id);
+		}
+
 		model.addAttribute("userPlaylist", userPlaylist);
-		
+
+		model.addAttribute("myReview", myReview);
+
 		// TV SHOW 좋아요 가져오기
 
 

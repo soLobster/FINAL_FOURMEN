@@ -106,6 +106,12 @@
             padding: 4px;
         }
 
+        .recently-review-info{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
         .recently-review img{
             border-radius: .5rem;
             border: 2px solid transparent;
@@ -115,10 +121,38 @@
             border-color: #fbc500;
         }
 
+        .review-a-tag {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .review-a-tag:hover{
+            color: #8dabfb;
+        }
+
+        .playlist-a-tag {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .playlist-a-tag:hover {
+            color: #8dabfb;
+        }
+
         .star-ratings {
             display: flex;
             color: #33ff33;
             font-size: 20px;
+        }
+
+        .recently-review_card {
+            display: inline-block;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+
+        .recommendation_img {
+            max-width: 100%;
         }
 
 
@@ -220,21 +254,47 @@
     </section>
 
     <section class= "review-section">
+        <th:block th:if="${recentReviewInfo ne null && recentReview ne null}">
 
-        <h5>활동</h5>
-        <div th:text="${ '평균 평점 : ' + #numbers.formatDecimal(averageRating, 1, 2)}" style="font-size: 30px"></div>
-
-
-        <h5>최근 남긴 리뷰</h5>
-        <div class = "recently-review">
-            <a th:href="@{/{category}/details/{id}(category = ${recentReviewInfo.getCategory()}, id = ${recentReviewInfo.getId()})}">
-                <img th:src="@{'https:/image.tmdb.org/t/p/w1280' + ${recentReviewInfo.getBackdropPath()}}" width="290" height="165"/>
-            </a>
-            <div class = "recently-review-info">
-                <div th:text="${recentReviewInfo.getName()}" style="font-size: 30px"></div>
-                <span class = "star-ratings" th:rating="${recentReview.getRating()}"></span>
+            <h5>활동</h5>
+            <div class = "average-review-rating">
+                <span style="font-style: italic">평점</span>
+                <h2 th:text="${#numbers.formatDecimal(averageRating, 1, 2)}" style="color: #fbc500; font-weight: bolder"></h2>
+                <p th:text="${ratingComment}" style="color: #fbc500; font-style: italic; font-size: 20px"></p>
             </div>
-        </div>
+
+            <div class ="post-count-div">
+                <span style="font-style: italic">게시글</span>
+                <h2 th:text="${postCount}" style="color: #fbc500; font-weight: bolder"></h2>
+            </div>
+
+            <div class = "playlist-count-div">
+                <a class ="playlist-a-tag" th:href="@{playlist}">
+                    <span style="font-style: italic">생성된 플레이 리스트</span>
+                </a>
+                <h2 th:text="${playListCount}" style="color: #fbc500; font-weight: bolder"></h2>
+            </div>
+
+            <a class = "review-a-tag" th:href="@{reviews}">
+                <h5>최근 남긴 리뷰</h5>
+            </a>
+
+            <div class = "border-0 card recently-review_card">
+                <img th:src="@{'https:/image.tmdb.org/t/p/w1280' + ${recentReviewInfo.getBackdropPath()}}" width="290" height="165"/>
+                <a th:href="@{/reviews/{reviewId}(reviewId = ${recentReview.getReviewId()})}" class="text-decoration-none">
+                    <section class = "card-img-overlay">
+                        <p class ="card-title text-white fs-5 fw-bolder"  th:text="${recentReviewInfo.getName()}"></p>
+                        <p class = "card-text star-ratings" th:rating="${recentReview.getRating()}"></p>
+                    </section>
+                </a>
+            </div>
+
+        </th:block>
+
+        <th:block th:unless="${recentReviewInfo ne null && recentReview ne null}">
+            <h5>최근 활동이 없습니다.</h5>
+        </th:block>
+
     </section>
 
 </div>

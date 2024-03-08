@@ -23,4 +23,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	@Query("select p from Post p where upper(p.member.nickname) like upper('%' || :keyword || '%')")	
 	Page<Post> findAllByMemberNicknameOrderByPostIdDesc(@Param("keyword") String searchContent, Pageable pagealbe);
+
+	List<Post> findByMemberMemberId(Long memberId);
 }

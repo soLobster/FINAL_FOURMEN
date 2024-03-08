@@ -16,6 +16,7 @@ import com.itwill.teamfourmen.dto.playlist.PlaylistDto;
 import com.itwill.teamfourmen.dto.playlist.PlaylistItemDto;
 import com.itwill.teamfourmen.dto.review.CombineReviewDTO;
 import com.itwill.teamfourmen.dto.tvshow.TvShowDTO;
+import com.itwill.teamfourmen.repository.PostRepository;
 import com.itwill.teamfourmen.service.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,7 +55,7 @@ public class MyPageController {
     private final MemberService memberservice;
     private final NicknameInterceptor myname;
     private final FollowService followService;
-    
+
     @GetMapping("/")
     public void mypage() {
     }
@@ -140,38 +141,65 @@ public class MyPageController {
 
         double averageRating = sumRating/targetUserReviewList.size();
 
-        model.addAttribute("reviewList",targetUserReviewList);
+        String ratingComment = "";
 
+        if(0D < averageRating && averageRating <= 1D ){
+            ratingComment = "괜찮은 영화가 있긴 한가요..?";
+        } else if (1D < averageRating && averageRating <= 2D ){
+            ratingComment = "굉장히 깐깐하시군요!!";
+        } else if (2D < averageRating && averageRating <= 3D){
+            ratingComment = "신중한 타입..!";
+        } else if (3D < averageRating && averageRating <= 4D ){
+            ratingComment = "영화를 즐기는 자";
+        } else {
+            ratingComment = "모든 영화를 좋아하시는군요 !!!";
+        }
+
+        model.addAttribute("reviewList",targetUserReviewList);
+        model.addAttribute("ratingComment", ratingComment);
         model.addAttribute("averageRating" , averageRating);
 
         List<Review> getRecentlyReview = featureService.recentReview(memberId);
 
-        Review recentReview = getRecentlyReview.get(0);
+        try {
+            Review recentReview = getRecentlyReview.get(0);
 
-        MypageDTO mypageDTO = new MypageDTO();
+            MypageDTO mypageDTO = new MypageDTO();
 
-        switch (recentReview.getCategory()) {
-            case "movie" :
-                MovieDetailsDto movieDetailsDto = movieApiUtil.getMovieDetails(recentReview.getTmdbId());
-                mypageDTO.setName(movieDetailsDto.getTitle());
-                mypageDTO.setBackdropPath(movieDetailsDto.getBackdropPath());
-                mypageDTO.setCategory(recentReview.getCategory());
-                mypageDTO.setId(movieDetailsDto.getId());
-                break;
-            case "tv":
-                TvShowDTO tvShowDTO = tvShowApiUtil.getTvShowDetails(recentReview.getTmdbId());
-                mypageDTO.setName(tvShowDTO.getName());
-                mypageDTO.setBackdropPath(tvShowDTO.getBackdrop_path());
-                mypageDTO.setCategory(recentReview.getCategory());
-                mypageDTO.setId(tvShowDTO.getId());
-                break;
-            default:
-                log.error("없어요!!");
-                break;
+            switch (recentReview.getCategory()) {
+                case "movie" :
+                    MovieDetailsDto movieDetailsDto = movieApiUtil.getMovieDetails(recentReview.getTmdbId());
+                    mypageDTO.setName(movieDetailsDto.getTitle());
+                    mypageDTO.setBackdropPath(movieDetailsDto.getBackdropPath());
+                    mypageDTO.setCategory(recentReview.getCategory());
+                    mypageDTO.setId(movieDetailsDto.getId());
+                    break;
+                case "tv":
+                    TvShowDTO tvShowDTO = tvShowApiUtil.getTvShowDetails(recentReview.getTmdbId());
+                    mypageDTO.setName(tvShowDTO.getName());
+                    mypageDTO.setBackdropPath(tvShowDTO.getBackdrop_path());
+                    mypageDTO.setCategory(recentReview.getCategory());
+                    mypageDTO.setId(tvShowDTO.getId());
+                    break;
+                default:
+                    log.error("없어요!!");
+                    break;
+            }
+            model.addAttribute("recentReviewInfo", mypageDTO);
+            model.addAttribute("recentReview" , getRecentlyReview.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("recentReviewInfo", null);
+            model.addAttribute("recentReview", null);
         }
 
-        model.addAttribute("recentReviewInfo", mypageDTO);
-        model.addAttribute("recentReview" , getRecentlyReview.get(0));
+        int postCount = featureService.getPostCount(memberId);
+
+        model.addAttribute("postCount", postCount);
+
+        int playListCount = featureService.getPlaylist(memberId).size();
+
+        model.addAttribute("playListCount", playListCount);
 
         return "mypage/details-profile";
     }
