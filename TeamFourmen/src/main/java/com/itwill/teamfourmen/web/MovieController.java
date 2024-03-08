@@ -461,8 +461,11 @@ public class MovieController {
 		PageAndListDto pagingDto = PageAndListDto.getPagingDto(page, (int) searchedPostDtoList.getTotalElements(), searchedPostDtoList.getTotalPages(), 5, 5);
 		
 		model.addAttribute("category", "movie");
+		model.addAttribute("isSearch", "검색 결과");
 		model.addAttribute("postDtoList", searchedPostDtoList);
 		model.addAttribute("pagingDto", pagingDto);
+		model.addAttribute("keyword", searchContent);
+		model.addAttribute("searchCategory", searchCategory);
 		
 		
 		return "board/list";

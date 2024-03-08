@@ -1,8 +1,11 @@
 /**
  * board-create.js
  */
+
+
 document.addEventListener('DOMContentLoaded', function() {
 	const editor = document.querySelector('#editor');
+	
 	
 	const formBoard = document.querySelector('.form-board-create');
 	
@@ -43,28 +46,44 @@ document.addEventListener('DOMContentLoaded', function() {
             } ],
             toolbar: ['toggleImageCaption', 'imageTextAlternative', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original']
         }
+	}).then((editor) => {
+		
+		btnBoardCreateCancel.addEventListener('click', function() {
+		
+			window.history.back();		
+		});
+		
+		btnPostBoard.addEventListener('click', function() {
+			
+			const willProceed = confirm('게시하겠습니까?');
+			
+			if(!willProceed) {
+				return;
+			}
+			
+			const textContentInput = document.createElement('input');
+
+			
+	        console.log( viewToPlainText( editor.editing.view.getRoot() ) );
+
+						
+			textContentInput.value = editor.getData();
+			
+			console.log(`plain text =${plainText}`);
+			
+			alert('하하하하');
+			
+			formBoard.appendChild(textContentInput);
+			
+			formBoard.submit();
+			
+			
+			alert('성공적으로 게시하였습니다.');
+			
+		});
+		
 	});
 	
 	
-	btnBoardCreateCancel.addEventListener('click', function() {
-		
-		window.history.back();		
-	});
-	
-	btnPostBoard.addEventListener('click', function() {
-		
-		const willProceed = confirm('게시하겠습니까?');
-		
-		if(!willProceed) {
-			return;
-		}
-		
-		
-		formBoard.submit();
-		
-		
-		alert('성공적으로 게시하였습니다.');
-		
-	});
 	
 });

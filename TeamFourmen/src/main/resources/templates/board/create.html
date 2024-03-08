@@ -12,6 +12,7 @@
     <link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/board/board-create.css}" rel="stylesheet">
     <link th:href="@{/css/footer.css}" rel="stylesheet">
+    <script type="module" th:src="@{/js/ckeditor/node_modules/@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext.js}"></script>
     <script th:src="@{/js/ckeditor/build/ckeditor.js}"></script>
 </head>
 <body>
@@ -24,6 +25,7 @@
             <input class="form-control" name="title" placeholder="제목을 작성해주세요." maxlength="50">
             <label class="board-create-label">내용</label>
             <textarea id="editor" name="content"></textarea>
+            <div id="word-count"></div>
             <div class="div-btn-board-form">
                 <button type="button" class="btn-board-craete-cancel">취소</button>
                 <button type="button" class="btn-board-create">글 작성</button>                

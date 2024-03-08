@@ -54,6 +54,8 @@ public class Post {
 	@Basic(optional = false)
 	private String content;
 	
+	private String textContent;
+	
 	private String category;
 	
 	@CreatedDate

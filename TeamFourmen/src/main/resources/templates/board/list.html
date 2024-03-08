@@ -18,7 +18,7 @@
 	<nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
 	
     <main class="board-main-container">
-        <h1 class="board-title">FREE BOARD</h1>
+        <h1 class="board-title" th:text="|${#strings.toUpperCase(category)} BOARD ${isSearch != null ? isSearch : ''}|">FREE BOARD</h1>
         <table class="table-board-list">
             <thead class="thead-board-list-title">
                 <th class="th-board-title">제목</th>
@@ -76,13 +76,13 @@
     <section class="section-board-search">
         <form class="form-board-search" th:action="@{/{category}/board/search(category=${category})}" method="get">
             <select class="search-category" name="searchCategory">
-                <option value="title" selected="selected">제목</option>
-                <option value="titleContent">제목 + 내용</option>
-                <option value="author">글쓴이</option>
+                <option value="title" th:selected="${#strings.equals(searchCategory, 'title')}">제목</option>
+                <option value="titleContent" th:selected="${#strings.equals(searchCategory, 'titleContent')}">제목 + 내용</option>
+                <option value="author" th:selected="${#strings.equals(searchCategory, 'author')}">글쓴이</option>
             </select>
             <div class="div-board-input-btn-container">
                 <div class="div-board-content-search">
-                    <input type="text" class="input-board-content-search" maxlength="20" name="searchContent" required>
+                    <input type="text" class="input-board-content-search" maxlength="20" name="searchContent" th:value="${keyword}" required>
                 </div>
                 <div class="div-board-search-btn">
                     <button type="input" class="btn-board-search">

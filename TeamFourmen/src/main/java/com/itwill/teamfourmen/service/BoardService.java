@@ -128,14 +128,14 @@ public class BoardService {
 
 		switch(searchCategory) {
 		case "title":
-			 searchResultList = postDao.findAllByTitleOrderByPostIdDesc(searchContent, pageable);
+			 searchResultList = postDao.getSearchResultByTitle(searchContent, boardCategory, pageable);
 			 log.info("검색결과={}", searchResultList);
 			break;
 		case "titleContent":
-			searchResultList = postDao.findAllByTitleOrContentOrderByPostIdDesc(searchContent, pageable);
+			searchResultList = postDao.getSearchResultByTitleAndContent(searchContent, boardCategory, pageable);
 			break;
 		case "author":
-			searchResultList = postDao.findAllByMemberNicknameOrderByPostIdDesc(searchContent, pageable);
+			searchResultList = postDao.getSearchResultByAuthor(searchContent, boardCategory, pageable);
 			break;
 		default:
 			log.info("잘못된 카테고리를 가져옴");

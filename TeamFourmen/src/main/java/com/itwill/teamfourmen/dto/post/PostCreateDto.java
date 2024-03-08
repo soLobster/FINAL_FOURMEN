@@ -33,6 +33,8 @@ public class PostCreateDto {
 	
 	private String content;
 	
+	private String textContent;
+	
 	private String category;
 	
 	private LocalDateTime createdTime;
