@@ -58,6 +58,11 @@
 	 color: #fbc500;
 	 text-align: left;
 }
+
+.th-board-post-category {
+    width: 20px;
+}
+
 .th-board-title {
     width: 50%;
     text-align: left;
@@ -96,7 +101,17 @@
     height: 3rem;
 }
 
+.table-row-each-post:first-child {
+    border-top: none;
+}
 
+.table-row-each-post:nth-child(odd) {
+    background-color: #2C3033;
+}
+
+.table-row-each-post:hover {
+    background-color: #003049;
+}
 
 	/* 제목링크관련 */
 .td-board-title a {

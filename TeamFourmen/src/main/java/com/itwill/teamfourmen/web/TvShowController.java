@@ -591,6 +591,7 @@ public class TvShowController {
 		
 		model.addAttribute("category", "tv");
 		model.addAttribute("isSearch", "검색 결과");
+		model.addAttribute("totElements", searchedPostDtoList.getTotalElements());
 		model.addAttribute("postDtoList", searchedPostDtoList);
 		model.addAttribute("pagingDto", pagingDto);
 		model.addAttribute("keyword", searchContent);
