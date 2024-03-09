@@ -125,10 +125,12 @@ public class BoardService {
 		
 		postDtoList.forEach((postDto) -> {
 			postDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(postDto.getCreatedTime()));
-			log.info("time difference={}", postDto.getTimeDifferenceInMinute());
+			
+			log.info("댓글개수={}", commentDao.countByPostPostId(postDto.getPostId()));
+			postDto.setNumOfComments(commentDao.countByPostPostId(postDto.getPostId()));
 		});
 		
-//		log.info("postDtoList={}", postDtoList);		
+		log.info("postDtoList={}", postDtoList.getContent());		
 		
 		return postDtoList;
 	}
@@ -364,29 +366,33 @@ public class BoardService {
 	public List<CommentDto> getCommentList(Long postId) {
 		log.info("getCommentList(postId={})", postId);
 		
-		List<Comment> commentList = commentDao.findByPostPostIdAndReplyToOrderByCommentIdAsc(postId, null);
+		List<Comment> commentList = commentDao.findByPostPostIdAndReplyToOrderByCommentIdAsc(postId, null);						
 		
-		List<CommentDto> commentDtoList = new ArrayList<>();
+		List<CommentDto> commentDtoList = commentList.stream().map((comment) -> CommentDto.fromEntity(comment)).toList();
 		List<CommentDto> repliesList = new ArrayList<>();
 		
-		commentList.forEach((comment) -> {			
-			CommentDto commentDto = CommentDto.fromEntity(comment);
-			
+		commentDtoList.forEach((comment) -> {
 			List<CommentLike> commentLikeList = commentLikeDao.findAllByCommentCommentId(comment.getCommentId());
-			commentDto.setCommentLikesList(commentLikeList);
+			comment.setCommentLikesList(commentLikeList);
 			
-			commentDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(commentDto.getCreatedTime()));
+			// 가장 부모댓글 timeDifference설정
+			Long timeDifferenceInMinute = getMinuteDifferenceIfDateSame(comment.getCreatedTime());
+			comment.setTimeDifferenceInMinute(timeDifferenceInMinute);
 			
 			// 해당 부모댓글로부터 이어진 모든 대댓글들을 가져옴
 			List<Comment> initialRepliesList = commentDao.findAllByReplyTo(comment.getCommentId());
-			List<CommentDto> initialRepliesDtoList = initialRepliesList.stream().map((reply) -> CommentDto.fromEntity(reply)).toList();
-			commentDto.getRepliesList().addAll(initialRepliesDtoList);
-			for (CommentDto initialReplyDto : initialRepliesDtoList) {
-				initialReplyDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(initialReplyDto.getCreatedTime()));
-				addAllRepliesToComments(commentDto, initialReplyDto);	
+			List<CommentDto> initialRepliesDtoList = initialRepliesList.stream().map((replyComment) -> CommentDto.fromEntity(replyComment)).toList();
+			
+			comment.getRepliesList().addAll(initialRepliesDtoList);
+			
+			for (CommentDto initialReplyCommentDto : initialRepliesDtoList) {
+				Long replyCommentTimeDifferenceInMinute = getMinuteDifferenceIfDateSame(initialReplyCommentDto.getCreatedTime());
+				initialReplyCommentDto.setTimeDifferenceInMinute(replyCommentTimeDifferenceInMinute);
+				
+				addAllRepliesToComments(comment, initialReplyCommentDto);
 			}
 			
-			commentDtoList.add(commentDto);			
+			
 		});
 		
 		// 가져온 대댓글들을 commentId순으로 정렬

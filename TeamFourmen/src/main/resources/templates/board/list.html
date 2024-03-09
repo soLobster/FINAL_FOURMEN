@@ -32,9 +32,12 @@
             -->
             <tbody>
                 <tr class="table-row-each-post" th:each= "postDto : ${postDtoList}">
-                    <td th:if="${category == 'popular'}" th:text="${postDto.category}"></td>
+                    <td th:if="${category == 'popular'}" class="td-board-each-post-category">
+                        <a th:href="@{/{postCategory}/board (postCategory=${postDto.category})}" th:text="${postDto.category}"></a>
+                    </td>
                     <td class="td-board-title board-list-text-control">
                         <a th:href="@{/{category}/board/details (category=${postDto.category}, id=${postDto.postId}, page=${pagingDto.page})}" th:text="${postDto.title}"></a>
+                        <span th:text="|[${postDto.numOfComments}]|" class="board-list-post-num-comments"></span>
                     </td>
                     <td class="td-board-author boarder-content-text-center board-list-text-control" th:text="${postDto.member.nickname}"></td>
                     <!-- 시간관련 하루이내 작성된 글이면 시간 또는 분 경과시간으로 보여주기 -->
