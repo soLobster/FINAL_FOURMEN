@@ -436,12 +436,21 @@ public class BoardService {
 	 * 댓글 삭제하는 메서드
 	 * @param commentId
 	 */
+//	@Transactional
+//	public void deleteComment(Long commentId) {
+//		log.info("deleteComment(commentId={})", commentId);
+//		
+//		commentDao.deleteById(commentId);
+//		
+//	}
 	@Transactional
 	public void deleteComment(Long commentId) {
 		log.info("deleteComment(commentId={})", commentId);
 		
-		commentDao.deleteById(commentId);
+		Comment commentToDelete = commentDao.findById(commentId).orElse(null);
 		
+		commentToDelete.setIsDeleted("Y");
+		commentToDelete.setContent("삭제된 댓글입니다.");
 	}
 	
 	/**
