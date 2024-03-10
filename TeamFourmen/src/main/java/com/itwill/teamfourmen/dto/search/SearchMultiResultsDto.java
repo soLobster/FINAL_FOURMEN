@@ -12,5 +12,6 @@ public class SearchMultiResultsDto {
     private List<MultiPeopleDto> people;
     private int currentPage;
     private int totalPages;
+    private String query;
 
 }
