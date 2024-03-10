@@ -817,14 +817,12 @@
 
 
 	/* provider 관련 */
-.movie-provider-logo-container {
-    width: 100%;
-    
-}
 
 .movie-provider-logo-container {
     width: 100%;
-    display: flex;        
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;     
 }
 
 .div-provider-each {
