@@ -227,6 +227,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			const authorNicknameReplyingTo = btnAddReply.getAttribute('author');
 			
 			btnAddReply.addEventListener('click', function() {
+                
+                if (!user) {
+                    alert('로그인 한 유저만 댓글을 달 수 있습니다.');
+                    return;
+                }
+                
 				const data = {			
 					member: {
 						email: user.getAttribute('email')
