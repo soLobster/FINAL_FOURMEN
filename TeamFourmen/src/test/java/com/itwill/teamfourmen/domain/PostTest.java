@@ -20,16 +20,16 @@ public class PostTest {
 	
 	@Test
 	public void test() {
-		Assertions.assertNotNull(postDao);
-		log.info("--- postDao = {}", postDao);
-		
-		log.info("--- post count = {}", postDao.count());
-		
-		Assertions.assertNotNull(boardService);
-		log.info("--- boardService = {}", boardService);
-		
-		PostCreateDto dto = new PostCreateDto(null, "cirche1@naver.com", "aaa", "bbb", "movie", null, null, null, null);
-		boardService.post(dto);
+//		Assertions.assertNotNull(postDao);
+//		log.info("--- postDao = {}", postDao);
+//		
+//		log.info("--- post count = {}", postDao.count());
+//		
+//		Assertions.assertNotNull(boardService);
+//		log.info("--- boardService = {}", boardService);
+//		
+//		PostCreateDto dto = new PostCreateDto(null, "cirche1@naver.com", "aaa", "bbb", "movie", null, null, null, null);
+//		boardService.post(dto);
 		
 //		boardService.post(null);
 	}

@@ -10,11 +10,7 @@ phases:
   post_build:
     commands:
       - echo Build completed successfully
-      - zip -r fourmen.zip build/libs/TeamFourmen-0.0.1-SNAPSHOT.jar appspec.yml scripts/server_start.sh scripts/server_stop.sh
 artifacts:
   files:
     - TeamFourmen/build/libs/TeamFourmen-0.0.1-SNAPSHOT.jar
-    - TeamFourmen/appspec.yml
-    - TeamFourmen/scripts/server_start.sh
-    - TeamFourmen/scripts/server_stop.sh
   discard-paths: yes
