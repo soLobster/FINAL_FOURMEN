@@ -253,7 +253,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // 로그인 유저와 마이페이지의 유저가 다르면 프로필 편집 불가
     if(userEmail !== await checkCurrentUser()) {
-        editProfile.classList.add('d-none');
+        if(editProfile){
+            editProfile.classList.add('d-none');
+        }
     }
 
     // 로그인 유저와 마이페이지 유저가 같다면 팔로우 불가
@@ -271,6 +273,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (adminMenu) {			
 	        adminMenu.classList.add('d-none');
 		}
+    }
+
+    if('anonymousUser' === await checkCurrentUser()){
+        isAdmin.classList.add('d-none');
+        const adminMenu = document.querySelector('#admin-menu');
+        adminMenu.classList.add('d-none');
     }
 
 });

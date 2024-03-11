@@ -3,11 +3,15 @@ package com.itwill.teamfourmen.dto.search;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itwill.teamfourmen.dto.person.KnownForDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class PersonInfo {
+@Getter
+public class MultiPeopleDto extends MediaItem {
 
 //    @JsonProperty("page")
 //    private int page;
@@ -48,6 +52,9 @@ public class PersonInfo {
     private String profilePath; // 인물의 프로필 이미지
 
     @JsonProperty("known_for")
-    private List<KnownForDto> personKnownFor; // 인물의 대표작 3개
+    private List<KnownForDto> knownFor; // 인물의 대표작 3개
+
+    @JsonProperty("media_type")
+    private String mediaType;
 
 }

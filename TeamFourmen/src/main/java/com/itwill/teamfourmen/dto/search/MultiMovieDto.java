@@ -6,19 +6,21 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TvShowInfo extends MediaItem {
+@Getter
+public class MultiMovieDto extends MediaItem {
 
 //    @JsonProperty("page")
 //    private int page;
 //
 //    @JsonProperty("results")
-//    private List<TvShowInfo> tvResults;
+//    private List<MovieInfo> movieResults;
 //
 //    @JsonProperty("total_pages")
 //    private int totalPages;
@@ -39,14 +41,11 @@ public class TvShowInfo extends MediaItem {
     @JsonProperty("id")
     private int id;
 
-    @JsonProperty("origin_country")
-    private List<String> originCountry;
-
     @JsonProperty("original_language")
     private String originalLanguage;
 
-    @JsonProperty("original_name")
-    private String originalName;
+    @JsonProperty("original_title")
+    private String originalTitle;
 
     @JsonProperty("overview")
     private String overview;
@@ -58,12 +57,15 @@ public class TvShowInfo extends MediaItem {
     private String posterPath;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonProperty("first_air_date")
+    @JsonProperty("release_date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate firstAirDate;
+    private LocalDate releaseDate;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("video")
+    private boolean video;
 
     @JsonProperty("vote_average")
     private double voteAverage;

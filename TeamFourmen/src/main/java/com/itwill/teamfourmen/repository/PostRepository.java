@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	Page<Post> findAllByCategoryOrderByCreatedTimeDesc(@Param("cateogry")String category, Pageable pageable);
 	
-	// 검색관련
+
 	@Query("select p from Post p where upper(p.title) like upper('%' || :keyword || '%') and category = :boardCategory")
 	Page<Post> getSearchResultByTitle(@Param("keyword") String keyword, @Param("boardCategory") String boardCategory, Pageable pageable);
 	
@@ -28,6 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	@Query("select p from Post p where upper(p.member.nickname) like upper('%' || :keyword || '%') and category = :boardCategory")	
 	Page<Post> getSearchResultByAuthor(@Param("keyword") String searchContent, @Param("boardCategory") String boardCategory, Pageable pagealbe);
+
 	
 	// 인기글 가져오는 메서드
 	@Query("SELECT p FROM Post p ORDER BY (p.views + p.likes * 5) DESC")
@@ -131,4 +132,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 			 "where upper(m.nickname) like upper('%' || :keyword || '%') " +
 			 "order by (sp.views + sp.likes * 5) ", nativeQuery = true)
 	List<Post> findAllPopularBoardSearchByAuthor(@Param("keyword") String keyword);
+
 }

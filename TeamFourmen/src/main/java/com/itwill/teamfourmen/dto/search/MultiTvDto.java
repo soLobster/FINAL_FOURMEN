@@ -6,13 +6,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TvShowInfo extends MediaItem {
+@Getter
+public class MultiTvDto extends MediaItem {
 
 //    @JsonProperty("page")
 //    private int page;
@@ -73,5 +75,6 @@ public class TvShowInfo extends MediaItem {
 
     @JsonProperty("media_type")
     private String mediaType;
+
 
 }
