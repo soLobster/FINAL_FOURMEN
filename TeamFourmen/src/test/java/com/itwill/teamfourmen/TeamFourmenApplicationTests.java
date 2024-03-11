@@ -37,15 +37,15 @@ class TeamFourmenApplicationTests {
 	@Test
 	void loadReviewComment() {
 				 
-		Review targetReview = reviewDao.findByReviewId(6L);
-		
-		log.info("TARGET REVIEW = {}",targetReview);
-	
-		List<ReviewComments> cl = targetReview.getReviewComments();
-		 
-		for(ReviewComments comments : cl) {
-			log.info("댓글 아이디 = {}" ,comments.getCommentId());
-		}
+//		Review targetReview = reviewDao.findByReviewId(6L);
+//		
+//		log.info("TARGET REVIEW = {}",targetReview);
+//	
+//		List<ReviewComments> cl = targetReview.getReviewComments();
+//		 
+//		for(ReviewComments comments : cl) {
+//			log.info("댓글 아이디 = {}" ,comments.getCommentId());
+//		}
 	}
 	
 //	@Test

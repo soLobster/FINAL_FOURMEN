@@ -65,6 +65,7 @@
     	/* 이미지 관련 */
 figure.image {
     margin: 0 auto;
+    text-align: center;
 }
 
         /* 이미지 크기 관련 */

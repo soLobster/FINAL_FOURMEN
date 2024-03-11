@@ -20,10 +20,10 @@
 </head>
 <body>
      <header>
-       <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+       <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
 </header>
 
-<section th:replace="~{/layout/MyPageBasic :: sectionFragment}"></section>
+<section th:replace="~{layout/MyPageBasic :: sectionFragment}"></section>
 
 <div class = "mypage-details-body" style="padding-bottom:20px; margin-bottom:50px;">    
     			
@@ -125,7 +125,7 @@
     </ul>
 </div>
 </div>
-<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
+<footer th:replace="~{layout/FooterLayout :: footer-bar}"></footer>    
 </body>
     <script th:src="@{/js/footer.js}"></script>
 <script

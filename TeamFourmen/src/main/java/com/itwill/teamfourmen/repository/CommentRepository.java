@@ -15,4 +15,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 	
 	// 댓글에 대한 대댓글 댓글들 찾음
 	List<Comment> findAllByReplyTo(@Param("replyTo") Long replyTo);
+	
+	
+	// postId에 해당하는 게시물의 댓글 개수 가져옴
+	int countByPostPostId(Long postId);
 }
