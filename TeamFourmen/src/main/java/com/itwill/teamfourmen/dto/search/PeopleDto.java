@@ -10,20 +10,6 @@ import java.util.List;
 @Data
 public class PeopleDto {
 
-//    @JsonProperty("page")
-//    private int page;
-//
-//    @JsonProperty("results")
-//    private List<PersonInfo> peopleResults;
-//
-//    @JsonProperty("total_pages")
-//    private int totalPages;
-//
-//    @JsonProperty("total_results")
-//    private int totalResults;
-
-
-    //////////////////////
     @JsonProperty("adult")
     private boolean adult;
 

@@ -13,19 +13,6 @@ import java.util.List;
 @Data
 public class MovieDto {
 
-//    @JsonProperty("page")
-//    private int page;
-//
-//    @JsonProperty("results")
-//    private List<MovieInfo> movieResults;
-//
-//    @JsonProperty("total_pages")
-//    private int totalPages;
-//
-//    @JsonProperty("total_results")
-//    private int totalResults;
-
-    //////////////////////
     @JsonProperty("adult")
     private boolean adult;
 

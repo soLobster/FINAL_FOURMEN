@@ -12,21 +12,8 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TvShowInfo extends MediaItem {
+public class TvDto extends MediaItem {
 
-//    @JsonProperty("page")
-//    private int page;
-//
-//    @JsonProperty("results")
-//    private List<TvShowInfo> tvResults;
-//
-//    @JsonProperty("total_pages")
-//    private int totalPages;
-//
-//    @JsonProperty("total_results")
-//    private int totalResults;
-
-    //////////////////////
     @JsonProperty("adult")
     private boolean adult;
 
@@ -71,7 +58,7 @@ public class TvShowInfo extends MediaItem {
     @JsonProperty("vote_count")
     private int voteCount;
 
-    @JsonProperty("media_type")
-    private String mediaType;
+//    @JsonProperty("media_type")
+//    private String mediaType;
 
 }
