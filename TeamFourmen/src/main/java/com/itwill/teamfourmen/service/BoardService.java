@@ -2,6 +2,7 @@ package com.itwill.teamfourmen.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.joda.time.DateTimeZone;
 import org.jsoup.Jsoup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -517,7 +519,9 @@ public class BoardService {
 		
 		log.info("timeVariable");
 		
-		LocalDateTime currentTime = LocalDateTime.now();
+		ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+		LocalDateTime currentTime = LocalDateTime.now(koreaZoneId);
+
 		
 		Duration duration = Duration.between(timeVariable, currentTime);
 		
