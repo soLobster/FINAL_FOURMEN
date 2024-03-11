@@ -81,11 +81,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             console.log('불러온 이미지 = ' + usersaveprofile);
 
-            if(type !== 'web'){
-                 userProfileImg.setAttribute('src', usersaveprofile);
-            } else {
-                userProfileImg.setAttribute('src',  '/image/userimage.png')
-            }
+            
+            if (usersaveprofile.startsWith('http')) {
+				userProfileImg.setAttribute('src', usersaveprofile);				
+			} else {
+				userProfileImg.setAttribute('src', '/image/userimage.png');
+			}
 
 
             userEmail = email;
