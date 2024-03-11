@@ -575,7 +575,9 @@
             <div class = "works-review-div">
                 <div class = "works-review-header">
                     <a class ="reviewer-nickname-a" th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
-                        <img class ="works-review-users-profile-img" th:src="${review.getMember().getUsersaveprofile()}" />
+<!--                        <img class ="works-review-users-profile-img" th:src="${review.getMember().getUsersaveprofile()}" />-->
+                        <img class ="works-review-users-profile-img" th:if ="${review.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{${review.getMember().getUsersaveprofile()}}"/>
+                        <img class ="works-review-users-profile-img" th:unless = "${review.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}"/>
                     </a>
                     <span>Review By</span>
                     <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
