@@ -408,13 +408,18 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 
  <script type="text/javascript">
- var naver_id_login = new naver_id_login("NccKFQR4sIZ2_ExxYtlu", "http://fourmenmedia.link/login");
+ const contextPath = location.origin;
+ var naver_id_login = new naver_id_login("NccKFQR4sIZ2_ExxYtlu", contextPath+"/login");
  var state = naver_id_login.getUniqState();
 
+ 
  naver_id_login.setButton("green", 2,35);
- naver_id_login.setDomain("http://fourmenmedia.link/");
+ naver_id_login.setDomain(contextPath);
  naver_id_login.setState(state);
 
+
+ console.log(`contextPaht =  ${contextPath}`);
+ 
  naver_id_login.init_naver_id_login();
 
 
