@@ -31,12 +31,6 @@
                 </button>
             </div>
 
-            <!-- 검색창 부분: 드롭다운 카테고리 메뉴 추가 -->
-            <ul class="category-list">
-                <li data-action="/search/content">콘텐츠</li>
-                <li data-action="/search/people">인물</li>
-                <li data-action="/search/user">유저</li>
-            </ul>
             <!-- 검색창 부분 -->
             <div class="navbar-search-container">
                 <div class="navbar-search-inner-container">
@@ -44,7 +38,7 @@
                         <!-- 검색 입력 필드 -->
                         <div class="navbar-search-input-container">
                             <label class="navbar-search-label">
-                                <input name="query" class="navbar-search-input" type="text" maxlength="50" placeholder="콘텐츠, 인물, 유저를 검색해보세요.">
+                                <input id="searchInput" name="query" class="navbar-search-input" type="text" maxlength="50" placeholder="콘텐츠와 인물을 검색해보세요.">
                             </label>
                         </div>
                         <!-- 검색 아이콘(돋보기) -->
@@ -54,6 +48,28 @@
                     </form>
                 </div>
             </div>
+            <!-- 검색창 부분 -->
+<!--            <div class="navbar-search-container">-->
+<!--                <div class="navbar-search-inner-container">-->
+<!--                    <form id="searchForm" action="" method="get"> &lt;!&ndash; 초기 action 값은 비워둡니다. onchange 이벤트를 사용해 카테고리에 따라 action을 업데이트 &ndash;&gt;-->
+<!--                        &lt;!&ndash; 검색 입력 필드 &ndash;&gt;-->
+<!--                        <div class="navbar-search-input-container">-->
+<!--                            <label class="navbar-search-label">-->
+<!--                                <input id="searchInput" name="query" class="navbar-search-input" type="text" maxlength="50" placeholder="영화 또는 tv 프로그램을 검색해보세요.">-->
+<!--                            </label>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; 카테고리 선택 &ndash;&gt;-->
+<!--                        <select name="category" class="navbar-search-category" onchange="updateAction(this.value)">-->
+<!--                            <option value="movie">영화</option>-->
+<!--                            <option value="tv">TV 프로그램</option>-->
+<!--                        </select>-->
+<!--                        &lt;!&ndash; 검색 아이콘(돋보기) &ndash;&gt;-->
+<!--                        <button class="navbar-search-button" type="submit">-->
+<!--                            <i class="fa-solid fa-magnifying-glass"></i>-->
+<!--                        </button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <!-- '더보기' 버튼 -->
             <button id="loadMore" style="display:none;">더보기</button>
@@ -308,6 +324,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
-    <script th:src="@{/js/search.js}"></script>
+    <script th:src="@{/js/navbar.js}"></script>
+<!--    <script th:src="@{/js/listClickHandler.js}"></script>-->
+<!--    <script>-->
+<!--        document.addEventListener('DOMContentLoaded', function () {-->
+<!--            // updateAction 함수 정의-->
+<!--            window.updateAction = function (selectedCategory) {-->
+<!--                let form = document.getElementById('searchForm'); // 폼 요소 선택-->
+<!--                let baseUrl = 'http://localhost:8081'; // 기본 URL 설정-->
+
+<!--                // 선택된 카테고리에 따라 폼의 action 속성 업데이트-->
+<!--                if (selectedCategory === 'movie') {-->
+<!--                    form.action = baseUrl + '/movie/search';-->
+<!--                } else if (selectedCategory === 'tv') {-->
+<!--                    form.action = baseUrl + '/tv/search';-->
+<!--                }-->
+<!--            };-->
+
+<!--            // 페이지 로드 시 기본 카테고리에 따른 action 설정-->
+<!--            let initialCategory = document.querySelector('.navbar-search-category').value;-->
+<!--            updateAction(initialCategory);-->
+<!--        });-->
+<!--    </script>-->
+
 </body>
 </html>

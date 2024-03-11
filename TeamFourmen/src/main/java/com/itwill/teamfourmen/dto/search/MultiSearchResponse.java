@@ -25,4 +25,6 @@ public class MultiSearchResponse extends MediaItem {
     @JsonProperty("media_type")
     private String mediaType;
 
+    private String query;
+
 }

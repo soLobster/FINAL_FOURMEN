@@ -63,6 +63,7 @@ public class SearchService {
 
                 // MultiSearchResponse 객체 생성 및 리스트에 추가
                 MultiSearchResponse multiSearchResponse = new MultiSearchResponse();
+                multiSearchResponse.setQuery(query); // 쿼리 추가하여 영화, tv 검색 페이지로 이동할 때 사용 가능하게 함. (기존의 잘 만들어진 검색 페이지 사용 목적..)
                 multiSearchResponse.setResults(results);
                 multiSearchResponse.setTotalPages(totalPages);
                 multiSearchResponse.setTotalResults(totalResults);
@@ -76,123 +77,13 @@ public class SearchService {
             log.error("Error retrieving search results: ", e);
         }
 
-        return searchMultiResponseList; // 검색 결과와 페이징 정보를 포함하는 MultiSearchResponse 객체를 담은 리스트 반환
+        log.info("*************** 서치 서비스 클래스에서 데이터 출력 테스트 ***************");
+        log.info("쿼리가 잘 전달되었는지 확인: {}", query);
+
+        return searchMultiResponseList;
     }
 
-    /**
-     * JSON 데이터를 List<SearchPeopleDto> 객체로 변환.
-     * 검색 기능 중, "person"을 검색하기 위함(인물 검색 기능)
-     * 검색 결과 데이터를 리스트 형태로 받아서 사용하기 위한 메서드.
-     * @param query, page
-     * 파라미터는 검색어 String query -> 유저가 검색창에 입력한 값 / int page
-     * @return JSON 데이터를 매핑한 searchPeopleList 리스트 객체.
-     */
-    public List<SearchPeopleDto> getSearchPeopleList(String query, int page) {
-        // API 요청 URL 생성
-        String uri = String.format(apiUrl + "/search/person?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d",
-                apiKey, query, page);
 
-        try {
-            JsonNode node = webClient.get()
-                    .uri(uri)
-                    .retrieve()
-                    .bodyToMono(JsonNode.class)
-                    .block();
-            JsonNode resultsNode = node.get("results"); // API 응답에서 "results" 노드에 접근
 
-            if (resultsNode != null) {
-                ObjectMapper mapper = new ObjectMapper()
-                    .registerModule(new JavaTimeModule()) // Java 8 날짜/시간 모듈 등록
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 알려지지 않은 속성이 있어도 실패하지 않도록 설정
-
-                // resultsNode를 SearchPeopleDto 배열로 변환하고 리스트로 변환하여 반환
-                List<SearchPeopleDto> searchPeopleList = Arrays.asList(mapper.treeToValue(resultsNode, SearchPeopleDto[].class));
-                return searchPeopleList;
-                }
-        } catch (JsonProcessingException e) {
-            log.error("JSON processing exception: ", e);
-        } catch (Exception e) {
-            log.error("Error retrieving search results: ", e);
-        }
-        return Collections.emptyList(); // 예외 발생 시 빈 리스트 반환
-    }
-
-    /**
-     * JSON 데이터를 List<SearchMoviesDto> 객체로 변환.
-     * 검색 기능 중, "movie"를 검색하기 위함(영화 검색 기능)
-     * 검색 결과 데이터를 리스트 형태로 받아서 사용하기 위한 메서드.
-     * @param query, page
-     * 파라미터는 검색어 String query -> 유저가 검색창에 입력한 값 / int page
-     * @return JSON 데이터를 매핑한 searchMoviesList 리스트 객체.
-     */
-    public List<SearchMoviesDto> getSearchMoviesList(String query, int page) {
-
-        // API 요청 주소 생성
-        String uri = String.format(apiUrl + "/search/movie?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d",
-                apiKey, query, page);
-
-        try {
-            JsonNode node = webClient.get()
-                    .uri(uri)
-                    .retrieve()
-                    .bodyToMono(JsonNode.class)
-                    .block();
-            JsonNode resultsNode = node.get("results"); // API 응답에서 "results" 노드에 접근
-
-            if (resultsNode != null) {
-                ObjectMapper mapper = new ObjectMapper()
-                    .registerModule(new JavaTimeModule()) // Java 8 날짜/시간 모듈 등록
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 알려지지 않은 속성이 있어도 실패하지 않도록 설정
-
-                // resultsNode를 SearchMoviesDto 배열로 변환하고 리스트로 변환하여 반환
-                List<SearchMoviesDto> searchMoviesList = Arrays.asList(mapper.treeToValue(resultsNode, SearchMoviesDto[].class));
-                return searchMoviesList;
-                }
-        } catch (JsonProcessingException e) {
-            log.error("JSON processing exception: ", e);
-        } catch (Exception e) {
-            log.error("Error retrieving search results: ", e);
-        }
-        return Collections.emptyList(); // 예외 발생 시 빈 리스트 반환
-    }
-
-    /**
-     * JSON 데이터를 List<SearchTvShowsDto> 객체로 변환.
-     * 검색 기능 중, "tv"를 검색하기 위함(tv 검색 기능)
-     * 검색 결과 데이터를 리스트 형태로 받아서 사용하기 위한 메서드.
-     * @param query, page
-     * 파라미터는 검색어 String query -> 유저가 검색창에 입력한 값 / int page
-     * @return JSON 데이터를 매핑한 searchTvShowsList 리스트 객체.
-     */
-    public List<SearchTvShowsDto> getSearchTvsList(String query, int page) {
-
-        // API 요청 주소 생성
-        String uri = String.format(apiUrl + "/search/tv?api_key=%s&query=%s&include_adult=false&language=ko-KR&page=%d",
-                apiKey, query, page);
-
-        try {
-            JsonNode node = webClient.get()
-                    .uri(uri)
-                    .retrieve()
-                    .bodyToMono(JsonNode.class)
-                    .block();
-            JsonNode resultsNode = node.get("results");
-
-            if (resultsNode != null) {
-                ObjectMapper mapper = new ObjectMapper()
-                    .registerModule(new JavaTimeModule()) // Java 8 날짜/시간 모듈 등록
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 알려지지 않은 속성이 있어도 실패하지 않도록 설정
-
-                // resultsNode를 SearchTvShowsDto 배열로 변환하고 리스트로 변환하여 반환
-                List<SearchTvShowsDto> searchTvShowsList = Arrays.asList(mapper.treeToValue(resultsNode, SearchTvShowsDto[].class));
-                return searchTvShowsList;
-                }
-        } catch (JsonProcessingException e) {
-            log.error("JSON processing exception: ", e);
-        } catch (Exception e) {
-            log.error("Error retrieving search results: ", e);
-        }
-        return Collections.emptyList(); // 예외 발생 시 빈 리스트 반환
-    }
 
 }
