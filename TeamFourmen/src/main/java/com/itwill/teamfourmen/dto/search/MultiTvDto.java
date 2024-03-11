@@ -16,19 +16,6 @@ import java.util.List;
 @Getter
 public class MultiTvDto extends MediaItem {
 
-//    @JsonProperty("page")
-//    private int page;
-//
-//    @JsonProperty("results")
-//    private List<TvShowInfo> tvResults;
-//
-//    @JsonProperty("total_pages")
-//    private int totalPages;
-//
-//    @JsonProperty("total_results")
-//    private int totalResults;
-
-    //////////////////////
     @JsonProperty("adult")
     private boolean adult;
 
