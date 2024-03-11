@@ -695,7 +695,7 @@ newpasswordchange.addEventListener('click',()=>{
 							console.log(response.data);
 							
 						
-					window.location.href="http://localhost:8081/login"
+					window.location.href="http://www.fourmenmedia.link/login"
 
 
 				})
@@ -981,12 +981,12 @@ let failfinallyfindemailclose = document.querySelector('#failfinallyfindemailclo
 finallyfindemailclose.addEventListener('click', () => {
 		finallyfindemailinfo.innerHTML = '';
 		finallyfindemail.style.display = 'none';
-		window.location.href= 'http://localhost:8081/login';
+		window.location.href= 'http://www.fourmenmedia.link/login';
 
 	});
 	failfinallyfindemailclose.addEventListener('click', () => {
 		failfinallyfindemail.style.display = 'none';
-		window.location.href= 'http://localhost:8081/login';
+		window.location.href= 'hhttp://www.fourmenmedia.link/login';
 
 	});
 
@@ -1057,14 +1057,14 @@ let finallyfindpassword = document.querySelector('div#finallyfindpassword');
 let finallyfindpasswordclose = document.querySelector('#finallyfindpasswordclose');
 	finallyfindpasswordclose.addEventListener('click', () => {
 		finallyfindpassword.style.display = 'none';
-		window.location.href="http://localhost:8081/login"
+		window.location.href="http://www.fourmenmedia.link/login"
 		
 	});
 let failfinallyfindpassword = document.querySelector('div#failfinallyfindpassword');
 let failfinallyfindpasswordclose = document.querySelector('#failfinallyfindpasswordclose');
 	failfinallyfindpasswordclose.addEventListener('click', () => {
 		failfinallyfindpassword.style.display = 'none';
-		window.location.href="http://localhost:8081/login"
+		window.location.href="hhttp://www.fourmenmedia.link/login"
 		
 	});	
 let kakaonaver= document.querySelector('div#kakaonaver');
