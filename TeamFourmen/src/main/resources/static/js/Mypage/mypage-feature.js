@@ -132,6 +132,10 @@ document.addEventListener('DOMContentLoaded', async function () {
                 browsersTitle.textContent = userNickname + ' ' + 'LIKED PERSON';
             } else if (pathName.split('/')[4] === 'edit') {
                 browsersTitle.textContent = userNickname + ' ' + 'EDIT';
+            } else if (pathName.split('/')[4] === 'followers')  {
+                browsersTitle.textContent = userNickname + ' ' + '의 팔로워';
+            } else if (pathName.split('/')[4] === 'followings') {
+                browsersTitle.textContent = userNickname + ' ' + '의 팔로잉';
             } else {
                 browsersTitle.textContent = 'ADMIN PAGE';
             }
