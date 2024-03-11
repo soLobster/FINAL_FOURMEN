@@ -408,7 +408,7 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 
  <script type="text/javascript">
- const contextPath = location.origin;
+ const contextPath = location.origin+"/login";
  var naver_id_login = new naver_id_login("NccKFQR4sIZ2_ExxYtlu", contextPath+"/login");
  var state = naver_id_login.getUniqState();
 
@@ -435,7 +435,7 @@
 	 
 	 
 	 const checkuri = `login/checkemail/${email}`;
-		//console.log(checkuri);
+		console.log(checkuri);
 		
 		
 		axios.get(checkuri)
@@ -448,9 +448,9 @@
 						   const password= 'naverpassword';
 						   const phone = 'naverphone';
 						   const type ='naver';
-						   //console.log(email);
+						   console.log(email);
 						   const nickname = nicknamechange.replace(".com", "");
-						   //console.log(nickname);
+						   console.log(nickname);
 						   const data = {
 								   email,
 								   name,
@@ -478,7 +478,8 @@
 						   });
 						
 					  
-					//console.log(response.data);}
+					//console.log(response.data);
+					}
 					if(response.data ==='Y'){ 
 	 
 	 
@@ -491,7 +492,7 @@
    const type ='naver';
    console.log(email);
    const nickname = nicknamechange.replace(".com", "");
-   //console.log(nickname);
+   console.log(nickname);
    const data = {
 		   email,
 		   name,
