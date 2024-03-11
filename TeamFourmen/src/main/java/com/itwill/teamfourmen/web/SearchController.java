@@ -72,14 +72,14 @@ public class SearchController {
             return null;
         }
 
-        SearchPeopleDto searchPeopleList = searchService.searchPeople(query, page);
-        model.addAttribute("searchPeopleList", searchPeopleList);
-
-        SearchMoviesDto searchMoviesList = searchService.searchMovies(query, page);
-        model.addAttribute("searchMoviesList", searchMoviesList);
-
-        SearchTvShowsDto searchTvShowsList = searchService.searchTvShows(query, page);
-        model.addAttribute("searchTvShowsList", searchTvShowsList);
+//        SearchPeopleDto searchPeopleList = searchService.searchPeople(query, page);
+//        model.addAttribute("searchPeopleList", searchPeopleList);
+//
+//        SearchMoviesDto searchMoviesList = searchService.searchMovies(query, page);
+//        model.addAttribute("searchMoviesList", searchMoviesList);
+//
+//        SearchTvShowsDto searchTvShowsList = searchService.searchTvShows(query, page);
+//        model.addAttribute("searchTvShowsList", searchTvShowsList);
 
         return "search/search-multi";
     }
