@@ -75,42 +75,4 @@ public class SearchController {
         return "search/search-multi";
     }
 
-    @GetMapping("/people")
-    public String searchPeople(@RequestParam(name = "query", required = false, defaultValue = "") String query,
-                               @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                               Model model) {
-        List<SearchPeopleDto> searchPeopleList = searchService.getSearchPeopleList(query, page);
-        if (!searchPeopleList.isEmpty()) {
-            // 결과가 있으면 모델에 추가
-            model.addAttribute("searchPeopleResults", searchPeopleList);
-        } else {
-            // 결과가 없으면 사용자에게 메시지 표시
-            model.addAttribute("message", "검색 결과가 없습니다.");
-        }
-        return "search/search-multi";
-    }
-
-    @GetMapping("/contents")
-    public String searchContents(@RequestParam(name = "query", required = false, defaultValue = "") String query,
-                                 @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                 Model model) {
-
-        try {
-            List<SearchMoviesDto> searchMovieList = searchService.getSearchMoviesList(query, page);
-            List<SearchTvShowsDto> searchTvList = searchService.getSearchTvsList(query, page);
-            if (!searchMovieList.isEmpty() || !searchTvList.isEmpty()) {
-                model.addAttribute("searchMovieResults", searchMovieList);
-                model.addAttribute("searchTvResults", searchTvList);
-            } else {
-                model.addAttribute("message", "검색 결과가 없습니다.");
-            }
-        } catch (Exception e) {
-            log.error("Contents 검색 중 오류 발생: ", e);
-            model.addAttribute("error", "검색 중 오류가 발생했습니다.");
-            return null;
-        }
-
-        return "search/search-multi";
-    }
-
 }

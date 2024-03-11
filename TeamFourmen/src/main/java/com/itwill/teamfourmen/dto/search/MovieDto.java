@@ -13,61 +13,61 @@ import java.util.List;
 @Data
 public class MovieDto {
 
-    @JsonProperty("page")
-    private int page;
-
-    @JsonProperty("results")
-    private List<MovieInfo> movieResults;
-
-    @JsonProperty("total_pages")
-    private int totalPages;
-
-    @JsonProperty("total_results")
-    private int totalResults;
+//    @JsonProperty("page")
+//    private int page;
+//
+//    @JsonProperty("results")
+//    private List<MovieInfo> movieResults;
+//
+//    @JsonProperty("total_pages")
+//    private int totalPages;
+//
+//    @JsonProperty("total_results")
+//    private int totalResults;
 
     //////////////////////
-//    @JsonProperty("adult")
-//    private boolean adult;
-//
-//    @JsonProperty("backdrop_path")
-//    private String movieBackdropPath;
-//
-//    @JsonProperty("genre_ids")
-//    private List<Integer> movieGenreIds;
-//
-//    @JsonProperty("id")
-//    private int movieId;
-//
-//    @JsonProperty("original_language")
-//    private String movieOriginalLanguage;
-//
-//    @JsonProperty("original_title")
-//    private String movieOriginalTitle;
-//
-//    @JsonProperty("overview")
-//    private String movieOverview;
-//
-//    @JsonProperty("popularity")
-//    private double moviePopularity;
-//
-//    @JsonProperty("poster_path")
-//    private String moviePosterPath;
-//
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-//    @JsonProperty("release_date")
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    private LocalDate movieReleaseDate;
-//
-//    @JsonProperty("title")
-//    private String movieTitle;
-//
-//    @JsonProperty("video")
-//    private boolean movieVideo;
-//
-//    @JsonProperty("vote_average")
-//    private double movieVoteAverage;
-//
-//    @JsonProperty("vote_count")
-//    private int movieVoteCount;
+    @JsonProperty("adult")
+    private boolean adult;
+
+    @JsonProperty("backdrop_path")
+    private String backdropPath;
+
+    @JsonProperty("genre_ids")
+    private List<Integer> genreIds;
+
+    @JsonProperty("id")
+    private int id;
+
+    @JsonProperty("original_language")
+    private String originalLanguage;
+
+    @JsonProperty("original_title")
+    private String originalTitle;
+
+    @JsonProperty("overview")
+    private String overview;
+
+    @JsonProperty("popularity")
+    private double popularity;
+
+    @JsonProperty("poster_path")
+    private String posterPath;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonProperty("release_date")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate releaseDate;
+
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("video")
+    private boolean video;
+
+    @JsonProperty("vote_average")
+    private double voteAverage;
+
+    @JsonProperty("vote_count")
+    private int voteCount;
 
 }
