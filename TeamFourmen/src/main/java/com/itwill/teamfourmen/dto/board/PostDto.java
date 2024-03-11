@@ -47,6 +47,8 @@ public class PostDto {
 	
 	private Long likes;
 	
+	private int numOfComments;
+	
 	public static PostDto fromEntity(Post post) {
 		
 		

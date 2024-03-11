@@ -18,16 +18,24 @@
     <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
 
     <h1>
-        search-users
+        search-collection
     </h1>
 
-    <section>
-        <ul class="category-list">
-            <li data-action="/search/multi">전체</li>
-            <li data-action="/search/contents">콘텐츠</li>
-            <li data-action="/search/people">인물</li>
+    <!-- "검색어"의 검색 결과 -->
+    <div id="searchQuery">
+        "검색어"의 검색 결과
+    </div>
+
+    <!-- 카테고리: 전체 콘텐츠 인물 컬렉션 유저 -->
+    <div>
+        <ul>
+            <li><a th:href="@{/search(category=multi)}">전체</a></li>
+            <li><a th:href="@{/search(category=contents)}">콘텐츠</a></li>
+            <li><a th:href="@{/search(category=people)}">인물</a></li>
+            <li><a th:href="@{/search(category=collection)}">컬렉션</a></li>
+            <li><a th:href="@{/search(category=users)}">유저</a></li>
         </ul>
-    </section>
+    </div>
 
     <!-- 검색 결과 데이터를 여기에 표시 -->
     <div th:if="${searchResults}">
@@ -45,6 +53,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <!-- 네이게이션 바 js -->
     <script th:src="@{/js/navbar.js}"></script>
-    <script th:src="@{/js/listClickHandler.js}"></script>
+    <!-- search js -->
 </body>
 </html>

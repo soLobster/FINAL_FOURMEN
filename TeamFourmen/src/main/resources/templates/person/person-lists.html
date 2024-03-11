@@ -19,8 +19,7 @@
 
 </head>
 <body>
-    <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
-
+    <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
     <div class="container-fluid">
         <main class="my-2">
             <div class="inner_block">
@@ -103,7 +102,8 @@
 
         </main>
     </div>
-	<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>
+
+	<footer th:replace="~{layout/FooterLayout :: footer-bar}"></footer>    
 
 
     <script th:src="@{/js/footer.js}"></script>

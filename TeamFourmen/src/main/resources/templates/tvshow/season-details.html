@@ -248,7 +248,7 @@
 </head>
 <body>
 <header>
-  <nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+  <nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
   <!--  <h1 th:text="${tvShowDto.getOriginal_name() + ' - Season  ' + seasonDto.getSeason_number()}"></h1>-->
 <!--  <input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">-->
 </header>
@@ -363,7 +363,7 @@
 
 </main>
 
-<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
+<footer th:replace="~{layout/FooterLayout :: footer-bar}"></footer>    
 
 
     <script th:src="@{/js/footer.js}"></script>

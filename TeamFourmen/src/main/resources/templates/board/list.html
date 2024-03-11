@@ -20,16 +20,25 @@
     <main class="board-main-container">
         <h1 class="board-title" th:text="|${#strings.toUpperCase(category)} BOARD ${isSearch != null ? isSearch : ''}|">게시판</h1>
         <table class="table-board-list">
-            <thead class="thead-board-list-title">
+            <!--
+            <thead class="thead-board-list-title">                
+                <th th:if="${category == 'popular'}" class="th-board-post-category"></th>
                 <th class="th-board-title">제목</th>
                 <th class="th-board-author">작성자</th>
                 <th class="th-board-created-time">작성/수정 시간</th>
                 <th class="th-board-views">조회수</th>
                 <th class="th-board-likes">좋아요</th>
             </thead>
+            -->
             <tbody>
                 <tr class="table-row-each-post" th:each= "postDto : ${postDtoList}">
-                    <td class="td-board-title board-list-text-control"><a th:href="@{/{category}/board/details (category=${category}, id=${postDto.postId}, page=${pagingDto.page})}" th:text="${postDto.title}"></a></td>
+                    <td th:if="${category == 'popular'}" class="td-board-each-post-category">
+                        <a th:href="@{/{postCategory}/board (postCategory=${postDto.category})}" th:text="${postDto.category}"></a>
+                    </td>
+                    <td class="td-board-title board-list-text-control">
+                        <a th:href="@{/{category}/board/details (category=${postDto.category}, id=${postDto.postId}, page=${pagingDto.page})}" th:text="${postDto.title}"></a>
+                        <span th:text="|[${postDto.numOfComments}]|" class="board-list-post-num-comments"></span>
+                    </td>
                     <td class="td-board-author boarder-content-text-center board-list-text-control" th:text="${postDto.member.nickname}"></td>
                     <!-- 시간관련 하루이내 작성된 글이면 시간 또는 분 경과시간으로 보여주기 -->
                     <td th:if="${postDto.timeDifferenceInMinute != null && postDto.timeDifferenceInMinute lt 60}"
@@ -40,13 +49,22 @@
                     <td th:if="${postDto.timeDifferenceInMinute == null}"
                         th:text="${#temporals.format(postDto.createdTime, 'yyyy-MM-dd')}"
                         class="td-board-created-time boarder-content-text-center board-list-text-control board-list-text-control">                    
-                    <td class="td-board-views boarder-content-text-center board-list-text-control" th:text="${postDto.views}"></td>
-                    <td class="td-board-likes boarder-content-text-center board-list-text-control" th:text="${postDto.likes}"></td>
+                    <td class="td-board-views boarder-content-text-center board-list-text-control">
+                        <i class="fa-solid fa-eye"></i>
+                        <span th:text="${postDto.views}"></span>
+                    </td>
+                    <td class="td-board-likes boarder-content-text-center board-list-text-control">
+                        <i class="fa-solid fa-heart"></i>
+                        <span th:text="${postDto.likes}"></span>
+                    </td>
+                </tr>
+                <tr th:if="${totElements != null && totElements == 0}">
+                    검색 결과가 없습니다.
                 </tr>
             </tbody>
         </table>
         <div class="div-board-create-button">
-            <button class="btn-board-create" sec:authorize="isAuthenticated()">글 작성</button>
+            <button class="btn-board-create" sec:authorize="isAuthenticated()" th:if="${category != 'popular'}">글 작성</button>
         </div>
     </main>
     
@@ -98,8 +116,7 @@
             </div>
         </form>
     </section>
-    <footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>    
-
+    <footer th:replace="~{layout/FooterLayout :: footer-bar}"></footer>
 
     <script th:src="@{/js/footer.js}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

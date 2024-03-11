@@ -49,6 +49,8 @@ public class CommentDto {
 	
 	private String authorNicknameReplyingTo;
 	
+	private String isDeleted;
+	
 	private List<CommentLike> commentLikesList = new ArrayList<>();
 	
 	private List<CommentDto> repliesList = new ArrayList<>();
@@ -64,6 +66,7 @@ public class CommentDto {
 					.likes(comment.getLikes())
 					.replyTo(comment.getReplyTo())
 					.authorNicknameReplyingTo(comment.getAuthorNicknameReplyingTo())
+					.isDeleted(comment.getIsDeleted())
 					.commentLikesList(new ArrayList<CommentLike>())
 					.repliesList(new ArrayList<CommentDto>())
 					.build();
