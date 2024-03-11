@@ -435,7 +435,7 @@
 	 
 	 
 	 const checkuri = `login/checkemail/${email}`;
-		console.log(checkuri);
+		//console.log(checkuri);
 		
 		
 		axios.get(checkuri)
@@ -448,9 +448,9 @@
 						   const password= 'naverpassword';
 						   const phone = 'naverphone';
 						   const type ='naver';
-						   console.log(email);
+						   //console.log(email);
 						   const nickname = nicknamechange.replace(".com", "");
-						   console.log(nickname);
+						   //console.log(nickname);
 						   const data = {
 								   email,
 								   name,
@@ -464,7 +464,7 @@
 						   
 						   axios.post('login/naver', data)
 						   .then((response) => {
-						     console.log(response.data);
+						     //console.log(response.data);
 							  var hibbenButton = document.getElementById('hibbenbutton');
 							  hibbenButton.click();
 
@@ -478,7 +478,7 @@
 						   });
 						
 					  
-					console.log(response.data);}
+					//console.log(response.data);}
 					if(response.data ==='Y'){ 
 	 
 	 
@@ -491,7 +491,7 @@
    const type ='naver';
    console.log(email);
    const nickname = nicknamechange.replace(".com", "");
-   console.log(nickname);
+   //console.log(nickname);
    const data = {
 		   email,
 		   name,
@@ -505,7 +505,7 @@
    
    axios.post('login/naver', data)
    .then((response) => {
-     console.log(response.data);
+     //console.log(response.data);
 	  var hibbenButton = document.getElementById('hibbenbutton');
 	  hibbenButton.click();
 
