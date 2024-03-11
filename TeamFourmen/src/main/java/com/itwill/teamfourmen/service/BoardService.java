@@ -3,6 +3,7 @@ package com.itwill.teamfourmen.service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -517,10 +518,11 @@ public class BoardService {
 	 */
 	public Long getMinuteDifferenceIfDateSame(LocalDateTime timeVariable) {
 		
-		log.info("timeVariable");
+		log.info(timeVariable.toString());
 		
-		ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
-		LocalDateTime currentTime = LocalDateTime.now(koreaZoneId);
+		ZoneId KoreanZone = ZoneId.of("Asia/Seoul");
+//		ZonedDateTime currentTime = ZonedDateTime.now(KoreanZone);
+		LocalDateTime currentTime = LocalDateTime.now();
 
 		
 		Duration duration = Duration.between(timeVariable, currentTime);
