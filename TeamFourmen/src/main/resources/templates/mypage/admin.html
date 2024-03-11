@@ -100,7 +100,7 @@
                     <td th:text="*{nickname}"></td>
                     <td th:text="*{phone}"></td>
                     <td th:text="*{type}"></td>
-                    <td th:text="*{created_time}"></td>
+                    <td th:text="*{#temporals.format(created_time, 'yyyy-MM-dd HH:mm')}"></td>
             
                 </tr>
    
