@@ -5,12 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class MovieInfo extends MediaItem {
+@Getter
+public class MultiMovieDto extends MediaItem {
 
 //    @JsonProperty("page")
 //    private int page;
@@ -29,44 +33,47 @@ public class MovieInfo extends MediaItem {
     private boolean adult;
 
     @JsonProperty("backdrop_path")
-    private String movieBackdropPath;
+    private String backdropPath;
 
     @JsonProperty("genre_ids")
-    private List<Integer> movieGenreIds;
+    private List<Integer> genreIds;
 
     @JsonProperty("id")
-    private int movieId;
+    private int id;
 
     @JsonProperty("original_language")
-    private String movieOriginalLanguage;
+    private String originalLanguage;
 
     @JsonProperty("original_title")
-    private String movieOriginalTitle;
+    private String originalTitle;
 
     @JsonProperty("overview")
-    private String movieOverview;
+    private String overview;
 
     @JsonProperty("popularity")
-    private double moviePopularity;
+    private double popularity;
 
     @JsonProperty("poster_path")
-    private String moviePosterPath;
+    private String posterPath;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("release_date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate movieReleaseDate;
+    private LocalDate releaseDate;
 
     @JsonProperty("title")
-    private String movieTitle;
+    private String title;
 
     @JsonProperty("video")
-    private boolean movieVideo;
+    private boolean video;
 
     @JsonProperty("vote_average")
-    private double movieVoteAverage;
+    private double voteAverage;
 
     @JsonProperty("vote_count")
-    private int movieVoteCount;
+    private int voteCount;
+
+    @JsonProperty("media_type")
+    private String mediaType;
 
 }

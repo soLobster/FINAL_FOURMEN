@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+// 이 클래스는 추상 클래스로, 실제 타입은 MultiMovieDto, MultiTvDto, MultiPeopleDto 중 하나! (검색 결과에 따라 달라짐)
 @Data
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "media_type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = MovieDto.class, name = "movie"),
-        @JsonSubTypes.Type(value = TvShowsDto.class, name = "tv"),
-        @JsonSubTypes.Type(value = PeopleDto.class, name = "person")
+        @JsonSubTypes.Type(value = MultiMovieDto.class, name = "movie"),
+        @JsonSubTypes.Type(value = MultiTvDto.class, name = "tv"),
+        @JsonSubTypes.Type(value = MultiPeopleDto.class, name = "person")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class MediaItem {

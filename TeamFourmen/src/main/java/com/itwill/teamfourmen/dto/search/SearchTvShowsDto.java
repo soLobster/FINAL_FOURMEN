@@ -12,7 +12,7 @@ public class SearchTvShowsDto {
     private int page;
 
     @JsonProperty("results")
-    private List<TvShowsDto> tvResults;
+    private List<TvDto> tvResults;
 
     @JsonProperty("total_pages")
     private int totalPages;

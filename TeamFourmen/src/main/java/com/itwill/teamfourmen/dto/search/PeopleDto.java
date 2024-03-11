@@ -7,49 +7,34 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class PeopleDto extends MediaItem {
+public class PeopleDto {
 
-    @JsonProperty("page")
-    private int page;
+    @JsonProperty("adult")
+    private boolean adult;
 
-    @JsonProperty("results")
-    private List<PersonInfo> peopleResults;
+    @JsonProperty("gender")
+    private int gender; // 인물의 성별
 
-    @JsonProperty("total_pages")
-    private int totalPages;
+    @JsonProperty("id")
+    private int id; // 인물의 아이디
 
-    @JsonProperty("total_results")
-    private int totalResults;
+    @JsonProperty("known_for_department")
+    private String knownForDepartment; // 인물의 유명 분야
 
+    @JsonProperty("name")
+    private String name; // 인물의 이름
 
-    //////////////////////
-//    @JsonProperty("adult")
-//    private boolean adult;
-//
-//    @JsonProperty("gender")
-//    private int gender; // 인물의 성별
-//
-//    @JsonProperty("id")
-//    private int personId; // 인물의 아이디
-//
-//    @JsonProperty("known_for_department")
-//    private String knownForDepartment; // 인물의 유명 분야
-//
-//    @JsonProperty("name")
-//    private String personName; // 인물의 이름
-//
-//    @JsonProperty("original_name")
-//    private String personOriginalName; // 인물의 오리지널 이름
-//
-//    @JsonProperty("popularity")
-//    private double personPopularity; // 인물의 인기도
-//
-//    @JsonProperty("profile_path")
-//    private String personProfilePath; // 인물의 프로필 이미지
-//
-//    @JsonProperty("known_for")
-//    private List<KnownForDto> personKnownFor; // 인물의 대표작 3개
+    @JsonProperty("original_name")
+    private String originalName; // 인물의 오리지널 이름
+
+    @JsonProperty("popularity")
+    private double popularity; // 인물의 인기도
+
+    @JsonProperty("profile_path")
+    private String profilePath; // 인물의 프로필 이미지
+
+    @JsonProperty("known_for")
+    private List<KnownForDto> knownFor; // 인물의 대표작 3개
 
 }

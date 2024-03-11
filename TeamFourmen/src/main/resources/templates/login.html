@@ -17,7 +17,7 @@
 
 	
 <body class="mainbody">
-	<a  href="http://localhost:8081" class="logo" target="_blank">
+	<a  href="http://www.fourmenmedia.link/" class="logo" target="_blank">
     <img th:src="@{image/logogood.png}" alt="">
   </a>
 
@@ -408,13 +408,18 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 
  <script type="text/javascript">
- var naver_id_login = new naver_id_login("NccKFQR4sIZ2_ExxYtlu", "http://localhost:8081/login");
+ const contextPath = location.origin+"/login";
+ var naver_id_login = new naver_id_login("NccKFQR4sIZ2_ExxYtlu", contextPath+"/login");
  var state = naver_id_login.getUniqState();
 
+ 
  naver_id_login.setButton("green", 2,35);
- naver_id_login.setDomain("http://localhost");
+ naver_id_login.setDomain(contextPath);
  naver_id_login.setState(state);
 
+
+ console.log(`contextPaht =  ${contextPath}`);
+ 
  naver_id_login.init_naver_id_login();
 
 
@@ -459,7 +464,7 @@
 						   
 						   axios.post('login/naver', data)
 						   .then((response) => {
-						     console.log(response.data);
+						     //console.log(response.data);
 							  var hibbenButton = document.getElementById('hibbenbutton');
 							  hibbenButton.click();
 
@@ -473,7 +478,8 @@
 						   });
 						
 					  
-					console.log(response.data);}
+					//console.log(response.data);
+					}
 					if(response.data ==='Y'){ 
 	 
 	 
@@ -500,7 +506,7 @@
    
    axios.post('login/naver', data)
    .then((response) => {
-     console.log(response.data);
+     //console.log(response.data);
 	  var hibbenButton = document.getElementById('hibbenbutton');
 	  hibbenButton.click();
 

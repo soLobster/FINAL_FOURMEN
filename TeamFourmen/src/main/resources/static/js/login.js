@@ -4,7 +4,7 @@
 
 
 document.addEventListener('DOMContentLoaded', function() {
-
+	const contextPathh = location.origin;
 	let idChecked = false;
 	let pwdChecked = false;
 	let passwordcheckChecked = false;
@@ -214,7 +214,7 @@ if(e.target.value==='' || e.target.value.length >4){
 	
 	function getphoneforget() {
 		let phone = document.querySelector('input#forgetphone').value;
-		console.log(phone);
+		//console.log(phone);
 
 		// 동일한 숫자가 count 이상 반복되는지 확인하는 함수
 		function hasRepeatedNumbers(str, count) {
@@ -233,20 +233,20 @@ if(e.target.value==='' || e.target.value.length >4){
 
 
 			const uri = `login/phone/${phone}`;
-			console.log(uri);
+			//console.log(uri);
 
 			axios.get(uri)
 				.then((response) => {
 
-					console.log(response.data);
+					//console.log(response.data);
 					const forgetphonecheckbtn = document.querySelector("a#forgetphonecheckbtn");
 
 					forgetphonecheckbtn.addEventListener('click', () => {
 						const forgetphonecheck = document.querySelector('input#forgetphonecheck').value;
-						console.log(forgetphonecheck);
-						console.log(response.data);
+						//console.log(forgetphonecheck);
+						//console.log(response.data);
 						if (response.data == forgetphonecheck) {
-							console.log("성공");
+							//console.log("성공");
 							forgetphonecheckbtn.style.display = 'none';
 							forgetphonecountdownElement.style.display = 'none';
 							forgetphonesuccess.style.display = 'block';
@@ -256,7 +256,7 @@ if(e.target.value==='' || e.target.value.length >4){
 							document.querySelector('input#forgetfullname').setAttribute('readonly', 'readonly');
 							
 						} else {
-							console.log("인증비번실패");
+							//console.log("인증비번실패");
 
 							forgetphonenumberwarningmodal.style.display = 'block';
 							document.querySelector('input#forgetphonecheck').value='';
@@ -428,7 +428,7 @@ forgetemailnamewarningmodalclose.addEventListener('click', () => {
 
 function forgetgetAllComments() {
 		let email = document.querySelector('input#forgetpwemail').value;
-		console.log(email);
+		//console.log(email);
 
 		if (email.indexOf('@') === -1) {
 			forgetemailwarningmodal.style.display = 'block';
@@ -437,20 +437,20 @@ function forgetgetAllComments() {
 			forgetcheckemailbox.style.display = 'block';
 
 			const uri = `login/email/${email}`;
-			console.log(uri);
+			//console.log(uri);
 
 			axios.get(uri)
 				.then((response) => {
-					console.log(response.data);
+					//console.log(response.data);
 
 					const forgetemailcheckbtn = document.querySelector("a#forgetemailcheckbtn");
 
 					forgetemailcheckbtn.addEventListener('click', () => {
 						const forgetemailcheck = document.querySelector('input#forgetemailcheck').value;
-						console.log(forgetemailcheck);
-						console.log(response.data);
+						//console.log(forgetemailcheck);
+						//console.log(response.data);
 						if (response.data == forgetemailcheck) {
-							console.log("성공");
+							//console.log("성공");
 							forgetemailcheckbtn.style.display = 'none';
 							forgetemailcountdown.style.display = 'none';
 							forgetemailsuccess.style.display = 'block';
@@ -461,7 +461,7 @@ function forgetgetAllComments() {
 				
 
 						} else {
-							console.log("인증비번실패");
+							//console.log("인증비번실패");
 							forgetemailnumberwarningmodal.style.display = 'block';
 							document.querySelector('input#forgetemailcheck').value='';
 						}
@@ -480,7 +480,7 @@ function forgetgetAllComments() {
 
 	function getAllComments() {
 		let email = document.querySelector('input#logemail').value;
-		console.log(email);
+		//console.log(email);
 
 		if (email.indexOf('@') === -1) {
 			warningmodal.style.display = 'block';
@@ -488,20 +488,20 @@ function forgetgetAllComments() {
 			ifemailinsert.style.display = 'block';
 
 			const uri = `login/email/${email}`;
-			console.log(uri);
+			//console.log(uri);
 
 			axios.get(uri)
 				.then((response) => {
-					console.log(response.data);
+					//console.log(response.data);
 
 					const emailcheckbtn = document.querySelector("a#emailcheckbtn");
 
 					emailcheckbtn.addEventListener('click', () => {
 						const checkemail = document.querySelector('input#checkmail').value;
-						console.log(checkemail);
-						console.log(response.data);
+						//console.log(checkemail);
+						//console.log(response.data);
 						if (response.data == checkemail) {
-							console.log("성공");
+							//console.log("성공");
 							emailcheckbtn.style.display = 'none';
 							countdownElement.style.display = 'none';
 							success.style.display = 'block';
@@ -509,7 +509,7 @@ function forgetgetAllComments() {
 							document.querySelector('input#logemail').setAttribute('readonly', 'readonly');
 							document.querySelector('input#checkmail').setAttribute('readonly', 'readonly');
 							checkidChecked = true;
-							console.log(idChecked);
+							//console.log(idChecked);
 							
 				if(idChecked && pwdChecked && nameChecked && nicknameChecked && phoneChecked && passwordcheckChecked && checkidChecked && checkphoneChecked){
          signupbtn.removeAttribute('disabled');
@@ -518,7 +518,7 @@ function forgetgetAllComments() {
         }
 
 						} else {
-							console.log("인증비번실패");
+							//console.log("인증비번실패");
 							numberwarningmodal.style.display = 'block';
 						}
 
@@ -553,8 +553,8 @@ function forgetgetAllComments() {
 			passwordgood.style.display = 'block';
 			passwordcondition.style.display = 'none';
 			if (passwordinput.value === passwordcheck.value) {
-			console.log(passwordinput.value);
-			console.log(passwordcheck.value);
+			//console.log(passwordinput.value);
+			//console.log(passwordcheck.value);
 			passwordcorrect.style.display = 'block';
 			passwordwrong.style.display = 'none';
 		} else {
@@ -566,8 +566,8 @@ function forgetgetAllComments() {
 			passwordcondition.style.display = 'block';
 			passwordgood.style.display = 'none';
 			if (passwordinput.value === passwordcheck.value) {
-			console.log(passwordinput.value);
-			console.log(passwordcheck.value);
+			//console.log(passwordinput.value);
+			//console.log(passwordcheck.value);
 			passwordcorrect.style.display = 'block';
 			passwordwrong.style.display = 'none';
 		} else {
@@ -579,8 +579,8 @@ function forgetgetAllComments() {
 
 	passwordcheck.addEventListener('input', () => {
 		if (passwordinput.value === passwordcheck.value) {
-			console.log(passwordinput.value);
-			console.log(passwordcheck.value);
+			//console.log(passwordinput.value);
+			//console.log(passwordcheck.value);
 			passwordcorrect.style.display = 'block';
 			passwordwrong.style.display = 'none';
 		} else {
@@ -616,8 +616,8 @@ let newpassword = document.querySelector("input#newpassword");
 			newpasswordwarninfo.style.display = 'none';
 			newpasswordwarngoodinfo.style.display = 'block';
 			if (newpassword.value === newpasswordcheck.value) {
-			console.log(newpassword.value);
-			console.log(newpasswordcheck.value);
+			//console.log(newpassword.value);
+			//console.log(newpasswordcheck.value);
 			newpasswordmatchgood.style.display = 'block';
 			newpasswordmatchno.style.display = 'none';
 	
@@ -635,8 +635,8 @@ let newpassword = document.querySelector("input#newpassword");
 			 newpasswordwarninfo.style.display = 'block';
 			newpasswordwarngoodinfo.style.display = 'none';
 			if (newpassword.value === newpasswordcheck.value) {
-			console.log(newpassword.value);
-			console.log(newpasswordcheck.value);
+			//console.log(newpassword.value);
+			//console.log(newpasswordcheck.value);
 			newpasswordmatchgood.style.display = 'block';
 			newpasswordmatchno.style.display = 'none';
 			
@@ -651,8 +651,8 @@ let newpassword = document.querySelector("input#newpassword");
 
 	newpasswordcheck.addEventListener('input', () => {
 		if (newpassword.value === newpasswordcheck.value) {
-			console.log(newpassword.value);
-			console.log(newpasswordcheck.value);
+			//console.log(newpassword.value);
+			//console.log(newpasswordcheck.value);
 			newpasswordmatchgood.style.display = 'block';
 			newpasswordmatchno.style.display = 'none';
 			
@@ -687,15 +687,15 @@ newpasswordchange.addEventListener('click',()=>{
 				
 				
 				const uri = `login/findpassword/${email}/${name}/${password}`;
-					console.log(uri);
+					//console.log(uri);
 		
 					axios.get(uri)
 						.then((response) => {
 
-							console.log(response.data);
+							//console.log(response.data);
 							
 						
-					window.location.href="http://localhost:8081/login"
+					window.location.href=contextPathh;
 
 
 				})
@@ -714,7 +714,7 @@ newpasswordchange.addEventListener('click',()=>{
 
 	function getphone() {
 		let phone = document.querySelector('input#phone').value;
-		console.log(phone);
+		//console.log(phone);
 
 		// 동일한 숫자가 count 이상 반복되는지 확인하는 함수
 		function hasRepeatedNumbers(str, count) {
@@ -732,20 +732,20 @@ newpasswordchange.addEventListener('click',()=>{
 
 
 			const uri = `login/phone/${phone}`;
-			console.log(uri);
+			//console.log(uri);
 
 			axios.get(uri)
 				.then((response) => {
 
-					console.log(response.data);
+					//console.log(response.data);
 					const phonecheckbtn = document.querySelector("a#phonecheckbtn");
 
 					phonecheckbtn.addEventListener('click', () => {
 						const phonecheck = document.querySelector('input#phonecheck').value;
-						console.log(phonecheck);
-						console.log(response.data);
+						//console.log(phonecheck);
+						//console.log(response.data);
 						if (response.data == phonecheck) {
-							console.log("성공");
+							//console.log("성공");
 							phonecheckbtn.style.display = 'none';
 							phonecountdownElement.style.display = 'none';
 							phonesuccess.style.display = 'block';
@@ -753,13 +753,13 @@ newpasswordchange.addEventListener('click',()=>{
 							document.querySelector('input#phone').setAttribute('readonly', 'readonly');
 							document.querySelector('input#phonecheck').setAttribute('readonly', 'readonly');
 							checkphoneChecked = true;
-							console.log(idChecked);
-							console.log(pwdChecked);
-							console.log(nameChecked);
-							console.log(nicknameChecked);
-							console.log(passwordcheckChecked);
-							console.log(checkidChecked);
-							console.log(checkphoneChecked);
+							//console.log(idChecked);
+							//console.log(pwdChecked);
+							//console.log(nameChecked);
+							//console.log(nicknameChecked);
+							//console.log(passwordcheckChecked);
+							//console.log(checkidChecked);
+							//console.log(checkphoneChecked);
 			if(idChecked && pwdChecked && nameChecked && nicknameChecked && phoneChecked && passwordcheckChecked && checkidChecked && checkphoneChecked){
 	         signupbtn.removeAttribute('disabled');
         } else {
@@ -767,7 +767,7 @@ newpasswordchange.addEventListener('click',()=>{
         }
 
 						} else {
-							console.log("인증비번실패");
+							//console.log("인증비번실패");
 
 							phonenumberwarningmodal.style.display = 'block';
 							document.querySelector('input#phonecheck').value='';
@@ -792,33 +792,33 @@ function kakaologin(){
 	window.Kakao.Auth.login({
 		scope: 'profile_nickname, profile_image, account_email',
 	 	success: function(authObj){
-			 console.log(authObj);
+			 //console.log(authObj);
 			 
 			 const accessToken = authObj.access_token;
-            console.log('Access Token:', accessToken);
+            //console.log('Access Token:', accessToken);
 			 
 			 window.Kakao.API.request({
 				 url:'/v2/user/me',
 				 success: res => {
 					 const kakao_account = res.kakao_account;
-					 console.log(kakao_account);
+					 //console.log(kakao_account);
 					 const profile = kakao_account.profile;
-                	   console.log(profile.nickname);
-                	   console.log(profile.profile_image_url);
-                	   console.log(kakao_account.email);
+                	   //console.log(profile.nickname);
+                	  // console.log(profile.profile_image_url);
+                	   //console.log(kakao_account.email);
                 	   
                 	  	
 				
 		let email = kakao_account.email;
 	 document.getElementById('naverEmail').value = email;
  		const checkuri = `login/checkemail/${email}`;
-		console.log(checkuri);
+		//console.log(checkuri);
 		
 		
 		axios.get(checkuri)
 				.then((response) => {
 
-					console.log(response.data);
+					//console.log(response.data);
 					if(response.data ==='Y'){
 							
 				let email = kakao_account.email;
@@ -826,7 +826,7 @@ function kakaologin(){
 				let password = "naverpassword";
 				let nicknamechange = kakao_account.email;
 				nickname = nicknamechange.replace(".com", "");
-   				console.log(nickname);
+   				//console.log(nickname);
    				let usersaveprofile = profile.profile_image_url;
 				let phone = "kakaophone";
 				let type = "kakao";
@@ -844,7 +844,7 @@ function kakaologin(){
           		          
   axios.post('login/naver', data)
    .then((response) => {
-     console.log(response.data);
+     //console.log(response.data);
 	  var hibbenButton = document.getElementById('hibbenbutton');
 	  hibbenButton.click();
 
@@ -981,12 +981,12 @@ let failfinallyfindemailclose = document.querySelector('#failfinallyfindemailclo
 finallyfindemailclose.addEventListener('click', () => {
 		finallyfindemailinfo.innerHTML = '';
 		finallyfindemail.style.display = 'none';
-		window.location.href= 'http://localhost:8081/login';
+		window.location.href= contextPathh+"/login";
 
 	});
 	failfinallyfindemailclose.addEventListener('click', () => {
 		failfinallyfindemail.style.display = 'none';
-		window.location.href= 'http://localhost:8081/login';
+		window.location.href= contextPathh+"/login";
 
 	});
 
@@ -1002,8 +1002,8 @@ findemailbutton.addEventListener('click',()=>{
 	let forgetfullname = document.querySelector('input#forgetfullname').value;
 	let forgetphone = document.querySelector('input#forgetphone').value;
 	let forgetphonecheckInput = document.querySelector('input#forgetphonecheck');
-	console.log(forgetfullname);
-	console.log(forgetphone);
+	//console.log(forgetfullname);
+	//console.log(forgetphone);
 	let name =forgetfullname;
 	let phone = forgetphone;
 	
@@ -1015,12 +1015,12 @@ findemailbutton.addEventListener('click',()=>{
 
 	
 	const uri = `login/findemail/${name}/${phone}`;
-					console.log(uri);
+					//console.log(uri);
 		
 					axios.get(uri)
 						.then((response) => {
 
-							console.log(response.data);
+							//console.log(response.data);
 							
 							if(response.data !== ''){
 								 
@@ -1057,14 +1057,14 @@ let finallyfindpassword = document.querySelector('div#finallyfindpassword');
 let finallyfindpasswordclose = document.querySelector('#finallyfindpasswordclose');
 	finallyfindpasswordclose.addEventListener('click', () => {
 		finallyfindpassword.style.display = 'none';
-		window.location.href="http://localhost:8081/login"
+		window.location.href=contextPathh+"/login";
 		
 	});
 let failfinallyfindpassword = document.querySelector('div#failfinallyfindpassword');
 let failfinallyfindpasswordclose = document.querySelector('#failfinallyfindpasswordclose');
 	failfinallyfindpasswordclose.addEventListener('click', () => {
 		failfinallyfindpassword.style.display = 'none';
-		window.location.href="http://localhost:8081/login"
+		window.location.href=contextPathh+"/login";
 		
 	});	
 let kakaonaver= document.querySelector('div#kakaonaver');
@@ -1097,7 +1097,7 @@ findpasswordbutton.addEventListener('click',()=>{
 					axios.get(uri)
 						.then((response) => {
 
-							console.log(response.data);
+							//console.log(response.data);
 							
 							if(response.data === 'kakao' || response.data === 'naver'){
 								kakaonaver.style.display = 'block'; 

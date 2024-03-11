@@ -2,11 +2,15 @@ package com.itwill.teamfourmen.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.joda.time.DateTimeZone;
 import org.jsoup.Jsoup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -97,39 +101,42 @@ public class BoardService {
 	}
 	
 	/**
-	 * 아규먼트로 받은 카테고리의 게시물 리스트를 반환
+	 * 아규먼트로 받은 카테고리의 게시물 리스트를 반환.
+	 * 만약 반환받은 게시물이 없을 경우 영화, tv, 인물 게시판의 경우 빈 리스트를,
+	 * 인기게시판의 경우 null을 반환함
 	 * @param category
 	 * @return
 	 */
 	public Page<PostDto> getPostList(String category, int page) {
 		
-		log.info("getPostList(category={}, page={}", category, page);
+		log.info("getPostList(category={}, page={}", category, page);				
 		
-		Pageable pageable = PageRequest.of(page, postsPerPage, Sort.by("postId").descending());
+		Page<Post> postList = null;
 		
-		Page<Post> postList = postDao.findAllByCategoryOrderByCreatedTimeDesc(category, pageable);
+		if (!category.equals("popular")) {	// 인기게시판이 아닐 경우(영화, tv, 인물)			
+			Pageable pageable = PageRequest.of(page, postsPerPage, Sort.by("postId").descending());			
+			postList = postDao.findAllByCategoryOrderByCreatedTimeDesc(category, pageable);			
+		} else {		// 인기 게시판일 경우
+			Pageable pageable = PageRequest.of(page, 20);
+			if (page >= 0 && page <= 4) {	// 1~5페이지의 경우에만 가져옴
+				postList = postDao.findAllPopularPosts(pageable);
+			}
+		}
+		
 		Page<PostDto> postDtoList = postList.map((post) -> PostDto.fromEntity(post));
 		
 		postDtoList.forEach((postDto) -> {
 			postDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(postDto.getCreatedTime()));
-			log.info("time difference={}", postDto.getTimeDifferenceInMinute());
+			
+			log.info("댓글개수={}", commentDao.countByPostPostId(postDto.getPostId()));
+			postDto.setNumOfComments(commentDao.countByPostPostId(postDto.getPostId()));
 		});
 		
-		log.info("postDtoList={}", postDtoList);		
+		log.info("postDtoList={}", postDtoList.getContent());		
 		
 		return postDtoList;
 	}
 	
-	
-//	public Page<PostDto> getPopularPostList(int page) {
-//		
-//		log.info("getPopularPostList(page={})", page);
-//		
-//		
-//		
-//		
-//		
-//	}
 	
 	
 	/**
@@ -145,8 +152,9 @@ public class BoardService {
 		Page<Post> searchResultList = null;
 		
 		Pageable pageable = PageRequest.of(page, postsPerPage, Sort.by("postId").descending());
-
+		
 		switch(searchCategory) {
+		
 		case "title":
 			 searchResultList = postDao.getSearchResultByTitle(searchContent, boardCategory, pageable);
 			 log.info("검색결과={}", searchResultList);
@@ -164,7 +172,6 @@ public class BoardService {
 			log.info("잘못된 카테고리를 가져옴");
 		}
 		
-		
 		Page<PostDto> searchResultDtoList = searchResultList.map((post) -> PostDto.fromEntity(post));
 		
 		searchResultDtoList.forEach((postDto) -> {
@@ -175,6 +182,88 @@ public class BoardService {
 		log.info("searchResultDtoList={}", searchResultDtoList);
 		
 		return searchResultDtoList;
+	}
+	
+	
+	/**
+	 * 인기 게시판 내에서 검색
+	 * @param searchCategory
+	 * @param searchContent
+	 * @param page
+	 * @return
+	 */
+	public List<PostDto> searchPopularPost(String searchCategory, String searchContent, int page) {
+		
+		long startingPost = (long) (postsPerPage * page);
+		
+		List<Post> searchResultList = null;
+		
+		switch(searchCategory) {
+		case "title":
+			searchResultList = postDao.findPopularBoardSearchByTitle(searchContent, startingPost, postsPerPage);
+			break;
+		case "content":
+			searchResultList = postDao.findPopularBoardSearchByContent(searchContent, startingPost, postsPerPage);
+			break;
+		case "titleContent":
+			searchResultList = postDao.findPopularBoardSearchByTitleContent(searchContent, startingPost, postsPerPage);
+			break;
+		case "author":			
+			searchResultList = postDao.findPopularBoardSearchByAuthor(searchContent, startingPost, postsPerPage);
+			break;
+		default:
+			log.info("잘못된 카테고리를 가져옴");
+		}
+		
+		log.info("가져온 postList={}", searchResultList);
+		
+		List<PostDto> searchResultDtoList = searchResultList.stream().map((post) -> PostDto.fromEntity(post)).toList();
+		
+		searchResultDtoList.forEach((postDto) -> {
+			postDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(postDto.getCreatedTime()));
+			log.info("time difference={}", postDto.getTimeDifferenceInMinute());
+		});
+		
+		return searchResultDtoList;
+	}
+	
+	/**
+	 * 인기게시판에서 페이징 처리하지 않은 총 검색 결과를 가져오기 위한 메서드
+	 * 만약 검색결과가 없을 시 빈 리스트로 리턴함
+	 * @param searchCategory
+	 * @param searchContent
+	 * @return
+	 */
+	public Map<String, Integer> getPopularSearchTotalElementAndPostPerPage(String searchCategory, String searchContent) {
+		
+		Map<String, Integer> totElementsAndPostsPerPage = new HashMap<>(); 
+		
+		// 우선 페이지당 게시물 수 넣음
+		totElementsAndPostsPerPage.put("postsPerPage", postsPerPage);
+		
+		List<Post> searchResultList = null;
+		
+		switch(searchCategory) {
+		case "title":
+			searchResultList = postDao.findAllPopularBoardSearchByTitle(searchContent);
+			break;
+		case "content":
+			searchResultList = postDao.findAllPopularBoardSearchByContent(searchContent);
+			break;
+		case "titleContent":
+			searchResultList = postDao.findAllPopularBoardSearchByTitleContent(searchContent);
+			break;
+		case "author":
+			searchResultList = postDao.findAllPopularBoardSearchByAuthor(searchContent);
+			break;
+		default:
+			log.info("잘못된 카테고리를 가져옴");
+		}
+		
+		int totElements = searchResultList.size();
+		totElementsAndPostsPerPage.put("totElements", totElements);
+		
+		return totElementsAndPostsPerPage;
 	}
 	
 	
@@ -244,6 +333,11 @@ public class BoardService {
 		
 		PostLike savedPostLike = postLikeDao.save(postLike);
 		
+		Post likedPost = postDao.findById(postLike.getPost().getPostId()).orElse(null);
+		
+		Long currentLikes = likedPost.getLikes();
+		likedPost.setLikes(currentLikes + 1);
+		
 		return savedPostLike;
 	}
 	
@@ -257,6 +351,13 @@ public class BoardService {
 		log.info("deleteLike(postLike={})", postLike);
 		
 		postLikeDao.deleteByMemberEmailAndPostPostId(postLike.getMember().getEmail(), postLike.getPost().getPostId());
+		
+		Post likeCanceledPost = postDao.findById(postLike.getPost().getPostId()).orElse(null);
+		
+		Long currentLikes = likeCanceledPost.getLikes();
+		Long likesAfterUpdate = currentLikes - 1 >= 0 ? currentLikes - 1 : 0; // 혹시모를 비동기 에러 대비해서..
+		
+		likeCanceledPost.setLikes(likesAfterUpdate);
 	}
 	
 	/**
@@ -267,29 +368,33 @@ public class BoardService {
 	public List<CommentDto> getCommentList(Long postId) {
 		log.info("getCommentList(postId={})", postId);
 		
-		List<Comment> commentList = commentDao.findByPostPostIdAndReplyToOrderByCommentIdAsc(postId, null);
+		List<Comment> commentList = commentDao.findByPostPostIdAndReplyToOrderByCommentIdAsc(postId, null);						
 		
-		List<CommentDto> commentDtoList = new ArrayList<>();
+		List<CommentDto> commentDtoList = commentList.stream().map((comment) -> CommentDto.fromEntity(comment)).toList();
 		List<CommentDto> repliesList = new ArrayList<>();
 		
-		commentList.forEach((comment) -> {			
-			CommentDto commentDto = CommentDto.fromEntity(comment);
-			
+		commentDtoList.forEach((comment) -> {
 			List<CommentLike> commentLikeList = commentLikeDao.findAllByCommentCommentId(comment.getCommentId());
-			commentDto.setCommentLikesList(commentLikeList);
+			comment.setCommentLikesList(commentLikeList);
 			
-			commentDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(commentDto.getCreatedTime()));
+			// 가장 부모댓글 timeDifference설정
+			Long timeDifferenceInMinute = getMinuteDifferenceIfDateSame(comment.getCreatedTime());
+			comment.setTimeDifferenceInMinute(timeDifferenceInMinute);
 			
 			// 해당 부모댓글로부터 이어진 모든 대댓글들을 가져옴
 			List<Comment> initialRepliesList = commentDao.findAllByReplyTo(comment.getCommentId());
-			List<CommentDto> initialRepliesDtoList = initialRepliesList.stream().map((reply) -> CommentDto.fromEntity(reply)).toList();
-			commentDto.getRepliesList().addAll(initialRepliesDtoList);
-			for (CommentDto initialReplyDto : initialRepliesDtoList) {
-				initialReplyDto.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(initialReplyDto.getCreatedTime()));
-				addAllRepliesToComments(commentDto, initialReplyDto);	
+			List<CommentDto> initialRepliesDtoList = initialRepliesList.stream().map((replyComment) -> CommentDto.fromEntity(replyComment)).toList();
+			
+			comment.getRepliesList().addAll(initialRepliesDtoList);
+			
+			for (CommentDto initialReplyCommentDto : initialRepliesDtoList) {
+				Long replyCommentTimeDifferenceInMinute = getMinuteDifferenceIfDateSame(initialReplyCommentDto.getCreatedTime());
+				initialReplyCommentDto.setTimeDifferenceInMinute(replyCommentTimeDifferenceInMinute);
+				
+				addAllRepliesToComments(comment, initialReplyCommentDto);
 			}
 			
-			commentDtoList.add(commentDto);			
+			
 		});
 		
 		// 가져온 대댓글들을 commentId순으로 정렬
@@ -339,12 +444,21 @@ public class BoardService {
 	 * 댓글 삭제하는 메서드
 	 * @param commentId
 	 */
+//	@Transactional
+//	public void deleteComment(Long commentId) {
+//		log.info("deleteComment(commentId={})", commentId);
+//		
+//		commentDao.deleteById(commentId);
+//		
+//	}
 	@Transactional
 	public void deleteComment(Long commentId) {
 		log.info("deleteComment(commentId={})", commentId);
 		
-		commentDao.deleteById(commentId);
+		Comment commentToDelete = commentDao.findById(commentId).orElse(null);
 		
+		commentToDelete.setIsDeleted("Y");
+		commentToDelete.setContent("삭제된 댓글입니다.");
 	}
 	
 	/**
@@ -405,7 +519,9 @@ public class BoardService {
 		
 		log.info("timeVariable");
 		
-		LocalDateTime currentTime = LocalDateTime.now();
+		ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+		LocalDateTime currentTime = LocalDateTime.now(koreaZoneId);
+
 		
 		Duration duration = Duration.between(timeVariable, currentTime);
 		

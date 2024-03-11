@@ -227,6 +227,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			const authorNicknameReplyingTo = btnAddReply.getAttribute('author');
 			
 			btnAddReply.addEventListener('click', function() {
+                
+                if (!user) {
+                    alert('로그인 한 유저만 댓글을 달 수 있습니다.');
+                    return;
+                }
+                
 				const data = {			
 					member: {
 						email: user.getAttribute('email')
@@ -330,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			                            ${comment.member.nickname === authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
 			                        </div>    <!-- post-comment-author-create-date-container 끝 -->`;
 			                        
-					if(comment.timeDifferenceInMinute) {	// 만약 24시간 내에 작성된 댓글일 경우
+					if(comment.timeDifferenceInMinute != null || comment.timeDifferenceInMinute == 0) {	// 만약 24시간 내에 작성된 댓글일 경우
 						if (comment.timeDifferenceInMinute < 60) {	// 1시간 이내 작성된 댓글인 경우
 							htmlContent += `
 								<div class="post-comment-each-created-time post-comment-text-vertical-center">${comment.timeDifferenceInMinute}분 전</div>
@@ -342,52 +348,75 @@ document.addEventListener('DOMContentLoaded', function() {
 						}
 					} else {	// 작성 후 24시간 경화한 댓글인 경우
 						htmlContent += `
-							<div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(comment.createdTime)}</div>
+							    <div class="post-comment-each-created-time post-comment-text-vertical-center">${formatTime(comment.createdTime)}</div>
 						`;
 					}			                        
 			                        
 					htmlContent += `			                        
 			                    </div>  <!-- post-comment-each-header 끝 -->
 			                    <div class="post-comment-body-container">
-			                        <div class="post-comment-content">${comment.content}</div>
-			                        <div class="post-comment-each-like-container">
-			                            <div>
-			                                <span>likes</span>
-			                                <span class="span-num-comment-likes">${comment.commentLikesList.length}</span>
-			                            </div>
+			                        <div class="post-comment-content">${comment.content}</div>`;
+                    if(comment.isDeleted == null) { // 만약 삭제된 댓글일 경우 이부분 div.post-comment-each-like-container 제외
+                        
+			        htmlContent +=` 
+			                     <div class="post-comment-each-like-container">
+		                            <div>
+		                                <span>likes</span>
+		                                <span class="span-num-comment-likes">${comment.commentLikesList.length}</span>
+		                            </div>
                     `;
                     
-                    if (user && comment.member.nickname == user.getAttribute('nickname')) {
-						htmlContent += `
-		                                <div></div>
-		                                <div>
-		                                    <button class="btn-post-comment-delete" commentId="${comment.commentId}" author="${comment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
-		                                </div>
+                        if (user && comment.member.nickname == user.getAttribute('nickname')) {
+						    htmlContent += `
+	                                <div></div>
+	                                <div>
+	                                    <button class="btn-post-comment-delete" commentId="${comment.commentId}" author="${comment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
+	                                </div>
                         `;
-					} else {
-						htmlContent += `
-		                                <div class="post-comment-each-like-report-icon-container">
-		                                    <div class="post-comment-like-container
-		                                    	 ${user &&comment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}" 
-												 commentId="${comment.commentId}" author="${comment.member.nickname}">
-		                                        <i class="fa-solid fa-thumbs-up"></i>
-		                                    </div>
-		                                </div>
+					    } else {
+						      htmlContent += `
+	                                <div class="post-comment-each-like-report-icon-container">
+	                                    <div class="post-comment-like-container
+	                                    	 ${user &&comment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}" 
+											 commentId="${comment.commentId}" author="${comment.member.nickname}">
+	                                        <i class="fa-solid fa-thumbs-up"></i>
+	                                    </div>
+	                                </div>
                         `;						
-					}
+					   }
 					
-					htmlContent += `
-			                        </div> <!-- post-comment-each-like-container 끝 -->
+				
+			            htmlContent +=`
+		                        </div> <!-- post-comment-each-like-container 끝 -->
+			            `;
+                    }   // if문 comment.isDeleted == null 끝!!
+                    htmlContent +=`
 			                        <div class="post-comment-reply-container">
-			                            <button class="btn-post-comment-reply">답글</button>                    
-			                        </div>
-			                        <div class="d-none post-comment-add-reply-container">
-			                            <textarea class="textarea-post-comment-reply"></textarea>
-			                            <button class="btn-post-comment-add-reply" commentId="${comment.commentId}" author="${comment.member.nickname}">댓글 등록</button>
-			                        </div>
-			                    </div>  <!-- comment body 끝 -->
-			                </div> <!-- post-comment-each-container 끝 -->
-					`;
+			        `;
+			        
+		            if (comment.isDeleted == null) {                            
+                        htmlContent += `
+		                            <button class="btn-post-comment-reply">답글</button>
+                        `;                    
+                    }
+                    
+                    htmlContent += `
+		                        </div>
+                    `;
+                    
+                    if(comment.isDeleted == null) {
+                        htmlContent += `
+                                <div class="d-none post-comment-add-reply-container">
+                                    <textarea class="textarea-post-comment-reply"></textarea>
+                                    <button class="btn-post-comment-add-reply" commentId="${comment.commentId}" author="${comment.member.nickname}">댓글 등록</button>
+                                </div>                            
+                        `;
+                    }
+                    
+                    htmlContent += `
+		                    </div>  <!-- comment body 끝 -->
+		                </div> <!-- post-comment-each-container 끝 -->
+				    `;
 					
 					if (!comment.repliesList) {	// 해당댓글에 대댓글이 없는 경우
 						htmlContent += `
@@ -430,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				                            <div class="post-comment-each-author post-comment-text-vertical-center">${replyComment.member.nickname}</div>
 				                            ${replyComment.member.nickname == authorNickname ? '<div class="post-comment-by-post-author post-comment-text-vertical-center">작성자</div>' : ''}
 				                        </div>   <!-- post-comment-reply-author-create-date-container 끝 -->`;
-				            if (replyComment.timeDifferenceInMinute) {
+				            if (replyComment.timeDifferenceInMinute != null || replyComment.timeDifferenceInMinute == 0) {
 								if (replyComment.timeDifferenceInMinute < 60) {
 									htmlContent += `
 										<div class="post-comment-each-created-time post-comment-text-vertical-center">${replyComment.timeDifferenceInMinute}분 전</div>
@@ -451,25 +480,37 @@ document.addEventListener('DOMContentLoaded', function() {
 				                    </div> <!-- post-comment-each-header 끝 -->
 				                    <div class="post-comment-body-container post-comment-reply-body-container">
 				                        <div class="post-comment-content">
+	                        `;
+	                        
+	                        if(replyComment.isDeleted == null) {   // 삭제된 댓글이면 답변받는 사람 닉네임 가리기
+                                htmlContent += `                                
 				                            <span class="span-post-comment-replied-author" replyTo="${replyComment.replyTo}">${replyComment.authorNicknameReplyingTo}</span>
+                                `;
+                            }
+                            
+                            htmlContent += `                            
 				                            <span class="span-post-comment-content">${replyComment.content}</span>
 				                        </div>
+	                        `;
+	                        
+                           if(replyComment.isDeleted == null) {
+                               htmlContent += `    
 				                        <div class="post-comment-each-like-container">
 				                            <div>
 				                                <span>likes</span>
 				                            	<span class="span-num-comment-likes">${replyComment.commentLikesList.length}</span>
 				                            </div>
-							`;
+							        `;
 							
-							if (user && replyComment.member.nickname == user.getAttribute('nickname')) {	// 로그인유저가 대댓글 작성했을 경우
-								htmlContent += `
+							    if (user && replyComment.member.nickname == user.getAttribute('nickname')) {	// 로그인유저가 대댓글 작성했을 경우
+								    htmlContent += `
 			                                <div></div>
 			                                <div>
 			                                    <button class="btn-post-comment-delete" commentId="${replyComment.commentId}" author="${replyComment.member.nickname}"><i class="fa-solid fa-trash"></i></button>
 			                                </div>   																
-								`;
-							} else {	// 그 외의 경우
-								htmlContent += `
+								    `;
+							    } else {	// 그 외의 경우
+								    htmlContent += `
 			                                <div class="post-comment-each-like-report-icon-container">
 			                                    <div class="post-comment-like-container
 			                                    	 ${user &&replyComment.commentLikesList.some((element) => element.member.email === user.getAttribute('email')) ? 'post-comment-already-liked' : ''}"
@@ -477,18 +518,39 @@ document.addEventListener('DOMContentLoaded', function() {
 			                                        <i class="fa-solid fa-thumbs-up"></i>
 			                                    </div>
 			                                </div>  
-								`;
-							}
-							
-							htmlContent += `
+								    `;
+						    	}
+						    	
+							    htmlContent += `
 				                        </div> <!-- post-comment-each-like-container 끝 -->
-				                        <div class="post-comment-reply-container">
-				                            <button class="btn-post-comment-reply">답글</button>                    
-				                        </div>
-				                        <div class="d-none post-comment-add-reply-container">
-				                            <textarea class="textarea-post-comment-reply"></textarea>
-				                            <button class="btn-post-comment-add-reply" commentId="${replyComment.commentId}" author="${replyComment.member.nickname}">댓글 등록</button>
-				                        </div>
+		                        `;
+                            }
+                            
+
+                            htmlContent += `
+                                        <div class="post-comment-reply-container">
+                            `;
+                             
+                             if(replyComment.isDeleted == null) {
+                                 htmlContent += `
+                                                <button class="btn-post-comment-reply">답글</button>                                                     
+                                 `;                                 
+                             }
+                             
+                             htmlContent += `
+                                        </div>                             
+                             `;                           
+                             
+                            if(replyComment.isDeleted == null) {
+                               htmlContent += ` 
+                                        <div class="d-none post-comment-add-reply-container">
+                                            <textarea class="textarea-post-comment-reply"></textarea>
+                                            <button class="btn-post-comment-add-reply" commentId="${replyComment.commentId}" author="${replyComment.member.nickname}">댓글 등록</button>
+                                        </div>
+                                `;                                
+                            }
+
+	                        htmlContent += `
 				                    </div>
 				                </div> <!-- each 대댓글 컨테이너 끝 -->
 				            </div> <!-- 가장 큰 div 끝 -->							

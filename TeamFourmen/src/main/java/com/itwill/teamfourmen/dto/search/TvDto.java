@@ -5,68 +5,60 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class TvShowInfo extends MediaItem {
+public class TvDto extends MediaItem {
 
-//    @JsonProperty("page")
-//    private int page;
-//
-//    @JsonProperty("results")
-//    private List<TvShowInfo> tvResults;
-//
-//    @JsonProperty("total_pages")
-//    private int totalPages;
-//
-//    @JsonProperty("total_results")
-//    private int totalResults;
-
-    //////////////////////
     @JsonProperty("adult")
     private boolean adult;
 
     @JsonProperty("backdrop_path")
-    private String tvBackdropPath;
+    private String backdropPath;
 
     @JsonProperty("genre_ids")
-    private List<Integer> tvGenreIds;
+    private List<Integer> genreIds;
 
     @JsonProperty("id")
-    private int tvId;
+    private int id;
 
     @JsonProperty("origin_country")
-    private List<String> tvOriginCountry;
+    private List<String> originCountry;
 
     @JsonProperty("original_language")
-    private String tvOriginalLanguage;
+    private String originalLanguage;
 
     @JsonProperty("original_name")
-    private String tvOriginalName;
+    private String originalName;
 
     @JsonProperty("overview")
-    private String tvOverview;
+    private String overview;
 
     @JsonProperty("popularity")
-    private double tvPopularity;
+    private double popularity;
 
     @JsonProperty("poster_path")
-    private String tvPosterPath;
+    private String posterPath;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("first_air_date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate tvFirstAirDate;
+    private LocalDate firstAirDate;
 
     @JsonProperty("name")
-    private String tvName;
+    private String name;
 
     @JsonProperty("vote_average")
-    private double tvVoteAverage;
+    private double voteAverage;
 
     @JsonProperty("vote_count")
-    private int tvVoteCount;
+    private int voteCount;
+
+//    @JsonProperty("media_type")
+//    private String mediaType;
 
 }

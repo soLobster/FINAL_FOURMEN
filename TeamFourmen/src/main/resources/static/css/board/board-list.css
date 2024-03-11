@@ -58,6 +58,11 @@
 	 color: #fbc500;
 	 text-align: left;
 }
+
+.th-board-post-category {
+    width: 20px;
+}
+
 .th-board-title {
     width: 50%;
     text-align: left;
@@ -96,12 +101,43 @@
     height: 3rem;
 }
 
+.table-row-each-post:first-child {
+    border-top: none;
+}
 
+.table-row-each-post:nth-child(odd) {
+    background-color: #2C3033;
+}
+
+.table-row-each-post:hover {
+    background-color: #003049;
+}
+
+    /* 인기게시판일 경우 각 게시물의 category에 대해 */
+.td-board-each-post-category {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.td-board-each-post-category a {
+    padding-left: 8px;
+    color: inherit;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+    /* 제목 댓글 수 관련 */
+.board-list-post-num-comments {
+    color: #ffd966;
+    padding-left: 8px;
+    /*font-weight: 700;*/
+}
 
 	/* 제목링크관련 */
 .td-board-title a {
+    padding-left: 8px;
     color: inherit;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
 }
 

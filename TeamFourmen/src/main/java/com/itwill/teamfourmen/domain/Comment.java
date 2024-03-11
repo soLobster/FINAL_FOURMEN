@@ -67,5 +67,5 @@ public class Comment {
 	
 	private String authorNicknameReplyingTo;
 	
-	
+	private String isDeleted;
 }

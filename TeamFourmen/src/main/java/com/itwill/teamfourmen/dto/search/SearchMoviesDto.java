@@ -12,7 +12,7 @@ public class SearchMoviesDto {
     private int page;
 
     @JsonProperty("results")
-    private List<MovieDto> movieResults;
+    private List<MovieDto> results;
 
     @JsonProperty("total_pages")
     private String totalPages; // 총 검색 결과 페이지

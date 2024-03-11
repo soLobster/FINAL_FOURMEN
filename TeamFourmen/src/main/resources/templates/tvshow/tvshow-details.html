@@ -8,10 +8,15 @@
 		  rel="stylesheet"
 		  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
 		  crossorigin="anonymous">
-	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oplfecjomd"></script>
-	<link th:href="@{/css/navbar.css}" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+	<script src="https://kit.fontawesome.com/937852f454.js" crossorigin="anonymous"></script>
+
 	<link th:href="@{/css/theme.css}" rel="stylesheet">
+	<link th:href="@{/css/navbar.css}" rel="stylesheet">
+	<link th:href="@{/css/footer.css}" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/user.css}">
+
 
 	<style>
 
@@ -226,7 +231,7 @@
             width: 100%;
             border: none;
             background-color: #3a86ff;
-            font: 1.1rem;
+            /*font: 1.1rem;*/
             color: #fff;
             padding: 4px 0;
             font-weight: 700;
@@ -237,7 +242,34 @@
             margin-top: 1rem;
         }
 
+		.modal-header {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+			width: 100%;
+			padding: 16px 0;
+			font-weight: 700;
+		}
 
+		/* 모달 바디 색 변경 */
+		.modal-body {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+		}
+
+		.modal-footer {
+			background-color: rgb(31, 32, 41);
+			color: rgb(196, 195, 202);
+		}
+
+		.btn-open-chat {
+			background-color: transparent;
+			border: none;
+			width: 46px;
+			height: 46px;
+			position: absolute;
+			top: -32%;
+			left: -107%;
+		}
 
 		.btn-add-like {
 			background-color:  transparent;
@@ -705,11 +737,6 @@
 			margin-left: 20px;
 		}
 
-		.view-star-rating > i {
-			font-size: 13px; !important;
-			color: #33ff33; !important;
-		}
-
 		.reviewer-nickname {
 			font-size: 20px;
 			font-weight: bolder;
@@ -880,15 +907,13 @@
 		}
 
 	</style>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
-	<link th:href="@{/css/theme.css}" rel="stylesheet">
-	<link th:href="@{/css/footer.css}" rel="stylesheet">
+
 	
 
 </head>
 <body class = "ko v4">
 <header>
-	<nav th:replace="~{/layout/ExampleLayout :: navigation-bar}"></nav>
+	<nav th:replace="~{layout/ExampleLayout :: navigation-bar}"></nav>
 <!--	<a th:href="@{'/tv/top_rated'}" class="fst-italic text-secondary text-decoration-none">리스트로 돌아가기</a>-->
 <!--	<input class="mb-2 ms-2 btn-sm btn btn-outline-dark" type ="button" value = "BACK" onclick="history.go(-1)">-->
 </header>
@@ -929,7 +954,7 @@
 						</section>
 					</th:block>
 					<section style="display: flex; gap: 20px">
-						<h2 style="padding-top: 4px"><i class="fa-solid fa-users fa-lg"></i></h2>
+						<h2><img th:src="@{'/icons/FFMLOGO.png'}" width="46" height="46" style="border-radius: .5rem"></h2>
 						<div style="display: flex; flex-direction: column">
                             <span th:if="${ratingAverage != 0}"
                                 th:text="|${ratingAverage} / 5|"></span>
@@ -950,7 +975,7 @@
 					</div>
 				</div>
 				<div class = "mb-4 user_custom_bar">
-					<div class = "tool-tip-custom-bar" id = "custom-list" data-bs-toggle="modal" data-bs-target="#playListModal">                        
+					<div class = "tool-tip-custom-bar div-playlist" id = "custom-list" data-bs-toggle="modal" data-bs-target="#playListModal">
 						<i class="fa-solid fa-list btn-playlist"></i>
 						<span class = "custom-bar-text">플레이 리스트 저장</span>
 					</div>
@@ -960,16 +985,25 @@
 							<span class = "custom-bar-text">Like</span>
 						</button>
 					</div>
-					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} ne null ? 'user-reviewed-already'" id = "custom-review">
+					<div class = "tool-tip-custom-bar div-review" th:classappend="${myReview} != null ? 'user-reviewed-already'" id = "custom-review">
 						<button type="button" class = "tool-tip-custom-bar btn-tv-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
 							<i class="fa-solid fa-pen"></i>
 							<span class = "custom-bar-text">리뷰 남기기</span>
 						</button>
 					</div>
+
+					<div class="tool-tip-custom-bar div-chat">
+						<button type="button" class="tool-tip-custom-bar movie-like-button btn-open-chat">
+							<i class="fa-solid fa-comment"></i>
+							<span class="custom-bar-text">오픈 채팅</span>
+						</button>
+					</div>
+
 					<div th:if ="${trailer ne null}" class = "tool-tip-custom-bar" id = "custom-trailer" data-bs-toggle="modal" data-bs-target="#trailerModal">
 						<i class="fa-solid fa-play"></i>
 						<span class="custom-bar-text">트레일러</span>
 					</div>
+
 				</div>
 
 				<p class = "mb-3 fs-5 fst-italic p-subtitle" th:if = "${tvShowDto.getTagline() ne ''}" th:text="${tvShowDto.getTagline()}"></p>
@@ -1193,7 +1227,7 @@
 		</div>
 	</section>
 	
-	<footer th:replace="~{/layout/FooterLayout :: footer-bar}"></footer>
+	<footer th:replace="~{layout/FooterLayout :: footer-bar}"></footer>
 	
 	</div>
 	
@@ -1202,7 +1236,7 @@
 
 
 <!-- 플레이리스트 모달 -->
-<div class="modal fade" id="playListModal" tabindex="-1" aria-labelledby="playListModal" aria-hidden="true">
+<div class="modal fade" th:if="${member != null}" id="playListModal" tabindex="-1" aria-labelledby="playListModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -1271,7 +1305,7 @@
 
 
 <!-- 리뷰 모달 -->
-<div class="modal fade" id="reviewModal" th:if = "${member ne null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewModal" th:if = "${member != null && myReview == null}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content bg-dark">
 			<div class="modal-header">
@@ -1370,6 +1404,21 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 </script>
+
+
+<!--// JS로 Axios post 전송을 위한 tvshowid-->
+<!--// const tvShowId-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script th:inline="javascript">
+	const backdropPath = [[${tvShowDto.getBackdrop_path()}]]
+</script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/image/img-dominant-color-tvshow.js}"></script>
+<script th:src="@{/js/tvshow/tv-detail.js}"></script>
+<script th:src="@{/js/features/features-tv.js}"></script>
+
+
 <script>
 	// JavaScript 코드 작성
 	// 좌우 버튼 클릭하여 횡스크롤 가능한 카드 리스트 스크롤
@@ -1447,22 +1496,12 @@
 				element.appendChild(halfStarRating);
 			}
 
-			});
 		});
+	});
 
 
 </script>
 
-<!--// JS로 Axios post 전송을 위한 tvshowid-->
-<!--// const tvShowId-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
-<script th:inline="javascript">
-	const backdropPath = [[${tvShowDto.getBackdrop_path()}]]
-</script>
-<script th:src="@{/js/navbar.js}"></script>
-<script th:src="@{/js/image/img-dominant-color-tvshow.js}"></script>
-<script th:src="@{/js/features/features-tv.js}"></script>
 
 <script th:src="@{/js/footer.js}"></script>
 
