@@ -482,7 +482,9 @@
 
                                 <a class = "review-item-user-profile-img-a-tag" th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
                                     <section class = "review-item-user-profile-img">
-                                        <img th:src="@{${review.getMember().getUsersaveprofile()}}">
+<!--                                        <img th:src="@{${review.getMember().getUsersaveprofile()}}">-->
+                                        <img th:if ="${review.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{${review.getMember().getUsersaveprofile()}}"/>
+                                        <img th:unless = "${review.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src="@{/image/userimage.png}"/>
                                     </section>
                                 </a>
 

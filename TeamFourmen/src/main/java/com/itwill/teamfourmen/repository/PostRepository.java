@@ -14,7 +14,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	
 	Page<Post> findAllByCategoryOrderByCreatedTimeDesc(@Param("cateogry")String category, Pageable pageable);
-	
+
+	List<Post> findByMemberMemberId(Long memberId);
 
 	@Query("select p from Post p where upper(p.title) like upper('%' || :keyword || '%') and category = :boardCategory")
 	Page<Post> getSearchResultByTitle(@Param("keyword") String keyword, @Param("boardCategory") String boardCategory, Pageable pageable);
