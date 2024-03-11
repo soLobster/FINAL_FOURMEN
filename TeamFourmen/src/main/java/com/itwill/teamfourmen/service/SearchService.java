@@ -85,71 +85,71 @@ public class SearchService {
         return searchMultiResponseList;
     }
 
-    public SearchPeopleDto searchPeople(String query, int page) {
-        String url = String.format("/search/person?api_key=%s&query=%s&page=%d&language=ko-KR", apiKey, query, page);
-        JsonNode jsonNode = this.webClient.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
-
-        if (jsonNode != null) {
-            ObjectMapper mapper = new ObjectMapper()
-                    .registerModule(new JavaTimeModule())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            try {
-                return objectMapper.treeToValue(jsonNode, SearchPeopleDto.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to map json to DTO", e);
-            }
-        } else {
-            return new SearchPeopleDto(); // Or handle this case as you see fit.
-        }
-
-    }
-
-    public SearchMoviesDto searchMovies(String query, int page) {
-        String url = String.format("/search/movie?api_key=%s&query=%s&page=%d&language=ko-KR", apiKey, query, page);
-        JsonNode jsonNode = this.webClient.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
-
-        if (jsonNode != null) {
-            ObjectMapper mapper = new ObjectMapper()
-                    .registerModule(new JavaTimeModule())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            try {
-                return objectMapper.treeToValue(jsonNode, SearchMoviesDto.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to map json to DTO", e);
-            }
-        } else {
-            return new SearchMoviesDto(); // Or handle this case as you see fit.
-        }
-    }
-
-    public SearchTvShowsDto searchTvShows(String query, int page) {
-        String url = String.format("/search/tv?api_key=%s&query=%s&page=%d&language=ko-KR", apiKey, query, page);
-        JsonNode jsonNode = this.webClient.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
-
-        if (jsonNode != null) {
-            ObjectMapper mapper = new ObjectMapper()
-                    .registerModule(new JavaTimeModule())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            try {
-                return objectMapper.treeToValue(jsonNode, SearchTvShowsDto.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to map json to DTO", e);
-            }
-        } else {
-            return new SearchTvShowsDto(); // Or handle this case as you see fit.
-        }
-    }
+//    public SearchPeopleDto searchPeople(String query, int page) {
+//        String url = String.format("/search/person?api_key=%s&query=%s&page=%d&language=ko-KR", apiKey, query, page);
+//        JsonNode jsonNode = this.webClient.get()
+//                .uri(url)
+//                .retrieve()
+//                .bodyToMono(JsonNode.class)
+//                .block();
+//
+//        if (jsonNode != null) {
+//            ObjectMapper mapper = new ObjectMapper()
+//                    .registerModule(new JavaTimeModule())
+//                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//            try {
+//                return objectMapper.treeToValue(jsonNode, SearchPeopleDto.class);
+//            } catch (Exception e) {
+//                throw new RuntimeException("Failed to map json to DTO", e);
+//            }
+//        } else {
+//            return new SearchPeopleDto(); // Or handle this case as you see fit.
+//        }
+//
+//    }
+//
+//    public SearchMoviesDto searchMovies(String query, int page) {
+//        String url = String.format("/search/movie?api_key=%s&query=%s&page=%d&language=ko-KR", apiKey, query, page);
+//        JsonNode jsonNode = this.webClient.get()
+//                .uri(url)
+//                .retrieve()
+//                .bodyToMono(JsonNode.class)
+//                .block();
+//
+//        if (jsonNode != null) {
+//            ObjectMapper mapper = new ObjectMapper()
+//                    .registerModule(new JavaTimeModule())
+//                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//            try {
+//                return objectMapper.treeToValue(jsonNode, SearchMoviesDto.class);
+//            } catch (Exception e) {
+//                throw new RuntimeException("Failed to map json to DTO", e);
+//            }
+//        } else {
+//            return new SearchMoviesDto(); // Or handle this case as you see fit.
+//        }
+//    }
+//
+//    public SearchTvShowsDto searchTvShows(String query, int page) {
+//        String url = String.format("/search/tv?api_key=%s&query=%s&page=%d&language=ko-KR", apiKey, query, page);
+//        JsonNode jsonNode = this.webClient.get()
+//                .uri(url)
+//                .retrieve()
+//                .bodyToMono(JsonNode.class)
+//                .block();
+//
+//        if (jsonNode != null) {
+//            ObjectMapper mapper = new ObjectMapper()
+//                    .registerModule(new JavaTimeModule())
+//                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//            try {
+//                return objectMapper.treeToValue(jsonNode, SearchTvShowsDto.class);
+//            } catch (Exception e) {
+//                throw new RuntimeException("Failed to map json to DTO", e);
+//            }
+//        } else {
+//            return new SearchTvShowsDto(); // Or handle this case as you see fit.
+//        }
+//    }
 
 }

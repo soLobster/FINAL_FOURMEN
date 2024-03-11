@@ -58,7 +58,7 @@ public class TvDto extends MediaItem {
     @JsonProperty("vote_count")
     private int voteCount;
 
-//    @JsonProperty("media_type")
-//    private String mediaType;
+    @JsonProperty("media_type")
+    private String mediaType;
 
 }
