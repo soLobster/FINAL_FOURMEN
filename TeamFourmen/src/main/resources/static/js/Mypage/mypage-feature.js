@@ -87,8 +87,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 userProfileImg.setAttribute('src',  '/image/userimage.png')
             }
 
-//            browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
-            
+
             userEmail = email;
             
             console.log('보이는 페이지의 유저 이메일 = ' +userEmail);
@@ -118,6 +117,25 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (myeditLink) {
                 myeditLink.href = `/mypage/details/${memberId}/edit`;
             }
+
+            if(pathName.split('/')[4] === 'profile'){
+                browsersTitle.textContent = userNickname + ' ' + 'DashBoard';
+            } else if (pathName.split('/')[4] === 'reviews'){
+                browsersTitle.textContent = userNickname + ' ' + 'REVIEWS';
+            } else if (pathName.split('/')[4] === 'playlist'){
+                browsersTitle.textContent = userNickname + ' 의 플레이리스트';
+            } else if (pathName.split('/')[4] === 'movie'){
+                browsersTitle.textContent = userNickname + ' ' + 'LIKED MOVIES';
+            } else if (pathName.split('/')[4] === 'tv') {
+                browsersTitle.textContent = userNickname + ' ' + 'LIKED TV';
+            } else if (pathName.split('/')[4] === 'person'){
+                browsersTitle.textContent = userNickname + ' ' + 'LIKED PERSON';
+            } else if (pathName.split('/')[4] === 'edit') {
+                browsersTitle.textContent = userNickname + ' ' + 'EDIT';
+            } else {
+                browsersTitle.textContent = 'ADMIN PAGE';
+            }
+
         });
 
     // 팔로우 체크

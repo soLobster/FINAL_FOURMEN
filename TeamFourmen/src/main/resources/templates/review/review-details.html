@@ -581,7 +581,7 @@
                     </a>
                     <span>Review By</span>
                     <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${review.getMember().getMemberId()})}">
-                        <h4 class = "works-review-users-name" th:text="${review.getMember().getName()}"></h4>
+                        <h4 class = "works-review-users-name" th:text="${review.getMember().getNickname()}"></h4>
                     </a>
                 </div>
                 <div class = "works-review-body">
@@ -641,8 +641,8 @@
                                         <section class = "user-info" th:email = "${comment.getMember().getEmail()}">
                                             <a th:href="@{/mypage/details/{memberId}/profile(memberId = ${comment.getMember().getMemberId()})}">
                                                 <div>
-                                                    <img th:if="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
-                                                    <img th:unless="${comment.getMember().getUsersaveprofile() ne null}" th:src = "@{/image/userimage.png}" />
+                                                    <img th:if="${comment.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src = "@{${comment.getMember().getUsersaveprofile()}}" />
+                                                    <img th:unless="${comment.getMember().getUsersaveprofile() ne 'userimage.png'}" th:src = "@{/image/userimage.png}" />
                                                 </div>
                                             </a>
                                             <div class = "user-name-created-date">
