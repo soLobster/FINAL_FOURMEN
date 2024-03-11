@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnSendReview = document.querySelector('.btn-send-review');	// 리뷰 보내기 버튼
     const btnAddLike = document.querySelector('.btn-add-like');	// 좋아요 버튼
     const divDidLikeAlready = document.querySelector('.div-like');
+    const btnPlaylistdiv = document.querySelector('.div-playlist');
     const divDidReviewedAlready = document.querySelector('.div-review');
     const btnTvReview =  document.querySelector('.btn-tv-review');
 	
@@ -165,6 +166,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		
 	});
+
+    btnPlaylistdiv.addEventListener('click', function () {
+
+        if(!signedInUser){
+            alert('로그인한 유저만 플레이리스트 추가할 수 있습니다.');
+            return;
+        }
+
+    });
 	
 	
 	// 새 플레이리스트 생성 버튼 이벤트리스너
