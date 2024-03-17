@@ -460,6 +460,10 @@ public class BoardService {
 			initialRepliesDtoList.forEach((reply) -> {
 				Comment commentReplied = commentDao.findById(reply.getReplyTo()).orElse(null);
 				reply.setCommentReplied(commentReplied);
+				
+				List<CommentLike> replyCommentLikeList = commentLikeDao.findAllByCommentCommentId(reply.getCommentId());
+				reply.setCommentLikesList(replyCommentLikeList);
+				
 			});
 			
 			comment.getRepliesList().addAll(initialRepliesDtoList);
@@ -569,6 +573,9 @@ public class BoardService {
 		List<CommentDto> repliesDtoList = repliesList.stream().map((reply) -> CommentDto.fromEntity(reply)).toList();
 		
 		repliesDtoList.forEach((replyComment) -> {
+			List<CommentLike> commetLikesListForReply = commentLikeDao.findAllByCommentCommentId(replyComment.getCommentId());
+			replyComment.setCommentLikesList(commetLikesListForReply);
+			
 			Comment commentReplied = commentDao.findById(replyComment.getReplyTo()).orElse(null);
 			replyComment.setCommentReplied(commentReplied);
 			replyComment.setTimeDifferenceInMinute(getMinuteDifferenceIfDateSame(replyComment.getCreatedTime()));	
